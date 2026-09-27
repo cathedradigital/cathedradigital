@@ -16,6 +16,7 @@ import { supabase } from '@/lib/db';
 import { useAuth } from '@/hooks/useAuth';
 import { AppRoute } from '@/types';
 import { toast } from 'sonner';
+import { useChurchContext } from '@/hooks/useChurchContext';
 
 const CATEGORIES = [
   { id: 'geral', label: 'Geral' },
@@ -54,6 +55,8 @@ function timeAgo(dateStr: string) {
 
 const AtriumCommunityPage: React.FC = () => {
   const { user } = useAuth();
+  const church = useChurchContext();
+  const todayLabel = new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' });
   const navigate = useNavigate();
   const [category, setCategory] = useState('geral');
   const [posts, setPosts] = useState<Post[]>([]);
@@ -65,6 +68,13 @@ const AtriumCommunityPage: React.FC = () => {
   const [submitting, setSubmitting] = useState(false);
 
   const fetchPosts = useCallback(async () => {
+    // A leitura da comunidade é restrita a membros autenticados (sem grant
+    // para o papel anon); evita uma requisição 401 para visitantes.
+    if (!user?.id) {
+      setPosts([]);
+      setLoading(false);
+      return;
+    }
     setLoading(true);
     let q = supabase
       .from('community_posts')
@@ -170,19 +180,19 @@ const AtriumCommunityPage: React.FC = () => {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="p-4 border border-border/20 bg-accent rounded-premium text-center">
               <span className="flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-widest text-gold-text mb-2"><Sparkles className="w-3 h-3" /> SANTO DO DIA</span>
-              <p className="font-display text-sm italic text-primary">São João Batista</p>
+              <p className="font-display text-sm italic text-primary">{church.todaySaint?.name ?? 'Santos do dia'}</p>
             </div>
             <div className="p-4 border border-border/20 bg-accent rounded-premium text-center">
               <span className="flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-widest text-gold-text mb-2"><User className="w-3 h-3" /> PAPA ATUAL</span>
-              <p className="font-display text-sm italic text-primary">Francisco</p>
+              <p className="font-display text-sm italic text-primary">{church.currentPope?.name ?? 'Leão XIV'}</p>
             </div>
             <div className="p-4 border border-border/20 bg-accent rounded-premium text-center">
               <span className="flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-widest text-gold-text mb-2"><BookOpen className="w-3 h-3" /> LITURGIA</span>
-              <p className="font-display text-sm italic text-primary">Féria da Semana</p>
+              <p className="font-display text-sm italic text-primary">{church.celebration ?? 'Féria'}</p>
             </div>
             <div className="p-4 border border-border/20 bg-accent rounded-premium text-center">
               <span className="flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-widest text-gold-text mb-2"><Calendar className="w-3 h-3" /> CALENDÁRIO</span>
-              <p className="font-display text-sm italic text-primary">24 Jun 2026</p>
+              <p className="font-display text-sm italic text-primary">{todayLabel}</p>
             </div>
           </div>
         </section>

@@ -176,7 +176,7 @@ const AcervoHomePage: React.FC = () => {
                     </div>
                     <div>
                       <EditorialCard.Eyebrow>🇻🇦 Magistério Vivo</EditorialCard.Eyebrow>
-                      <EditorialCard.Title>{currentPope?.name || 'Papa Francisco'}</EditorialCard.Title>
+                      <EditorialCard.Title>{currentPope?.name || 'Leão XIV'}</EditorialCard.Title>
                       <EditorialCard.Description>O sucessor de Pedro nos guia na fé.</EditorialCard.Description>
                     </div>
                   </div>

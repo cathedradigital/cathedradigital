@@ -156,7 +156,7 @@ const POPES_DATA: Pope[] = [
     id: 'francis',
     name: 'Francisco',
     title: 'O Papa da Misericórdia',
-    reign: '2013 – Presente',
+    reign: '2013 – 2025',
     bio: 'Primeiro Papa das Américas e da Companhia de Jesus. Foca no cuidado com os pobres e com a "Casa Comum".',
     contributions: [
       'Encíclica Laudato Si\'',
@@ -166,6 +166,21 @@ const POPES_DATA: Pope[] = [
     image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Pope_Francis_South_Korea_2014.jpg/440px-Pope_Francis_South_Korea_2014.jpg',
     isSaint: false,
     motto: 'Miserando atque eligendo'
+  },
+  {
+    id: 'leo-xiv',
+    name: 'Leão XIV',
+    title: 'Bispo de Roma, Vigário de Jesus Cristo',
+    reign: '2025 – Presente',
+    bio: 'Robert Francis Prevost, agostiniano nascido em Chicago e missionário no Peru, eleito em 8 de maio de 2025. Primeiro Papa nascido nos Estados Unidos.',
+    contributions: [
+      'Primeiro Papa agostiniano da era moderna',
+      'Continuidade do Jubileu da Esperança 2025',
+      'Ênfase na paz, no diálogo e na unidade da Igreja'
+    ],
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Pope_Leo_XIV_3_%283x4_cropped%29.png/440px-Pope_Leo_XIV_3_%283x4_cropped%29.png',
+    isSaint: false,
+    motto: 'In Illo uno unum'
   }
 ];
 
@@ -240,7 +255,9 @@ const PopesPage: React.FC = () => {
       if (match) return match;
     }
 
-    return POPES_DATA.find((p) => {
+    // Percorre do mais recente para o mais antigo: em anos de transição
+    // (ex.: 2025) prevalece o Papa eleito por último.
+    return [...POPES_DATA].reverse().find((p) => {
       const [start, end] = parseReignYears(p.reign);
       return year >= start && year <= end;
     });
