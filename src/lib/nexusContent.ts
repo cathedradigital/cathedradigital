@@ -46,7 +46,7 @@ function parseBibleReference(ref: unknown): ParsedBibleReference {
   const ROMAN: Record<string, string> = { I: '1', II: '2', III: '3' };
   const normalized = safe.data.replace(/^(III|II|I)\s+/i, (_, r) => `${ROMAN[r.toUpperCase()]} `);
   // Separadores aceitos entre capítulo e versículo: , : . -
-  const m = normalized.match(/^([1-3]?\s?[A-Za-zÀ-ÿ]+)\.?\s+(\d+)(?:\s*[,:.\-]\s*(\d+))?/);
+  const m = normalized.match(/^([1-3]?\s?[A-Za-zÀ-ÿ]+)\.?\s+(\d+)(?:\s*[,:.-]\s*(\d+))?/);
   if (!m) return {};
   const rawBook = m[1].replace(/\s+/g, '').toLowerCase();
   const abbr = BIBLE_ABBR_BY_LOWER.get(rawBook);

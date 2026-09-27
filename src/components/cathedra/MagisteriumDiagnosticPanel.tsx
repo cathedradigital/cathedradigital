@@ -158,8 +158,6 @@ const MagisteriumDiagnosticPanel: React.FC = () => {
   const buffer = useMemo<MagisteriumDiagEvent[]>(() => getMagisteriumDiagBuffer(), [tick]);
   const persisted = useMemo<MagisteriumDiagEvent[]>(() => getPersistedMagisteriumErrors(), [tick]);
 
-  if (!enabled) return null;
-
   const thinCount = buffer.filter((e) => e.step === 'cache_thin' || e.step === 'fetch_thin').length;
 
   const okCount = buffer.filter((e) => (OK_STEPS as readonly string[]).includes(e.step)).length;
@@ -171,6 +169,8 @@ const MagisteriumDiagnosticPanel: React.FC = () => {
       null
     );
   }, [buffer, persisted]);
+
+  if (!enabled) return null;
 
   return (
     <div

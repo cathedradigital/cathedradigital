@@ -187,7 +187,7 @@ export default function IntegrationsStatus() {
       result = { ok: false, message: msg };
     }
     setResults((s) => ({ ...s, [id]: result }));
-    result.ok ? toast.success(`${id}: ${result.message}`) : toast.error(`${id}: ${result.message}`);
+    if (result.ok) toast.success(`${id}: ${result.message}`); else toast.error(`${id}: ${result.message}`);
 
     // Persistir no histórico (best-effort; ignora se não for admin)
     try {

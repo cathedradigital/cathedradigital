@@ -43,7 +43,7 @@ const renderVerseText = (text: unknown): string => {
   return text;
 };
 
-interface BodyProps extends BibleVersePopoverProps {}
+type BodyProps = BibleVersePopoverProps;
 
 const BibleVersePopoverBody: React.FC<BodyProps> = ({ abbr, chapter, verse, onNavigate }) => {
   const navigate = useNavigate();

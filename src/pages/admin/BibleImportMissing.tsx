@@ -98,7 +98,7 @@ export default function BibleImportMissing() {
   function toggleExpand(abbrev: string) {
     setExpanded((prev) => {
       const next = new Set(prev);
-      next.has(abbrev) ? next.delete(abbrev) : next.add(abbrev);
+      if (next.has(abbrev)) next.delete(abbrev); else next.add(abbrev);
       return next;
     });
   }

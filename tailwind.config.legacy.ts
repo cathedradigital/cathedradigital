@@ -228,5 +228,6 @@ export default {
       },
     },
   },
+  // eslint-disable-next-line @typescript-eslint/no-require-imports -- config legado (CommonJS)
   plugins: [require("tailwindcss-animate")],
 } satisfies Config;

@@ -1686,8 +1686,8 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
                     <h4 className="text-[10px] font-black uppercase tracking-widest text-primary/40">Dados da Sessão</h4>
 
                     <button 
-                      onClick={() => {
-                        const { generateSecurityScanPDF } = require('@/utils/securityReport');
+                      onClick={async () => {
+                        const { generateSecurityScanPDF } = await import('@/utils/securityReport');
                         generateSecurityScanPDF(selectedScan, securityLogs);
                       }}
                       className="text-primary/40 hover:text-secondary"

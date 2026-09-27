@@ -551,8 +551,7 @@ export const EditorialBookCover: React.FC<EditorialBookCoverProps> = ({
 /* Timeline — trilha vertical com marcadores dourados                  */
 /* ------------------------------------------------------------------ */
 
-export interface EditorialTimelineProps
-  extends React.HTMLAttributes<HTMLOListElement> {}
+export type EditorialTimelineProps = React.HTMLAttributes<HTMLOListElement>;
 
 export const EditorialTimeline: React.FC<EditorialTimelineProps> = ({
   className,

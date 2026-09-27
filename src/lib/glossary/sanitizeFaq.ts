@@ -283,6 +283,7 @@ function collectRemoved(raw: unknown): string[] {
     const matches = raw.match(re);
     if (matches) hits.push(...matches);
   }
+  // eslint-disable-next-line no-control-regex -- detecção intencional de caracteres de controle
   if (/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/.test(raw)) hits.push('[control-chars]');
   return hits;
 }
@@ -332,6 +333,7 @@ const INLINE_EVENT_HANDLER = /\son[a-z]+\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]+)/gi;
 // javascript:/data: URIs em atributos href/src
 const DANGEROUS_URI = /(?:href|src)\s*=\s*(?:"|')?\s*(?:javascript|data|vbscript):[^"'>\s]*/gi;
 // Caracteres de controle (exceto \t \n \r) — quebram JSON-LD e podem esconder payloads
+// eslint-disable-next-line no-control-regex -- remoção intencional
 const CONTROL_CHARS = /[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g;
 
 function escapeHtmlEntities(input: string): string {

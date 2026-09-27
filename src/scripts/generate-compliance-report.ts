@@ -320,7 +320,7 @@ function getTrendIcon(val: number = 0) {
 }
 
 // HTML Dashboard with Expandable Diffs and History Chart
-let html = `
+const html = `
 <!DOCTYPE html>
 <html>
 <head>
