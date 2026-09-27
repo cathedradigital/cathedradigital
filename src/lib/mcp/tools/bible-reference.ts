@@ -45,7 +45,7 @@ export default defineTool({
     if (vEnd < verse) return { content: [{ type: "text", text: "verse_end deve ser >= verse." }], isError: true };
     if (vEnd - verse + 1 > 50) return { content: [{ type: "text", text: "Máximo de 50 versículos por chamada." }], isError: true };
 
-    const sb = createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_PUBLISHABLE_KEY!, {
+    const sb = createClient((process.env.SUPABASE_URL || import.meta.env.VITE_SUPABASE_URL)!, (process.env.SUPABASE_PUBLISHABLE_KEY || import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY)!, {
       auth: { persistSession: false, autoRefreshToken: false },
     });
 
