@@ -1,4 +1,4 @@
-name: Node.js CI
+name: CI
 
 on:
   push:
@@ -14,20 +14,26 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      # A Vercel instala as dependências com Bun (bun.lock); o CI usa o mesmo
+      # gerenciador para testar exatamente a mesma árvore de dependências.
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "22.x"
-          cache: "npm"
 
       - name: Install dependencies
-        run: npm ci
+        run: bun install --frozen-lockfile
 
       - name: Typecheck
-        run: npm run typecheck
+        run: bun run typecheck
 
       - name: Lint
-        run: npm run lint
+        run: bun run lint
 
-      - name: Build
-        run: npm run build
+      - name: Build (preset Vercel)
+        run: bun run build
+        env:
+          NITRO_PRESET: vercel
