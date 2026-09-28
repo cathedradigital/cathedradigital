@@ -58,8 +58,7 @@ Deno.serve(async (req) => {
     "Quando não houver fonte verificável no contexto, diga isso.",
     "Não apresente opinião do modelo como doutrina.",
     "Responda em português brasileiro, de forma clara e útil.",
-  ].join("
-");
+  ].join("\n");
 
   const messages = [
     { role: "system", content: system },
