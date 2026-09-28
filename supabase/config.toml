@@ -1,1 +1,4 @@
 project_id = "gpwrpmoniglarqwfyryp"
+
+[functions.logos-ai]
+verify_jwt = true
