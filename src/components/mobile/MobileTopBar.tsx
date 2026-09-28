@@ -2,6 +2,7 @@ import { ArrowLeft, Search, Menu } from "lucide-react";
 import { useNavigate, Link } from '@/lib/rr-compat';
 import { cn } from "@/lib/utils";
 import type { ReactNode } from "react";
+import cathedraLogo from '@/assets/cathedra-logo.webp';
 
 interface MobileTopBarProps {
   /** Título curto exibido no centro. Se ausente, usa apenas kicker. */
@@ -40,6 +41,7 @@ export function MobileTopBar({
 
   return (
     <header
+      data-mobile-chrome=""
       className={cn(
         "sticky top-0 z-40 w-full md:hidden",
         "flex items-center gap-3 px-[var(--stitch-margin-mobile)]",
@@ -74,7 +76,7 @@ export function MobileTopBar({
         </button>
       )}
       <Link to="/" className="shrink-0">
-        <img src="/monograma-cathedra.svg" alt="Cathedra" className="h-8 w-8" />
+        <img src={cathedraLogo} alt="Cathedra" className="h-8 w-8" />
       </Link>
 
       <div className="min-w-0 flex-1">

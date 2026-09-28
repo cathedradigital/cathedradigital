@@ -142,7 +142,7 @@ const BottomNavItem: React.FC<BottomNavItemProps> = React.memo(({
       }}
       transition={shouldReduceMotion ? { duration: 0 } : undefined}
       className={cn(
-        "text-[7px] md:text-[8.5px] font-medium uppercase tracking-[0.15em] leading-none transition-all truncate w-full px-spacing-3xs text-center relative z-10",
+        "text-[9px] md:text-[10px] font-medium uppercase tracking-[0.08em] leading-none transition-all whitespace-nowrap text-center relative z-10",
         shouldReduceMotion ? "duration-0" : "duration-300",
         isActive ? 'text-[color:var(--gold-text)] font-semibold' : 'text-foreground/80'
       )}

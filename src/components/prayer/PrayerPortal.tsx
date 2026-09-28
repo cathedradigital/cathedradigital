@@ -279,16 +279,15 @@ const PrayerPortal: React.FC<Props> = ({
                 const Icon = ICON_MAP[item.icon ?? 'sparkles'];
                 const spanAll = resolvedHighlight.meta && resolvedHighlight.meta.length % 2 === 1 && idx === resolvedHighlight.meta.length - 1;
                 return (
-                  <div key={item.label} className={cn('flex items-start gap-2.5', spanAll && 'md:col-span-2')}>
-                    <Icon className="mt-0.5 h-4 w-4 flex-none text-stitch-secondary" aria-hidden />
-                    <div>
-                      <dt className="font-stitch-body text-[10px] font-black uppercase tracking-[0.22em] text-stitch-secondary">
-                        {item.label}
-                      </dt>
-                      <dd className="mt-0.5 font-stitch-body font-medium text-stitch-on-surface">
-                        {item.value}
-                      </dd>
-                    </div>
+                  <div key={item.label} className={cn(spanAll && 'md:col-span-2')}>
+                    {/* dt/dd precisam ser filhos diretos do grupo <div> dentro do <dl> */}
+                    <dt className="flex items-center gap-2.5 font-stitch-body text-[10px] font-black uppercase tracking-[0.22em] text-stitch-secondary">
+                      <Icon className="h-4 w-4 flex-none text-stitch-secondary" aria-hidden />
+                      {item.label}
+                    </dt>
+                    <dd className="mt-0.5 pl-[1.625rem] font-stitch-body font-medium text-stitch-on-surface">
+                      {item.value}
+                    </dd>
                   </div>
                 );
               })}

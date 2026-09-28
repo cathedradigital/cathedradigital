@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { ArrowLeft, Type, Focus, Share2 } from "lucide-react";
 import { useNavigate } from '@/lib/rr-compat';
 import { cn } from "@/lib/utils";
+import cathedraLogo from '@/assets/cathedra-logo.webp';
 
 interface MobileReaderChromeProps {
   kicker?: string;
@@ -40,6 +41,7 @@ export function MobileReaderChrome({
 
   return (
     <header
+      data-mobile-chrome=""
       className={cn(
         "sticky top-0 z-30 w-full md:hidden",
         "bg-stitch-surface",
@@ -52,7 +54,7 @@ export function MobileReaderChrome({
         style={{ height: "var(--stitch-mobile-topbar-h)" }}
       >
         <div className="flex shrink-0 items-center gap-1">
-          <img src="/monograma-cathedra.svg" alt="Cathedra" className="h-7 w-7" />
+          <img src={cathedraLogo} alt="Cathedra" className="h-7 w-7" />
           {title && (
             <p
               className={cn(

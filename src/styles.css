@@ -1,6 +1,9 @@
 @import "tailwindcss";
 @config "../tailwind.config.legacy.ts";
 @import "tw-animate-css";
+/* Tokens e estilos base do Design System Cathedra (cores, espaçamentos, fontes, raios). */
+@import "./legacy-index.css";
+@import "./styles/typography.css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -393,4 +396,12 @@
 
 .shadow-premium-lg {
   box-shadow: 0 10px 40px -10px hsl(var(--foreground) / 0.12), 0 4px 16px -4px hsl(var(--foreground) / 0.08), 0 0 0 1px hsl(var(--foreground) / 0.02);
+}
+
+/* No mobile, páginas com cabeçalho próprio (MobileTopBar / MobileReaderChrome)
+   não exibem também o cabeçalho global — evita dois cabeçalhos empilhados. */
+@media (max-width: 767px) {
+  body:has([data-mobile-chrome]) header[role="banner"] {
+    display: none;
+  }
 }

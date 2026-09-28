@@ -103,6 +103,19 @@ export default {
           },
         },
       },
+      // `max-w-spacing-*` é usado como escala de largura de container (equivalente a
+      // max-w-xs … max-w-4xl). Sem este mapeamento o Tailwind v4 reaproveitaria a
+      // escala de espaçamento (ex.: spacing-4xl = 6rem) e esmagaria os containers.
+      maxWidth: {
+        'spacing-xs': '20rem',
+        'spacing-sm': '24rem',
+        'spacing-md': '28rem',
+        'spacing-lg': '32rem',
+        'spacing-xl': '36rem',
+        'spacing-2xl': '42rem',
+        'spacing-3xl': '48rem',
+        'spacing-4xl': '56rem',
+      },
       spacing: {
         'spacing-0': '0px',
         'spacing-px': '1px',

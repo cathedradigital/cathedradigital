@@ -100,7 +100,7 @@
     --layout-padding: var(--spacing-xl);
     --layout-padding-mobile: var(--spacing-sm);
     --layout-content-width-mobile: 85vw;
-    --header-height: 40px;
+    --header-height: 64px; /* comporta os alvos de toque de 44–48px do cabeçalho */
     --bottom-nav-height: 52px;
     
     /* 8. Icons */
@@ -353,7 +353,7 @@
     --noir-surface-elevated: #111111;
     --noir-text: #f5f5f7;
     --noir-text-muted: #a1a1a6;
-    --noir-text-faint: #424245;
+    --noir-text-faint: #8e8e93; /* ≥ 4.5:1 sobre --noir-bg (WCAG AA) */
     --noir-line: rgba(255, 255, 255, 0.05);
     --noir-line-strong: rgba(255, 255, 255, 0.12);
     --gold: #c9a84c;
@@ -450,7 +450,7 @@
 
   /* High Contrast Focus */
   .high-contrast :focus-visible {
-    @apply ring-4 ring-primary ring-offset-4 ring-offset-background !important;
+    @apply ring-4! ring-primary! ring-offset-4! ring-offset-background!;
   }
 
   html, body {
@@ -524,7 +524,7 @@
   .line-spacing-normal .reader-text { line-height: 1.8; }
   .line-spacing-wide .reader-text { line-height: 2.2; }
 
-  @screen md {
+  @media (min-width: 768px) {
     .reader-text {
       line-height: 2;
     }
@@ -638,19 +638,23 @@
   }
 
   .btn-premium-primary {
-    @apply btn-premium bg-primary text-primary-foreground hover:bg-primary/80;
+    @apply relative overflow-hidden px-spacing-xl py-spacing-md h-[44px] font-medium uppercase tracking-[0.4em] text-[9px] flex items-center justify-center gap-spacing-md active:scale-[0.96] disabled:opacity-20 border-none transition-all duration-300 bg-primary text-primary-foreground hover:bg-primary/80;
+    border-radius: 9999px;
   }
 
   .btn-premium-secondary {
-    @apply btn-premium bg-secondary text-secondary-foreground;
+    @apply relative overflow-hidden px-spacing-xl py-spacing-md h-[44px] font-medium uppercase tracking-[0.4em] text-[9px] flex items-center justify-center gap-spacing-md active:scale-[0.96] disabled:opacity-20 border-none transition-all duration-300 bg-secondary text-secondary-foreground;
+    border-radius: 9999px;
   }
 
   .btn-premium-outline {
-    @apply btn-premium bg-transparent border-primary/10 text-primary/60 hover:border-primary/30 hover:text-primary;
+    @apply relative overflow-hidden px-spacing-xl py-spacing-md h-[44px] font-medium uppercase tracking-[0.4em] text-[9px] flex items-center justify-center gap-spacing-md active:scale-[0.96] disabled:opacity-20 border-none transition-all duration-300 bg-transparent border-primary/10 text-primary/60 hover:border-primary/30 hover:text-primary;
+    border-radius: 9999px;
   }
 
   .btn-premium-ghost {
-    @apply btn-premium bg-transparent text-primary/30 hover:text-primary hover:bg-primary/[0.04];
+    @apply relative overflow-hidden px-spacing-xl py-spacing-md h-[44px] font-medium uppercase tracking-[0.4em] text-[9px] flex items-center justify-center gap-spacing-md active:scale-[0.96] disabled:opacity-20 border-none transition-all duration-300 bg-transparent text-primary/30 hover:text-primary hover:bg-primary/[0.04];
+    border-radius: 9999px;
   }
 
 
@@ -722,7 +726,7 @@
 body:not(.is-scrolling-down) .header-auto-hide,
 .reveal-header-trigger:hover + header,
 header:hover {
-  @apply translate-y-0 opacity-100 pointer-events-auto !important;
+  @apply translate-y-0! opacity-100! pointer-events-auto!;
 }
 
 /* Deep Visual Silence - Refined, Atmospheric, and Contemplative */
@@ -736,7 +740,7 @@ header:hover {
 }
 
 .visual-silence * {
-  @apply transition-all duration-1000 border-transparent !shadow-premium-none;
+  @apply transition-all duration-1000 border-transparent shadow-premium-none!;
 }
 
 .visual-silence header, 
@@ -747,7 +751,7 @@ header:hover {
 
 /* Ensure focus is STILL visible even in visual silence mode for accessibility */
 .visual-silence :focus-visible {
-  @apply ring-1 ring-primary/30 ring-offset-1 ring-offset-background !important;
+  @apply ring-1! ring-primary/30! ring-offset-1! ring-offset-background!;
 }
 
 .visual-silence .premium-card-interactive:hover,
@@ -824,20 +828,20 @@ header:hover {
 
 /* Ensure focus is highly visible when animations are reduced */
 .reduce-animations :focus-visible {
-  @apply ring-4 ring-primary ring-offset-2 !important;
+  @apply ring-4! ring-primary! ring-offset-2!;
   outline: 2px solid hsl(var(--primary)) !important;
 }
 
 /* 10. Visible Focus Mode */
 .visible-focus-mode :focus-visible {
-  @apply ring-4 ring-primary ring-offset-4 ring-offset-background !important;
+  @apply ring-4! ring-primary! ring-offset-4! ring-offset-background!;
   outline: 3px solid hsl(var(--primary)) !important;
 }
 
 .visible-focus-mode [role="button"]:focus,
 .visible-focus-mode button:focus,
 .visible-focus-mode a:focus {
-  @apply ring-4 ring-primary ring-offset-4 !important;
+  @apply ring-4! ring-primary! ring-offset-4!;
 }
 
 /* Layout Density & Reading Rhythm */
