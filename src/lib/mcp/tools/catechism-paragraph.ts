@@ -18,7 +18,7 @@ export default defineTool({
     if (end < from) return { content: [{ type: "text", text: "'to' deve ser >= 'paragraph'." }], isError: true };
     if (end - from + 1 > 30) return { content: [{ type: "text", text: "Intervalo máximo: 30 parágrafos." }], isError: true };
 
-    const sb = createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_PUBLISHABLE_KEY!, {
+    const sb = createClient((process.env.SUPABASE_URL || import.meta.env.VITE_SUPABASE_URL)!, (process.env.SUPABASE_PUBLISHABLE_KEY || import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY)!, {
       auth: { persistSession: false, autoRefreshToken: false },
     });
     const { data, error } = await sb

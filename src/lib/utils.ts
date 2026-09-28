@@ -70,7 +70,7 @@ export function getElementSelector(el: HTMLElement): string {
       break;
     } else {
       let sib = el, nth = 1;
-      while (sib = sib.previousElementSibling as HTMLElement) {
+      while ((sib = sib.previousElementSibling as HTMLElement)) {
         if (sib.nodeName.toLowerCase() == selector) nth++;
       }
       if (nth != 1) selector += ":nth-of-type(" + nth + ")";

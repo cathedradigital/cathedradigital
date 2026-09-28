@@ -37,6 +37,7 @@ import type { ResumeItem } from '@/modules/atrium/types';
 import { useAuth } from '@/hooks/useAuth';
 import AtriumReception from '@/components/cathedra/AtriumReception';
 import { SpaceDoors, type SpaceDoor, SpaceLayout, SpaceFooter } from '@/components/cathedra/space/SpaceLayout';
+import { useChurchContext } from '@/hooks/useChurchContext';
 
 
 // ─── Copy oficial ────────────────────────────────────────────────────────────
@@ -103,6 +104,7 @@ const AtriumHome: React.FC = () => {
   const { authenticated } = useAuth();
   const resume = useResume().slice(0, 2);
   const liturgy = useLiturgyToday();
+  const church = useChurchContext();
   const themes = useFeaturedThemes().slice(0, 3);
   const suggestions = useSearchSuggestions().slice(0, 5);
   const recs = useRecommendations().slice(0, 3);
@@ -117,7 +119,7 @@ const AtriumHome: React.FC = () => {
   });
 
   const saintOfDay =
-    liturgy?.saintOfDay?.name ?? 'Natividade de São João Batista';
+    liturgy?.saintOfDay?.name ?? church.todaySaint?.name ?? 'Santos do dia';
   const saintQuote = '"Ele deve crescer, eu devo diminuir."';
 
   const submitSearch = (value: string) => {
@@ -450,7 +452,7 @@ const AtriumHome: React.FC = () => {
             </div>
             <div className="p-6 border border-border/20 bg-accent rounded-premium text-center">
               <span className="text-[10px] font-black uppercase tracking-widest text-gold-text block mb-2">PAPA ATUAL</span>
-              <p className="font-display text-lg italic text-primary">Francisco</p>
+              <p className="font-display text-lg italic text-primary">{church.currentPope?.name ?? 'Leão XIV'}</p>
             </div>
             <div className="p-6 border border-border/20 bg-accent rounded-premium text-center">
               <span className="text-[10px] font-black uppercase tracking-widest text-gold-text block mb-2">LITURGIA</span>

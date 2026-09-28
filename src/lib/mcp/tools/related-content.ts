@@ -14,7 +14,7 @@ export default defineTool({
   },
   annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
   handler: async ({ kind, ref, limit }) => {
-    const sb = createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_PUBLISHABLE_KEY!, {
+    const sb = createClient((process.env.SUPABASE_URL || import.meta.env.VITE_SUPABASE_URL)!, (process.env.SUPABASE_PUBLISHABLE_KEY || import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY)!, {
       auth: { persistSession: false, autoRefreshToken: false },
     });
     const max = limit ?? 20;

@@ -37,7 +37,7 @@ const RealTimeTelemetryPanel = lazy(() => import('./admin/RealTimeTelemetryPanel
 const ProductionReadyDashboard = lazy(() => import('@/pages/admin/ProductionReadyDashboard'));
 const GlobalKnowledgeAudit = lazy(() => import('@/pages/admin/GlobalKnowledgeAudit'));
 
-interface UserProfile extends AdminUser {}
+type UserProfile = AdminUser;
 
 interface CRMUser {
   id: string;

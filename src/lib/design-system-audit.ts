@@ -32,7 +32,7 @@ export interface AuditResult {
  */
 const getActualBackgroundColor = (element: HTMLElement): string => {
   let current: HTMLElement | null = element;
-  let colors: string[] = [];
+  const colors: string[] = [];
 
   while (current) {
     const style = window.getComputedStyle(current);

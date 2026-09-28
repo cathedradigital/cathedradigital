@@ -64,7 +64,10 @@ function exportSnapshotAsJson(snap: NexusMetricsSnapshot): void {
 
 export const NexusMetricsOverlay: React.FC = () => {
   if (!import.meta.env.DEV) return null;
+  return <NexusMetricsOverlayInner />;
+};
 
+const NexusMetricsOverlayInner: React.FC = () => {
   const [snap, setSnap] = React.useState<NexusMetricsSnapshot>(() =>
     getNexusMetricsSnapshot(),
   );

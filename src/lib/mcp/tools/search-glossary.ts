@@ -13,8 +13,8 @@ export default defineTool({
   },
   annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
   handler: async ({ query, limit }) => {
-    const url = process.env.SUPABASE_URL!;
-    const key = process.env.SUPABASE_PUBLISHABLE_KEY!;
+    const url = (process.env.SUPABASE_URL || import.meta.env.VITE_SUPABASE_URL)!;
+    const key = (process.env.SUPABASE_PUBLISHABLE_KEY || import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY)!;
     const sb = createClient(url, key, { auth: { persistSession: false, autoRefreshToken: false } });
     const { data, error } = await sb
       .from("glossary")

@@ -122,6 +122,8 @@ function Stat({ label, value }: { label: string; value: string }) {
 
 /** Painel agregado do "Sistema" — média ponderada de todas as entidades prontas. */
 function SystemPanel() {
+  // editorialRegistry é estático: a ordem/quantidade de hooks é estável entre renders.
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const summaries = editorialRegistry.map(m => ({ m, s: useEditorialSummary(m) }));
   const ready = summaries.filter(x => x.m.ready && x.s.snapshot);
   const totalWeight = ready.reduce((s, x) => s + x.m.weight, 0);

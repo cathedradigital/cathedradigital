@@ -60,8 +60,8 @@ function diffLines(a: string, b: string): Array<{ type: 'eq' | 'add' | 'del'; te
 }
 
 const DiffView: React.FC<{ label: string; oldVal: string | null; newVal: string | null }> = ({ label, oldVal, newVal }) => {
-  if ((oldVal || '') === (newVal || '')) return null;
   const lines = useMemo(() => diffLines(oldVal || '', newVal || ''), [oldVal, newVal]);
+  if ((oldVal || '') === (newVal || '')) return null;
   const adds = lines.filter(l => l.type === 'add').length;
   const dels = lines.filter(l => l.type === 'del').length;
   return (

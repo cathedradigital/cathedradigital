@@ -352,7 +352,7 @@ const Bible: React.FC = () => {
         'Apocalypse': 'Apocalipse'
       };
       
-      while(node = walker.nextNode()) {
+      while ((node = walker.nextNode())) {
         const text = node.textContent || '';
         if (text.trim()) {
           // Correção agressiva de termos mapeados

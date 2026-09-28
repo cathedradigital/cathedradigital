@@ -20,7 +20,7 @@ export default defineTool({
   handler: async ({ content, mood, entry_date }, ctx: ToolContext) => {
     if (!ctx.isAuthenticated())
       return { content: [{ type: "text", text: "Não autenticado." }], isError: true };
-    const sb = createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_PUBLISHABLE_KEY!, {
+    const sb = createClient((process.env.SUPABASE_URL || import.meta.env.VITE_SUPABASE_URL)!, (process.env.SUPABASE_PUBLISHABLE_KEY || import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY)!, {
       global: { headers: { Authorization: `Bearer ${ctx.getToken()}` } },
       auth: { persistSession: false, autoRefreshToken: false },
     });

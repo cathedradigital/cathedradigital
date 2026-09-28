@@ -17,7 +17,6 @@ export function useWakeLock(active: boolean) {
 
   const request = useCallback(async () => {
     try {
-      // @ts-ignore experimental API
       const s = await navigator.wakeLock?.request('screen');
       if (s) {
         sentinelRef.current = s;

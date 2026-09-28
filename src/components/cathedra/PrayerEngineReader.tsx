@@ -488,6 +488,25 @@ export const PrayerEngineReader: React.FC<Props> = ({
     !session.session?.completed_at &&
     completedCount > 0;
 
+  // Nexus canônico da oração inteira (usado pelo slot do ReaderShell).
+  const prayerNexus = useMemo(
+    () =>
+      resolvePrayerAutoNexus({
+        slug: prayer.slug,
+        title: prayer.title,
+        category: prayer.category,
+        related_bible: prayer.related_bible,
+        related_catechism: prayer.related_catechism,
+        related_saints: prayer.related_saints,
+        related_glossary: prayer.related_glossary,
+        block_refs: blocks.map((b) => ({
+          bible: b.refs?.bible,
+          catechism: b.refs?.catechism,
+        })),
+      }),
+    [prayer, blocks],
+  );
+
   if (showResumeCard) {
     const label = currentMystery
       ? `${activeSection?.title ?? 'Seção'} • ${currentMystery.title}`
@@ -1044,6 +1063,7 @@ export const PrayerEngineReader: React.FC<Props> = ({
   );
 
 
+
   if (focus) {
     return (
       <>
@@ -1086,24 +1106,6 @@ export const PrayerEngineReader: React.FC<Props> = ({
     );
   }
 
-  // Nexus canônico da oração inteira (usado pelo slot do ReaderShell).
-  const prayerNexus = useMemo(
-    () =>
-      resolvePrayerAutoNexus({
-        slug: prayer.slug,
-        title: prayer.title,
-        category: prayer.category,
-        related_bible: prayer.related_bible,
-        related_catechism: prayer.related_catechism,
-        related_saints: prayer.related_saints,
-        related_glossary: prayer.related_glossary,
-        block_refs: blocks.map((b) => ({
-          bible: b.refs?.bible,
-          catechism: b.refs?.catechism,
-        })),
-      }),
-    [prayer, blocks],
-  );
 
   // Rota de exceção: MysteryHero (Rosário) toma a tela inteira antes da
   // dezena — não passa pelo ReaderShell, análogo ao Modo Celebração do Missal.

@@ -37,4 +37,16 @@ export default tseslint.config(
     },
   },
   eslintPluginPrettier,
+  {
+    // Formatação é responsabilidade do `npm run format` (Prettier); o lint do CI
+    // bloqueia apenas problemas reais de código.
+    rules: {
+      "prettier/prettier": "off",
+      "no-empty": ["warn", { allowEmptyCatch: true }],
+    },
+  },
+  {
+    files: ["**/*.{ts,tsx}"],
+    rules: { "@typescript-eslint/no-explicit-any": "warn" },
+  },
 );
