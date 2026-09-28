@@ -16,36 +16,37 @@ Deno.serve(async (req) => {
     });
   }
 
-  const json = (body: unknown, status = 200) => new Response(JSON.stringify(body), {\n    status,\n    headers: {\n      "Content-Type": "application/json",\n      "Access-Control-Allow-Origin": "*",\n      "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",\n    },\n  });\n\n  const key = Deno.env.get("LOVABLE_API_KEY");
+  const json = (body: unknown, status = 200) => new Response(JSON.stringify(body), {
+    status,
+    headers: {
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+    },
+  });
+
+  const key = Deno.env.get("LOVABLE_API_KEY");
   if (!key) {
-    return new Response(JSON.stringify({ error: "Gateway de IA não configurado." }), {
-      status: 503,
-      headers: { "Content-Type": "application/json" },
-    });
+    return json({ error: "Gateway de IA não configurado." }, 503);
   }
 
   let body;
   try {
     body = await req.json();
   } catch {
-    return new Response(JSON.stringify({ error: "JSON inválido." }), {
-      status: 400,
-      headers: { "Content-Type": "application/json" },
-    });
+    return json({ error: "JSON inválido." }, 400);
   }
 
   const query = typeof body?.query === "string" ? body.query.trim() : "";
   if (!query || query.length > 4000) {
-    return new Response(JSON.stringify({ error: "Pergunta inválida." }), {
-      status: 400,
-      headers: { "Content-Type": "application/json" },
-    });
+    return json({ error: "Pergunta inválida." }, 400);
   }
 
   const history = Array.isArray(body?.history)
     ? body.history.slice(-6).filter((m) =>
         m && (m.role === "user" || m.role === "assistant") &&
-        typeof m.content === "string" && m.content.trim().length > 0\n        && m.content.length <= 4000
+        typeof m.content === "string" && m.content.trim().length > 0
+        && m.content.length <= 4000
       )
     : [];
 
@@ -57,7 +58,8 @@ Deno.serve(async (req) => {
     "Quando não houver fonte verificável no contexto, diga isso.",
     "Não apresente opinião do modelo como doutrina.",
     "Responda em português brasileiro, de forma clara e útil.",
-  ].join("\n");
+  ].join("
+");
 
   const messages = [
     { role: "system", content: system },
@@ -97,24 +99,16 @@ Deno.serve(async (req) => {
 
     if (!response.ok) {
       if (response.status === 429) {
-        return new Response(JSON.stringify({
-          error: "Limite do serviço de IA atingido.",
-          limit_reached: true,
-        }), { status: 429, headers: { "Content-Type": "application/json" } });
+        return json({ error: "Limite do serviço de IA atingido.", limit_reached: true }, 429);
       }
 
       console.error("Logos upstream error", response.status, payload?.error?.message);
-      return new Response(JSON.stringify({
-        error: "Serviço de IA temporariamente indisponível.",
-      }), { status: 502, headers: { "Content-Type": "application/json" } });
+      return json({ error: "Serviço de IA temporariamente indisponível." }, 502);
     }
 
     const text = payload?.choices?.[0]?.message?.content;
     if (typeof text !== "string" || !text.trim()) {
-      return new Response(JSON.stringify({ error: "O serviço de IA respondeu sem conteúdo." }), {
-        status: 502,
-        headers: { "Content-Type": "application/json" },
-      });
+      return json({ error: "O serviço de IA respondeu sem conteúdo." }, 502);
     }
 
     return new Response(JSON.stringify({ text: text.trim() }), {
@@ -126,9 +120,7 @@ Deno.serve(async (req) => {
     });
   } catch (error) {
     console.error("Logos gateway failure", String(error));
-    return new Response(JSON.stringify({
-      error: "Não foi possível conectar ao serviço de IA.",
-    }), { status: 502, headers: { "Content-Type": "application/json" } });
+    return json({ error: "Não foi possível conectar ao serviço de IA." }, 502);
   } finally {
     clearTimeout(timeout);
   }
