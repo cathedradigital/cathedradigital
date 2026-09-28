@@ -135,7 +135,7 @@ const ContaConfiguracoes = lazy(() => import('./pages/conta/sections/Configuraco
 const ContaAdmin = lazy(() => import('./pages/conta/sections/AdminSection'));
 const GlobalSearchPage = lazy(() => import('./components/cathedra/GlobalSearchPage'));
 const AtriumBuscarPage = lazy(() => import('./pages/AtriumBuscarPage'));
-const LogosAI = lazy(() => import('./components/cathedra/LogosAI'));
+const LogosPage = lazy(() => import('./pages/LogosPage'));
 const Index = lazy(() => import('./pages/Index'));
 const HomeUnified = lazy(() => import('./pages/HomeUnified'));
 const AtriumHome = lazy(() => import('./pages/AtriumHome'));
@@ -656,7 +656,7 @@ const AppLayout: React.FC = () => {
               <Route path="/buscar" element={<Suspense fallback={<LoadingFallback />}><AtriumBuscarPage /></Suspense>} />
               <Route path="/buscar-legacy" element={<Suspense fallback={<LoadingFallback />}><GlobalSearchPage /></Suspense>} />
               <Route path="/search" element={<Navigate to="/buscar" replace />} />
-              <Route path="/logos" element={<Navigate to="/buscar" replace />} />
+              <Route path="/logos" element={<Suspense fallback={<LoadingFallback />}><LogosPage /></Suspense>} />
 
               <Route path="/chat" element={<Navigate to="/logos" replace />} />
               <Route path="/auth" element={<Suspense fallback={<LoadingFallback />}><Auth onSuccess={() => navigate(resolveAuthHome(), { replace: true })} /></Suspense>} />
