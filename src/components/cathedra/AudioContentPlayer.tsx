@@ -6,6 +6,7 @@ import { Icons } from '../../constants';
 import { useAuth } from '@/hooks/useAuth';
 import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
 import { toast } from 'sonner';
+import { PUBLIC_SUPABASE_PUBLISHABLE_KEY, PUBLIC_SUPABASE_URL } from '@/integrations/supabase/publicConfig';
 
 interface AudioContentPlayerProps {
   text: string;
@@ -95,7 +96,7 @@ const AudioContentPlayer: React.FC<AudioContentPlayerProps> = ({
     try {
       const { data: { session } } = await supabase.auth.getSession();
       
-      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/elevenlabs-tts`, {
+      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL || PUBLIC_SUPABASE_URL}/functions/v1/elevenlabs-tts`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${session?.access_token}`,
