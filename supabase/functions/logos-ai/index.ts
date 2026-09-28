@@ -16,7 +16,7 @@ Deno.serve(async (req) => {
     });
   }
 
-  const key = Deno.env.get("LOVABLE_API_KEY");
+  const json = (body: unknown, status = 200) => new Response(JSON.stringify(body), {\n    status,\n    headers: {\n      "Content-Type": "application/json",\n      "Access-Control-Allow-Origin": "*",\n      "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",\n    },\n  });\n\n  const key = Deno.env.get("LOVABLE_API_KEY");
   if (!key) {
     return new Response(JSON.stringify({ error: "Gateway de IA não configurado." }), {
       status: 503,
@@ -45,7 +45,7 @@ Deno.serve(async (req) => {
   const history = Array.isArray(body?.history)
     ? body.history.slice(-6).filter((m) =>
         m && (m.role === "user" || m.role === "assistant") &&
-        typeof m.content === "string" && m.content.trim().length > 0
+        typeof m.content === "string" && m.content.trim().length > 0\n        && m.content.length <= 4000
       )
     : [];
 
