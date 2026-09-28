@@ -214,7 +214,7 @@ const HomeUnified: React.FC = () => {
                 id="home-search"
                 type="text"
                 placeholder="O que deseja descobrir hoje?"
-                className="w-full bg-transparent text-lg md:text-2xl outline-none placeholder:italic"
+                className="w-full bg-transparent text-lg md:text-2xl outline-none placeholder:italic placeholder:text-white/60"
                 style={{
                   color: 'var(--noir-text)',
                   fontFamily: "var(--font-display)",
@@ -326,13 +326,13 @@ const HomeUnified: React.FC = () => {
                   </Link>
                 </div>
               ) : (
-                <div className="border border-primary/5 rounded-premium bg-card/40 p-6 text-center">
+                <div className="border border-[color:var(--noir-line-strong)] rounded-premium bg-[var(--noir-surface)] p-6 text-center">
                   <Icons.History className="w-8 h-8 text-gold/20 mx-auto mb-3" />
                   <p className="text-xs text-noir-text-muted">Inicie uma nova leitura para que possamos guardar seu progresso.</p>
                 </div>
               )}
 
-              <div className="p-6 border border-primary/5 rounded-premium bg-card/40">
+              <div className="p-6 border border-[color:var(--noir-line-strong)] rounded-premium bg-[var(--noir-surface)]">
                 <div className="flex items-center justify-between mb-6">
                   <Eyebrow>Sua Ofensiva</Eyebrow>
                   <span className="text-lg">🔥</span>

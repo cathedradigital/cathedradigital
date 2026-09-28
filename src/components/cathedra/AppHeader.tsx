@@ -54,7 +54,7 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
         )}
         role="banner"
       >
-        <div className={cn("flex items-center justify-between py-0 px-spacing-sm md:px-[var(--layout-padding)] max-w-spacing-4xl mx-auto", !isLanding || user ? "h-full" : "")}>
+        <div className={cn("flex items-center justify-between py-0 px-spacing-sm md:px-[var(--layout-padding)] max-w-7xl mx-auto", !isLanding || user ? "h-full" : "")}>
 
           {/* Logo Section — assinatura editorial Playfair (Sprint Visual 3.0) */}
           <div 
@@ -117,7 +117,7 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
                   variant="ghost"
                   size="icon"
                   onClick={(e) => isLegitimateClick(e) && navigate(-1)}
-                  className="w-[44px] h-[44px] rounded-premium-full border border-primary/5 hover:bg-primary/[0.02] transition-all duration-300 tap-premium"
+                  className="hidden sm:inline-flex w-[44px] h-[44px] rounded-premium-full border border-primary/5 hover:bg-primary/[0.02] transition-all duration-300 tap-premium"
                   aria-label={t('back') || 'Voltar'}
                 >
                   <Icons.ChevronLeft className="opacity-50 group-hover:opacity-100 transition-opacity" />

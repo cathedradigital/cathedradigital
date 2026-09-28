@@ -164,7 +164,7 @@ const AcervoHomePage: React.FC = () => {
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-spacing-md">
               {/* SSoT: Papa Atual */}
-              <Link to="/papas" className="group">
+              <Link to="/papas" className="group" aria-label={`Papa atual: ${currentPope?.name || 'Leão XIV'}`}>
                 <EditorialCard density="dense" className="h-full bg-primary/[0.01] hover:bg-primary/[0.03] border-primary/10">
                   <div className="flex items-center gap-spacing-md">
                     <div className="w-16 h-16 rounded-full overflow-hidden border border-primary/20 shrink-0">
@@ -184,7 +184,7 @@ const AcervoHomePage: React.FC = () => {
               </Link>
 
               {/* SSoT: Santo do Dia */}
-              <Link to="/santos" className="group">
+              <Link to="/santos" className="group" aria-label={`Santo do dia: ${todaySaint?.name || 'ver santos'}`}>
                 <EditorialCard density="dense" className="h-full bg-primary/[0.01] hover:bg-primary/[0.03] border-primary/10">
                    <div className="flex items-center gap-spacing-md">
                     <div className="w-16 h-16 rounded-full overflow-hidden border border-primary/20 shrink-0">

@@ -164,8 +164,8 @@ const LiturgiaPage: React.FC = () => {
              <Icons.Liturgy className="w-spacing-xl h-spacing-xl text-secondary" />
            </div>
            <div className="space-y-spacing-xs">
-             <h2 className="font-display text-4xl text-primary/40 tracking-widest uppercase italic">Liturgia</h2>
-             <p className="text-[10px] uppercase tracking-[0.4em] text-secondary/60 font-bold">Verbum Domini</p>
+             <h1 className="font-display text-4xl text-primary/70 tracking-widest uppercase italic">Liturgia</h1>
+             <p className="text-[10px] uppercase tracking-[0.4em] text-secondary font-bold">Verbum Domini</p>
            </div>
            
            {readings?.colorToken && (

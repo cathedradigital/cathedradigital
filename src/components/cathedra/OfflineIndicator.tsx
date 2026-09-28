@@ -47,7 +47,7 @@ const OfflineIndicator: React.FC = () => {
   }
 
   return (
-    <div className={`fixed bottom-spacing-md left-spacing-2xs/2 -translate-x-1/2 z-[200] px-spacing-md py-spacing-xs ${color} text-white rounded-premium-full shadow-premium-hover flex flex-col items-center gap-spacing-2xs animate-in fade-in slide-in-from-bottom-spacing-md transition-colors`}>
+    <div className={`fixed bottom-[calc(var(--spacing-md)+72px)] lg:bottom-spacing-md left-1/2 -translate-x-1/2 z-[200] px-spacing-md py-spacing-xs ${color} text-white rounded-premium-full shadow-premium-hover flex flex-col items-center gap-spacing-2xs animate-in fade-in slide-in-from-bottom-spacing-md transition-colors`}>
       <div className="flex items-center gap-spacing-xs">
         <span className="w-spacing-xs h-spacing-xs rounded-premium-full bg-white/70 animate-pulse" />
         <h2 className="text-premium-xs font-bold uppercase tracking-wider">
