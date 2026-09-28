@@ -19,6 +19,7 @@ import {
   LineChart, Line, XAxis, YAxis, ResponsiveContainer, Tooltip, CartesianGrid, Legend,
 } from 'recharts';
 import { downloadSnapshotCsv, downloadTrendCsv, downloadFailingCsv } from '@/lib/cidComplianceCsv';
+import { PUBLIC_SUPABASE_PUBLISHABLE_KEY, PUBLIC_SUPABASE_URL } from '@/integrations/supabase/publicConfig';
 
 type Counts = { conforme: number; herdado: number; na: number; ausente: number; desconhecido?: number };
 type Category = { total: number; cidOk: number; failed: number };
@@ -49,12 +50,12 @@ export default function CidComplianceDashboardPage() {
     queryFn: async (): Promise<StatsResponse> => {
       const { data: session } = await supabase.auth.getSession();
       const token = session.session?.access_token;
-      const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/cid-compliance-stats?days=${days}`;
+      const url = `${import.meta.env.VITE_SUPABASE_URL || PUBLIC_SUPABASE_URL}/functions/v1/cid-compliance-stats?days=${days}`;
       const res = await fetch(url, {
         method: 'GET',
         headers: {
-          Authorization: `Bearer ${token ?? import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
-          apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string,
+          Authorization: `Bearer ${token ?? (import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY || PUBLIC_SUPABASE_PUBLISHABLE_KEY)}`,
+          apikey: (import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string) || PUBLIC_SUPABASE_PUBLISHABLE_KEY,
         },
       });
       if (!res.ok) throw new Error(`HTTP ${res.status}: ${await res.text()}`);
