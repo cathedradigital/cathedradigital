@@ -73,11 +73,6 @@ function makeDbClient(req: Request) {
       persistSession: false,
       autoRefreshToken: false,
     },
-    global: {
-      headers: req.headers.get("Authorization")
-        ? { Authorization: req.headers.get("Authorization")! }
-        : undefined,
-    },
   });
 }
 
@@ -142,7 +137,60 @@ function contextNode(type: string | null, context: string, journeyId: string | n
   return null;
 }
 
+async function searchBibleReference(
+  db: ReturnType<typeof createClient>,
+  input: string,
+): Promise<RetrievedSource[]> {
+  const match = input.match(/\b([1-3]?\s?[A-Za-zÀ-ÿ]+)\s+(\d+)\s*[,\:]\s*(\d+)(?:\s*[-–]\s*(\d+))?\b/);
+  if (!match) return [];
+
+  const book = match[1].replace(/\s+/g, "");
+  const chapter = Number(match[2]);
+  const verse = Number(match[3]);
+  const verseEnd = Number(match[4] || match[3]);
+
+  const { data: bookRow } = await db
+    .from("bible_books")
+    .select("id,name,abbrev,testament")
+    .ilike("abbrev", book)
+    .limit(1)
+    .maybeSingle();
+  if (!bookRow) return [];
+
+  const { data: chapterRow } = await db
+    .from("bible_chapters")
+    .select("id,number")
+    .eq("book_id", bookRow.id)
+    .eq("number", chapter)
+    .limit(1)
+    .maybeSingle();
+  if (!chapterRow) return [];
+
+  const { data: verses } = await db
+    .from("bible_verses")
+    .select("number,text,translation_id")
+    .eq("chapter_id", chapterRow.id)
+    .gte("number", verse)
+    .lte("number", Math.min(verseEnd, verse + 49))
+    .order("number", { ascending: true });
+  if (!verses?.length) return [];
+
+  const translationId = verses[0].translation_id;
+  const filtered = verses.filter((v) => v.translation_id === translationId);
+  const refLabel = String(bookRow.abbrev) + " " + chapter + "," + verse +
+    (verseEnd !== verse ? "-" + verseEnd : "");
+
+  return [{
+    kind: "bible_verse",
+    ref: refLabel,
+    title: refLabel + " — " + String(bookRow.name),
+    excerpt: filtered.map((v) => String(v.number) + " " + String(v.text)).join(" ").slice(0, 1200),
+    href: "/biblia/" + encodeURIComponent(String(bookRow.abbrev)) + "/" + chapter,
+  }];
+}
+
 async function searchRealSources(db: ReturnType<typeof createClient>, query: string, limit = 8): Promise<RetrievedSource[]> {
+  const bibleHits = await searchBibleReference(db, query);
   const terms = queryTerms(query);
   if (terms.length === 0) return [];
 
@@ -256,7 +304,7 @@ async function searchRealSources(db: ReturnType<typeof createClient>, query: str
     });
   }
 
-  return hits.slice(0, 18);
+  return [...bibleHits, ...hits].slice(0, 18);
 }
 
 async function nexusForNode(
@@ -268,12 +316,12 @@ async function nexusForNode(
     db.from("nexus_relations")
       .select("id, relation_type, source_kind, source_ref, target_kind, target_ref, note, confidence, attributed_to")
       .eq("source_kind", kind)
-      .filter("source_ref->>id", "eq", ref)
+      .or("source_ref->>id.eq." + ref + ",source_ref->>slug.eq." + ref + ",source_ref->>ref.eq." + ref)
       .limit(40),
     db.from("nexus_relations")
       .select("id, relation_type, source_kind, source_ref, target_kind, target_ref, note, confidence, attributed_to")
       .eq("target_kind", kind)
-      .filter("target_ref->>id", "eq", ref)
+      .or("target_ref->>id.eq." + ref + ",target_ref->>slug.eq." + ref + ",target_ref->>ref.eq." + ref)
       .limit(40),
   ]);
 
