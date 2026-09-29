@@ -45,6 +45,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
   const [isTyping, setIsTyping] = useState(false);
   const abortControllerRef = React.useRef<AbortController | null>(null);
   const [history, setHistory] = useState<{ role: 'user' | 'assistant'; content: string }[]>([]);
+  const [retrievedSources, setRetrievedSources] = useState<{ kind: string; ref: string; title: string; relation?: string; note?: string | null }[]>([]);
   const lastLoadedContextRef = React.useRef<string | undefined>(undefined);
   const [visibleMessages, setVisibleMessages] = useState(10); // Simple pagination
   const chatEndRef = React.useRef<HTMLDivElement>(null);
@@ -149,6 +150,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
 
       if (error) throw error;
       
+      setRetrievedSources(Array.isArray(data?.sources) ? data.sources.slice(0, 8) : []);
       const assistantMsg = data.text || 'Desculpe, não consegui processar sua pergunta agora.';
       
       setIsTyping(true);
@@ -344,6 +346,21 @@ const LogosAI: React.FC<LogosAIProps> = ({
                     </div>
                   </motion.div>
                 ))}
+
+                {retrievedSources.length > 0 && !isLoading && !isTyping && (
+                  <div className="pt-spacing-lg border-t border-primary/5">
+                    <p className="text-[9px] font-black uppercase tracking-[0.2em] text-secondary/60 mb-spacing-sm">Fontes consultadas pelo Nexus</p>
+                    <ul className="space-y-1.5">
+                      {retrievedSources.map((source, index) => (
+                        <li key={source.kind + ':' + source.ref + ':' + index} className="text-[10px] text-muted-foreground/80 leading-relaxed">
+                          <span className="font-semibold text-primary/70">{source.title}</span>
+                          <span className="ml-1 opacity-60">({source.kind}:{source.ref})</span>
+                          {source.relation && <span className="ml-1 opacity-60">· {source.relation}</span>}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
 
                 {history.length > 0 && !isLoading && !isTyping && (
                   <motion.div 
