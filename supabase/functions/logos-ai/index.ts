@@ -312,20 +312,25 @@ async function nexusForNode(
   kind: string,
   ref: string,
 ): Promise<NexusRow[]> {
-  const [outgoing, incoming] = await Promise.all([
-    db.from("nexus_relations")
-      .select("id, relation_type, source_kind, source_ref, target_kind, target_ref, note, confidence, attributed_to")
-      .eq("source_kind", kind)
-      .or("source_ref->>id.eq." + ref + ",source_ref->>slug.eq." + ref + ",source_ref->>ref.eq." + ref)
-      .limit(40),
-    db.from("nexus_relations")
-      .select("id, relation_type, source_kind, source_ref, target_kind, target_ref, note, confidence, attributed_to")
-      .eq("target_kind", kind)
-      .or("target_ref->>id.eq." + ref + ",target_ref->>slug.eq." + ref + ",target_ref->>ref.eq." + ref)
-      .limit(40),
+  const [outId, outSlug, outRef, inId, inSlug, inRef] = await Promise.all([
+    db.from("nexus_relations").select("id, relation_type, source_kind, source_ref, target_kind, target_ref, note, confidence, attributed_to")
+      .eq("source_kind", kind).filter("source_ref->>id", "eq", ref).limit(40),
+    db.from("nexus_relations").select("id, relation_type, source_kind, source_ref, target_kind, target_ref, note, confidence, attributed_to")
+      .eq("source_kind", kind).filter("source_ref->>slug", "eq", ref).limit(40),
+    db.from("nexus_relations").select("id, relation_type, source_kind, source_ref, target_kind, target_ref, note, confidence, attributed_to")
+      .eq("source_kind", kind).filter("source_ref->>ref", "eq", ref).limit(40),
+    db.from("nexus_relations").select("id, relation_type, source_kind, source_ref, target_kind, target_ref, note, confidence, attributed_to")
+      .eq("target_kind", kind).filter("target_ref->>id", "eq", ref).limit(40),
+    db.from("nexus_relations").select("id, relation_type, source_kind, source_ref, target_kind, target_ref, note, confidence, attributed_to")
+      .eq("target_kind", kind).filter("target_ref->>slug", "eq", ref).limit(40),
+    db.from("nexus_relations").select("id, relation_type, source_kind, source_ref, target_kind, target_ref, note, confidence, attributed_to")
+      .eq("target_kind", kind).filter("target_ref->>ref", "eq", ref).limit(40),
   ]);
 
-  return [...((outgoing.data ?? []) as NexusRow[]), ...((incoming.data ?? []) as NexusRow[])];
+  return [
+    ...(outId.data ?? []), ...(outSlug.data ?? []), ...(outRef.data ?? []),
+    ...(inId.data ?? []), ...(inSlug.data ?? []), ...(inRef.data ?? []),
+  ] as NexusRow[];
 }
 
 async function retrieveNexus(
