@@ -161,7 +161,6 @@ const AtriumCommunityPage: React.FC = () => {
   return (
     <>
       <MobileTopBar kicker="Cathedra" title="Igreja Viva" />
-    <>
       <Helmet>
         <title>Comunidade — Cathedra</title>
         <meta
