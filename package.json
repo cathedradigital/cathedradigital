@@ -19,7 +19,7 @@
     "validate:security": "node scripts/validate-security-boundaries.mjs",
     "deploy:cloudflare": "npm run build && wrangler deploy",
     "cf-typegen": "wrangler types",
-    "deploy": "wrangler deploy"
+    "deploy": "npm run build && wrangler deploy"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.9.1",
