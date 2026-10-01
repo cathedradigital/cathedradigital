@@ -20,7 +20,7 @@ export interface MagisteriumNexusInput {
 }
 
 const BUCKETS: readonly ReaderNexusBucket[] = [
-  'catechism', 'bible', 'glossary', 'journey', 'saint', 'prayer',
+  'catechism', 'bible', 'father', 'glossary', 'journey', 'saint', 'prayer',
 ];
 
 const CACHE_MAX = 64;
