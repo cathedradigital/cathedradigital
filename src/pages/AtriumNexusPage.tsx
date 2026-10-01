@@ -17,6 +17,7 @@
  */
 
 import React, { useEffect, useState } from 'react';
+import { MobileTopBar } from '@/components/mobile/MobileTopBar';
 import { Helmet } from '@/lib/helmet-compat';
 import { Link, useNavigate } from '@/lib/rr-compat';
 import {
@@ -144,7 +145,9 @@ const AtriumNexusPage: React.FC = () => {
         if (!cancelled) setLoading(false);
       }
     })();
-    return () => {
+    return (
+    <MobileTopBar kicker="Cathedra" title="Nexus" transparent />
+) => {
       cancelled = true;
     };
   }, []);
