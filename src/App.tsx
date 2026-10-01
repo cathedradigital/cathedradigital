@@ -727,7 +727,7 @@ const AppLayout: React.FC = () => {
               <Route path="/aparicoes" element={<Suspense fallback={<LoadingFallback />}><AparicoesPage /></Suspense>} />
               <Route path="/dogmas" element={<Suspense fallback={<LoadingFallback />}><DogmasPage /></Suspense>} />
 
-              {/* Liturgia & Oração — rotas canônicas validadas */}
+              {/* Liturgia & Oração — rotas canônicas validadas e publicáveis */}
               <Route path="/liturgia" element={<Suspense fallback={<LoadingFallback />}><DevocionalMobileShell title="Liturgia"><LiturgiaPage /></DevocionalMobileShell></Suspense>} />
               <Route path="/liturgia/dia" element={<Suspense fallback={<LoadingFallback />}><DevocionalMobileShell title="Dia Litúrgico" kicker="Cathedra · Liturgia"><DiaLiturgicoPage /></DevocionalMobileShell></Suspense>} />
               <Route path="/liturgia/dia/:d" element={<Suspense fallback={<LoadingFallback />}><DevocionalMobileShell title="Dia Litúrgico" kicker="Cathedra · Liturgia"><DiaLiturgicoPage /></DevocionalMobileShell></Suspense>} />
