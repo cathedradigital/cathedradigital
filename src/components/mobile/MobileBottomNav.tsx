@@ -66,8 +66,8 @@ export function MobileBottomNav({
             to={item.to}
             aria-current={isActive ? "page" : undefined}
             className={cn(
-              "group flex flex-1 flex-col items-center justify-center gap-1",
-              "px-2 py-2 transition-colors",
+              "group flex min-w-0 flex-1 flex-col items-center justify-center gap-1 overflow-hidden",
+              "min-w-0 px-1 py-2 transition-colors",
               "focus-visible:outline-none focus-visible:ring-2",
               "focus-visible:ring-inset focus-visible:ring-stitch-secondary",
             )}
@@ -89,7 +89,7 @@ export function MobileBottomNav({
             </span>
             <span
               className={cn(
-                "font-[var(--font-stitch-label)] text-[11px] font-bold uppercase tracking-[0.08em]",
+                "max-w-full truncate px-1 font-[var(--font-stitch-label)] text-[10px] font-bold uppercase tracking-[0.06em] sm:text-[11px]",
                 isActive
                   ? "text-stitch-primary"
                   : "text-stitch-on-surface-variant",

@@ -36,6 +36,14 @@ export function MobileTopBar({
 }: MobileTopBarProps) {
   const navigate = useNavigate();
 
+  const handleMenu = () => {
+    if (onMenu) {
+      onMenu();
+      return;
+    }
+    window.dispatchEvent(new CustomEvent("open-sidebar"));
+  };
+
   const handleBack = () => {
     if (onBack) onBack();
     else navigate(-1);
@@ -44,7 +52,7 @@ export function MobileTopBar({
   return (
     <header
       className={cn(
-        "sticky top-0 z-40 w-full md:hidden",
+        "sticky top-0 z-40 w-full max-w-[100vw] overflow-hidden md:hidden",
         "flex items-center gap-3 px-[var(--stitch-margin-mobile)]",
         "border-b transition-colors",
         transparent
@@ -105,9 +113,9 @@ export function MobileTopBar({
         <button
           type="button"
           aria-label="Menu"
-          onClick={onMenu}
+          onClick={handleMenu}
           className="inline-flex h-10 w-10 items-center justify-center rounded-full text-stitch-on-surface hover:bg-stitch-surface-container disabled:opacity-40"
-          disabled={!onMenu}
+          disabled={false}
         >
           <Menu className="h-5 w-5" />
         </button>
