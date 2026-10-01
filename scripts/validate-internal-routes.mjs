@@ -45,9 +45,15 @@ const seen = new Map();
 for (const file of files(srcRoot)) {
   const content = readFileSync(file, 'utf8');
   const rel = relative(root, file);
-  const re = /(?:to|href)=["'](\/[^"'?#]*)["']/g;
-  for (const match of content.matchAll(re)) {
-    const path = match[1] || '/';
+  const patterns = [
+    /(?:to|href)=["'](\\/[^"'?#]*)["']/g,
+    /\\bnavigate\\(\\s*["'](\\/[^"'?#]*)["']/g,
+    /\\bwindow\\.location\\.(?:href|assign|replace)\\s*(?:=|\\()\\s*["'](\\/[^"'?#]*)["']/g,
+  ];
+
+  for (const re of patterns) {
+    for (const match of content.matchAll(re)) {
+      const path = match[1] || '/';
     if (ignored.some((rule) => rule.test(path))) continue;
     if (path.startsWith('//')) continue;
     const list = seen.get(path) ?? [];
