@@ -90,7 +90,7 @@ export const BibleReader: React.FC<BibleReaderProps> = ({
   );
 
   return (
-    <div className="flex flex-col md:flex-row w-full min-h-screen" data-catedra-module="bible">
+    <div className="flex flex-col md:flex-row w-full min-h-screen min-w-0 overflow-x-hidden" data-catedra-module="bible">
       {/* Desktop Sidebar: Sacred Image/Icon */}
       <div className="hidden md:flex md:w-[40%] sticky top-0 h-screen overflow-hidden bg-primary/5 border-r border-primary/5">
         <SacredImage 
@@ -109,7 +109,7 @@ export const BibleReader: React.FC<BibleReaderProps> = ({
         </div>
       </div>
 
-      <div className="flex-1">
+      <div className="flex-1 min-w-0 overflow-x-hidden">
         <ReaderShell
           className="pb-32"
           contentMaxWidth="max-w-[46rem]"
@@ -213,11 +213,11 @@ export const BibleReader: React.FC<BibleReaderProps> = ({
                 id={`verse-${v.number}`}
                 onClick={() => onVerseAction(v)}
                 className={cn(
-                  'relative group cursor-pointer transition-all duration-300 rounded-lg p-3 -mx-2',
+                  'relative group cursor-pointer transition-all duration-300 rounded-lg p-3 -mx-2 max-w-full overflow-hidden',
                   highlightColor ? `bg-${highlightColor}/10` : 'hover:bg-primary/[0.02]',
                 )}
               >
-                <div className="flex items-start gap-2.5 md:gap-3">
+                <div className="flex items-start gap-2.5 md:gap-3 min-w-0">
                   <span
                     aria-label={`Versículo ${v.number}`}
                     className="mt-1 shrink-0 text-[9px] md:text-[10px] font-semibold text-secondary/80 select-none tabular-nums leading-none"
@@ -225,7 +225,7 @@ export const BibleReader: React.FC<BibleReaderProps> = ({
                     {v.number}
                   </span>
                   <p className={cn(
-                    'leading-[1.78] md:leading-[1.82] transition-colors font-serif tracking-[0.002em]',
+                    'min-w-0 break-words leading-[1.78] md:leading-[1.82] transition-colors font-serif tracking-[0.002em]',
                     settings.theme === 'night' ? 'text-stone-300' : 'text-primary/90',
                   )}>
                     {v.text}
@@ -233,7 +233,7 @@ export const BibleReader: React.FC<BibleReaderProps> = ({
                 </div>
 
                 {finalConnections.length > 0 && (
-                  <div className="flex flex-wrap items-center gap-2 mt-3 ml-6">
+                  <div className="flex flex-wrap items-center gap-2 mt-3 ml-6 max-w-full">
                     {finalConnections.map((conn, idx) => {
                       const isEssential = conn.relevance_level === 'essential' || conn.relevance === 'essential';
                       return (
@@ -274,7 +274,7 @@ export const BibleReader: React.FC<BibleReaderProps> = ({
       </div>
 
       {/* Navigation flutuante — preserva contexto de leitura */}
-      <div className="fixed bottom-24 left-0 right-0 px-6 pointer-events-none z-20">
+      <div className="fixed bottom-[calc(4.5rem+env(safe-area-inset-bottom))] left-0 right-0 px-4 sm:px-6 pointer-events-none z-20">
         <div className="max-w-lg mx-auto flex justify-between items-center pointer-events-auto">
           <Button
             variant="ghost"
