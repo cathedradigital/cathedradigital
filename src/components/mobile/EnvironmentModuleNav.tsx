@@ -33,7 +33,8 @@ export function EnvironmentModuleNav({ environmentKey }: { environmentKey?: Modu
   return (
     <nav
       aria-label={`Módulos de ${group.label}`}
-      className="border-b border-stitch-outline-variant/45 bg-stitch-surface/95 backdrop-blur-md md:hidden"
+      className="sticky z-30 border-b border-stitch-outline-variant/45 bg-stitch-surface/95 backdrop-blur-md md:hidden"
+      style={{ top: `calc(var(--stitch-mobile-topbar-h) + var(--stitch-mobile-safe-top))` }}
     >
       <div className="flex items-center gap-1.5 overflow-x-auto px-[var(--stitch-margin-mobile)] py-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {group.items.map((item) => {
