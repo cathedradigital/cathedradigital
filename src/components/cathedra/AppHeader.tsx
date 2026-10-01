@@ -39,7 +39,7 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
     pathname === group.items[0]?.path || group.items.some((item) => pathname === item.path || (item.path !== '/' && pathname.startsWith(item.path + '/'))),
   );
 
-  React.useEffect(() => {
+  useEffect(() => {
     const root = document.documentElement;
     if (!activeGroup) {
       root.style.removeProperty('--catedra-module-accent');
