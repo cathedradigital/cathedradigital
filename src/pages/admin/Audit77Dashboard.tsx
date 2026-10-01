@@ -52,7 +52,7 @@ const initialAuditItems: AuditItem[] = [
   { 
     id: 'catechism', 
     module: 'Catecismo', 
-    route: '/catecismo',
+    route: '/catechism',
     p: 'P0', 
     status: 'FAIL',
     loadTime: 850,
@@ -68,7 +68,7 @@ const initialAuditItems: AuditItem[] = [
   { 
     id: 'bible', 
     module: 'Bíblia', 
-    route: '/biblia',
+    route: '/bible',
     p: 'P0', 
     status: 'FAIL', 
     loadTime: 1200,
