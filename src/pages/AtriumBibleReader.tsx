@@ -73,7 +73,8 @@ const AtriumBibleReader: React.FC = () => {
     const title = book ? book.name : 'Sagrada Escritura';
     const subtitle = chapterStr ? `Capítulo ${chapterStr}` : undefined;
     return (
-      <Suspense fallback={<BibleSkeleton />}>
+      <div data-catedra-module="bible">
+        <Suspense fallback={<BibleSkeleton />}>
         <MobileTopBar
           kicker="Cathedra · Bíblia"
           title={book ? `${book.name} ${chapterStr ?? ''}`.trim() : 'Bíblia'}
