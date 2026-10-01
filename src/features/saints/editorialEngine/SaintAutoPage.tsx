@@ -76,7 +76,7 @@ export const SaintAutoPage: React.FC<Props> = ({ descriptor }) => {
       }
       nexus={<NexusPanel output={nexus} kicker={`Conexões · ${header.name}`} />}
       continuation={
-        <div className="space-y-spacing-lg">
+        <div className="catedra-reading space-y-spacing-lg">
           {closure && <EditorialClosure {...closure} />}
           <ReaderContinuation
             context={{
@@ -108,7 +108,7 @@ export const SaintAutoPage: React.FC<Props> = ({ descriptor }) => {
               src={image}
               alt={header.iconography?.imageAlt ?? `Representação de ${header.name}`}
               category={header.category}
-              className="w-full aspect-[3/4] rounded-premium overflow-hidden"
+              className="catedra-surface w-full aspect-[3/4] rounded-premium overflow-hidden"
             />
             {attributes.length > 0 && (
               <figcaption className="text-premium-xs text-muted-foreground text-center">

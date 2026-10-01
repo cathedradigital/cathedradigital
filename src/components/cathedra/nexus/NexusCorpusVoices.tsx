@@ -29,10 +29,14 @@ const LABELS: Record<string, string> = {
 export default function NexusCorpusVoices() {
   const [people, setPeople] = useState<CorpusPerson[]>([]);
   const [popes, setPopes] = useState<CorpusPerson[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     let active = true;
     (async () => {
+      setLoading(true);
+      setError(false);
       const { data, error } = await supabase
         .from('corpus_people')
         .select('id,slug,display_name,person_kind,papal_number,papal_name,canonical_url')
@@ -44,19 +48,28 @@ export default function NexusCorpusVoices() {
       if (!active) return;
       if (error) {
         console.error('Nexus corpus voices error', error.message);
+        if (active) setError(true);
+        if (active) setLoading(false);
         return;
       }
       setPeople((data ?? []) as CorpusPerson[]);
-      const { data: papalData } = await supabase
+      const { data: papalData, error: papalError } = await supabase
         .from('corpus_people')
         .select('id,slug,display_name,person_kind,papal_number,papal_name,canonical_url')
         .eq('status', 'published').eq('person_kind', 'pope')
         .order('papal_number', { ascending: true }).limit(24);
-      if (active) setPopes((papalData ?? []) as CorpusPerson[]);
+      if (active) {
+        if (papalError) console.error('Nexus papal chronology error', papalError.message);
+        setPopes((papalData ?? []) as CorpusPerson[]);
+        setError(Boolean(papalError));
+        setLoading(false);
+      }
     })();
     return () => { active = false; };
   }, []);
 
+  if (loading) return <div className="mt-12 border-t border-stitch-secondary/20 pt-10" aria-label="Carregando acervo vivo"><div className="h-6 w-48 animate-pulse bg-stitch-surface-container-low" /><div className="mt-4 h-4 w-full max-w-2xl animate-pulse bg-stitch-surface-container-low" /></div>;
+  if (error && people.length === 0 && popes.length === 0) return <section className="mt-12 border-t border-stitch-secondary/20 pt-10" aria-live="polite"><p className="font-stitch-body text-sm text-stitch-on-surface-variant">Não foi possível carregar o acervo agora.</p></section>;
   if (people.length === 0 && popes.length === 0) return null;
 
   return (
