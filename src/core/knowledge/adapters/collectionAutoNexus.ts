@@ -23,7 +23,7 @@ export interface CollectionNexusInput {
 }
 
 const BUCKETS: readonly ReaderNexusBucket[] = [
-  'bible', 'catechism', 'saint', 'glossary', 'prayer', 'journey',
+  'bible', 'catechism', 'magisterium', 'saint', 'father', 'glossary', 'prayer', 'journey',
 ];
 
 const CACHE_MAX = 32;
