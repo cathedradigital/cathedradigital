@@ -33,6 +33,9 @@ jobs:
       - name: Lint
         run: bun run lint
 
+      - name: Validate internal routes
+        run: bun run validate:links
+
       - name: Build (preset Vercel)
         run: bun run build
         env:
