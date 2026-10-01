@@ -255,12 +255,12 @@ const BibleLanding: React.FC = () => {
                 </span>
               </div>
 
-              <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+              <div className="estudar-bible-book-grid grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
                 {cat.books.map((book: BibleBook, i: number) => (
                   <Link
                     key={book.abbr}
                     to={buildBibleUrl({ abbr: book.abbr, chapter: 1 })}
-                    className="group relative flex aspect-[3/4] flex-col justify-between overflow-hidden border border-stitch-outline-variant/20 bg-stitch-surface-container-lowest p-4 transition-all hover:border-stitch-secondary hover:shadow-lg hover:shadow-black/[0.05]"
+                    className="estudar-bible-book-card group relative flex aspect-[3/4] flex-col justify-between overflow-hidden border border-stitch-outline-variant/20 bg-stitch-surface-container-lowest p-4 transition-all hover:border-stitch-secondary hover:shadow-lg hover:shadow-black/[0.05]"
                   >
                     <div className="absolute inset-0 bg-gradient-to-br from-stitch-primary/[0.03] to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
                     <div className="relative">
