@@ -24,7 +24,7 @@ const EstudarHubPage: React.FC = () => {
     <div
       data-catedra-module-root
       data-catedra-module="estudar"
-      className="min-h-screen w-full bg-stitch-background text-stitch-on-background"
+      className="min-h-screen w-full min-w-0 overflow-x-hidden bg-stitch-background text-stitch-on-background"
     >
       <Helmet>
         <title>Cathedra — Estudar</title>
@@ -36,7 +36,7 @@ const EstudarHubPage: React.FC = () => {
 
       <MobileTopBar kicker="Cathedra" title="Estudar" transparent />
 
-      <main className="mx-auto w-full max-w-[1120px] px-5 pb-[calc(var(--stitch-mobile-bottomnav-h)+var(--stitch-mobile-safe-bottom)+2rem)] pt-8 md:px-16 md:pb-16 md:pt-14">
+      <main className="mx-auto w-full min-w-0 max-w-[1120px] px-4 pb-[calc(var(--stitch-mobile-bottomnav-h)+var(--stitch-mobile-safe-bottom)+2rem)] pt-7 sm:px-5 md:px-16 md:pb-16 md:pt-14">
         <header className="max-w-3xl border-b border-stitch-secondary/20 pb-8">
           <p className="font-stitch-body text-[12px] font-bold uppercase tracking-[0.32em] text-stitch-secondary">
             Ambiente 01 · Conhecimento
@@ -64,7 +64,7 @@ const EstudarHubPage: React.FC = () => {
             </span>
           </div>
 
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid min-w-0 grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 md:gap-4">
             {items.map((item) => {
               const Icon = ICONS[item.id as keyof typeof ICONS] ?? BookOpen;
               return (
@@ -91,7 +91,7 @@ const EstudarHubPage: React.FC = () => {
           </div>
         </section>
 
-        <section className="mt-10 border-t border-stitch-outline-variant/20 pt-7" aria-labelledby="estudar-conexoes">
+        <section className="mt-8 border-t border-stitch-outline-variant/20 pt-7" aria-labelledby="estudar-conexoes">
           <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
             <div>
               <p className="font-stitch-body text-[10px] font-bold uppercase tracking-[0.2em] text-stitch-secondary">
