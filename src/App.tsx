@@ -660,6 +660,7 @@ const AppLayout: React.FC = () => {
               <Route path="/login" element={<Navigate to="/auth" replace />} />
               <Route path="/reset-password" element={<Suspense fallback={<LoadingFallback />}><ResetPasswordPage /></Suspense>} />
               <Route path="/profile" element={<Suspense fallback={<LoadingFallback />}><AuthGuard><ProfilePage /></AuthGuard></Suspense>} />
+              <Route path="/settings" element={<Navigate to="/conta/configuracoes" replace />} />
               <Route path="/profile/favorites" element={<Suspense fallback={<LoadingFallback />}><AuthGuard><ProfileFavoritesPage /></AuthGuard></Suspense>} />
               <Route path="/spiritual-profile" element={<Suspense fallback={<LoadingFallback />}><AuthGuard><SpiritualProfile /></AuthGuard></Suspense>} />
               <Route path="/onboarding" element={<Suspense fallback={<LoadingFallback />}><OnboardingPage /></Suspense>} />
