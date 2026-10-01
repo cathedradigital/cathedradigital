@@ -60,7 +60,7 @@ async function searchBible(q: string, limit: number): Promise<RawHit[]> {
     id: `book:${r.abbrev}`,
     title: r.name ?? r.abbrev ?? '',
     subtitle: r.testament ?? undefined,
-    href: `/biblia/${r.abbrev}/1`,
+    href: `/bible?book=${encodeURIComponent(String(r.abbrev ?? ''))}&chapter=1`,
   }));
 }
 
@@ -77,7 +77,7 @@ async function searchCatechism(q: string, limit: number): Promise<RawHit[]> {
     id: String(r.paragraph),
     title: `§ ${r.paragraph}`,
     excerpt: r.texto_base ? r.texto_base.slice(0, 260) : undefined,
-    href: `/catechism/${r.paragraph}`,
+    href: `/catechism?p=${encodeURIComponent(String(r.paragraph))}`,
     nexusRef: { kind: 'catechism', ref: String(r.paragraph) },
   }));
 }
@@ -199,7 +199,7 @@ async function searchLiturgy(q: string, limit: number): Promise<RawHit[]> {
     title: r.celebration_title ?? r.iso_date ?? 'Missal',
     subtitle: r.liturgical_color ?? undefined,
     excerpt: r.iso_date ?? undefined,
-    href: `/missal/${r.iso_date ?? r.id}`,
+    href: `/missal`,
   }));
 }
 
