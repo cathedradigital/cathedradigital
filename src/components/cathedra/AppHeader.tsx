@@ -102,14 +102,14 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
             }}
           >
             <div className="flex items-center gap-2">
-              <Icons.Logo className="w-10 h-10 md:w-14 md:h-14 text-primary transition-all group-hover:scale-110" />
+              <Icons.Logo className="w-12 h-12 md:w-16 md:h-16 text-primary transition-all group-hover:scale-110" />
               <div className="flex flex-col leading-none">
                 <span
                   className="text-primary/90 group-hover:text-primary transition-colors"
                   style={{
                     fontFamily: "'Playfair Display', serif",
                     fontWeight: 600,
-                    fontSize: 'clamp(1rem, 2vw, 1.25rem)',
+                    fontSize: 'clamp(1.15rem, 2.2vw, 1.5rem)',
                     letterSpacing: '0.1em',
                   }}
                 >
