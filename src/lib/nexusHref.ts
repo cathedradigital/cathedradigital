@@ -71,7 +71,9 @@ export function resolveNexusHref(
     case 'magisterium_doc':
       return `/magisterium/${id}`;
     case 'patristic':
-      return `/patristica/${id}`;
+      return id.includes('/')
+        ? `/biblioteca/escritos/${id}`
+        : '/biblioteca/escritos';
     case 'liturgy':
       return /^\d{4}-\d{2}-\d{2}$/.test(id)
         ? `/missal?d=${encodeURIComponent(id)}`
@@ -115,7 +117,7 @@ const CHANNEL_TO_LISTING: Record<NexusChannel, string> = {
   bible: '/bible',
   catechism: '/catechism',
   magisterium: '/magisterium',
-  father: '/patristica',
+  father: '/biblioteca?filter=patristica',
   saint: '/santos',
   journey: '/jornadas',
   theme: '/buscar',
