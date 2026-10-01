@@ -1,6 +1,7 @@
 import { ArrowLeft, Search, Menu } from "lucide-react";
 import { useNavigate, Link } from '@/lib/rr-compat';
 import { cn } from "@/lib/utils";
+import { EnvironmentModuleNav } from "@/components/mobile/EnvironmentModuleNav";
 import type { ReactNode } from "react";
 
 interface MobileTopBarProps {
@@ -50,9 +51,10 @@ export function MobileTopBar({
   };
 
   return (
+    <div className="md:hidden">
     <header
       className={cn(
-        "sticky top-0 z-40 w-full max-w-[100vw] overflow-hidden md:hidden",
+        "sticky top-0 z-40 w-full max-w-[100vw] overflow-hidden",
         "flex items-center gap-3 px-[var(--stitch-margin-mobile)]",
         "border-b transition-colors",
         transparent
@@ -122,5 +124,7 @@ export function MobileTopBar({
       </div>
 
     </header>
+    <EnvironmentModuleNav />
+    </div>
   );
 }
