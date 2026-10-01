@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Icons } from '@/constants';
 import { globalSearchV2, type GlobalSearchHit, type SearchResultType } from '@/services/globalSearchService';
 import { Link } from '@/lib/rr-compat';
+import { RouteRegistry } from '@/core/navigation/RouteRegistry';
 
 const TYPE_LABEL: Record<SearchResultType, string> = {
   bible: 'Bíblia',
@@ -30,14 +31,16 @@ const TYPE_ICON: Record<SearchResultType, any> = {
 };
 
 const TYPE_ROUTE: Record<SearchResultType, (hit: GlobalSearchHit) => string> = {
-  bible: (h) => `/biblia/${h.slug}`,
-  catechism: (h) => `/catecismo/${h.slug}`,
-  saint: (h) => `/santos/${h.slug}`,
-  patristic: (h) => `/biblioteca/escritos/${h.slug}`,
-  magisterium: (h) => `/biblioteca/escritos/${h.slug}`,
-  prayer: (h) => `/rezar/${h.slug}`,
-  journey: (h) => `/jornadas/${h.slug}`,
-  glossary: (h) => `/glossario/${h.slug}`
+  bible: (h) => RouteRegistry.resolve('study.bible', { book: h.slug, chapter: 1 }),
+  catechism: (h) => RouteRegistry.resolve('study.catechism', { paragraph: h.slug }),
+  saint: (h) => RouteRegistry.resolve('study.saint', { slug: h.slug }),
+  patristic: (h) => h.slug.includes('/')
+    ? `/biblioteca/escritos/${h.slug}`
+    : '/biblioteca/escritos',
+  magisterium: (h) => RouteRegistry.resolve('study.magisterium', { doc: h.slug }),
+  prayer: (h) => RouteRegistry.resolve('pray.prayer', { slug: h.slug }),
+  journey: (h) => RouteRegistry.resolve('study.journey', { id: h.slug }),
+  glossary: (h) => RouteRegistry.resolve('study.glossary', { slug: h.slug })
 };
 
 const BibliotecaInteligentePage: React.FC = () => {
