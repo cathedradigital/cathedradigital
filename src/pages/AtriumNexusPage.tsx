@@ -160,7 +160,10 @@ const AtriumNexusPage: React.FC = () => {
     (a, b) => NEXUS_KIND_PRESETS[a].order - NEXUS_KIND_PRESETS[b].order,
   );
 
-  return (\n    <>\n    <MobileTopBar kicker="Cathedra" title="Nexus" transparent />   <div
+  return (
+    <>
+      <MobileTopBar kicker="Cathedra" title="Nexus" transparent />
+    <div
       className="min-h-screen w-full min-w-0 overflow-x-hidden bg-stitch-background text-stitch-on-background"
       style={{
         backgroundImage:
