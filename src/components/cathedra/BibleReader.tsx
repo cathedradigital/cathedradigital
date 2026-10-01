@@ -13,7 +13,6 @@ import {
   CatechesisContext,
 } from '@/components/reader';
 import { resolveBibleAutoNexus } from '@/core/knowledge/adapters/bibleAutoNexus';
-import SacredImage from './SacredImage';
 
 interface Verse {
   number: number;
@@ -91,25 +90,7 @@ export const BibleReader: React.FC<BibleReaderProps> = ({
 
   return (
     <div className="flex flex-col md:flex-row w-full min-h-screen min-w-0 overflow-x-hidden" data-catedra-module="bible">
-      {/* Desktop Sidebar: Sacred Image/Icon */}
-      <div className="hidden md:flex md:w-[40%] sticky top-0 h-screen overflow-hidden bg-primary/5 border-r border-primary/5">
-        <SacredImage 
-          src={undefined} // Bible content often uses a generic sacred icon or text-based hero
-          className="w-full h-full object-cover opacity-60 mix-blend-multiply" 
-          alt={book.name} 
-        />
-        <div className="absolute inset-0 bg-gradient-to-l from-background via-transparent to-transparent" />
-        <div className="absolute inset-0 flex items-center justify-center p-spacing-xl">
-           <div className="text-center space-y-spacing-md">
-             <div className="w-spacing-4xl h-spacing-4xl mx-auto rounded-full bg-secondary/10 flex items-center justify-center border border-secondary/20 shadow-premium">
-               <Icons.BookOpen className="w-spacing-xl h-spacing-xl text-secondary" />
-             </div>
-             <h2 className="font-display text-4xl text-primary/40 tracking-widest uppercase">{book.abbr}</h2>
-           </div>
-        </div>
-      </div>
-
-      <div className="flex-1 min-w-0 overflow-x-hidden">
+      <div className="w-full min-w-0 overflow-x-hidden">
         <ReaderShell
           className="pb-32"
           contentMaxWidth="max-w-[46rem]"
