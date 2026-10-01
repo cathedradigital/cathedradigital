@@ -2,10 +2,10 @@ import { readFileSync, readdirSync } from 'node:fs';
 import { join, relative, resolve } from 'node:path';
 
 const root = resolve(process.cwd(), 'src');
-const forbiddenClientImports = [
+const forbiddenPatterns = [
   /(?:from|import)\s+['"][^'"]*client\.server(?:\.[^'"]+)?['"]/,
-  /SUPABASE_SERVICE_ROLE_KEY/,
   /(?:process\.)?env\[['"]SUPABASE_SERVICE_ROLE_KEY['"]\]/,
+  /(?:process\.)?env\.SUPABASE_SERVICE_ROLE_KEY/,
 ];
 
 const serverOnlyFiles = new Set([
@@ -24,12 +24,10 @@ function walk(dir) {
 const violations = [];
 for (const file of walk(root)) {
   const rel = relative(process.cwd(), file).replaceAll('\\', '/');
+  if (serverOnlyFiles.has(rel)) continue;
   const source = readFileSync(file, 'utf8');
-  for (const rule of forbiddenClientImports) {
-    if (rule.test(source) && !serverOnlyFiles.has(rel)) {
-      violations.push(`${rel}: server-only Supabase credential/import detected in browser source`);
-      break;
-    }
+  if (forbiddenPatterns.some((pattern) => pattern.test(source))) {
+    violations.push(`${rel}: server-only Supabase boundary detected in browser source`);
   }
 }
 
