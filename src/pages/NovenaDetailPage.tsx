@@ -8,6 +8,7 @@ import { ReaderContinuation } from '@/components/shared/ReaderContinuation';
 import { EditorialCard } from '@/components/editorial/harmony/EditorialCard';
 import { Button } from '@/components/ui/button';
 import { getNovenaBySlug } from '@/data/novenas';
+import { useNovenasList } from '@/hooks/useNovenas';
 import { loadProgress, saveProgress, type NovenaProgress } from '@/lib/novenas/progress';
 import { generateNovenaProgressPdf } from '@/lib/novenas/pdf';
 import { toast } from 'sonner';
@@ -16,7 +17,8 @@ import { toast } from 'sonner';
 const NovenaDetailPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
   const [searchParams] = useSearchParams();
-  const novena = slug ? getNovenaBySlug(slug) : undefined;
+  const allNovenas = useNovenasList();
+  const novena = slug ? (allNovenas.find((n) => n.slug === slug) ?? getNovenaBySlug(slug)) : undefined;
 
   const [progress, setProgress] = useState<NovenaProgress | null>(null);
 
