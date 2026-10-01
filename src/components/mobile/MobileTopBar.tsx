@@ -13,6 +13,8 @@ interface MobileTopBarProps {
   onBack?: () => void;
   /** Ações à direita (ícones). */
   actions?: ReactNode;
+  /** Abre a navegação lateral global no mobile. */
+  onMenu?: () => void;
   /** Deixa o fundo transparente com blur (útil sobre Hero). */
   transparent?: boolean;
   className?: string;
@@ -28,6 +30,7 @@ export function MobileTopBar({
   showBack = false,
   onBack,
   actions,
+  onMenu,
   transparent = false,
   className,
 }: MobileTopBarProps) {
@@ -102,7 +105,9 @@ export function MobileTopBar({
         <button
           type="button"
           aria-label="Menu"
-          className="inline-flex h-10 w-10 items-center justify-center rounded-full text-stitch-on-surface hover:bg-stitch-surface-container"
+          onClick={onMenu}
+          className="inline-flex h-10 w-10 items-center justify-center rounded-full text-stitch-on-surface hover:bg-stitch-surface-container disabled:opacity-40"
+          disabled={!onMenu}
         >
           <Menu className="h-5 w-5" />
         </button>

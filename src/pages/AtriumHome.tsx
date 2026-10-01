@@ -38,11 +38,10 @@ import { useAuth } from '@/hooks/useAuth';
 import AtriumReception from '@/components/cathedra/AtriumReception';
 import { SpaceDoors, type SpaceDoor, SpaceLayout, SpaceFooter } from '@/components/cathedra/space/SpaceLayout';
 import { useChurchContext } from '@/hooks/useChurchContext';
+import { MODULE_NAVIGATION } from '@/config/moduleNavigation';
 
 
 // ─── Copy oficial ────────────────────────────────────────────────────────────
-const HERO_KICKER = 'Sanctuarium Digital';
-const HERO_TITLE = 'Seu companheiro espiritual para a vida interior.';
 const HERO_SUBTITLE =
   'Leia, reze, estude e descubra a riqueza da fé católica.';
 
@@ -56,48 +55,32 @@ const RESUME_ICON: Record<ResumeItem['kind'], React.ComponentType<{ className?: 
 };
 
 // ─── 5 Ambientes (P4) — navegação canônica ──────────────────────────────────
-const MAIN_DOORS: SpaceDoor[] = [
-  { 
-    key: 'orar', 
-    label: 'ORAR', 
-    overline: 'Oratio', 
-    to: '/oracao', 
-    Icon: Heart, 
-    hint: 'Um espaço para silenciar e rezar.' 
-  },
-  { 
-    key: 'estudar', 
-    label: 'ESTUDAR', 
-    overline: 'Studium', 
-    to: '/acervo', 
-    Icon: MenuBook, 
-    hint: 'Conheça os tesouros da fé.' 
-  },
-  { 
-    key: 'conhecer', 
-    label: 'CONHECER', 
-    overline: 'Cognoscere', 
-    to: '/santos', 
-    Icon: Sparkles, 
-    hint: 'Descubra testemunhas da fé e da Igreja.' 
-  },
-  { 
-    key: 'igreja', 
-    label: 'IGREJA', 
-    overline: 'Ecclesia', 
-    to: '/community', 
-    Icon: GraduationCap, 
-    hint: 'Acompanhe a vida da Igreja.' 
-  },
-  { 
-    key: 'minha-jornada', 
-    label: 'MINHA JORNADA', 
-    overline: 'Iter Meum', 
-    to: '/minha-jornada', 
-    Icon: RouteIcon, 
-    hint: 'Veja por onde você passou e continue.' 
-  },
-];
+const MODULE_DOOR_ICONS = {
+  estudar: MenuBook,
+  rezar: Heart,
+  'formar-se': GraduationCap,
+  pesquisar: SearchIcon,
+  'minha-jornada': RouteIcon,
+} as const;
+
+const MODULE_DOOR_OVERLINES = {
+  estudar: 'Studium',
+  rezar: 'Oratio',
+  'formar-se': 'Formatio',
+  pesquisar: 'Investigatio',
+  'minha-jornada': 'Iter Meum',
+} as const;
+
+const MAIN_DOORS: SpaceDoor[] = MODULE_NAVIGATION.map((group) => ({
+  key: group.key,
+  label: group.label.toUpperCase(),
+  overline: MODULE_DOOR_OVERLINES[group.key],
+  to: group.items[0]?.path ?? '/',
+  Icon: MODULE_DOOR_ICONS[group.key],
+  hint: group.description,
+  accent: group.accent,
+  accentSoft: group.accentSoft,
+}));
 
 const AtriumHome: React.FC = () => {
   const navigate = useNavigate();
@@ -237,7 +220,7 @@ const AtriumHome: React.FC = () => {
               </div>
               <div className="relative z-10 flex justify-end">
                 <Link
-                  to="/buscar"
+                  to="/nexus"
                   className="inline-flex items-center gap-3 rounded-lg bg-gold px-8 py-3 font-reader text-[14px] font-medium uppercase tracking-[0.05em] text-gold-text-on-container transition-transform hover:scale-105 active:scale-95"
                   style={{
                     boxShadow:
@@ -470,7 +453,7 @@ const AtriumHome: React.FC = () => {
           links={[
             { label: 'Biblioteca', to: '/acervo', hint: 'Mosteiro do Conhecimento' },
             { label: 'Sacrário', to: '/oracao', hint: 'Silenciar e rezar' },
-            { label: 'Capelas', to: '/santos', hint: 'Vidas dos santos' },
+            { label: 'Santos', to: '/santos', hint: 'Vidas e testemunhos de santidade' },
           ]}
         />
       </section>
