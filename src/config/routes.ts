@@ -12,10 +12,10 @@ export interface RouteConfig {
   category?: 'core' | 'spiritual' | 'content' | 'user' | 'admin';
 }
 
-// ONDA 1 (Navegação) — slugs canônicos apontam DIRETO para a rota real registrada
-// em `src/App.tsx`, sem redirects intermediários. Rotas antigas em inglês continuam
-// funcionando como aliases via <Navigate> no App.tsx (compatibilidade / SEO).
-// Registro dos aliases: docs/CATHEDRA-ROUTE-CANONICAL.md
+// Registro de metadados e compatibilidade de rotas.
+// A navegação pública não é definida aqui: a fonte canônica é
+// `src/config/moduleNavigation.ts`, organizada nos cinco ambientes.
+// Aliases continuam registrados para compatibilidade/SEO.
 export const APP_ROUTES: RouteConfig[] = [
   // Core Routes (Hub Spiritual)
   { path: '/bible', label: 'Bíblia', icon: Icons.BookOpen, showInMenu: true, category: 'core' },
@@ -35,7 +35,6 @@ export const APP_ROUTES: RouteConfig[] = [
 
 
   // Content & Resources
-  { path: '/biblioteca', label: 'Biblioteca', icon: Icons.Library, showInMenu: true, category: 'content' },
   { path: '/oracao', label: 'Orações', icon: Icons.Flame, showInMenu: true, category: 'content' },
   { path: '/rosary', label: 'Rosário', icon: Icons.Hash, showInMenu: true, category: 'content' },
   { path: '/viacrucis', label: 'Via Sacra', icon: Icons.Activity, showInMenu: true, category: 'content' },
@@ -65,7 +64,6 @@ export const APP_ROUTES: RouteConfig[] = [
   { path: '/onboarding', label: 'Boas-vindas', icon: Icons.Star, showInMenu: false, category: 'user' },
 
   // User Profile
-  { path: '/profile', label: 'Perfil', icon: Icons.User, showInMenu: true, category: 'user' },
   { path: '/favorites', label: 'Favoritos', icon: Icons.Heart, showInMenu: true, category: 'user' },
   { path: '/achievements', label: 'Conquistas', icon: Icons.Trophy, showInMenu: true, category: 'user' },
   { path: '/settings', label: 'Configurações', icon: Icons.Settings, showInMenu: true, category: 'user' },
