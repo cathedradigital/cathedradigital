@@ -66,26 +66,35 @@ const AtriumJornadasPage: React.FC = () => {
   const [journeys, setJourneys] = useState<JourneyRow[]>([]);
   const [progressMap, setProgressMap] = useState<Record<string, number>>({});
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
+  const [progressError, setProgressError] = useState<string | null>(null);
   const [activeCategory, setActiveCategory] = useState<string>('all');
 
   useEffect(() => {
     let cancelled = false;
     (async () => {
       setLoading(true);
+      setLoadError(null);
+      setProgressError(null);
       const { data, error } = await supabase
         .from('view_journeys_with_stats')
         .select('*')
         .order('sort_order', { ascending: true });
       if (error) {
         console.error('AtriumJornadas load error:', error);
+        if (!cancelled) setLoadError('Não foi possível carregar as jornadas.');
       }
       if (!cancelled && data) setJourneys(data as JourneyRow[]);
 
       if (user) {
-        const { data: prog } = await supabase
+        const { data: prog, error: progError } = await supabase
           .from('journey_progress')
           .select('journey_id')
           .eq('user_id', user.id);
+        if (progError) {
+          console.error('AtriumJornadas progress load error:', progError);
+          if (!cancelled) setProgressError('O progresso pessoal não pôde ser carregado.');
+        }
         if (!cancelled && prog) {
           const m: Record<string, number> = {};
           prog.forEach((p: any) => {
@@ -280,6 +289,17 @@ const AtriumJornadasPage: React.FC = () => {
                 />
               ))}
             </div>
+          ) : loadError ? (
+            <div className="border-t border-stitch-secondary/10 pt-8 text-center">
+              <p className="font-stitch-body text-[14px] text-destructive">{loadError}</p>
+              <button
+                type="button"
+                onClick={() => window.location.reload()}
+                className="mt-4 border border-stitch-secondary/40 px-4 py-2 font-stitch-body text-[12px] font-bold uppercase tracking-[0.15em] text-stitch-secondary hover:bg-stitch-secondary/10"
+              >
+                Tentar novamente
+              </button>
+            </div>
           ) : visible.length === 0 ? (
             <p className="border-t border-stitch-secondary/10 pt-8 text-center font-stitch-body text-[14px] italic text-stitch-on-surface-variant">
               Nenhuma jornada nesta trilha ainda.
@@ -342,11 +362,17 @@ const AtriumJornadasPage: React.FC = () => {
             </Link>
           </div>
 
+          {progressError && (
+            <p role="status" className="mt-6 text-center font-stitch-body text-[12px] italic text-stitch-on-surface-variant">
+              {progressError}
+            </p>
+          )}
+
           <SpaceFooter 
             note='"Ensina-me, Senhor, o teu caminho, e guia-me por vereda plana." — Sl 27,11'
             links={[
               { label: 'Átrio', to: '/', hint: 'Voltar à entrada do Mosteiro' },
-              { label: 'Biblioteca', to: '/biblioteca', hint: 'Estudar a Tradição' },
+              { label: 'Biblioteca', to: '/acervo', hint: 'Estudar a Tradição' },
               { label: 'Rezar', to: '/rezar', hint: 'Levar a formação à oração' },
             ]}
           />
