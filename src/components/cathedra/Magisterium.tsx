@@ -523,7 +523,7 @@ const Magisterium: React.FC = () => {
         titleClassName="mb-spacing-md max-w-none"
       />
 
-      <div className="w-full space-y-spacing-2xl pb-spacing-4xl">
+      <div className="w-full space-y-spacing-2xl pb-spacing-4xl" data-catedra-module-root data-catedra-module="documents">
 
         {/* Unified Search & Filters */}
         <div className="space-y-spacing-xl">

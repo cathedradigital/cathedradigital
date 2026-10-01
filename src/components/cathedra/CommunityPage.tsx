@@ -276,7 +276,7 @@ const CommunityPage: React.FC = () => {
 
   if (selectedPost) {
     return (
-      <div className="w-full space-y-spacing-lg py-spacing-xl px-spacing-md">
+      <div className="w-full space-y-spacing-lg py-spacing-xl px-spacing-md" data-catedra-module-root data-catedra-module="community">
         <Button 
           onClick={() => { setSelectedPost(null); setReplies([]); }} 
           className="flex items-center gap-spacing-xs text-premium-sm text-muted-foreground hover:text-foreground transition-colors focus-visible:ring-2 focus-visible:ring-primary outline-none rounded-premium-full px-spacing-xs py-spacing-2xs"

@@ -1,0 +1,225 @@
+/* Estudar — sistema visual dos módulos internos
+ * Camada editorial compartilhada: leitura, responsividade, estados e identidade por módulo.
+ */
+:root {
+  --estudar-reading-ch: 68ch;
+  --estudar-reading-rem: 46rem;
+  --estudar-mobile-gutter: 1rem;
+  --estudar-tablet-gutter: 1.5rem;
+  --estudar-desktop-gutter: 2rem;
+  --estudar-module-radius: 1rem;
+  --estudar-module-shadow: 0 12px 40px -24px hsl(var(--foreground) / .24);
+  --estudar-bible-accent: #2f6f8f;
+  --estudar-catechism-accent: #557b72;
+  --estudar-documents-accent: #806a4c;
+  --estudar-nexus-accent: #705b8c;
+  --estudar-library-accent: #766343;
+  --estudar-saints-accent: #8a5961;
+  --estudar-community-accent: #3f756e;
+}
+
+/* O módulo colore o contexto; o texto de leitura permanece neutro. */
+[data-catedra-module] {
+  --estudar-accent: var(--catedra-module-accent, #2f6f8f);
+  --estudar-accent-soft: color-mix(in srgb, var(--estudar-accent) 10%, transparent);
+  --estudar-accent-border: color-mix(in srgb, var(--estudar-accent) 24%, hsl(var(--border)));
+}
+
+[data-catedra-module="bible"] {
+  --estudar-accent: var(--estudar-bible-accent);
+  --estudar-reading-size: 1.0625rem;
+  --estudar-reading-leading: 1.82;
+}
+[data-catedra-module="catechism"] { --estudar-accent: var(--estudar-catechism-accent); }
+[data-catedra-module="documents"] { --estudar-accent: var(--estudar-documents-accent); }
+[data-catedra-module="nexus"] { --estudar-accent: var(--estudar-nexus-accent); }
+[data-catedra-module="library"] { --estudar-accent: var(--estudar-library-accent); }
+[data-catedra-module="saints"] { --estudar-accent: var(--estudar-saints-accent); }
+[data-catedra-module="community"] { --estudar-accent: var(--estudar-community-accent); }
+
+[data-catedra-module] [data-catedra-module-root],
+[data-catedra-module] > [data-catedra-module-root] {
+  min-width: 0;
+}
+
+[data-catedra-module] :is(button, a, [role="button"]) {
+  -webkit-tap-highlight-color: transparent;
+}
+
+[data-catedra-module] :is(button, a, [role="button"]):not(.prose a) {
+  min-height: 2.75rem;
+}
+
+[data-catedra-module] :is(input, textarea, select) {
+  min-height: 2.75rem;
+}
+
+/* Faixa contextual discreta: o usuário sabe onde está sem saturar a página. */
+[data-catedra-module]::before {
+  content: "";
+  display: block;
+  height: 2px;
+  width: 100%;
+  background: var(--estudar-accent);
+  opacity: .75;
+}
+
+[data-catedra-module] :is(h1, h2, h3) {
+  text-wrap: balance;
+}
+
+[data-catedra-module] .estudar-reading-column,
+[data-catedra-module] [data-reader-slot="content"] {
+  width: min(100%, var(--estudar-reading-rem));
+  max-width: var(--estudar-reading-rem);
+  margin-inline: auto;
+}
+
+/* Bíblia: leitura contínua, versículos escaneáveis e controles compactos. */
+[data-catedra-module="bible"] [data-reader-shell] {
+  --reader-accent: var(--estudar-accent);
+  --reader-accent-soft: var(--estudar-accent-soft);
+}
+[data-catedra-module="bible"] [data-reader-slot="content"] {
+  font-size: var(--estudar-reading-size);
+  line-height: var(--estudar-reading-leading);
+}
+[data-catedra-module="bible"] [data-reader-slot="content"] p {
+  max-width: var(--estudar-reading-ch);
+  text-wrap: pretty;
+}
+[data-catedra-module="bible"] [data-reader-slot="content"] :is(h1, h2, h3) {
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+[data-catedra-module="bible"] .estudar-bible-controls {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  backdrop-filter: blur(12px);
+  background: color-mix(in srgb, hsl(var(--background)) 88%, transparent);
+  border-bottom: 1px solid var(--estudar-accent-border);
+}
+
+/* Conteúdo documental e catequético: índice e texto em ritmos separados. */
+[data-catedra-module="catechism"] [data-reader-slot="content"],
+[data-catedra-module="documents"] [data-reader-slot="content"] {
+  max-width: var(--estudar-reading-rem);
+}
+[data-catedra-module="catechism"] .estudar-index,
+[data-catedra-module="documents"] .estudar-index {
+  border: 1px solid var(--estudar-accent-border);
+  background: var(--estudar-accent-soft);
+  border-radius: var(--estudar-module-radius);
+}
+[data-catedra-module="catechism"] :is(article, section),
+[data-catedra-module="documents"] :is(article, section) {
+  scroll-margin-top: 6rem;
+}
+
+/* Biblioteca: descoberta primeiro; resultados não ficam espremidos em colunas estreitas. */
+[data-catedra-module="library"] .estudar-discovery-grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: clamp(1rem, 2vw, 1.75rem);
+}
+[data-catedra-module="library"] .estudar-discovery-main {
+  grid-column: span 8;
+  min-width: 0;
+}
+[data-catedra-module="library"] .estudar-discovery-aside {
+  grid-column: span 4;
+  min-width: 0;
+}
+
+/* Santos: hero compacto + sequência editorial, sem transformar biografia em dashboard. */
+[data-catedra-module="saints"] .estudar-editorial-column {
+  width: min(100%, var(--estudar-reading-rem));
+  margin-inline: auto;
+}
+[data-catedra-module="saints"] .estudar-editorial-block {
+  border-top: 1px solid var(--estudar-accent-border);
+  padding-block: 1.25rem;
+}
+
+/* Nexo: relações são secundárias ao destino; links têm sinal visual consistente. */
+[data-catedra-module="nexus"] .estudar-relation {
+  border: 1px solid var(--estudar-accent-border);
+  background: var(--estudar-accent-soft);
+  border-radius: var(--estudar-module-radius);
+}
+[data-catedra-module="nexus"] .estudar-relation a {
+  color: var(--estudar-accent);
+  text-decoration: underline;
+  text-underline-offset: .18em;
+}
+
+/* Igreja Viva: feed com largura controlada e ação principal evidente. */
+[data-catedra-module="community"] .estudar-community-feed {
+  width: min(100%, 52rem);
+  margin-inline: auto;
+}
+[data-catedra-module="community"] .estudar-community-primary {
+  border-color: var(--estudar-accent-border);
+  box-shadow: var(--estudar-module-shadow);
+}
+
+/* Estados comuns. */
+[data-catedra-module] .estudar-state {
+  border: 1px dashed var(--estudar-accent-border);
+  background: var(--estudar-accent-soft);
+  border-radius: var(--estudar-module-radius);
+  padding: clamp(1.25rem, 4vw, 2rem);
+}
+
+@media (max-width: 767px) {
+  [data-catedra-module] {
+    --estudar-mobile-gutter: 1rem;
+  }
+
+  [data-catedra-module] .estudar-reading-column,
+  [data-catedra-module] [data-reader-slot="content"] {
+    width: min(100%, calc(100vw - 2 * var(--estudar-mobile-gutter)));
+  }
+
+  [data-catedra-module="bible"] [data-reader-slot="content"] {
+    font-size: 1.0625rem;
+    line-height: 1.82;
+    padding-inline: .25rem;
+  }
+
+  [data-catedra-module="library"] .estudar-discovery-grid {
+    display: block;
+  }
+
+  [data-catedra-module="library"] .estudar-discovery-main,
+  [data-catedra-module="library"] .estudar-discovery-aside {
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+
+  [data-catedra-module] .estudar-mobile-scroll {
+    overflow-x: auto;
+    scrollbar-width: none;
+    overscroll-behavior-inline: contain;
+  }
+
+  [data-catedra-module] .estudar-mobile-scroll::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@media (min-width: 768px) {
+  [data-catedra-module] {
+    --estudar-reading-size: 1.0625rem;
+    --estudar-reading-leading: 1.8;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-catedra-module] * {
+    scroll-behavior: auto !important;
+    transition-duration: .01ms !important;
+    animation-duration: .01ms !important;
+  }
+}

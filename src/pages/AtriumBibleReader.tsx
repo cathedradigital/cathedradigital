@@ -73,7 +73,8 @@ const AtriumBibleReader: React.FC = () => {
     const title = book ? book.name : 'Sagrada Escritura';
     const subtitle = chapterStr ? `Capítulo ${chapterStr}` : undefined;
     return (
-      <Suspense fallback={<BibleSkeleton />}>
+      <div data-catedra-module="bible">
+        <Suspense fallback={<BibleSkeleton />}>
         <MobileTopBar
           kicker="Cathedra · Bíblia"
           title={book ? `${book.name} ${chapterStr ?? ''}`.trim() : 'Bíblia'}
@@ -99,7 +100,8 @@ const AtriumBibleReader: React.FC = () => {
           <Bible />
         </BibleReadGate>
         <BiblePickerSheet open={pickerOpen} onOpenChange={setPickerOpen} />
-      </Suspense>
+        </Suspense>
+      </div>
     );
   }
 
@@ -121,7 +123,7 @@ const BibleLanding: React.FC = () => {
 
   return (
     <div
-      className="min-h-screen w-full bg-stitch-background text-stitch-on-background"
+      className="min-h-screen w-full bg-stitch-background text-stitch-on-background" data-catedra-module="bible"
       style={{
         backgroundImage: 'url("https://www.transparenttextures.com/patterns/p6.png")',
       }}

@@ -1,6 +1,7 @@
 @import "tailwindcss";
 @config "../tailwind.config.legacy.ts";
 @import "tw-animate-css";
+@import "./styles/estudar-modules.css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -592,4 +593,52 @@
   .catedra-module-shell::before {
     height: 2px;
   }
+}
+
+
+/* ESTUDAR — fundação visual comum. A identidade azul/teal entra no limiar e nas superfícies, nunca no corpo do texto. */
+[data-catedra-module="estudar"] [data-catedra-module-root] {
+  min-height: 100%;
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--catedra-module-accent-soft) 72%, transparent),
+      transparent 16rem
+    );
+}
+
+[data-catedra-module="estudar"] [data-reader-shell] {
+  --reader-accent: var(--catedra-module-accent);
+  --reader-accent-soft: var(--catedra-module-accent-soft);
+}
+
+[data-catedra-module="estudar"] [data-reader-shell] [data-reader-slot="content"] {
+  width: min(100%, var(--catedra-reading-max));
+}
+
+[data-catedra-module="estudar"] [data-reader-shell] [data-reader-slot="content"] p {
+  text-wrap: pretty;
+}
+
+@media (max-width: 640px) {
+  [data-catedra-module="estudar"] [data-reader-shell] [data-reader-slot="content"] {
+    padding-inline: 1.125rem;
+    padding-block: 1.5rem;
+  }
+
+  [data-catedra-module="estudar"] [data-reader-shell] [data-reader-slot="content"] p {
+    font-size: 1.0625rem;
+    line-height: 1.82;
+  }
+
+  [data-catedra-module="estudar"] [data-reader-shell] [data-reader-slot="content"] h1,
+  [data-catedra-module="estudar"] [data-reader-shell] [data-reader-slot="content"] h2 {
+    text-wrap: balance;
+  }
+}
+
+[data-catedra-module="estudar"] [data-catedra-module-root] input:focus-visible,
+[data-catedra-module="estudar"] [data-catedra-module-root] button:focus-visible,
+[data-catedra-module="estudar"] [data-catedra-module-root] a:focus-visible {
+  outline-color: var(--catedra-module-accent);
 }

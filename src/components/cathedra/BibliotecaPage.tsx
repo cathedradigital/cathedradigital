@@ -271,7 +271,7 @@ const BibliotecaPage: React.FC = () => {
 
   return (
     <ContemplativeLayout>
-      <div className="w-full pt-spacing-md pb-spacing-4xl" data-biblioteca-theme={theme}>
+      <div className="w-full pt-spacing-md pb-spacing-4xl" data-biblioteca-theme={theme} data-catedra-module-root data-catedra-module="library">
 
         {/* Hero editorial — abertura contemplativa (Sprint R1). */}
         <EditorialHero
