@@ -135,11 +135,7 @@ const ContaAdmin = lazy(() => import('./pages/conta/sections/AdminSection'));
 const GlobalSearchPage = lazy(() => import('./components/cathedra/GlobalSearchPage'));
 const AtriumBuscarPage = lazy(() => import('./pages/AtriumBuscarPage'));
 const LogosPage = lazy(() => import('./pages/LogosPage'));
-const Index = lazy(() => import('./pages/Index'));
 const HomeUnified = lazy(() => import('./pages/HomeUnified'));
-const AtriumHome = lazy(() => import('./pages/AtriumHome'));
-const PublicLanding = lazy(() => import('./pages/PublicLanding'));
-const RootGate = lazy(() => import('./components/cathedra/RootGate'));
 import { setLastRoute, resolveAuthHome } from './lib/lastRoute';
 
 const SpiritualProfile = lazy(() => import('./components/cathedra/SpiritualProfile'));
@@ -630,8 +626,9 @@ const AppLayout: React.FC = () => {
               <Route path="/" element={<Suspense fallback={<LoadingFallback />}><HomeUnified /></Suspense>} />
               <Route path="/atrium" element={<Navigate to="/" replace />} />
               <Route path="/planos" element={<Navigate to="/pricing" replace />} />
-              <Route path="/home-v3" element={<Suspense fallback={<LoadingFallback />}><HomeUnified /></Suspense>} />
-              <Route path="/legacy-home" element={<Suspense fallback={<LoadingFallback />}><Index /></Suspense>} />
+              {/* Entrada canônica: "/" é a única Home pública. Aliases antigos preservam links sem duplicar telas. */}
+              <Route path="/home-v3" element={<Navigate to="/" replace />} />
+              <Route path="/legacy-home" element={<Navigate to="/" replace />} />
               <Route path="/home" element={<Navigate to="/" replace />} />
               <Route path="/dev/editorial" element={<Suspense fallback={<LoadingFallback />}><EditorialShowcase /></Suspense>} />
               <Route path="/dev/mobile" element={<Suspense fallback={<LoadingFallback />}><MobileShowcase /></Suspense>} />
