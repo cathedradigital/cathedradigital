@@ -15,7 +15,7 @@ values
     'official_reference',
     'Lista oficial dos pontífices romanos. Usar como fonte de referência e não como autorização automática para reproduzir textos.',
     now(),
-    'published'
+    'active'
   ),
   (
     'new-advent-fathers-index',
