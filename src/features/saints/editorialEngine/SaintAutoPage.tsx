@@ -130,7 +130,6 @@ export const SaintAutoPage: React.FC<Props> = ({ descriptor }) => {
             contentType="saint"
             contentId={descriptor.slug}
             label={header.name}
-            url={window.location.pathname + window.location.search}
           />
         </div>
         {image && (
