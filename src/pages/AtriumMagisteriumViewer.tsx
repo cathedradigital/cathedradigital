@@ -35,7 +35,7 @@ const AtriumMagisteriumViewer: React.FC = () => {
   const subtitle = subtitleParts.length > 0 ? subtitleParts.join(' · ') : undefined;
 
   return (
-    <>
+    <div data-catedra-module="documents">
       <MobileTopBar kicker={kicker} title={meta?.title ?? 'Magistério'} showBack />
       <ReaderToolbar
         kicker={kicker}
@@ -47,7 +47,7 @@ const AtriumMagisteriumViewer: React.FC = () => {
         <MagisteriumViewer />
       </Suspense>
       <MobileBottomNav />
-    </>
+    </div>
   );
 };
 
