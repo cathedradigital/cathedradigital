@@ -148,6 +148,11 @@ const BibleVersePopoverBody: React.FC<BodyProps> = ({ abbr, chapter, verse, onNa
     navigate(buildBibleUrl({ abbr, chapter, verse }));
   };
 
+  const handleStudyPath = (url: string) => {
+    setStudyOpen(true);
+    navigate(url);
+  };
+
   const goLabel = verse ? `Ir ao versículo ${verse}` : 'Abrir completo';
 
   return (
@@ -205,7 +210,7 @@ const BibleVersePopoverBody: React.FC<BodyProps> = ({ abbr, chapter, verse, onNa
             {study.suggestions.length > 0 ? (
               <div className="mt-2 space-y-2">
                 {study.suggestions.slice(0, 8).map((item, index) => (
-                  <button key={item.target.node.id ?? index} type="button" onClick={() => navigate(item.target.url)}
+                  <button key={item.target.node.id ?? index} type="button" onClick={() => handleStudyPath(item.target.url)}
                     className="block w-full rounded-lg border border-border/70 bg-background/50 px-2.5 py-2 text-left transition-colors hover:bg-muted focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary">
                     <span className="block text-[9px] font-bold uppercase tracking-[0.12em] text-secondary">{item.eyebrow}</span>
                     <span className="mt-0.5 block text-[11px] font-semibold text-foreground">{item.target.node.label}</span>
