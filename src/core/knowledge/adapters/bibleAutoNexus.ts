@@ -20,7 +20,8 @@ export interface BibleNexusInput {
 }
 
 const BUCKETS: readonly ReaderNexusBucket[] = [
-  'catechism', 'glossary', 'prayer', 'saint', 'journey', 'liturgy',
+  // Escritura → doutrina → Magistério → testemunho → oração.
+  'catechism', 'magisterium', 'father', 'saint', 'glossary', 'liturgy', 'prayer', 'journey',
 ];
 
 const CACHE_MAX = 64;
