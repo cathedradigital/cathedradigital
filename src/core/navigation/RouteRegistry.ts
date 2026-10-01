@@ -33,7 +33,7 @@ const ROUTES: Record<RouteKey, RouteEntry> = {
   'study.magisterium':    { template: '/magisterium/:doc',                 requires: ['doc'] },
   // Rota canônica dos Padres/Doutores. Redireciona internamente para /santos/:slug
   // (Padres estão na tabela `saints` com category='doctor').
-  'study.father':         { template: '/padres/:slug',                         requires: ['slug'] },
+  'study.father':         { template: '/biblioteca/padres/:slug',          requires: ['slug'] },
   'study.saint':          { template: '/santos/:slug',                     requires: ['slug'] },
   'study.glossary':       { template: '/glossario/:slug',                  requires: ['slug'] },
   'study.journey':        { template: '/jornadas/:id',                     requires: ['id'] },
