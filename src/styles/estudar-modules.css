@@ -843,3 +843,58 @@
     padding-inline: 0;
   }
 }
+
+/* Final desktop density overrides — applied after the legacy desktop review. */
+@media (min-width: 768px) {
+  [data-catedra-module="bible"] .estudar-bible-book-grid {
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+    gap: .6rem;
+  }
+
+  [data-catedra-module="bible"] .estudar-bible-book-card {
+    min-height: 8.5rem;
+    aspect-ratio: auto;
+    padding: .7rem;
+    border-radius: .7rem;
+  }
+
+  [data-catedra-module="bible"] .estudar-bible-book-card h3 {
+    font-size: .82rem;
+    line-height: 1.08;
+  }
+
+  [data-catedra-module="bible"] .estudar-bible-book-card p {
+    font-size: .56rem;
+    line-height: 1.15;
+  }
+
+  [data-catedra-module="bible"] .estudar-bible-book-card .group-hover\\:opacity-100 {
+    display: none;
+  }
+
+  [data-catedra-module="catechism"] [data-reader-slot="content"],
+  [data-catedra-module="catechism"] .editorial-column {
+    max-width: 62rem;
+  }
+
+  [data-catedra-module="catechism"] article[id^="p"] .reader-text {
+    font-size: 1.08rem;
+    line-height: 1.86;
+  }
+
+  [data-catedra-module="nexus"] .estudar-relation {
+    min-height: 0;
+    padding: .85rem 1rem;
+  }
+
+  [data-catedra-module="library"] .estudar-item-card {
+    min-height: 0;
+    padding: .9rem 1rem;
+  }
+}
+
+@media (min-width: 1200px) {
+  [data-catedra-module="bible"] .estudar-bible-book-grid {
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+  }
+}
