@@ -90,14 +90,17 @@ const queryClient = new QueryClient({
   },
 });
 
-const queryStorage =
+const queryStorage: Storage =
   typeof window !== 'undefined'
     ? window.localStorage
-    : ({
+    : {
+        length: 0,
+        clear: () => undefined,
         getItem: () => null,
-        setItem: () => undefined,
+        key: () => null,
         removeItem: () => undefined,
-      } as Storage);
+        setItem: () => undefined,
+      };
 
 const persister = createSyncStoragePersister({
   storage: queryStorage,
