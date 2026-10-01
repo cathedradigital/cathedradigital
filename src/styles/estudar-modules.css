@@ -1,5 +1,6 @@
-/* Estudar — sistema visual dos módulos internos
- * Camada editorial compartilhada: leitura, responsividade, estados e identidade por módulo.
+/* Estudar — sistema visual compartilhado e refinamento ponta a ponta.
+ * Regra: conteúdo e dados permanecem intactos; esta camada organiza leitura,
+ * navegação, densidade, responsividade, estados e identidade contextual.
  */
 :root {
   --estudar-reading-ch: 68ch;
@@ -18,18 +19,14 @@
   --estudar-community-accent: #3f756e;
 }
 
-/* O módulo colore o contexto; o texto de leitura permanece neutro. */
 [data-catedra-module] {
   --estudar-accent: var(--catedra-module-accent, #2f6f8f);
   --estudar-accent-soft: color-mix(in srgb, var(--estudar-accent) 10%, transparent);
   --estudar-accent-border: color-mix(in srgb, var(--estudar-accent) 24%, hsl(var(--border)));
+  min-width: 0;
 }
 
-[data-catedra-module="bible"] {
-  --estudar-accent: var(--estudar-bible-accent);
-  --estudar-reading-size: 1.0625rem;
-  --estudar-reading-leading: 1.82;
-}
+[data-catedra-module="bible"] { --estudar-accent: var(--estudar-bible-accent); --estudar-reading-size: 1.0625rem; --estudar-reading-leading: 1.82; }
 [data-catedra-module="catechism"] { --estudar-accent: var(--estudar-catechism-accent); }
 [data-catedra-module="documents"] { --estudar-accent: var(--estudar-documents-accent); }
 [data-catedra-module="nexus"] { --estudar-accent: var(--estudar-nexus-accent); }
@@ -37,36 +34,26 @@
 [data-catedra-module="saints"] { --estudar-accent: var(--estudar-saints-accent); }
 [data-catedra-module="community"] { --estudar-accent: var(--estudar-community-accent); }
 
-[data-catedra-module] [data-catedra-module-root],
-[data-catedra-module] > [data-catedra-module-root] {
-  min-width: 0;
-}
-
-[data-catedra-module] :is(button, a, [role="button"]) {
-  -webkit-tap-highlight-color: transparent;
-}
-
-[data-catedra-module] :is(button, a, [role="button"]):not(.prose a) {
-  min-height: 2.75rem;
-}
-
-[data-catedra-module] :is(input, textarea, select) {
-  min-height: 2.75rem;
-}
-
-/* Faixa contextual discreta: o usuário sabe onde está sem saturar a página. */
+/* Estrutura comum */
 [data-catedra-module]::before {
   content: "";
   display: block;
   height: 2px;
   width: 100%;
   background: var(--estudar-accent);
-  opacity: .75;
+  opacity: .72;
 }
-
-[data-catedra-module] :is(h1, h2, h3) {
-  text-wrap: balance;
+[data-catedra-module] :is(h1,h2,h3,h4) { text-wrap: balance; }
+[data-catedra-module] :is(button,a,[role="button"]) {
+  -webkit-tap-highlight-color: transparent;
 }
+[data-catedra-module] :is(button,a,[role="button"]):not(.prose a) { min-height: 2.75rem; }
+[data-catedra-module] :is(input,textarea,select) { min-height: 2.75rem; }
+[data-catedra-module] :is(button,a,input,textarea,select,[role="button"]):focus-visible {
+  outline: 2px solid var(--estudar-accent);
+  outline-offset: 2px;
+}
+[data-catedra-module] ::selection { background: var(--estudar-accent); color: hsl(var(--background)); }
 
 [data-catedra-module] .estudar-reading-column,
 [data-catedra-module] [data-reader-slot="content"] {
@@ -74,65 +61,149 @@
   max-width: var(--estudar-reading-rem);
   margin-inline: auto;
 }
-
-/* Bíblia: leitura contínua, versículos escaneáveis e controles compactos. */
-[data-catedra-module="bible"] [data-reader-shell] {
-  --reader-accent: var(--estudar-accent);
-  --reader-accent-soft: var(--estudar-accent-soft);
+[data-catedra-module] [data-reader-shell] {
+  min-width: 0;
 }
+[data-catedra-module] .estudar-section {
+  scroll-margin-top: 6rem;
+  padding-block: clamp(1.25rem, 3vw, 2.5rem);
+}
+[data-catedra-module] .estudar-state {
+  border: 1px dashed var(--estudar-accent-border);
+  background: var(--estudar-accent-soft);
+  border-radius: var(--estudar-module-radius);
+  padding: clamp(1.25rem, 4vw, 2rem);
+}
+[data-catedra-module] .estudar-divider {
+  border-top: 1px solid var(--estudar-accent-border);
+}
+[data-catedra-module] .estudar-chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.25rem;
+  border: 1px solid var(--estudar-accent-border);
+  border-radius: 999px;
+  background: var(--estudar-accent-soft);
+  padding: .35rem .7rem;
+  color: var(--estudar-accent);
+  font-size: .72rem;
+  font-weight: 650;
+  letter-spacing: .06em;
+}
+
+/* Leitura */
+[data-catedra-module] [data-reader-slot="content"] {
+  text-wrap: pretty;
+}
+[data-catedra-module] [data-reader-slot="content"] :is(h1,h2,h3) {
+  scroll-margin-top: 6rem;
+}
+[data-catedra-module] [data-reader-slot="content"] :is(p,li) {
+  overflow-wrap: break-word;
+}
+[data-catedra-module] .estudar-reading-toolbar,
+[data-catedra-module] .estudar-bible-controls {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  backdrop-filter: blur(12px);
+  background: color-mix(in srgb, hsl(var(--background)) 90%, transparent);
+  border-bottom: 1px solid var(--estudar-accent-border);
+}
+
+/* 01 — Bíblia: leitura contínua, foco no texto e navegação de capítulo. */
 [data-catedra-module="bible"] [data-reader-slot="content"] {
   font-size: var(--estudar-reading-size);
   line-height: var(--estudar-reading-leading);
 }
 [data-catedra-module="bible"] [data-reader-slot="content"] p {
   max-width: var(--estudar-reading-ch);
-  text-wrap: pretty;
 }
-[data-catedra-module="bible"] [data-reader-slot="content"] :is(h1, h2, h3) {
-  margin-top: 2rem;
-  margin-bottom: 1rem;
+[data-catedra-module="bible"] [data-reader-slot="content"] :is(h1,h2,h3) {
+  margin-block: 2rem 1rem;
 }
-[data-catedra-module="bible"] .estudar-bible-controls {
-  position: sticky;
-  top: 0;
-  z-index: 20;
-  backdrop-filter: blur(12px);
-  background: color-mix(in srgb, hsl(var(--background)) 88%, transparent);
-  border-bottom: 1px solid var(--estudar-accent-border);
+[data-catedra-module="bible"] [id^="verse-"] {
+  scroll-margin-top: 7rem;
+}
+[data-catedra-module="bible"] [id^="verse-"]:hover {
+  background: var(--estudar-accent-soft);
+}
+[data-catedra-module="bible"] .estudar-chapter-nav {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: .75rem;
+}
+[data-catedra-module="bible"] .estudar-chapter-nav > :last-child { justify-self: end; }
+
+/* 02 — Catecismo: sumário primeiro, leitura sem ruído. */
+[data-catedra-module="catechism"] .estudar-index {
+  border: 1px solid var(--estudar-accent-border);
+  background: var(--estudar-accent-soft);
+  border-radius: var(--estudar-module-radius);
+}
+[data-catedra-module="catechism"] :is(article,section) { scroll-margin-top: 6rem; }
+[data-catedra-module="catechism"] [data-reader-slot="content"] {
+  font-size: 1.04rem;
+  line-height: 1.82;
 }
 
-/* Conteúdo documental e catequético: índice e texto em ritmos separados. */
-[data-catedra-module="catechism"] [data-reader-slot="content"],
-[data-catedra-module="documents"] [data-reader-slot="content"] {
-  max-width: var(--estudar-reading-rem);
-}
-[data-catedra-module="catechism"] .estudar-index,
+/* 03 — Documentos: hierarquia de títulos, metadados e leitura longa. */
 [data-catedra-module="documents"] .estudar-index {
   border: 1px solid var(--estudar-accent-border);
   background: var(--estudar-accent-soft);
   border-radius: var(--estudar-module-radius);
 }
-[data-catedra-module="catechism"] :is(article, section),
-[data-catedra-module="documents"] :is(article, section) {
-  scroll-margin-top: 6rem;
+[data-catedra-module="documents"] :is(article,section) { scroll-margin-top: 6rem; }
+[data-catedra-module="documents"] [data-reader-slot="content"] {
+  font-size: 1.04rem;
+  line-height: 1.84;
 }
 
-/* Biblioteca: descoberta primeiro; resultados não ficam espremidos em colunas estreitas. */
+/* 04 — Nexo: primeiro o destino; relações depois. */
+[data-catedra-module="nexus"] .estudar-relation {
+  border: 1px solid var(--estudar-accent-border);
+  background: var(--estudar-accent-soft);
+  border-radius: var(--estudar-module-radius);
+  transition: border-color .2s ease, transform .2s ease;
+}
+[data-catedra-module="nexus"] .estudar-relation:hover {
+  border-color: color-mix(in srgb, var(--estudar-accent) 45%, hsl(var(--border)));
+  transform: translateY(-1px);
+}
+[data-catedra-module="nexus"] .estudar-relation a {
+  color: var(--estudar-accent);
+  text-decoration: underline;
+  text-underline-offset: .18em;
+}
+
+/* 05 — Biblioteca: descoberta, filtros e leitura do item. */
 [data-catedra-module="library"] .estudar-discovery-grid {
   display: grid;
-  grid-template-columns: repeat(12, minmax(0, 1fr));
-  gap: clamp(1rem, 2vw, 1.75rem);
+  grid-template-columns: repeat(12,minmax(0,1fr));
+  gap: clamp(1rem,2vw,1.75rem);
 }
-[data-catedra-module="library"] .estudar-discovery-main {
-  grid-column: span 8;
-  min-width: 0;
+[data-catedra-module="library"] .estudar-discovery-main { grid-column: span 8; min-width: 0; }
+[data-catedra-module="library"] .estudar-discovery-aside { grid-column: span 4; min-width: 0; }
+[data-catedra-module="library"] .estudar-filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+  align-items: center;
 }
-[data-catedra-module="library"] .estudar-discovery-aside {
-  grid-column: span 4;
+[data-catedra-module="library"] .estudar-item-card {
   min-width: 0;
+  border: 1px solid var(--estudar-accent-border);
+  border-radius: var(--estudar-module-radius);
+  transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease;
+}
+[data-catedra-module="library"] .estudar-item-card:hover {
+  border-color: color-mix(in srgb, var(--estudar-accent) 45%, hsl(var(--border)));
+  box-shadow: var(--estudar-module-shadow);
+  transform: translateY(-1px);
 }
 
-/* Santos: hero compacto + sequência editorial, sem transformar biografia em dashboard. */
+/* 06 — Salto: editorial, escaneável e centrado no conteúdo. */
 [data-catedra-module="saints"] .estudar-editorial-column {
   width: min(100%, var(--estudar-reading-rem));
   margin-inline: auto;
@@ -141,20 +212,9 @@
   border-top: 1px solid var(--estudar-accent-border);
   padding-block: 1.25rem;
 }
+[data-catedra-module="saints"] .estudar-editorial-block:first-child { border-top: 0; }
 
-/* Nexo: relações são secundárias ao destino; links têm sinal visual consistente. */
-[data-catedra-module="nexus"] .estudar-relation {
-  border: 1px solid var(--estudar-accent-border);
-  background: var(--estudar-accent-soft);
-  border-radius: var(--estudar-module-radius);
-}
-[data-catedra-module="nexus"] .estudar-relation a {
-  color: var(--estudar-accent);
-  text-decoration: underline;
-  text-underline-offset: .18em;
-}
-
-/* Igreja Viva: feed com largura controlada e ação principal evidente. */
+/* 07 — Igreja Viva: feed organizado e ação principal clara. */
 [data-catedra-module="community"] .estudar-community-feed {
   width: min(100%, 52rem);
   margin-inline: auto;
@@ -163,50 +223,43 @@
   border-color: var(--estudar-accent-border);
   box-shadow: var(--estudar-module-shadow);
 }
+[data-catedra-module="community"] :is(textarea,input) { font-size: 1rem; }
 
-/* Estados comuns. */
-[data-catedra-module] .estudar-state {
-  border: 1px dashed var(--estudar-accent-border);
-  background: var(--estudar-accent-soft);
-  border-radius: var(--estudar-module-radius);
-  padding: clamp(1.25rem, 4vw, 2rem);
+/* Utilitários responsivos comuns */
+[data-catedra-module] .estudar-mobile-scroll {
+  overflow-x: auto;
+  scrollbar-width: none;
+  overscroll-behavior-inline: contain;
 }
+[data-catedra-module] .estudar-mobile-scroll::-webkit-scrollbar { display: none; }
 
 @media (max-width: 767px) {
   [data-catedra-module] {
     --estudar-mobile-gutter: 1rem;
   }
-
   [data-catedra-module] .estudar-reading-column,
   [data-catedra-module] [data-reader-slot="content"] {
     width: min(100%, calc(100vw - 2 * var(--estudar-mobile-gutter)));
   }
-
+  [data-catedra-module] [data-reader-slot="content"] { padding-inline: .25rem; }
   [data-catedra-module="bible"] [data-reader-slot="content"] {
     font-size: 1.0625rem;
     line-height: 1.82;
-    padding-inline: .25rem;
   }
-
-  [data-catedra-module="library"] .estudar-discovery-grid {
-    display: block;
-  }
-
+  [data-catedra-module="library"] .estudar-discovery-grid { display: block; }
   [data-catedra-module="library"] .estudar-discovery-main,
   [data-catedra-module="library"] .estudar-discovery-aside {
     width: 100%;
     margin-bottom: 1rem;
   }
-
-  [data-catedra-module] .estudar-mobile-scroll {
+  [data-catedra-module="library"] .estudar-filter-row {
+    flex-wrap: nowrap;
     overflow-x: auto;
-    scrollbar-width: none;
-    overscroll-behavior-inline: contain;
+    padding-bottom: .25rem;
   }
-
-  [data-catedra-module] .estudar-mobile-scroll::-webkit-scrollbar {
-    display: none;
-  }
+  [data-catedra-module="community"] .estudar-community-feed { width: 100%; }
+  [data-catedra-module] :is(h1) { font-size: clamp(1.75rem,8vw,2.5rem); }
+  [data-catedra-module] :is(h2) { font-size: clamp(1.25rem,6vw,1.75rem); }
 }
 
 @media (min-width: 768px) {
@@ -215,7 +268,6 @@
     --estudar-reading-leading: 1.8;
   }
 }
-
 @media (prefers-reduced-motion: reduce) {
   [data-catedra-module] * {
     scroll-behavior: auto !important;
