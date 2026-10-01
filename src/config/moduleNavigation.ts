@@ -99,7 +99,6 @@ export const MODULE_NAVIGATION: ModuleNavGroup[] = [
 
 export const TRANSVERSAL_MODULES = [
   { id: 'logos', label: 'Logos IA', path: '/logos', description: 'Assistente transversal baseado nas fontes recuperadas pelo Nexus.' },
-  { id: 'community', label: 'Comunidade', path: '/community', description: 'Partilha e interação entre usuários.' },
 ];
 
 export const getModuleGroup = (key: ModuleEnvironment) =>
