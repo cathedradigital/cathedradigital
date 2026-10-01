@@ -24,12 +24,16 @@ export interface ModuleNavGroup {
   key: ModuleEnvironment;
   label: string;
   description: string;
+  accent: string;
+  accentSoft: string;
   items: ModuleNavItem[];
 }
 
 export const MODULE_NAVIGATION: ModuleNavGroup[] = [
   {
     key: 'estudar',
+    accent: '#2f6f8f',
+    accentSoft: 'rgba(47,111,143,0.14)',
     label: 'Estudar',
     description: 'Fontes, tradição e conhecimento da fé.',
     items: [
@@ -44,6 +48,8 @@ export const MODULE_NAVIGATION: ModuleNavGroup[] = [
   },
   {
     key: 'rezar',
+    accent: '#8b5e83',
+    accentSoft: 'rgba(139,94,131,0.14)',
     label: 'Rezar',
     description: 'Oração, liturgia e vida espiritual.',
     items: [
@@ -61,6 +67,8 @@ export const MODULE_NAVIGATION: ModuleNavGroup[] = [
   },
   {
     key: 'formar-se',
+    accent: '#b07a35',
+    accentSoft: 'rgba(176,122,53,0.14)',
     label: 'Formar-se',
     description: 'Jornadas e percursos estruturados de formação.',
     items: [
@@ -70,6 +78,8 @@ export const MODULE_NAVIGATION: ModuleNavGroup[] = [
   },
   {
     key: 'pesquisar',
+    accent: '#4f7d69',
+    accentSoft: 'rgba(79,125,105,0.14)',
     label: 'Pesquisar',
     description: 'Descoberta universal e ferramentas de referência.',
     items: [
@@ -84,6 +94,8 @@ export const MODULE_NAVIGATION: ModuleNavGroup[] = [
   },
   {
     key: 'minha-jornada',
+    accent: '#7a6aa6',
+    accentSoft: 'rgba(122,106,166,0.14)',
     label: 'Minha Jornada',
     description: 'Continuidade, memória e configuração pessoal.',
     items: [

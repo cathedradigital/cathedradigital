@@ -13,7 +13,7 @@ import { cn } from '@/lib/utils';
 import { useAvatarUrl } from '@/lib/avatar';
 import { isLegitimateClick } from '@/lib/navigation-utils';
 import { getBreadcrumbs } from '@/config/routes';
-import { MODULE_NAVIGATION } from '@/config/moduleNavigation';
+import { MODULE_NAVIGATION, type ModuleEnvironment } from '@/config/moduleNavigation';
 
 interface AppHeaderProps {
   user: any;
@@ -34,6 +34,7 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
   const { t } = useLang();
   const avatarSrc = useAvatarUrl(user?.avatar, 96);
   const [isReady, setIsReady] = useState(false);
+  const [openEnvironment, setOpenEnvironment] = useState<ModuleEnvironment | null>(null);
   
   useEffect(() => {
     setIsReady(true);
@@ -221,26 +222,53 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
         </div>
         {!isLanding && activeEnvironment && (
           <div className="hidden border-t border-border/40 bg-background/70 backdrop-blur-xl lg:block">
-            <nav className="mx-auto flex max-w-7xl items-center gap-1 px-spacing-sm md:px-[var(--layout-padding)]" aria-label="Ambientes da Cátedra">
+            <nav className="mx-auto flex max-w-7xl items-center gap-1 overflow-x-auto px-spacing-sm md:px-[var(--layout-padding)]" aria-label="Ambientes da Cátedra">
               {MODULE_NAVIGATION.map((group) => {
                 const active = group.key === activeEnvironment.key;
+                const expanded = openEnvironment === group.key;
                 return (
                   <button
                     key={group.key}
                     type="button"
-                    onClick={() => navigate(group.items[0]?.path ?? '/')}
-                    className={cn(
-                      "relative px-4 py-2.5 text-[9px] font-semibold uppercase tracking-[0.18em] transition-colors",
-                      active ? "text-primary" : "text-muted-foreground hover:text-foreground"
-                    )}
+                    onClick={() => setOpenEnvironment(expanded ? null : group.key)}
+                    className={cn("relative flex shrink-0 items-center gap-1 px-4 py-2.5 text-[9px] font-semibold uppercase tracking-[0.18em] transition-colors", active ? "font-bold" : "text-muted-foreground hover:text-foreground")}
+                    style={active ? { color: group.accent } : undefined}
+                    aria-expanded={expanded}
+                    aria-haspopup="true"
                     aria-current={active ? "page" : undefined}
                   >
-                    {group.label}
-                    {active && <span className="absolute inset-x-3 bottom-0 h-0.5 bg-primary" aria-hidden />}
+                    {group.label}<span className={cn("text-[10px] transition-transform", expanded && "rotate-180")} aria-hidden>⌄</span>
+                    {active && <span className="absolute inset-x-3 bottom-0 h-0.5" style={{ backgroundColor: group.accent }} aria-hidden />}
                   </button>
                 );
               })}
             </nav>
+            {openEnvironment && (() => {
+              const group = MODULE_NAVIGATION.find((item) => item.key === openEnvironment);
+              if (!group) return null;
+              return (
+                <div className="border-t border-border/30" style={{ backgroundColor: group.accentSoft }}>
+                  <nav className="mx-auto flex max-w-7xl items-center gap-1 overflow-x-auto px-spacing-sm py-1.5 md:px-[var(--layout-padding)]" aria-label={`Tópicos de ${group.label}`}>
+                    {group.items.map((item) => {
+                      const selected = pathname === item.path || (item.path !== '/' && pathname.startsWith(item.path + '/'));
+                      return (
+                        <button
+                          key={item.id}
+                          type="button"
+                          onClick={() => { setOpenEnvironment(group.key); navigate(item.path); window.scrollTo({ top: 0, behavior: 'instant' }); }}
+                          className={cn("shrink-0 rounded-full px-3 py-1.5 text-[9px] font-semibold tracking-[0.08em] transition-colors", selected ? "bg-background shadow-sm" : "text-muted-foreground hover:bg-background/70 hover:text-foreground")}
+                          style={selected ? { color: group.accent } : undefined}
+                          title={item.description}
+                          aria-current={selected ? "page" : undefined}
+                        >
+                          {item.label}
+                        </button>
+                      );
+                    })}
+                  </nav>
+                </div>
+              );
+            })()}
           </div>
         )}
       </header>

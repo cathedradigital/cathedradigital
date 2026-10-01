@@ -21,3 +21,20 @@ As classes `.catedra-page`, `.catedra-section`, `.catedra-reading`, `.catedra-su
 ## Regra de evolução
 
 Novos módulos devem reutilizar esses padrões antes de criar valores locais de largura, raio, espaçamento ou interação. Alterações globais devem ser feitas nos tokens para evitar divergência entre telas.
+
+
+## Identidade por ambiente
+
+Cada ambiente público possui uma identidade cromática própria, aplicada de forma discreta à navegação contextual e aos estados ativos:
+
+- **Estudar:** azul-petróleo `#2f6f8f`
+- **Rezar:** ameixa `#8b5e83`
+- **Formar-se:** âmbar-terra `#b07a35`
+- **Pesquisar:** verde `#4f7d69`
+- **Minha Jornada:** violeta `#7a6aa6`
+
+A cor identifica contexto; ela não substitui texto, ícones, foco ou estado semântico.
+
+## Nexus como camada transversal
+
+Referências verificadas devem preferir um destino interno quando a Cátedra possui uma rota canônica correspondente. A fonte original permanece disponível como referência externa quando aplicável. Assim, o Nexus conecta módulos sem duplicar conteúdo e sem transformar uma fonte externa em conteúdo da própria Cátedra.
