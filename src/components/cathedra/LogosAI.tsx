@@ -45,7 +45,14 @@ const LogosAI: React.FC<LogosAIProps> = ({
   const [isTyping, setIsTyping] = useState(false);
   const abortControllerRef = React.useRef<AbortController | null>(null);
   const [history, setHistory] = useState<{ role: 'user' | 'assistant'; content: string }[]>([]);
-  const [retrievedSources, setRetrievedSources] = useState<{ kind: string; ref: string; title: string; relation?: string; note?: string | null }[]>([]);
+  const [retrievedSources, setRetrievedSources] = useState<{
+    kind: string; ref: string; title: string; relation?: string; note?: string | null; href?: string;
+    authority?: { source_type: string; authority_class: string; authority_label: string; author?: string | null; citation?: string | null; canonical_url?: string | null } | null;
+  }[]>([]);
+  const [authorityNexus, setAuthorityNexus] = useState<{
+    relation: string; from?: { source_type?: string; authority_label?: string; title?: string };
+    to?: { source_type?: string; authority_label?: string; title?: string }; note?: string | null;
+  }[]>([]);
   const lastLoadedContextRef = React.useRef<string | undefined>(undefined);
   const [visibleMessages, setVisibleMessages] = useState(10); // Simple pagination
   const chatEndRef = React.useRef<HTMLDivElement>(null);
@@ -115,7 +122,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
     if (e) e.preventDefault();
     if (settings.totalSilence) {
       toast.error("O Modo Silêncio Total está ativo", {
-        description: "Desative-o nas configurações para interagir com a Logos IA."
+        description: "Desative-o nas configurações para interagir com a Cáter."
       });
       return;
     }
@@ -151,6 +158,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
       if (error) throw error;
       
       setRetrievedSources(Array.isArray(data?.sources) ? data.sources.slice(0, 8) : []);
+      setAuthorityNexus(Array.isArray(data?.authority_nexus) ? data.authority_nexus.slice(0, 8) : []);
       const assistantMsg = data.text || 'Desculpe, não consegui processar sua pergunta agora.';
       
       setIsTyping(true);
@@ -173,11 +181,11 @@ const LogosAI: React.FC<LogosAIProps> = ({
       setIsTyping(false);
     } catch (err: any) {
       if (err.name === 'AbortError' || (err.message && err.message.includes('abort'))) {
-        console.log('Logos IA request aborted');
+        console.log('Cáter request aborted');
         return;
       }
-      console.error('Logos IA Error:', err);
-      toast.error('Erro ao conectar com Logos IA');
+      console.error('Cáter Error:', err);
+      toast.error('Erro ao conectar com Cáter');
     } finally {
       setIsLoading(false);
     }
@@ -192,12 +200,14 @@ const LogosAI: React.FC<LogosAIProps> = ({
     }
 
     setHistory([]);
+    setRetrievedSources([]);
+    setAuthorityNexus([]);
     if (context) {
       localStorage.removeItem(`logos_history_${context}`);
     }
 
     if (!skipConfirm) {
-      toast.success("Histórico da Logos IA redefinido", {
+      toast.success("Histórico da Cáter redefinido", {
         description: "O silêncio foi restaurado nesta seção."
       });
     }
@@ -287,7 +297,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
                     />
                   </>
                 )}
-                <CathedraButton variant="ghost" size="sm" onClick={onClose} aria-label="Fechar Logos AI" className="rounded-premium-full text-primary/60 hover:text-primary transition-colors h-spacing-xl w-spacing-xl px-spacing-0" icon={<Icons.X className="w-spacing-sm h-spacing-sm" />} />
+                <CathedraButton variant="ghost" size="sm" onClick={onClose} aria-label="Fechar Cáter" className="rounded-premium-full text-primary/60 hover:text-primary transition-colors h-spacing-xl w-spacing-xl px-spacing-0" icon={<Icons.X className="w-spacing-sm h-spacing-sm" />} />
               </div>
 
               <div className="flex items-center justify-between mb-spacing-lg md:mb-spacing-xl opacity-30">
@@ -296,7 +306,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
                     <Icons.Sparkles className="w-spacing-sm h-spacing-sm" strokeWidth={0.5} />
                   </div>
                   <div>
-                    <h4 className="text-[8px] font-black uppercase tracking-[0.6em] text-primary/40">Logos IA</h4>
+                    <h4 className="text-[8px] font-black uppercase tracking-[0.6em] text-primary/40">Cáter</h4>
                   </div>
                 </div>
                 
@@ -348,17 +358,52 @@ const LogosAI: React.FC<LogosAIProps> = ({
                 ))}
 
                 {retrievedSources.length > 0 && !isLoading && !isTyping && (
-                  <div className="pt-spacing-lg border-t border-primary/5">
-                    <p className="text-[9px] font-black uppercase tracking-[0.2em] text-secondary/60 mb-spacing-sm">Fontes consultadas pelo Nexus</p>
-                    <ul className="space-y-1.5">
+                  <div className="pt-spacing-lg border-t border-primary/5 space-y-spacing-sm">
+                    <div>
+                      <p className="text-[9px] font-black uppercase tracking-[0.2em] text-secondary/70">Fontes que sustentam esta consulta</p>
+                      <p className="mt-1 text-[10px] text-muted-foreground/70 leading-relaxed">
+                        A natureza da fonte aparece explicitamente para não confundir Escritura, Magistério, testemunho patrístico ou teologia.
+                      </p>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-spacing-sm">
                       {retrievedSources.map((source, index) => (
-                        <li key={source.kind + ':' + source.ref + ':' + index} className="text-[10px] text-muted-foreground/80 leading-relaxed">
-                          <span className="font-semibold text-primary/70">{source.title}</span>
-                          <span className="ml-1 opacity-60">({source.kind}:{source.ref})</span>
-                          {source.relation && <span className="ml-1 opacity-60">· {source.relation}</span>}
-                        </li>
+                        <div key={source.kind + ':' + source.ref + ':' + index} className="rounded-premium border border-primary/5 bg-primary/[0.02] p-spacing-sm">
+                          <div className="flex items-start justify-between gap-spacing-xs">
+                            <div>
+                              <p className="text-[10px] font-semibold text-primary/80 leading-relaxed">{source.title}</p>
+                              {source.authority?.authority_label && (
+                                <p className="mt-1 text-[8px] font-black uppercase tracking-widest text-secondary/80">
+                                  {source.authority.authority_label}
+                                </p>
+                              )}
+                            </div>
+                            {source.authority?.canonical_url && (
+                              <a href={source.authority.canonical_url} target="_blank" rel="noreferrer" className="shrink-0 text-[8px] font-black uppercase tracking-widest text-primary/60 hover:text-primary underline underline-offset-2">
+                                Fonte
+                              </a>
+                            )}
+                          </div>
+                          <p className="mt-1 text-[9px] text-muted-foreground/70">
+                            {source.authority?.citation || (source.kind + ':' + source.ref)}
+                          </p>
+                        </div>
                       ))}
-                    </ul>
+                    </div>
+                    {authorityNexus.length > 0 && (
+                      <div className="pt-spacing-sm">
+                        <p className="text-[9px] font-black uppercase tracking-[0.2em] text-secondary/60 mb-spacing-xs">Nexus de autoridade</p>
+                        <div className="space-y-1.5">
+                          {authorityNexus.map((edge, index) => (
+                            <p key={edge.relation + ':' + index} className="text-[9px] text-muted-foreground/75 leading-relaxed">
+                              <span className="font-semibold text-primary/70">{edge.from?.authority_label || edge.from?.title}</span>
+                              <span className="mx-1 opacity-50">→ {edge.relation} →</span>
+                              <span className="font-semibold text-primary/70">{edge.to?.authority_label || edge.to?.title}</span>
+                              {edge.note && <span className="ml-1 opacity-60">· {edge.note}</span>}
+                            </p>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 )}
 
@@ -407,7 +452,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
                           <div className="w-spacing-xs h-spacing-xs rounded-premium-full bg-primary animate-bounce [animation-delay:-0.3s]" />
                           <div className="w-spacing-xs h-spacing-xs rounded-premium-full bg-primary animate-bounce [animation-delay:-0.15s]" />
                           <div className="w-spacing-xs h-spacing-xs rounded-premium-full bg-primary animate-bounce" />
-                          <span className="text-[8px] font-black uppercase tracking-widest ml-spacing-xs text-primary/40">Logos está contemplando...</span>
+                          <span className="text-[8px] font-black uppercase tracking-widest ml-spacing-xs text-primary/40">Cáter está consultando...</span>
                         </div>
                       )}
                     </div>
@@ -423,7 +468,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
                     placeholder={settings.totalSilence ? "Silêncio Total Ativo..." : "Bíblia, Catecismo ou perguntar sobre a fé..."}
-                    aria-label={settings.totalSilence ? "Logos IA desativada no Modo Silêncio" : "Digite sua dúvida teológica para a Logos IA"}
+                    aria-label={settings.totalSilence ? "Cáter desativada no Modo Silêncio" : "Digite sua dúvida teológica para a Cáter"}
                     disabled={settings.totalSilence}
                     className="w-full bg-transparent border-none text-premium-sm md:text-premium-lg focus:ring-0 outline-none text-center font-serif italic placeholder:text-muted-foreground/30 py-spacing-sm md:py-spacing-md transition-all text-primary"
                   />
@@ -477,7 +522,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
                   <Icons.Sparkles className="w-spacing-md h-spacing-md" strokeWidth={0.5} />
                 </div>
                 <div>
-                  <h3 className="text-premium-sm font-bold uppercase tracking-[0.4em] text-primary">Logos IA</h3>
+                  <h3 className="text-premium-sm font-bold uppercase tracking-[0.4em] text-primary">Cáter</h3>
                   <p className="text-[9px] text-muted-foreground/60 uppercase font-black tracking-widest mt-spacing-2xs">Mentor Espiritual</p>
                 </div>
               </div>
@@ -502,7 +547,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
                     />
                   </>
                 )}
-                <CathedraButton variant="ghost" size="sm" onClick={onClose} aria-label="Fechar Logos AI" className="rounded-premium-full hover:bg-primary/[0.02] text-primary/60 hover:text-primary transition-colors h-spacing-xl w-spacing-xl px-spacing-0" icon={<Icons.X className="w-spacing-md h-spacing-md" />} />
+                <CathedraButton variant="ghost" size="sm" onClick={onClose} aria-label="Fechar Cáter" className="rounded-premium-full hover:bg-primary/[0.02] text-primary/60 hover:text-primary transition-colors h-spacing-xl w-spacing-xl px-spacing-0" icon={<Icons.X className="w-spacing-md h-spacing-md" />} />
               </div>
             </div>
 
