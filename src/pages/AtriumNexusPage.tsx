@@ -112,13 +112,15 @@ const AtriumNexusPage: React.FC = () => {
   const [relations, setRelations] = useState<NexusRelationRow[]>([]);
   const [contribs, setContribs] = useState<NexusContributionRow[]>([]);
   const [loading, setLoading] = useState(true);
+  const [dataError, setDataError] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
     (async () => {
       setLoading(true);
+      setDataError(false);
       try {
-        const [{ data: rels }, { data: cs }] = await Promise.all([
+        const [relsResult, contributionsResult] = await Promise.all([
           (supabase as any)
             .from('nexus_relations')
             .select('id, relation_type, source_kind, target_kind, source_ref, target_ref, note, created_at')
@@ -132,8 +134,12 @@ const AtriumNexusPage: React.FC = () => {
             .limit(6),
         ]);
         if (cancelled) return;
-        setRelations((rels ?? []) as NexusRelationRow[]);
-        setContribs((cs ?? []) as NexusContributionRow[]);
+        if (relsResult.error || contributionsResult.error) {
+          console.error('Nexus data load error', relsResult.error?.message ?? contributionsResult.error?.message);
+          setDataError(true);
+        }
+        setRelations((relsResult.data ?? []) as NexusRelationRow[]);
+        setContribs((contributionsResult.data ?? []) as NexusContributionRow[]);
       } finally {
         if (!cancelled) setLoading(false);
       }
@@ -216,6 +222,11 @@ const AtriumNexusPage: React.FC = () => {
 
         <NexusCorpusVoices />
         <NexusCorpusRelations />
+        {dataError && !loading && (
+          <div className="mt-6 border border-stitch-outline-variant/40 bg-stitch-surface-container-lowest p-4 text-sm text-stitch-on-surface-variant" role="status">
+            Alguns dados dinâmicos do Nexus não puderam ser carregados. O restante da página continua disponível.
+          </div>
+        )}
 
         {/* ─── Bento: Introdução + CTA curadoria ───────────────────── */}
         <section className="mt-12 grid grid-cols-1 items-stretch gap-8 md:grid-cols-12">
