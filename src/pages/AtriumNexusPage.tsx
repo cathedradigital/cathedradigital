@@ -161,7 +161,7 @@ const AtriumNexusPage: React.FC = () => {
 
   return (
     <div
-      className="min-h-screen w-full bg-stitch-background text-stitch-on-background"
+      className="min-h-screen w-full min-w-0 overflow-x-hidden bg-stitch-background text-stitch-on-background"
       style={{
         backgroundImage:
           'url("https://www.transparenttextures.com/patterns/p6.png")',
@@ -181,17 +181,17 @@ const AtriumNexusPage: React.FC = () => {
         <link rel="canonical" href="https://cathedradigital.com.br/nexus" />
       </Helmet>
 
-      <section className="catedra-page catedra-section pb-16 pt-10 md:pt-14 animate-fade-in">
+      <section className="catedra-page catedra-section min-w-0 overflow-x-hidden pb-12 pt-8 md:pb-16 md:pt-14 animate-fade-in">
         {/* ─── Hero editorial ─────────────────────────────────────────── */}
         <section className="text-center md:text-left">
           <div className="mb-8 hidden h-px w-full bg-stitch-secondary/30 md:block" />
           <p className="mb-3 font-stitch-body text-[12px] font-bold uppercase tracking-[0.32em] text-stitch-secondary">
             {HERO_KICKER}
           </p>
-          <h1 className="mb-3 font-stitch-display text-[32px] italic leading-[40px] text-stitch-primary md:text-[48px] md:leading-[56px] md:tracking-[-0.02em]">
+          <h1 className="mb-3 font-stitch-display text-[30px] italic leading-[36px] text-stitch-primary md:text-[48px] md:leading-[56px] md:tracking-[-0.02em]">
             {HERO_TITLE}
           </h1>
-          <p className="mb-8 max-w-2xl font-stitch-body text-[20px] leading-[32px] text-stitch-on-surface-variant md:mx-0 mx-auto">
+          <p className="mb-6 max-w-2xl font-stitch-body text-[17px] leading-[27px] md:mb-8 md:text-[20px] md:leading-[32px] text-stitch-on-surface-variant md:mx-0 mx-auto">
             {HERO_SUBTITLE}
           </p>
 
@@ -200,7 +200,7 @@ const AtriumNexusPage: React.FC = () => {
               e.preventDefault();
               submitSearch(q);
             }}
-            className="mx-auto flex max-w-2xl items-center gap-3 border-b-2 border-stitch-primary/80 pb-3 text-left focus-within:border-stitch-secondary md:mx-0"
+            className="mx-auto flex min-w-0 max-w-2xl items-center gap-2 border-b-2 border-stitch-primary/80 pb-3 text-left focus-within:border-stitch-secondary md:mx-0"
           >
             <SearchIcon className="h-5 w-5 shrink-0 text-stitch-on-surface-variant" />
             <input
@@ -209,7 +209,7 @@ const AtriumNexusPage: React.FC = () => {
               onChange={(e) => setQ(e.target.value)}
               placeholder="Que fio deseja puxar hoje?"
               aria-label="Buscar no Nexus"
-              className="w-full bg-transparent font-stitch-display text-[18px] italic text-stitch-primary placeholder:text-stitch-on-surface-variant/60 focus:outline-none md:text-[22px]"
+              className="min-w-0 w-full bg-transparent font-stitch-display text-[16px] italic text-stitch-primary placeholder:text-stitch-on-surface-variant/60 focus:outline-none md:text-[22px]"
             />
             <button
               type="submit"
@@ -229,7 +229,7 @@ const AtriumNexusPage: React.FC = () => {
         )}
 
         {/* ─── Bento: Introdução + CTA curadoria ───────────────────── */}
-        <section className="mt-12 grid grid-cols-1 items-stretch gap-8 md:grid-cols-12">
+        <section className="mt-10 grid grid-cols-1 min-w-0 items-stretch gap-5 md:mt-12 md:gap-8 md:grid-cols-12">
           <article className="group relative flex h-80 flex-col justify-between overflow-hidden border border-[hsl(var(--stitch-secondary)/0.25)] bg-stitch-surface-container-lowest p-8 transition-all hover:bg-stitch-surface-container-low md:col-span-8">
             <div
               className="pointer-events-none absolute inset-0 opacity-[0.03]"
@@ -294,7 +294,7 @@ const AtriumNexusPage: React.FC = () => {
         </section>
 
         {/* ─── 7 Vozes canônicas ──────────────────────────────────────── */}
-        <section className="mt-16">
+        <section className="mt-12 md:mt-16">
           <div className="mb-8 flex items-center gap-4">
             <Compass className="h-5 w-5 text-stitch-secondary" />
             <h2 className="font-stitch-display text-[24px] font-semibold leading-[32px] text-stitch-primary">
@@ -426,7 +426,7 @@ const AtriumNexusPage: React.FC = () => {
         )}
 
         {/* ─── Verso litúrgico ────────────────────────────────────────── */}
-        <section className="mt-20 border-t border-stitch-outline-variant/40 pt-10 text-center">
+        <section className="mt-14 border-t border-stitch-outline-variant/40 pt-10 text-center">
           <p className="font-stitch-display text-[20px] italic leading-[30px] text-stitch-primary md:text-[24px]">
             "Toda Escritura é inspirada por Deus e útil para ensinar."
           </p>
