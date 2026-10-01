@@ -145,8 +145,7 @@ const AtriumNexusPage: React.FC = () => {
         if (!cancelled) setLoading(false);
       }
     })();
-    return (
-    <MobileTopBar kicker="Cathedra" title="Nexus" transparent />) => {
+    return () => {
       cancelled = true;
     };
   }, []);
@@ -161,8 +160,7 @@ const AtriumNexusPage: React.FC = () => {
     (a, b) => NEXUS_KIND_PRESETS[a].order - NEXUS_KIND_PRESETS[b].order,
   );
 
-  return (
-    <div
+  return (\n    <>\n    <MobileTopBar kicker="Cathedra" title="Nexus" transparent />   <div
       className="min-h-screen w-full min-w-0 overflow-x-hidden bg-stitch-background text-stitch-on-background"
       style={{
         backgroundImage:
@@ -438,6 +436,7 @@ const AtriumNexusPage: React.FC = () => {
         </section>
       </section>
     </div>
+    </>
   );
 };
 
