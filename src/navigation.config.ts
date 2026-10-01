@@ -5,7 +5,7 @@ export const navigationConfig = {
     { label: 'Início', route: AppRoute.HOME, icon: 'Home' },
     { label: 'Bíblia', route: AppRoute.BIBLE, icon: 'Bible' },
     { label: 'Catecismo', route: AppRoute.CATECHISM, icon: 'Catechism' },
-    { label: 'Logos', route: '/logos', icon: 'Sparkles' },
+    { label: 'Cáter', route: '/logos', icon: 'Sparkles' },
   ],
   secondary: [
     { label: 'Santuário', route: AppRoute.HOJE, icon: 'Sun' },
