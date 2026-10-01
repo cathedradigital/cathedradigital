@@ -468,7 +468,7 @@ const AtriumHome: React.FC = () => {
         <SpaceFooter 
           note="O Mosteiro é um organismo vivo onde cada pedra conta uma história de santidade."
           links={[
-            { label: 'Biblioteca', to: '/biblioteca', hint: 'Mosteiro do Conhecimento' },
+            { label: 'Biblioteca', to: '/acervo', hint: 'Mosteiro do Conhecimento' },
             { label: 'Sacrário', to: '/oracao', hint: 'Silenciar e rezar' },
             { label: 'Capelas', to: '/santos', hint: 'Vidas dos santos' },
           ]}

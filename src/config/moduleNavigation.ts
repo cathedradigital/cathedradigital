@@ -98,7 +98,7 @@ export const MODULE_NAVIGATION: ModuleNavGroup[] = [
 ];
 
 export const TRANSVERSAL_MODULES = [
-  { id: 'logos', label: 'Logos IA', path: '/logos', description: 'Assistente transversal baseado nas fontes recuperadas pelo Nexus.' },
+  { id: 'logos', label: 'Cáter', path: '/logos', description: 'Assistente teológico baseado nas fontes verificadas e no Nexus de autoridade.' },
 ];
 
 export const getModuleGroup = (key: ModuleEnvironment) =>
