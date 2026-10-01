@@ -550,3 +550,45 @@
     transition: none;
   }
 }
+
+
+/* Shell cromático dos ambientes: a cor identifica o lugar sem transformar a leitura em painel saturado. */
+.catedra-module-shell {
+  position: relative;
+  isolation: isolate;
+}
+
+.catedra-module-shell::before {
+  content: "";
+  display: block;
+  height: 2px;
+  width: 100%;
+  background: var(--catedra-module-accent, transparent);
+  opacity: 0.72;
+}
+
+[data-catedra-module] .catedra-module-kicker {
+  color: var(--catedra-module-accent);
+}
+
+[data-catedra-module] .catedra-module-surface {
+  border-color: color-mix(in srgb, var(--catedra-module-accent) 22%, hsl(var(--border)));
+  background:
+    linear-gradient(180deg, var(--catedra-module-accent-soft), transparent 12rem),
+    hsl(var(--card));
+}
+
+[data-catedra-module] .catedra-module-action {
+  border-color: color-mix(in srgb, var(--catedra-module-accent) 38%, transparent);
+  color: var(--catedra-module-accent);
+}
+
+[data-catedra-module] .catedra-module-action:hover {
+  background: var(--catedra-module-accent-soft);
+}
+
+@media (max-width: 640px) {
+  .catedra-module-shell::before {
+    height: 2px;
+  }
+}
