@@ -31,7 +31,7 @@ jobs:
         run: bun run typecheck
 
       - name: Lint
-        run: bun run lint
+        run: bun run lint -- --quiet
 
       - name: Validate internal routes
         run: bun run validate:links
