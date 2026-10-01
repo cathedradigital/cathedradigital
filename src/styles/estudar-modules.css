@@ -966,3 +966,32 @@
     flex: 0 0 auto;
   }
 }
+
+/* Interação de leitura — última camada desktop. */
+@media (min-width: 768px) {
+  [data-catedra-module="documents"] .estudar-doc-reader,
+  [data-catedra-module="documents"] .reader-text,
+  [data-catedra-module="documents"] .prose {
+    max-width: 68rem;
+    margin-inline: auto;
+  }
+
+  [data-catedra-module="documents"] .estudar-doc-reader {
+    font-size: 1.06rem;
+    line-height: 1.82;
+  }
+
+  [data-catedra-module="nexus"] a,
+  [data-catedra-module="nexus"] button {
+    min-height: 2.5rem;
+  }
+
+  [data-catedra-module="library"] [data-library-result] {
+    min-height: 0;
+  }
+
+  [data-catedra-module="saints"] [data-catedra-module="saint-detail"] {
+    max-width: 68rem;
+    margin-inline: auto;
+  }
+}
