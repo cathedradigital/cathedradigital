@@ -5,7 +5,7 @@ import { toast } from 'sonner';
 import { useReadingMarks } from '@/hooks/useReadingMarks';
 
 interface ReadingMarkProps {
-  contentType: 'bible' | 'catechism' | 'magisterium';
+  contentType: string;
   contentId: string;
   label?: string;
   chapter?: number;
