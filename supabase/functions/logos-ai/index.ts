@@ -151,7 +151,7 @@ async function searchBibleReference(
   db: ReturnType<typeof createClient>,
   input: string,
 ): Promise<RetrievedSource[]> {
-  const match = input.match(/\b([1-3]?\s?[A-Za-zÀ-ÿ]+)\s+(\d+)\s*[,\:]\s*(\d+)(?:\s*[-–]\s*(\d+))?\b/);
+  const match = input.match(/\b([1-3]?\s?[A-Za-zÀ-ÿ]+)\s+(\d+)\s*[,:]\s*(\d+)(?:\s*[-–]\s*(\d+))?\b/);
   if (!match) return [];
 
   const book = match[1].replace(/\s+/g, "");
