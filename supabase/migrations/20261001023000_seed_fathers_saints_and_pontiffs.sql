@@ -69,14 +69,14 @@ on conflict (slug) do update set
   status = excluded.status;
 
 insert into public.corpus_documents
-  (source_id, person_id, slug, title, document_kind, author, language, canonical_url,
+  (source_id, person_id, slug, title, document_kind, author_name, original_language, canonical_url,
    rights_status, rights_note, excerpt, ingestion_status, status)
 select
   s.id,
   p.id,
   x.slug,
   x.title,
-  x.document_kind::public.corpus_document_kind,
+  x.document_kind,
   x.author,
   'en',
   'https://www.newadvent.org/fathers/',
