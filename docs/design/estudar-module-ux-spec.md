@@ -77,3 +77,28 @@ A segunda camada usa o mesmo sistema de leitura do Estudar e acrescenta uma assi
 
 ### Regra de implementação
 Os módulos recebem `data-catedra-module` e compartilham `src/styles/estudar-modules.css`. Isso permite evoluir cada módulo separadamente sem duplicar tokens, breakpoints ou regras de leitura.
+
+## Refinamento ponta a ponta — Etapa 3
+
+Esta etapa aplica o mesmo contrato de acabamento aos sete ambientes do Estudar, sem alterar dados, rotas, autenticação ou integrações.
+
+### Ordem de leitura e navegação
+- **Bíblia:** contexto → seleção/identificação do livro → capítulo → leitura contínua → conexões → anterior/próximo.
+- **Catecismo:** partes → seções → parágrafo → contexto/conexões → navegação de continuidade.
+- **Documentos:** documento → metadados → índice/hierarquia → texto longo → referências/destinos.
+- **Nexo:** destino principal → relações contextualizadas → ação de abertura; relações não competem com o conteúdo principal.
+- **Biblioteca:** descoberta → busca/filtros → item → leitura/abertura; filtros ficam acessíveis sem ocupar a tela inteira.
+- **Salto:** entrada editorial → conteúdo principal → blocos sequenciais → continuidade, evitando aparência de dashboard.
+- **Igreja Viva:** entrada → feed → filtros/abas → conteúdo → ação principal e estados de carregamento/vazio/erro.
+
+### Contrato responsivo comum
+- toque mínimo de 44px para controles interativos;
+- coluna de leitura limitada a aproximadamente 68ch/46rem;
+- gutters reduzidos no celular e espaçamento progressivo em tablet/desktop;
+- navegação horizontal de filtros quando a largura não comportar todos os itens;
+- foco visível por teclado e respeito a reduced-motion;
+- títulos balanceados e texto de leitura com largura controlada;
+- estados de carregamento, vazio e erro preservados sem criar dependência de conteúdo inventado.
+
+### Identidade contextual
+Cada módulo mantém seu acento próprio, enquanto o texto de leitura permanece neutro. A identidade cromática não altera a hierarquia doutrinal nem substitui o conteúdo.
