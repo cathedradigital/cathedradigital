@@ -76,7 +76,7 @@ export const SaintAutoPage: React.FC<Props> = ({ descriptor }) => {
       }
       nexus={<NexusPanel output={nexus} kicker={`Conexões · ${header.name}`} />}
       continuation={
-        <div className="catedra-reading space-y-spacing-lg" data-catedra-module-root>
+        <div className="catedra-reading space-y-spacing-lg" data-catedra-module-root data-catedra-module="saints">
           {closure && <EditorialClosure {...closure} />}
           <ReaderContinuation
             context={{
