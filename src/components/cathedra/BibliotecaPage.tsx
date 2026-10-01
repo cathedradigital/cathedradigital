@@ -271,7 +271,7 @@ const BibliotecaPage: React.FC = () => {
 
   return (
     <ContemplativeLayout>
-      <div className="w-full pt-spacing-md pb-spacing-4xl" data-biblioteca-theme={theme} data-catedra-module-root data-catedra-module="library">
+      <div className="w-full min-w-0 overflow-x-hidden pt-spacing-md pb-spacing-4xl" data-biblioteca-theme={theme} data-catedra-module-root data-catedra-module="library">
 
         {/* Hero editorial — abertura contemplativa (Sprint R1). */}
         <EditorialHero
@@ -291,7 +291,7 @@ const BibliotecaPage: React.FC = () => {
         {/* Busca — respiração generosa depois da abertura, sem cara de topo de app. */}
         <form
           onSubmit={submitSearch}
-          className="mt-spacing-4xl mb-spacing-lg"
+          className="mt-spacing-2xl md:mt-spacing-4xl mb-spacing-lg min-w-0"
           role="search"
           aria-label="Buscar na Biblioteca"
         >
@@ -302,7 +302,7 @@ const BibliotecaPage: React.FC = () => {
               onChange={(e) => setQuery(e.target.value)}
               placeholder="O que você procura?"
               aria-label="O que você procura?"
-              className="w-full bg-transparent border-0 border-b border-primary/15 focus:border-secondary focus:outline-none pl-spacing-2xl pr-spacing-md py-spacing-md font-serif text-lg md:text-xl italic placeholder:text-primary/25 text-primary transition-colors"
+              className="w-full min-w-0 bg-transparent border-0 border-b border-primary/15 focus:border-secondary focus:outline-none pl-spacing-2xl pr-spacing-md py-spacing-sm md:py-spacing-md font-serif text-base md:text-xl italic placeholder:text-primary/25 text-primary transition-colors"
             />
             {(query || axis) && (
               <button
@@ -329,7 +329,7 @@ const BibliotecaPage: React.FC = () => {
                   onClick={() => setAxis(a.key)}
                   aria-pressed={active}
                   className={cn(
-                    'text-[11px] uppercase tracking-[0.2em] px-spacing-md py-[6px] border transition-colors',
+                    'shrink-0 text-[10px] md:text-[11px] uppercase tracking-[0.16em] md:tracking-[0.2em] px-spacing-sm md:px-spacing-md py-[6px] border transition-colors',
                     active
                       ? 'border-secondary text-secondary bg-secondary/5'
                       : 'border-primary/15 text-primary/60 hover:border-secondary/60 hover:text-secondary',
@@ -755,7 +755,7 @@ const Shelf: React.FC<{
 
     <div
       className={cn(
-        'flex gap-spacing-lg overflow-x-auto snap-x snap-mandatory pb-spacing-md',
+        'flex min-w-0 gap-spacing-md md:gap-spacing-lg overflow-x-auto snap-x snap-mandatory pb-spacing-md',
         '[scrollbar-width:thin] [-ms-overflow-style:none]',
         '[&::-webkit-scrollbar]:h-[6px] [&::-webkit-scrollbar-thumb]:bg-primary/15 [&::-webkit-scrollbar-track]:bg-transparent',
       )}
@@ -800,7 +800,7 @@ const CollectionsEditorial: React.FC<{ series: ColecaoSerie[] }> = ({ series }) 
             />
           )}
 
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-spacing-2xl md:gap-spacing-3xl items-start">
+          <div className="grid min-w-0 grid-cols-1 md:grid-cols-12 gap-spacing-xl md:gap-spacing-3xl items-start">
             {/* Coluna curatorial */}
             <header className="md:col-span-4 lg:col-span-3 md:sticky md:top-spacing-2xl">
               <div className="flex items-baseline gap-spacing-md mb-spacing-md">
@@ -914,7 +914,7 @@ const EscritosView: React.FC<{
       </div>
 
       {/* Recomendação principal — capa maior à esquerda, nota do bibliotecário à direita. */}
-      <div className="relative grid grid-cols-1 md:grid-cols-12 gap-spacing-2xl md:gap-spacing-4xl items-start mb-spacing-4xl">
+      <div className="relative grid min-w-0 grid-cols-1 md:grid-cols-12 gap-spacing-xl md:gap-spacing-4xl items-start mb-spacing-4xl">
         <div className="md:col-span-4 lg:col-span-3 flex md:justify-end">
           <BookCover
             kicker="Percurso Editorial"
