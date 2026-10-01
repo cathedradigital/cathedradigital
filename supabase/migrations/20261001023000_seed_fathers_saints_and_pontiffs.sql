@@ -146,7 +146,7 @@ on conflict (slug) do update set
 
 -- O diretório oficial de pontífices passa a ser uma fonte do corpus.
 insert into public.corpus_documents
-  (source_id, slug, title, document_kind, author, language, canonical_url,
+  (source_id, slug, title, document_kind, author_name, original_language, canonical_url,
    rights_status, rights_note, excerpt, ingestion_status, status)
 select
   id,
@@ -174,3 +174,26 @@ on conflict (slug) do update set
   excerpt = excluded.excerpt,
   ingestion_status = excluded.ingestion_status,
   status = excluded.status;
+
+
+-- Relações documentais explícitas: cada obra patrística é ligada ao seu autor.
+insert into public.corpus_relations
+  (source_document_id, target_person_id, relation_type, note, confidence, status)
+select d.id, d.person_id, 'written_by',
+  'Relação bibliográfica derivada do registro controlado da obra no acervo.',
+  1.000, 'published'
+from public.corpus_documents d
+where d.document_kind in ('patristic_work','saint_work','papal_document')
+  and d.person_id is not null
+on conflict do nothing;
+
+-- O perfil oficial de Leão XIV fica ligado ao registro do pontífice no corpus.
+insert into public.corpus_relations
+  (source_document_id, target_person_id, relation_type, note, confidence, status)
+select d.id, p.id, 'about',
+  'Página documental oficial da Santa Sé sobre Leão XIV.',
+  1.000, 'published'
+from public.corpus_documents d
+join public.corpus_people p on p.slug = 'leo-xiv'
+where d.slug = 'leo-xiv-vatican-profile'
+on conflict do nothing;
