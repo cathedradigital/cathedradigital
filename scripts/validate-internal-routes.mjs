@@ -26,7 +26,7 @@ const contaStart = app.indexOf('<Route path="/conta"');
 const contaEnd = app.indexOf('/* Biblioteca */', contaStart);
 if (contaStart >= 0 && contaEnd > contaStart) {
   const contaBlock = app.slice(contaStart, contaEnd);
-  for (const match of contaBlock.matchAll(/<Route\\s+path=["']([^/"'][^"']*)["']/g)) {
+  for (const match of contaBlock.matchAll(/<Route\s+path=["']([^/"'][^"']*)["']/g)) {
     declared.add(`/conta/${match[1]}`);
   }
 }
