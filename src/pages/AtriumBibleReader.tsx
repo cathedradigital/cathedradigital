@@ -42,7 +42,8 @@ const BIBLE_EDITION_ROADMAP: Array<{ name: string; status: BibleEditionStatus; n
   { name: 'Peregrino', status: 'externa', note: 'Acesso externo; o Cátedra não extrai nem armazena conteúdo protegido.' },
   { name: 'Outras traduções', status: 'estudo', note: 'Espaço para traduções de estudo, sempre identificadas quanto à tradição e ao estatuto.' },
 ];
-\nconst TESTAMENT_META: Record<Testament, { kicker: string; blurb: string }> = {
+
+const TESTAMENT_META: Record<Testament, { kicker: string; blurb: string }> = {
   'Antigo Testamento': {
     kicker: 'Primeira Aliança',
     blurb: 'Da Criação à espera do Messias — a preparação divina para a plenitude dos tempos.',
@@ -278,7 +279,8 @@ const BibleLanding: React.FC = () => {
             Área reservada para estudo comparado dos três Evangelhos sinóticos, com referências às fontes e distinção clara entre texto bíblico, tradição e material de apoio.
           </p>
         </section>
-\n        {/* Categorias e livros */}
+
+        {/* Categorias e livros */}
         <section className="pt-10 space-y-14">
           {categories.map((cat) => (
             <div key={cat.name}>
