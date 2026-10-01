@@ -27,11 +27,15 @@ const LABELS: Record<string, string> = {
 
 const NexusCorpusRelations: React.FC = () => {
   const [rows, setRows] = useState<RelationRow[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
     (async () => {
-      const { data } = await supabase
+      setLoading(true);
+      setError(false);
+      const { data, error } = await supabase
         .from('corpus_relations')
         .select(
           'id, relation_type, note, confidence, source_document:source_document_id(title, canonical_url), target_document:target_document_id(title, canonical_url), target_person:target_person_id(display_name, canonical_url)',
@@ -40,7 +44,12 @@ const NexusCorpusRelations: React.FC = () => {
         .order('created_at', { ascending: false })
         .limit(8);
 
-      if (!cancelled) setRows((data ?? []) as unknown as RelationRow[]);
+      if (!cancelled) {
+        if (error) console.error('Nexus corpus relations error', error.message);
+        setError(Boolean(error));
+        setRows((data ?? []) as unknown as RelationRow[]);
+        setLoading(false);
+      }
     })();
 
     return () => {
@@ -48,6 +57,8 @@ const NexusCorpusRelations: React.FC = () => {
     };
   }, []);
 
+  if (loading) return <section className="mt-16" aria-label="Carregando relações verificadas"><div className="h-6 w-64 animate-pulse bg-stitch-surface-container-low" /><div className="mt-6 h-24 animate-pulse border border-stitch-outline-variant/40 bg-stitch-surface-container-lowest" /></section>;
+  if (error && !rows.length) return <section className="mt-16" aria-live="polite"><p className="font-stitch-body text-sm text-stitch-on-surface-variant">As relações verificadas não puderam ser carregadas agora.</p></section>;
   if (!rows.length) return null;
 
   return (
