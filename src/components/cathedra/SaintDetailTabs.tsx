@@ -165,7 +165,7 @@ const SaintDetailTabs: React.FC<Props> = ({ saint, onReflect, autoReflect }) => 
               <TabsContent value="reflexao" className="focus-visible:outline-none">
                 <div className="space-y-spacing-md">
                   <p className="text-premium-sm text-muted-foreground font-serif italic">
-                    Refletir com Logos sobre a vida e o testemunho de {saint.name}, aplicando à sua jornada
+                    Refletir na Jornada sobre a vida e o testemunho de {saint.name}, aplicando à sua jornada
                     espiritual de hoje.
                   </p>
                   <Button
