@@ -60,7 +60,10 @@ export const SaintAutoPage: React.FC<Props> = ({ descriptor }) => {
   const image = header.iconography?.imageUrl;
   const attributes = header.iconography?.attributes ?? [];
 
-  return (\n    <>\n      <MobileTopBar kicker="Cathedra" title={header.name} transparent />
+  return (
+    <>
+      <MobileTopBar kicker="Cathedra" title={header.name} transparent />
+
     <div className="min-w-0 w-full overflow-x-hidden" data-catedra-module-root data-catedra-module="saints">
     <ReaderShell
       contentMaxWidth="max-w-3xl"
