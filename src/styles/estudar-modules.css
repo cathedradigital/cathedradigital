@@ -474,3 +474,148 @@
     padding-top: .25rem;
   }
 }
+
+
+/* =========================================================
+   Desktop review — Estudar
+   Objetivo: dar composição de biblioteca editorial no desktop,
+   sem alterar dados, rotas ou conteúdo.
+   ========================================================= */
+@media (min-width: 768px) {
+  [data-catedra-module] {
+    --estudar-desktop-content: 72rem;
+    --estudar-desktop-reading: 46rem;
+  }
+
+  [data-catedra-module] :is(button,a,[role="button"]):not(.prose a) {
+    min-height: 2.5rem;
+  }
+
+  /* Landings: uma coluna editorial clara, sem excesso de blocos soltos. */
+  [data-catedra-module] .estudar-module-landing {
+    width: min(100%, var(--estudar-desktop-content));
+    margin-inline: auto;
+  }
+
+  [data-catedra-module] .estudar-module-landing > :is(section,article) {
+    min-width: 0;
+  }
+
+  /* Bíblia — hero, estudo comparado e catálogo de livros passam a respirar
+     como uma única coleção editorial. */
+  [data-catedra-module="bible"] .estudar-bible-book-grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  [data-catedra-module="bible"] .estudar-bible-book-card {
+    aspect-ratio: 4 / 5;
+    min-height: 15rem;
+    border-radius: .9rem;
+    padding: 1.25rem;
+    box-shadow: 0 10px 28px -24px hsl(var(--foreground) / .35);
+  }
+
+  [data-catedra-module="bible"] .estudar-bible-book-card > div:last-child {
+    max-width: 14rem;
+  }
+
+  [data-catedra-module="bible"] .estudar-bible-book-card h3 {
+    font-size: 1.05rem;
+  }
+
+  [data-catedra-module="bible"] .estudar-bible-book-card:hover {
+    transform: translateY(-2px);
+  }
+
+  [data-catedra-module="bible"] .estudar-reading-column,
+  [data-catedra-module="bible"] [data-reader-slot="content"] {
+    max-width: var(--estudar-desktop-reading);
+  }
+
+  /* Catecismo — cada parte vira uma faixa editorial estável:
+     índice à esquerda, sub-seções em grade à direita. */
+  [data-catedra-module="catechism"] .estudar-catechism-part {
+    column-gap: clamp(2rem, 5vw, 5rem);
+    padding-block: clamp(2rem, 4vw, 3.5rem);
+  }
+
+  [data-catedra-module="catechism"] .estudar-catechism-part > header {
+    position: sticky;
+    top: 6rem;
+    align-self: start;
+    padding-block: .5rem 1rem;
+  }
+
+  [data-catedra-module="catechism"] .estudar-catechism-part > header .font-stitch-display {
+    font-size: clamp(3.25rem, 5vw, 4.5rem);
+  }
+
+  [data-catedra-module="catechism"] .estudar-catechism-part > div {
+    align-content: start;
+  }
+
+  [data-catedra-module="catechism"] .estudar-catechism-part > div > a,
+  [data-catedra-module="catechism"] .estudar-catechism-part > div > article {
+    min-height: 9rem;
+  }
+
+  [data-catedra-module="catechism"] [data-reader-slot="content"] {
+    max-width: var(--estudar-desktop-reading);
+    margin-inline: auto;
+    font-size: 1.075rem;
+    line-height: 1.88;
+  }
+
+  /* Documentos — separa descoberta (filtros) de leitura e reduz a
+     sensação de painel administrativo. */
+  [data-catedra-module="documents"] .estudar-doc-sort-row {
+    max-width: var(--estudar-desktop-content);
+    margin-inline: auto;
+  }
+
+  [data-catedra-module="documents"] [data-reader-slot="content"] {
+    max-width: var(--estudar-desktop-reading);
+    margin-inline: auto;
+    font-size: 1.06rem;
+    line-height: 1.86;
+  }
+
+  [data-catedra-module="documents"] .estudar-index {
+    box-shadow: var(--estudar-module-shadow);
+  }
+
+  /* Leitores em geral: cabeçalho e corpo passam a ter uma largura
+     diferente; o texto fica confortável e o contexto permanece visível. */
+  [data-catedra-module] [data-reader-shell] {
+    width: min(100%, 72rem);
+    margin-inline: auto;
+  }
+
+  [data-catedra-module] [data-reader-slot="content"] :is(h1,h2,h3) {
+    max-width: var(--estudar-desktop-reading);
+    margin-inline: auto;
+  }
+
+  /* Nexus/Biblioteca/Santos: cards com altura visual consistente. */
+  [data-catedra-module="nexus"] .estudar-relation,
+  [data-catedra-module="library"] .estudar-item-card {
+    min-height: 7.5rem;
+  }
+
+  [data-catedra-module="library"] .estudar-discovery-grid {
+    width: min(100%, var(--estudar-desktop-content));
+    margin-inline: auto;
+    align-items: start;
+  }
+}
+
+@media (min-width: 1200px) {
+  [data-catedra-module="bible"] .estudar-bible-book-grid {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+
+  [data-catedra-module] .estudar-module-landing {
+    padding-inline: 0;
+  }
+}
