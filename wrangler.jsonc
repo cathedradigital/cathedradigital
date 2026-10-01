@@ -9,6 +9,16 @@
   "workers_dev": true,
   "preview_urls": true,
   "previews": {},
+  "routes": [
+    {
+      "pattern": "cathedradigital.com.br",
+      "custom_domain": true
+    },
+    {
+      "pattern": "www.cathedradigital.com.br",
+      "custom_domain": true
+    }
+  ],
   "observability": {
     "enabled": true
   }
