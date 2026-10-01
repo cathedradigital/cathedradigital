@@ -32,12 +32,14 @@ type Testament = 'Antigo Testamento' | 'Novo Testamento';
 
 
 
-type BibleEditionStatus = 'católica' | 'estudo' | 'referência';
+type BibleEditionStatus = 'católica' | 'estudo' | 'referência' | 'externa';
 
 const BIBLE_EDITION_ROADMAP: Array<{ name: string; status: BibleEditionStatus; note: string }> = [
   { name: 'Edição católica principal', status: 'católica', note: 'Fonte editorial principal da Cátedra.' },
   { name: 'Vulgata Latina', status: 'referência', note: 'Preparada para comparação do texto latino e das tradições de tradução.' },
-  { name: 'Ave Maria', status: 'católica', note: 'Prevista como edição comparável, conforme licenciamento e fonte editorial.' },
+  { name: 'Ave Maria', status: 'externa', note: 'Consulta na fonte digital externa; o Cátedra não incorpora o texto sem licença.' },
+  { name: 'CNBB', status: 'externa', note: 'Referência externa da tradução oficial; reprodução integral depende de autorização.' },
+  { name: 'Peregrino', status: 'externa', note: 'Acesso externo; o Cátedra não extrai nem armazena conteúdo protegido.' },
   { name: 'Outras traduções', status: 'estudo', note: 'Espaço para traduções de estudo, sempre identificadas quanto à tradição e ao estatuto.' },
 ];
 \nconst TESTAMENT_META: Record<Testament, { kicker: string; blurb: string }> = {
