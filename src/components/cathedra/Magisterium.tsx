@@ -78,6 +78,8 @@ import { EditorialHero } from '@/components/editorial';
 import ReadingMark from './ReadingMark';
 import { CathedraCard } from './CathedraCard';
 import { cn } from '@/lib/utils';
+import { MobileTopBar } from '@/components/mobile/MobileTopBar';
+import { MobileBottomNav } from '@/components/mobile/MobileBottomNav';
 import {
   MAGISTERIUM_DOCUMENTS,
   MAGISTERIUM_CATEGORIES,
@@ -485,7 +487,8 @@ const Magisterium: React.FC = () => {
 
   return (
     <ContemplativeLayout>
-      <div data-catedra-module="documents" className="min-w-0 w-full overflow-x-hidden">
+      <MobileTopBar kicker="Cathedra" title="Documentos" transparent />
+      <div data-catedra-module="documents" className="estudar-module-landing min-w-0 w-full overflow-x-hidden">
       <SEOHead 
         title="Magistério da Igreja | Cathedra" 
         description="Acesse os documentos fundamentais da Igreja Católica em uma experiência premium." 
