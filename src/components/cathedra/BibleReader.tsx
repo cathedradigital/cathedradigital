@@ -112,7 +112,7 @@ export const BibleReader: React.FC<BibleReaderProps> = ({
       <div className="flex-1">
         <ReaderShell
           className="pb-32"
-          contentMaxWidth="max-w-3xl"
+          contentMaxWidth="max-w-5xl"
           ariaLabel={`${t('bible_reader_kicker')} — ${book.name} ${chapter}`}
           hero={
             <EditorialHero
@@ -121,7 +121,7 @@ export const BibleReader: React.FC<BibleReaderProps> = ({
               subtitle={typeof heroSubtitle === 'string' ? heroSubtitle : undefined}
               meta={heroMeta}
               align="left"
-              size="lg"
+              size="sm"
             />
           }
           headerContext={
@@ -184,8 +184,8 @@ export const BibleReader: React.FC<BibleReaderProps> = ({
       <div
         ref={containerRef}
         className={cn(
-          'space-y-6',
-          settings.fontSize === 'small' ? 'text-lg' : settings.fontSize === 'large' ? 'text-2xl' : 'text-xl',
+          'space-y-3 md:space-y-4',
+          settings.fontSize === 'small' ? 'text-base' : settings.fontSize === 'large' ? 'text-xl' : 'text-lg',
           settings.fontFamily === 'serif' ? 'font-serif' : 'font-sans',
         )}
         style={{ paddingTop, paddingBottom }}
@@ -216,12 +216,15 @@ export const BibleReader: React.FC<BibleReaderProps> = ({
                   highlightColor ? `bg-${highlightColor}/10` : 'hover:bg-primary/[0.02]',
                 )}
               >
-                <div className="flex items-start gap-4">
-                  <sup className="mt-2 text-[10px] font-medium text-secondary/70 select-none tabular-nums tracking-wider">
+                <div className="flex items-start gap-2.5 md:gap-3">
+                  <span
+                    aria-label={`Versículo ${v.number}`}
+                    className="mt-1 shrink-0 text-[9px] md:text-[10px] font-semibold text-secondary/80 select-none tabular-nums leading-none"
+                  >
                     {v.number}
-                  </sup>
+                  </span>
                   <p className={cn(
-                    'leading-relaxed transition-colors font-serif',
+                    'leading-[1.78] md:leading-[1.82] transition-colors font-serif tracking-[0.002em]',
                     settings.theme === 'night' ? 'text-stone-300' : 'text-primary/90',
                   )}>
                     {v.text}
