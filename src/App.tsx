@@ -90,8 +90,17 @@ const queryClient = new QueryClient({
   },
 });
 
+const queryStorage =
+  typeof window !== 'undefined'
+    ? window.localStorage
+    : ({
+        getItem: () => null,
+        setItem: () => undefined,
+        removeItem: () => undefined,
+      } as Storage);
+
 const persister = createSyncStoragePersister({
-  storage: window.localStorage,
+  storage: queryStorage,
   key: 'CATHEDRA_QUERY_CACHE',
 });
 
