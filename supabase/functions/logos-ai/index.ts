@@ -460,16 +460,37 @@ Deno.serve(async (req) => {
     attributed_to: r.attributed_to,
   }));
 
+  const authoritativeKinds = new Set(["bible_verse", "catechism_paragraph", "magisterium_doc", "patristic"]);
+  const groundedSources = sourceContext.filter((source) =>
+    authoritativeKinds.has(source.kind) && typeof source.excerpt === "string" && source.excerpt.trim().length > 0
+  );
+
+  // Regra central do Cáter: sem fonte verificável recuperada, não há geração.
+  if (groundedSources.length === 0) {
+    return json({
+      text: "Não encontrei nas fontes verificáveis disponíveis na Cátedra elementos suficientes para responder com segurança. Não vou formular uma resposta doutrinal por conta própria.",
+      sources: sourceContext,
+      nexus: relationContext,
+      retrieval: {
+        source_count: sourceContext.length,
+        relation_count: relationContext.length,
+        grounded_source_count: 0,
+        used_database: Boolean(db),
+        grounded: false,
+      },
+    }, 422);
+  }
+
   const system = [
-    "Você é Logos, assistente de estudo da Cathedra Digital.",
-    "Use prioritariamente as fontes recuperadas do banco da Cathedra e as relações curadas do Nexus.",
-    "Quando uma fonte recuperada sustentar a resposta, cite-a pelo título e referência, sem inventar dados.",
+    "Você é Cáter, assistente teológico da Cátedra Digital.",
+    "Use exclusivamente as fontes recuperadas da Cátedra e as relações curadas do Nexus para afirmações factuais e doutrinais.",
+    "Cada afirmação doutrinal deve ser sustentada por uma fonte recuperada com texto/excerto verificável; cite título e referência.",
     "Use relações do Nexus para explicar por que dois conteúdos estão conectados.",
     "Não invente versículos, citações, documentos, números de parágrafo ou referências.",
     "Diferencie fonte, resumo, interpretação e inferência.",
-    "Se o retrieval não trouxer uma fonte verificável para uma afirmação, diga isso e não preencha a lacuna com memória do modelo.",
-    "Não apresente opinião do modelo como doutrina.",
-    "Responda em português brasileiro, de forma clara e útil.",
+    "Se uma afirmação não estiver sustentada pelos excertos recuperados, não a faça. Não use memória paramétrica para preencher lacunas.",
+    "Nunca apresente opinião, hipótese ou inferência do modelo como doutrina da Igreja.",
+    "Responda em português brasileiro, de forma clara e útil. Você é uma ferramenta de consulta, não uma autoridade eclesial.",
   ].join("\n");
 
   const messages = [
@@ -530,7 +551,9 @@ Deno.serve(async (req) => {
       retrieval: {
         source_count: sourceContext.length,
         relation_count: relationContext.length,
+        grounded_source_count: groundedSources.length,
         used_database: Boolean(db),
+        grounded: true,
       },
     });
   } catch (error) {
