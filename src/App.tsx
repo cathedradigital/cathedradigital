@@ -66,7 +66,6 @@ const ReadingPreferencesPanel = lazy(() => import('./components/cathedra/Reading
 const OfflineIndicator = lazy(() => import('./components/cathedra/OfflineIndicator'));
 const PausedBanner = lazy(() => import('./components/cathedra/PausedBanner').then(m => ({ default: m.PausedBanner })));
 const SplashScreen = lazy(() => import('./components/cathedra/SplashScreen'));
-const GlobalLogosAI = lazy(() => import('./components/cathedra/GlobalLogosAI').then(m => ({ default: m.GlobalLogosAI })));
 const WelcomeFirstAccess = lazy(() => import('./components/cathedra/WelcomeFirstAccess'));
 import { installSessionRenewal } from './lib/sessionRenewal';
 
@@ -604,7 +603,6 @@ const AppLayout: React.FC = () => {
         )}
         
         <Suspense fallback={null}>
-          <GlobalLogosAI />
           <WelcomeFirstAccess />
         </Suspense>
 
