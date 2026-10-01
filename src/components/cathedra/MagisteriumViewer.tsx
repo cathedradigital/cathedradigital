@@ -16,8 +16,6 @@ import AudioButton from './AudioButton';
 import ReadingControlPanel from './ReadingControlPanel';
 import ReadingMark from './ReadingMark';
 import NotesPanel from './NotesPanel';
-import LogosAI from './LogosAI';
-import { LogosContextualSuggestions } from './LogosContextualSuggestions';
 import Relatio from './Relatio';
 import ChapterNotesList from './ChapterNotesList';
 import { useNotes, UserNote } from '@/hooks/useNotes';
@@ -56,9 +54,6 @@ const MagisteriumViewer: React.FC = () => {
   const [failureCount, setFailureCount] = useState(0);
   const MAX_RETRIES = 3;
   const unrecoverable = failureCount >= MAX_RETRIES;
-  const [showLogosAI, setShowLogosAI] = useState(false);
-  const [logosAIInitialQuery, setLogosAIInitialQuery] = useState('');
-  const [logosSelectionsCount, setLogosSelectionsCount] = useState(0);
   const [readingProgress, setReadingProgress] = useState(0);
   const [activeHighlight, setActiveHighlight] = useState<UserNote | null>(null);
   const [activeParagraphId, setActiveParagraphId] = useState<string | null>(null);
@@ -605,17 +600,6 @@ const MagisteriumViewer: React.FC = () => {
           >
             <Icons.Search className="w-spacing-md h-spacing-md" aria-hidden="true" />
           </Button>
-          <Button 
-            variant="ghost" 
-            size="icon" 
-            onClick={() => setShowLogosAI(!showLogosAI)}
-            aria-pressed={showLogosAI}
-            aria-label={showLogosAI ? 'Fechar Logos IA' : 'Abrir Logos IA'}
-            className={`rounded-premium-full min-h-11 min-w-11 p-spacing-0 transition-all focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none ${showLogosAI ? 'bg-primary text-primary-foreground scale-110' : 'hover:bg-primary/5 text-primary/70'}`}
-            title="Logos IA"
-          >
-            <Icons.Sparkles className="w-spacing-md h-spacing-md" aria-hidden="true" />
-          </Button>
         </div>
       </div>
 
@@ -790,13 +774,7 @@ const MagisteriumViewer: React.FC = () => {
             }}
             onNavigateToBible={(abbr, ch) => navigate(`/bible?book=${abbr}&chapter=${ch}`)}
             onNavigateToCIC={(p) => navigate(`/catechism?p=${p}`)}
-            onNavigateToDoc={(docId) => navigate(`/magisterium/${docId}`)}
-            onSelectLogosQuery={(prompt) => {
-              setLogosAIInitialQuery(prompt);
-              setShowLogosAI(true);
-              setLogosSelectionsCount(prev => prev + 1);
-            }}
-          />
+            onNavigateToDoc={(docId) => navigate(`/magisterium/${docId}`)}/>
         </div>
       )}
 
