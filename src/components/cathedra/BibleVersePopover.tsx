@@ -50,20 +50,34 @@ const EXTERNAL_BIBLE_EDITIONS = [
   {
     id: 'ave-maria',
     name: 'Bíblia Ave-Maria',
-    description: 'Consulta externa da edição digital publicada pela Província Claretiana / Editora Ave-Maria.',
-    url: 'https://claretianos.com.br/biblia-ave-maria-online/',
+    description: 'Abrir a passagem diretamente na edição Ave-Maria, com livro, capítulo e versículo.',
+    buildUrl: (abbr: string, chapter: number, verse?: number) => {
+      const bookMap: Record<string, string> = {
+        '1CO': 'i-corintios',
+        '2CO': 'ii-corintios',
+      };
+      const book = bookMap[abbr.toUpperCase()];
+      if (!book) return 'https://www.bibliacatolica.com.br/biblia-ave-maria/';
+      return `https://www.bibliacatolica.com.br/biblia-ave-maria/${book}/${chapter}/${verse ?? ''}`;
+    },
   },
   {
     id: 'cnbb',
     name: 'Bíblia da CNBB',
-    description: 'Referência oficial da tradução da Bíblia da CNBB.',
-    url: 'https://www.cnbb.org.br/lancada-nova-edicao-da-biblia-sagrada-da-cnbb-em-brasilia-df/',
+    description: 'Abrir a referência diretamente na pesquisa da CNBB, preservando livro, capítulo e versículo.',
+    buildUrl: (abbr: string, chapter: number, verse?: number) => {
+      const reference = `${abbr} ${chapter}${verse ? `:${verse}` : ''}`;
+      return `https://www.cnbb.org.br/?s=${encodeURIComponent(reference)}`;
+    },
   },
   {
     id: 'peregrino',
     name: 'Peregrino',
-    description: 'Acesso ao serviço externo. O Cátedra não copia, armazena ou extrai o conteúdo protegido.',
-    url: 'https://www.souperegrino.com/',
+    description: 'Abrir a referência na fonte externa do Peregrino. O Cátedra não copia, armazena ou extrai o conteúdo protegido.',
+    buildUrl: (abbr: string, chapter: number, verse?: number) => {
+      const reference = `${abbr} ${chapter}${verse ? `:${verse}` : ''}`;
+      return `https://www.souperegrino.com/?s=${encodeURIComponent(reference)}`;
+    },
   },
 ] as const;
 
@@ -212,7 +226,7 @@ const BibleVersePopoverBody: React.FC<BodyProps> = ({ abbr, chapter, verse, onNa
           {EXTERNAL_BIBLE_EDITIONS.map((edition) => (
             <a
               key={edition.id}
-              href={edition.url}
+              href={edition.buildUrl(abbr, chapter, verse)}
               target="_blank"
               rel="noopener noreferrer"
               title={edition.description}
@@ -224,7 +238,7 @@ const BibleVersePopoverBody: React.FC<BodyProps> = ({ abbr, chapter, verse, onNa
           ))}
         </div>
         <p className="mt-2 text-[10px] leading-relaxed text-muted-foreground">
-          A consulta é feita na fonte externa. O Cátedra não incorpora nem guarda o texto dessas edições sem licença de reprodução.
+          A abertura leva à referência correspondente. Quando a fonte não oferece uma URL de capítulo/versículo estável, a busca externa preserva o livro, capítulo e versículo informados. O Cátedra não incorpora nem guarda o texto dessas edições sem licença de reprodução.
         </p>
       </div>
 
