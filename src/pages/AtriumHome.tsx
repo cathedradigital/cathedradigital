@@ -114,7 +114,7 @@ const AtriumHome: React.FC = () => {
   return (
     <SpaceLayout>
       <div
-        className="w-full bg-background text-foreground"
+        className="catedra-atrium w-full bg-background text-foreground"
         style={{
           backgroundImage:
             'url("https://www.transparenttextures.com/patterns/p6.png")',
@@ -142,7 +142,7 @@ const AtriumHome: React.FC = () => {
         {authenticated && <AtriumReception />}
         {/* ─── Hero editorial (visitantes) ─────────────────────────────── */}
         {!authenticated && (
-        <section className="text-center md:text-left">
+        <section className="catedra-atrium-hero text-center md:text-left">
           <div className="mb-8 hidden h-px w-full bg-gold-text/30 md:block" />
           <h2 className="mb-3 font-reader text-[12px] font-bold uppercase tracking-[0.32em] text-gold-text">
             Pergunte sobre a fé.
