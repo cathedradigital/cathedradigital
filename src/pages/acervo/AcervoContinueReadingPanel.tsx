@@ -132,13 +132,13 @@ const AcervoContinueReadingPanel: React.FC = () => {
           label="Em andamento"
           value={inProgress}
           icon={Icons.Clock}
-          to="/conta/leituras"
+          to="/conta/jornada"
         />
         <MetricCell
           label="Concluídas"
           value={completed}
           icon={Icons.Check}
-          to="/conta/leituras?filter=completed"
+          to="/conta/jornada"
         />
         <MetricCell
           label="Favoritos"
