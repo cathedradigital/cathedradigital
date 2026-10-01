@@ -556,6 +556,7 @@
 .catedra-module-shell {
   position: relative;
   isolation: isolate;
+  background: linear-gradient(180deg, var(--catedra-module-accent-soft, transparent) 0%, transparent 18rem);
 }
 
 .catedra-module-shell::before {
