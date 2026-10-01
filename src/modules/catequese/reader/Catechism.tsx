@@ -429,15 +429,6 @@ const LazyParagraph: React.FC<{
             >
               <Icons.Heart className={`w-spacing-sm h-spacing-sm transition-all ${isFavorite('catechism', `CIC §${p}`) ? 'fill-primary text-primary' : 'text-muted-foreground/40'}`} />
             </Button>
-            <Button
-              variant="ghost"
-              size="icon-sm"
-              onClick={() => (window as any).dispatchEvent(new CustomEvent('open-logos-ai', { detail: { context: `Catecismo §${p}`, type: 'catechism' } }))}
-              className="rounded-premium-full hover:bg-primary/5 transition-all text-muted-foreground/40 hover:text-primary focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none"
-              aria-label={`Perguntar à Logos IA sobre o Parágrafo ${p}`}
-            >
-              <Icons.Sparkles className="w-spacing-sm h-spacing-sm" />
-            </Button>
             <ReadingMarkComponent contentType="catechism" contentId={`${p}`} label={`Catecismo §${p}`} paragraph={p} />
             <Button
               variant="ghost"
