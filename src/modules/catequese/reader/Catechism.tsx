@@ -32,6 +32,7 @@ import useReadingAutoHide from '@/hooks/useReadingAutoHide';
 import { UserNote, useNotes } from '@/hooks/useNotes';
 import { cn } from '@/lib/utils';
 import PassageActions from '@/components/shared/PassageActions';
+import { NoteEditModal } from '@/components/cathedra/NoteEditModal';
 import { CathedraCard } from '@/components/cathedra/CathedraCard';
 import CatechismDiagnosticPanel from '../components/CatechismDiagnosticPanel';
 import { CatechismPendingProvider, useCatechismPending } from '@/contexts/CatechismPendingContext';
@@ -75,8 +76,9 @@ const CatechismContent: React.FC<{
   onNavigateToBible?: (abbr: string, chapter: number) => void; 
   isVisible?: boolean;
   onHighlightClick?: (note: UserNote) => void;
+  onCreateNote?: (paragraph: number) => void;
   highlights?: UserNote[];
-}> = ({ paragraph, onNavigateToBible, isVisible = true, onHighlightClick, highlights = [] }) => {
+}> = ({ paragraph, onNavigateToBible, isVisible = true, onHighlightClick, onCreateNote, highlights = [] }) => {
   const { data, isLoading, isError, error, refetch, isFetching } = useCatechismParagraph(paragraph, isVisible);
   const prefetch = usePrefetchCatechismParagraph();
   const { settings } = useReadingSettings();
@@ -384,6 +386,7 @@ const LazyParagraph: React.FC<{
   toggleFavorite: (item: any) => void; 
   handleNavigateToBible: (abbr: string, chapter: number) => void;
   onHighlightClick?: (note: UserNote) => void;
+  onCreateNote?: (paragraph: number) => void;
   highlights?: UserNote[];
 }> = ({ paragraph: p, currentParagraph, paragraphsRead, isFavorite, toggleFavorite, handleNavigateToBible, onHighlightClick, highlights = [] }) => {
   const { settings } = useReadingSettings();
@@ -426,21 +429,22 @@ const LazyParagraph: React.FC<{
             >
               <Icons.Heart className={`w-spacing-sm h-spacing-sm transition-all ${isFavorite('catechism', `CIC §${p}`) ? 'fill-primary text-primary' : 'text-muted-foreground/40'}`} />
             </Button>
+            <ReadingMarkComponent contentType="catechism" contentId={`${p}`} label={`Catecismo §${p}`} paragraph={p} />
             <Button
               variant="ghost"
               size="icon-sm"
-              onClick={() => (window as any).dispatchEvent(new CustomEvent('open-logos-ai', { detail: { context: `Catecismo §${p}`, type: 'catechism' } }))}
-              className="rounded-premium-full hover:bg-primary/5 transition-all text-muted-foreground/40 hover:text-primary focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none"
-              aria-label={`Perguntar à Logos IA sobre o Parágrafo ${p}`}
+              onClick={() => onCreateNote?.(p)}
+              className="rounded-premium-full text-muted-foreground/50 hover:text-primary hover:bg-primary/5"
+              aria-label={`Adicionar anotação ao parágrafo ${p}`}
+              title="Adicionar anotação"
             >
-              <Icons.Sparkles className="w-spacing-sm h-spacing-sm" />
+              <Icons.PenLine className="w-spacing-sm h-spacing-sm" />
             </Button>
-            <ReadingMarkComponent contentType="catechism" contentId={`${p}`} label={`Catecismo §${p}`} paragraph={p} />
           </div>
         </div>
         <div className="h-[0.5px] flex-1 bg-gradient-to-r from-primary/[0.05] via-transparent to-transparent" />
       </div>
-      <CatechismContent paragraph={p} onNavigateToBible={handleNavigateToBible} isVisible={isVisible} onHighlightClick={onHighlightClick} highlights={highlights} />
+      <CatechismContent paragraph={p} onNavigateToBible={handleNavigateToBible} isVisible={isVisible} onHighlightClick={onHighlightClick} onCreateNote={onCreateNote} highlights={highlights} />
     </article>
   );
 };
@@ -476,6 +480,7 @@ const Catechism: React.FC = memo(() => {
   const [activeParagraphId, setActiveParagraphId] = useState<string | null>(null);
   const [activeHighlight, setActiveHighlight] = useState<UserNote | null>(null);
   const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
+  const [noteParagraph, setNoteParagraph] = useState<number | null>(null);
 
   useEffect(() => {
     if (initialParagraph === 'invalid') {
@@ -606,6 +611,22 @@ const Catechism: React.FC = memo(() => {
 
   const nextUnreadParagraph = 1; // Simplified for template consistency
 
+  const openNoteForParagraph = useCallback((paragraph: number) => {
+    const existing = currentChapterNotes.find(n => n.paragraph === paragraph);
+    setActiveHighlight(existing ?? null);
+    setNoteParagraph(paragraph);
+    setIsNoteModalOpen(true);
+  }, [currentChapterNotes]);
+
+  const saveParagraphNote = useCallback(async (text: string, color: string) => {
+    if (!noteParagraph || !text.trim()) return;
+    if (activeHighlight) await updateNote(activeHighlight.id, text, color);
+    else await addNote(String(noteParagraph), text, color, { paragraph: noteParagraph });
+    setIsNoteModalOpen(false);
+    setActiveHighlight(null);
+    setNoteParagraph(null);
+  }, [noteParagraph, activeHighlight, updateNote, addNote]);
+
   // Nexus heurístico + relações curadas do grafo (Catecismo ⇄ Santos, Bíblia, Patrística…).
   const sectionNexus = useCatechismNexus(currentParagraph, location.articleRange);
 
@@ -708,7 +729,11 @@ const Catechism: React.FC = memo(() => {
 
               <div className="space-y-spacing-xl md:space-y-spacing-3xl">
                 {Array.from({ length: endPara - startPara + 1 }, (_, i) => startPara + i).map(p => (
-                  <LazyParagraph key={p} paragraph={p} currentParagraph={currentParagraph} paragraphsRead={new Set()} isFavorite={isFavorite} toggleFavorite={toggleFavorite} handleNavigateToBible={handleNavigateToBible} highlights={currentChapterNotes} />
+                  <LazyParagraph key={p} paragraph={p} currentParagraph={currentParagraph} paragraphsRead={new Set()} isFavorite={isFavorite} toggleFavorite={toggleFavorite} handleNavigateToBible={handleNavigateToBible}
+                    onHighlightClick={(note) => { setActiveHighlight(note); setNoteParagraph(note.paragraph ?? currentParagraph); setIsNoteModalOpen(true); }}
+                    onCreateNote={openNoteForParagraph}
+                    highlights={currentChapterNotes}
+                  />
                 ))}
               </div>
 
@@ -720,9 +745,47 @@ const Catechism: React.FC = memo(() => {
               </div>
 
             </div>
+
+            <section className="mt-10 border-t border-primary/[0.06] pt-5" aria-label="Anotações desta seção">
+              <div className="flex items-center justify-between gap-4 mb-3">
+                <div>
+                  <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-primary/40">Caderno de estudo</p>
+                  <h3 className="font-display text-lg text-primary">Anotações desta seção</h3>
+                </div>
+                <Button variant="outline" size="sm" onClick={() => openNoteForParagraph(currentParagraph)} className="rounded-full text-[10px] uppercase tracking-wider">
+                  <Icons.PenLine className="mr-2 h-3.5 w-3.5" /> Nova anotação
+                </Button>
+              </div>
+              {currentChapterNotes.length > 0 ? (
+                <div className="grid gap-2 md:grid-cols-2">
+                  {currentChapterNotes.map(note => (
+                    <button key={note.id} type="button"
+                      onClick={() => { setActiveHighlight(note); setNoteParagraph(note.paragraph ?? currentParagraph); setIsNoteModalOpen(true); }}
+                      className="rounded-xl border border-primary/10 bg-primary/[0.02] p-3 text-left transition-colors hover:bg-primary/[0.05]">
+                      <span className="text-[9px] font-bold uppercase tracking-wider text-secondary">{note.paragraph ? `§${note.paragraph}` : 'Seção'}</span>
+                      <p className="mt-1 line-clamp-3 text-sm leading-relaxed text-foreground">{note.note_text}</p>
+                    </button>
+                  ))}
+                </div>
+              ) : (
+                <p className="rounded-xl border border-dashed border-primary/10 p-4 text-sm italic text-muted-foreground">
+                  Ainda não há anotações nesta seção. Use a caneta ao lado de um parágrafo para registrar uma ideia.
+                </p>
+              )}
+            </section>
             </ReaderShell>
           </div>
         </div>
+        <NoteEditModal
+          isOpen={isNoteModalOpen}
+          onClose={() => { setIsNoteModalOpen(false); setActiveHighlight(null); setNoteParagraph(null); }}
+          onSave={saveParagraphNote}
+          onDelete={activeHighlight ? async () => { await deleteChapterNote(activeHighlight.id); setIsNoteModalOpen(false); setActiveHighlight(null); setNoteParagraph(null); } : undefined}
+          initialText={activeHighlight?.note_text ?? ''}
+          initialColor={activeHighlight?.highlight_color ?? 'yellow'}
+          title={noteParagraph ? `Anotação · Catecismo §${noteParagraph}` : 'Anotação · Catecismo'}
+          isEditing={!!activeHighlight}
+        />
         <CatechismDiagnosticPanel />
       </CatechismPendingProvider>
     );
