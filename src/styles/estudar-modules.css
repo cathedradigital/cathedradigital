@@ -898,3 +898,71 @@
     grid-template-columns: repeat(8, minmax(0, 1fr));
   }
 }
+
+/* Module interaction pass — Nexus, Biblioteca e Santos. */
+@media (min-width: 768px) {
+  [data-catedra-module="nexus"] .estudar-module-landing,
+  [data-catedra-module="library"] .estudar-module-landing,
+  [data-catedra-module="saints"] .estudar-module-landing {
+    width: min(100%, 76rem);
+    margin-inline: auto;
+  }
+
+  [data-catedra-module="nexus"] :is(article, [role="article"]) {
+    min-width: 0;
+  }
+
+  [data-catedra-module="nexus"] :is(article, [role="article"]) h2,
+  [data-catedra-module="nexus"] :is(article, [role="article"]) h3 {
+    line-height: 1.2;
+  }
+
+  [data-catedra-module="library"] :is(article, [role="article"]) {
+    min-width: 0;
+  }
+
+  [data-catedra-module="library"] :is(article, [role="article"]) p {
+    line-height: 1.5;
+  }
+
+  [data-catedra-module="saints"] {
+    --estudar-saints-reading: 64rem;
+  }
+
+  [data-catedra-module="saints"] .space-y-spacing-xl {
+    min-width: 0;
+  }
+
+  [data-catedra-module="saints"] .prose,
+  [data-catedra-module="saints"] [role="tabpanel"] {
+    max-width: var(--estudar-saints-reading);
+  }
+}
+
+@media (max-width: 767px) {
+  [data-catedra-module="nexus"] :is(article, [role="article"]) {
+    min-width: 0;
+  }
+
+  [data-catedra-module="library"] :is(article, [role="article"]) {
+    min-width: 0;
+  }
+
+  [data-catedra-module="saints"] {
+    overflow-x: hidden;
+  }
+
+  [data-catedra-module="saints"] [role="tablist"] {
+    max-width: 100%;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  [data-catedra-module="saints"] [role="tablist"]::-webkit-scrollbar {
+    display: none;
+  }
+
+  [data-catedra-module="saints"] [role="tablist"] > * {
+    flex: 0 0 auto;
+  }
+}
