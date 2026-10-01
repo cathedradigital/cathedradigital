@@ -472,6 +472,45 @@
   [data-catedra-module="documents"] .estudar-doc-filter-row > * {
     scroll-snap-align: start;
   }
+  [data-catedra-module="documents"] .estudar-doc-theme-row {
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x proximity;
+    padding-inline: .125rem;
+  }
+  [data-catedra-module="documents"] .estudar-doc-theme-row::-webkit-scrollbar {
+    display: none;
+  }
+  [data-catedra-module="documents"] .estudar-doc-theme-row > * {
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+  }
+  [data-catedra-module="documents"] .estudar-doc-filter-stack > .relative {
+    position: sticky;
+    top: calc(var(--stitch-mobile-topbar-h) + var(--stitch-mobile-safe-top) + 2.75rem);
+    z-index: 20;
+    padding-block: .25rem;
+    background: color-mix(in srgb, hsl(var(--background)) 94%, transparent);
+    backdrop-filter: blur(10px);
+  }
+  [data-catedra-module="documents"] .estudar-doc-sort-row > :last-child {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: 100%;
+  }
+  [data-catedra-module="documents"] .estudar-doc-sort-row button {
+    justify-content: center;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  [data-catedra-module="documents"] .estudar-doc-filter-stack + .sr-only + div {
+    scroll-margin-top: 9rem;
+  }
+  [data-catedra-module="documents"] .estudar-doc-filter-stack ~ .grid {
+    gap: .75rem;
+  }
   [data-catedra-module="documents"] article {
     min-width: 0;
     overflow-wrap: anywhere;

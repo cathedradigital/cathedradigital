@@ -571,7 +571,7 @@ const Magisterium: React.FC = () => {
           </div>
 
           {/* Temas (multi-seleção) */}
-          <div className="flex items-center justify-center gap-spacing-xs flex-wrap py-spacing-xs">
+          <div className="estudar-doc-theme-row flex items-center justify-start gap-spacing-xs flex-nowrap overflow-x-auto py-spacing-xs scrollbar-none">
             {MAGISTERIUM_THEMES.map(theme => {
               const active = selectedThemes.includes(theme);
               return (
