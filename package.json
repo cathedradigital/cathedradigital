@@ -13,7 +13,9 @@
     "format": "prettier --write .",
     "validate:modules": "node scripts/validate-module-contracts.mjs",
     "validate:links": "node scripts/validate-internal-routes.mjs",
-    "validate:security": "node scripts/validate-security-boundaries.mjs"
+    "validate:security": "node scripts/validate-security-boundaries.mjs",
+    "deploy:cloudflare": "npm run build && wrangler deploy",
+    "cf-typegen": "wrangler types"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.9.1",
@@ -114,6 +116,8 @@
     "prettier": "^3.7.3",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.56.1",
-    "vite": "8.1.5"
+    "vite": "8.1.5",
+    "@cloudflare/vite-plugin": "^1.62.0",
+    "wrangler": "^4.145.0"
   }
 }
