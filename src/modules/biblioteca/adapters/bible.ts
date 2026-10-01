@@ -29,12 +29,12 @@ export const bibleAdapter: LibraryAdapter = {
         slug: abbr,
         summary: chapters ? `${chapters} capítulo${chapters > 1 ? 's' : ''}` : undefined,
         category: testament,
-        href: `/biblia/${abbr}/1`,
+        href: `/bible?book=${encodeURIComponent(abbr)}&chapter=1`,
       };
     });
   },
 
   resolveHref({ slug }) {
-    return `/biblia/${slug}/1`;
+    return `/bible?book=${encodeURIComponent(slug)}&chapter=1`;
   },
 };
