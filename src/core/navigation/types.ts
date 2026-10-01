@@ -34,7 +34,7 @@ export type RouteKey =
   | 'study.bible'         // /bible?book=&chapter=
   | 'study.catechism'     // /catechism?p=:paragraph
   | 'study.magisterium'   // /magisterium/:doc
-  | 'study.father'        // /biblioteca?padre=:slug (TODO rota canônica)
+  | 'study.father'        // /biblioteca/padres/:slug (redirect canônico para /santos/:slug)
   | 'study.saint'         // /santos/:slug
   | 'study.glossary'      // /glossario/:slug
   | 'study.journey'       // /jornadas/:id
