@@ -276,7 +276,7 @@ const CommunityPage: React.FC = () => {
 
   if (selectedPost) {
     return (
-      <div className="w-full space-y-spacing-lg py-spacing-xl px-spacing-md" data-catedra-module-root data-catedra-module="community">
+      <div className="w-full min-w-0 overflow-x-hidden space-y-spacing-lg py-spacing-xl px-spacing-sm sm:px-spacing-md" data-catedra-module-root data-catedra-module="community">
         <Button 
           onClick={() => { setSelectedPost(null); setReplies([]); }} 
           className="flex items-center gap-spacing-xs text-premium-sm text-muted-foreground hover:text-foreground transition-colors focus-visible:ring-2 focus-visible:ring-primary outline-none rounded-premium-full px-spacing-xs py-spacing-2xs"
@@ -354,7 +354,7 @@ const CommunityPage: React.FC = () => {
 
   return (
     <ContemplativeLayout>
-      <div className="desktop-main px-spacing-md">
+      <div className="desktop-main min-w-0 overflow-x-hidden px-spacing-sm sm:px-spacing-md">
         {loading && posts.length === 0 ? (
           <div className="space-y-spacing-xl">
             <PageHeaderSkeleton />
@@ -362,12 +362,12 @@ const CommunityPage: React.FC = () => {
           </div>
         ) : (
           <>
-            <div className="text-center space-y-spacing-md pt-spacing-md mb-spacing-xl">
+            <div className="text-center space-y-spacing-sm md:space-y-spacing-md pt-spacing-md mb-spacing-lg md:mb-spacing-xl">
               <div className="inline-flex items-center gap-spacing-xs px-spacing-md py-spacing-2xs bg-primary/5 rounded-premium border border-primary/10 shadow-premium-md mb-spacing-xs">
                 <Icons.Message className="w-spacing-md h-spacing-md text-primary" aria-hidden="true" />
                 <span className="text-premium-small font-black uppercase tracking-[0.3em] text-primary">Communitas Fidelium</span>
               </div>
-              <h1 className="text-premium-4xl md:text-premium-7xl font-black tracking-tighter text-foreground bg-gradient-to-b from-foreground to-foreground/70 bg-clip-text text-transparent leading-[0.9]">Comunidade</h1>
+              <h1 className="text-premium-4xl sm:text-5xl md:text-premium-7xl font-black tracking-tighter text-foreground bg-gradient-to-b from-foreground to-foreground/70 bg-clip-text text-transparent leading-[0.9]">Comunidade</h1>
               <p className="text-muted-foreground font-serif italic max-w-spacing-2xl mx-auto text-premium-base sm:text-premium-xl leading-relaxed">Discussões, testemunhos e partilhas entre irmãos na fé.</p>
               <p className="text-premium-xs text-muted-foreground uppercase tracking-widest opacity-60">Conteúdo moderado para edificação mútua</p>
             </div>
@@ -397,7 +397,7 @@ const CommunityPage: React.FC = () => {
 
         {tab === 'forum' ? (
           <div className="space-y-spacing-lg" {...getTabPanelProps('panel-forum', 'tab-0', true)}>
-            <div className="flex flex-col sm:flex-row gap-spacing-md mb-spacing-lg">
+            <div className="flex min-w-0 flex-col sm:flex-row gap-spacing-sm md:gap-spacing-md mb-spacing-lg">
               <FuzzySearchInput
                 value={searchQuery}
                 onChange={setSearchQuery}
@@ -405,15 +405,15 @@ const CommunityPage: React.FC = () => {
                 isSearching={isSearchPending}
                 className="flex-1"
               />
-              <Button onClick={() => setShowNewPost(true)} className="rounded-premium-full h-spacing-2xl px-spacing-lg font-black uppercase tracking-widest gap-spacing-xs bg-primary shadow-premium shadow-primary/20">
+              <Button onClick={() => setShowNewPost(true)} className="w-full sm:w-auto rounded-premium-full h-spacing-2xl px-spacing-lg font-black uppercase tracking-widest gap-spacing-xs bg-primary shadow-premium shadow-primary/20">
                 <Icons.Plus className="w-spacing-md h-spacing-md" /> Nova Discussão
               </Button>
             </div>
 
             <div className="grid grid-cols-1 gap-spacing-md">
               {posts.map(post => (
-                <Card key={post.id} className="premium-card-interactive" onClick={() => openPost(post)}>
-                  <CardContent className="p-spacing-lg">
+                <Card key={post.id} className="min-w-0 premium-card-interactive" onClick={() => openPost(post)}>
+                  <CardContent className="min-w-0 p-spacing-md md:p-spacing-lg">
                     <div className="flex items-center gap-spacing-sm mb-spacing-md">
                       <div className="w-spacing-xl h-spacing-xl rounded-premium bg-muted flex items-center justify-center font-black text-premium-sm text-primary">
                         {(post.author_name || 'A').charAt(0).toUpperCase()}
@@ -422,7 +422,7 @@ const CommunityPage: React.FC = () => {
                         <p className="text-premium-sm font-bold text-foreground">{post.author_name}</p>
                         <p className="text-premium-xs text-muted-foreground uppercase tracking-widest">{timeAgo(post.created_at)}</p>
                       </div>
-                      <Badge variant="outline" className="text-premium-xs font-black uppercase tracking-widest border-primary/20 text-primary/70">
+                      <Badge variant="outline" className="max-w-[45%] truncate text-premium-xs font-black uppercase tracking-widest border-primary/20 text-primary/70">
                         {CATEGORIES.find(c => c.id === post.category)?.label || post.category}
                       </Badge>
                     </div>
