@@ -620,6 +620,24 @@
     max-width: 64rem;
   }
 
+  [data-catedra-module="saints"] .max-w-5xl {
+    width: min(100%, 76rem);
+    max-width: 76rem;
+  }
+
+  [data-catedra-module="saints"] :is(.grid.grid-cols-1.md\\:grid-cols-2.lg\\:grid-cols-3) {
+    gap: .9rem;
+  }
+
+  [data-catedra-module="saints"] article,
+  [data-catedra-module="saints"] [role="article"] {
+    min-width: 0;
+  }
+
+  [data-catedra-module="saints"] .font-serif.text-premium-xl {
+    font-size: 1.15rem;
+  }
+
   [data-catedra-module="saints"] .estudar-editorial-block {
     padding-block: 1rem;
   }
