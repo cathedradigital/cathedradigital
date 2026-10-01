@@ -43,6 +43,29 @@ const renderVerseText = (text: unknown): string => {
   return text;
 };
 
+
+
+const EXTERNAL_BIBLE_EDITIONS = [
+  {
+    id: 'ave-maria',
+    name: 'Bíblia Ave-Maria',
+    description: 'Consulta externa da edição digital publicada pela Província Claretiana / Editora Ave-Maria.',
+    url: 'https://claretianos.com.br/biblia-ave-maria-online/',
+  },
+  {
+    id: 'cnbb',
+    name: 'Bíblia da CNBB',
+    description: 'Referência oficial da tradução da Bíblia da CNBB.',
+    url: 'https://www.cnbb.org.br/lancada-nova-edicao-da-biblia-sagrada-da-cnbb-em-brasilia-df/',
+  },
+  {
+    id: 'peregrino',
+    name: 'Peregrino',
+    description: 'Acesso ao serviço externo. O Cátedra não copia, armazena ou extrai o conteúdo protegido.',
+    url: 'https://www.souperegrino.com/',
+  },
+] as const;
+
 type BodyProps = BibleVersePopoverProps;
 
 const BibleVersePopoverBody: React.FC<BodyProps> = ({ abbr, chapter, verse, onNavigate }) => {
@@ -150,6 +173,28 @@ const BibleVersePopoverBody: React.FC<BodyProps> = ({ abbr, chapter, verse, onNa
           {errorMsg || 'Texto não disponível.'}
         </p>
       )}
+
+      <div className="mt-spacing-sm border-t border-border pt-spacing-sm">
+        <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground mb-2">Outras edições</p>
+        <div className="flex flex-wrap gap-2">
+          {EXTERNAL_BIBLE_EDITIONS.map((edition) => (
+            <a
+              key={edition.id}
+              href={edition.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              title={edition.description}
+              className="inline-flex min-h-8 items-center rounded-full border border-border bg-muted/30 px-3 py-1.5 text-[10px] font-semibold text-foreground transition-colors hover:bg-muted focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+            >
+              {edition.name}
+              <span aria-hidden="true" className="ml-1.5">↗</span>
+            </a>
+          ))}
+        </div>
+        <p className="mt-2 text-[10px] leading-relaxed text-muted-foreground">
+          A consulta é feita na fonte externa. O Cátedra não incorpora nem guarda o texto dessas edições sem licença de reprodução.
+        </p>
+      </div>
 
       {/* Mantém o nome do livro no rodapé, para paridade com o header antigo */}
       {!loading && verses.length > 0 && (
