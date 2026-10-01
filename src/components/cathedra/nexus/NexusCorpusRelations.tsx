@@ -67,7 +67,11 @@ const NexusCorpusRelations: React.FC = () => {
 
       <ul className="grid grid-cols-1 gap-4 md:grid-cols-2">
         {rows.map((row) => {
-          const target = row.target_document ?? row.target_person;
+          const target = row.target_document
+            ? { label: row.target_document.title, href: row.target_document.canonical_url }
+            : row.target_person
+              ? { label: row.target_person.display_name, href: row.target_person.canonical_url }
+              : null;
           if (!row.source_document || !target) return null;
 
           return (
@@ -89,14 +93,14 @@ const NexusCorpusRelations: React.FC = () => {
                   row.source_document.title
                 )}
                 <ArrowRight className="h-4 w-4 shrink-0 text-stitch-secondary" />
-                {target.canonical_url ? (
+                {target.href ? (
                   <a
-                    href={target.canonical_url}
+                    href={target.href}
                     target="_blank"
                     rel="noreferrer"
                     className="hover:text-stitch-secondary"
                   >
-                    {target.title ?? target.display_name}
+                    {target.label}
                   </a>
                 ) : (
                   target.title ?? target.display_name
