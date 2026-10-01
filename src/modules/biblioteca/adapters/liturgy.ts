@@ -27,13 +27,13 @@ export const liturgyAdapter: LibraryAdapter = {
         slug,
         summary: row.iso_date ?? undefined,
         category: row.liturgical_color ?? undefined,
-        href: `/missal/${slug}`,
+        href: `/missal`,
         updatedAt: row.updated_at ?? undefined,
       };
     });
   },
 
   resolveHref({ slug }) {
-    return `/missal/${slug}`;
+    return `/missal`;
   },
 };
