@@ -21,6 +21,8 @@ import {
 } from '@/components/reader';
 import SacredImage from '@/components/cathedra/SacredImage';
 import { useSaintNexus } from '@/hooks/useSaintNexus';
+import { useReadingMarks } from '@/hooks/useReadingMarks';
+import ReadingMark from '@/components/cathedra/ReadingMark';
 import type { SaintPageDescriptor } from './types';
 import { SaintBioBlock } from './blocks/SaintBioBlock';
 import { SaintTimelineBlock } from './blocks/SaintTimelineBlock';
@@ -55,6 +57,16 @@ export const SaintAutoPage: React.FC<Props> = ({ descriptor }) => {
     .filter((v): v is string => Boolean(v));
 
   const nexus = useSaintNexus(descriptor.slug, header.name, virtueNames);
+  const { saveLastRead } = useReadingMarks();
+
+  React.useEffect(() => {
+    void saveLastRead({
+      content_type: 'saint',
+      content_id: descriptor.slug,
+      label: header.name,
+      url: window.location.pathname + window.location.search,
+    });
+  }, [descriptor.slug, header.name, saveLastRead]);
 
 
   const image = header.iconography?.imageUrl;
@@ -107,6 +119,14 @@ export const SaintAutoPage: React.FC<Props> = ({ descriptor }) => {
       }
     >
       <div className="min-w-0 space-y-spacing-lg">
+        <div className="flex items-center justify-end border-b border-border/50 pb-spacing-xs">
+          <ReadingMark
+            contentType="saint"
+            contentId={descriptor.slug}
+            label={header.name}
+            url={window.location.pathname + window.location.search}
+          />
+        </div>
         {image && (
           <figure className="mx-auto w-full max-w-sm space-y-spacing-2xs">
             <SacredImage
