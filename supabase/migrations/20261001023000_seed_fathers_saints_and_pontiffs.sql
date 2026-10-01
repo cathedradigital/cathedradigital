@@ -27,7 +27,7 @@ values
     'public_domain',
     'Candidatos de domínio público devem ser verificados por obra/edição antes da ingestão integral.',
     now(),
-    'published'
+    'active'
   )
 on conflict (slug) do update set
   title = excluded.title,
