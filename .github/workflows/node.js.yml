@@ -14,8 +14,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # A Vercel instala as dependências com Bun (bun.lock); o CI usa o mesmo
-      # gerenciador para testar exatamente a mesma árvore de dependências.
+      # Bun reproduz a árvore de dependências usada pelo projeto.
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
 
@@ -36,7 +35,5 @@ jobs:
       - name: Validate internal routes
         run: bun run validate:links
 
-      - name: Build (preset Vercel)
+      - name: Build (Cloudflare)
         run: bun run build
-        env:
-          NITRO_PRESET: vercel
