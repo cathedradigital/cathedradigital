@@ -1,181 +1,149 @@
 import React from 'react';
-import { motion } from 'framer-motion';
-import { Icons } from '../../constants';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { BookOpen, HandHeart, GraduationCap, SearchCode, Compass, Brain, Users, ArrowRight } from 'lucide-react';
+import { Link } from '@/lib/rr-compat';
+import { Helmet } from '@/lib/helmet-compat';
+import { MODULE_NAVIGATION, TRANSVERSAL_MODULES } from '@/config/moduleNavigation';
 
-const MODULES = [
-  {
-    title: 'Bíblia Sagrada',
-    icon: <Icons.Bible className="w-spacing-xl h-spacing-xl" />,
-    description: 'Acesso integral aos 73 livros das Escrituras.',
-    details: [
-      'Navegação intuitiva por testamentos, livros e capítulos.',
-      'Referências cruzadas automáticas para o Catecismo e Magistério.',
-      'Modo de estudo com inteligência artificial para aprofundamento.',
-      'Sistema de busca avançado por palavras-chave e temas.'
-    ],
-    color: 'text-blue-500',
-    bg: 'bg-blue-500/10'
-  },
-  {
-    title: 'Catecismo (CIC)',
-    icon: <Icons.Catechism className="w-spacing-xl h-spacing-xl" />,
-    description: 'O compêndio completo da doutrina católica.',
-    details: [
-      'Busca por número de parágrafo (§) ou tema.',
-      'Interconexão com as fontes bíblicas citadas.',
-      'Explicações detalhadas dos quatro pilares da fé.',
-      'Histórico de leitura e marcações pessoais.'
-    ],
-    color: 'text-amber-500',
-    bg: 'bg-amber-500/10'
-  },
-  {
-    title: 'Liturgia Diária',
-    icon: <Icons.Liturgy className="w-spacing-xl h-spacing-xl" />,
-    description: 'Acompanhe a oração oficial da Igreja dia a dia.',
-    details: [
-      'Leituras da Missa, Salmo e Evangelho do dia.',
-      'Santo do dia com biografia e oração.',
-      'Calendário litúrgico completo com cores e tempos.',
-      'Comentários espirituais para meditação das leituras.'
-    ],
-    color: 'text-emerald-500',
-    bg: 'bg-emerald-500/10'
-  },
-  {
-    title: 'Trilhas de Formação',
-    icon: <Icons.Journeys className="w-spacing-xl h-spacing-xl" />,
-    description: 'Caminhos estruturados de aprendizado progressivo.',
-    details: [
-      'Jornadas temáticas: Espiritualidade, Doutrina, Moral, etc.',
-      'Progresso salvo automaticamente por etapa.',
-      'Quizzes de fixação ao final de cada módulo.',
-      'Certificados simbólicos de conclusão de trilha.'
-    ],
-    color: 'text-primary',
-    bg: 'bg-primary/10'
-  },
-  {
-    title: 'Logos IA',
-    icon: <Icons.Brain className="w-spacing-xl h-spacing-xl" />,
-    description: 'Assistente teológico inteligente baseado na Tradição.',
-    details: [
-      'Respostas fundamentadas exclusivamente no Magistério.',
-      'Capacidade de sintetizar temas complexos em linguagem simples.',
-      'Geração de reflexões personalizadas a partir do seu perfil.',
-      'Análise de conexões entre Bíblia, Tradição e Magistério.'
-    ],
-    color: 'text-secondary',
-    bg: 'bg-secondary/10'
-  },
-  {
-    title: 'Nexus Theologicus',
-    icon: <Icons.Tag className="w-spacing-xl h-spacing-xl" />,
-    description: 'Navegação por temas e conceitos sagrados.',
-    details: [
-      'Mapa de "bolhas" que conectam conceitos fundamentais.',
-      'Agrupamento de conteúdos por categorias teológicas.',
-      'Visualização rápida de como a fé responde a dores e buscas.',
-      'Exploração multidimensional de um único tema.'
-    ],
-    color: 'text-purple-500',
-    bg: 'bg-purple-500/10'
-  },
-  {
-    title: 'Comunidade & Partilha',
-    icon: <Icons.Community className="w-spacing-xl h-spacing-xl" />,
-    description: 'Espaço para interação e crescimento mútuo.',
-    details: [
-      'Fórum de discussão moderado sobre temas de fé.',
-      'Pedido de orações e intercessão comunitária.',
-      'Partilha de insights e estudos realizados.',
-      'Eventos e transmissões ao vivo para assinantes.'
-    ],
-    color: 'text-rose-500',
-    bg: 'bg-rose-500/10'
-  },
-  {
-    title: 'Obras de Aquino',
-    icon: <Icons.Cross className="w-spacing-xl h-spacing-xl" />,
-    description: 'Acesso à Suma Teológica e outras obras magnas.',
-    details: [
-      'Estrutura original de Artigos, Objeções e Respostas.',
-      'Traduzido e anotado para facilitar a compreensão.',
-      'Busca terminológica técnica do tomismo.',
-      'Conexão com os dogmas e decretos conciliares.'
-    ],
-    color: 'text-orange-500',
-    bg: 'bg-orange-500/10'
-  }
-];
+const ENV_ICONS = {
+  'estudar': BookOpen,
+  'rezar': HandHeart,
+  'formar-se': GraduationCap,
+  'pesquisar': SearchCode,
+  'minha-jornada': Compass,
+} as const;
 
 const ModulesGuidePage: React.FC = () => {
   return (
-    <div className="max-w-5xl mx-auto space-y-spacing-2xl pb-spacing-3xl">
-      <header className="text-center space-y-spacing-md">
-        <div className="inline-flex items-center gap-spacing-xs px-spacing-sm py-spacing-2xs bg-primary/10 rounded-premium">
-          <Icons.Feather className="w-spacing-md h-spacing-md text-primary" />
-          <span className="text-premium-xs font-black uppercase tracking-[0.2em] text-primary">Guia do Peregrino</span>
-        </div>
-        <h1 className="text-premium-4xl md:text-premium-6xl font-display font-black text-primary leading-tight tracking-tight">
-          Entenda os Módulos
+    <div className="mx-auto w-full max-w-[1120px] space-y-10 px-5 pb-24 pt-8 md:px-10 md:pt-14">
+      <Helmet>
+        <title>Mapa da Plataforma — Cathedra</title>
+        <meta
+          name="description"
+          content="Mapa dos cinco ambientes e módulos da plataforma Cathedra Digital."
+        />
+      </Helmet>
+
+      <header className="max-w-3xl">
+        <p className="mb-3 text-[11px] font-bold uppercase tracking-[0.28em] text-secondary">
+          Arquitetura da plataforma
+        </p>
+        <h1 className="font-display text-4xl leading-tight text-primary md:text-5xl">
+          Um caminho claro para cada necessidade.
         </h1>
-        <p className="text-muted-foreground text-premium-lg max-w-spacing-2xl mx-auto italic font-serif">
-          "Conhecereis a verdade, e a verdade vos libertará." (Jo 8,32)
+        <p className="mt-5 text-base leading-7 text-muted-foreground md:text-lg">
+          A Cathedra foi organizada em cinco ambientes. Os módulos vivem dentro
+          deles; ferramentas transversais, como Logos e Comunidade, não competem
+          com a navegação principal.
         </p>
       </header>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-spacing-lg">
-        {MODULES.map((module, idx) => (
-          <motion.div
-            key={module.title}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: idx * 0.05 }}
-          >
-            <Card className="h-full border-border/50 hover:border-primary/30 transition-all duration-300 bg-card  shadow-premium-md hover:shadow-premium-hover rounded-premium overflow-hidden group">
-              <CardHeader className="pb-spacing-md">
-                <div className="flex items-center gap-spacing-md">
-                  <div className={`w-spacing-2xl h-spacing-2xl rounded-premium-full ${module.bg} flex items-center justify-center ${module.color} group-hover:scale-110 transition-transform`}>
-                    {module.icon}
+      <section aria-labelledby="flow-title" className="border-y border-border/30 py-7">
+        <h2 id="flow-title" className="sr-only">Fluxo principal</h2>
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-5">
+          {MODULE_NAVIGATION.map((group, index) => {
+            const Icon = ENV_ICONS[group.key];
+            return (
+              <React.Fragment key={group.key}>
+                <Link
+                  to={group.items[0]?.path ?? '/'}
+                  className="group flex min-h-[110px] flex-col justify-between border border-border/30 bg-card p-4 transition-colors hover:border-secondary/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-secondary"
+                >
+                  <Icon className="h-5 w-5 text-secondary" aria-hidden />
+                  <span>
+                    <span className="block font-display text-lg text-primary">{group.label}</span>
+                    <span className="mt-1 block text-xs leading-5 text-muted-foreground">{group.description}</span>
+                  </span>
+                </Link>
+                {index < MODULE_NAVIGATION.length - 1 && (
+                  <ArrowRight className="mx-auto hidden h-4 w-4 self-center text-muted-foreground/40 sm:block" aria-hidden />
+                )}
+              </React.Fragment>
+            );
+          })}
+        </div>
+      </section>
+
+      <section className="space-y-5" aria-labelledby="modules-title">
+        <div>
+          <p className="text-[10px] font-bold uppercase tracking-[0.24em] text-secondary">Mapa</p>
+          <h2 id="modules-title" className="mt-1 font-display text-3xl text-primary">
+            Ambientes e módulos
+          </h2>
+        </div>
+
+        <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
+          {MODULE_NAVIGATION.map((group) => {
+            const Icon = ENV_ICONS[group.key];
+            return (
+              <article key={group.key} className="border border-border/30 bg-card p-6">
+                <div className="flex items-start gap-4">
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center border border-secondary/30 bg-secondary/5">
+                    <Icon className="h-5 w-5 text-secondary" aria-hidden />
                   </div>
                   <div>
-                    <CardTitle className="text-premium-xl font-bold">{module.title}</CardTitle>
-                    <CardDescription className="text-premium-sm font-medium">{module.description}</CardDescription>
+                    <h3 className="font-display text-2xl text-primary">{group.label}</h3>
+                    <p className="mt-1 text-sm leading-6 text-muted-foreground">{group.description}</p>
                   </div>
                 </div>
-              </CardHeader>
-              <CardContent>
-                <ul className="space-y-spacing-xs">
-                  {module.details.map((detail, i) => (
-                    <li key={i} className="flex items-start gap-spacing-sm text-premium-sm text-muted-foreground leading-relaxed">
-                      <div className={`w-spacing-2xs h-spacing-2xs rounded-premium-full mt-spacing-2xs shrink-0 ${module.color.replace('text-', 'bg-')}`} />
-                      {detail}
-                    </li>
-                  ))}
-                </ul>
-              </CardContent>
-            </Card>
-          </motion.div>
-        ))}
-      </div>
 
-      <div className="bg-primary/5 border border-primary/20 rounded-[2.5rem] p-spacing-xl md:p-spacing-2xl text-center space-y-spacing-lg relative overflow-hidden group">
-        <div className="absolute top-spacing-0 right-0 w-spacing-4xl h-spacing-4xl bg-primary/10 rounded-premium  -mr-spacing-4xl -mt-spacing-4xl" />
-        <div className="relative z-10 space-y-spacing-md">
-          <h2 className="text-premium-2xl md:text-premium-3xl font-bold text-primary">Ainda tem dúvidas?</h2>
-          <p className="text-muted-foreground max-w-spacing-2xl mx-auto">
-            Nossa plataforma é viva e está em constante evolução. Se você não encontrou o que procurava ou tem uma sugestão, converse com nossa equipe de suporte ou partilhe na comunidade.
-          </p>
-          <div className="flex flex-wrap justify-center gap-spacing-md pt-spacing-md">
-            <Badge variant="outline" className="rounded-premium-full px-spacing-md py-spacing-2xs border-primary/20 text-primary hover:bg-primary/5 transition-colors cursor-pointer">Suporte ao Peregrino</Badge>
-            <Badge variant="outline" className="rounded-premium-full px-spacing-md py-spacing-2xs border-primary/20 text-primary hover:bg-primary/5 transition-colors cursor-pointer">Central de Ajuda</Badge>
-            <Badge variant="outline" className="rounded-premium-full px-spacing-md py-spacing-2xs border-primary/20 text-primary hover:bg-primary/5 transition-colors cursor-pointer">Tutorial em Vídeo</Badge>
+                <div className="mt-6 grid grid-cols-1 gap-2 sm:grid-cols-2">
+                  {group.items.map((item) => (
+                    <Link
+                      key={item.id}
+                      to={item.path}
+                      className="group rounded-sm border border-border/20 px-4 py-3 transition-colors hover:border-secondary/40 hover:bg-secondary/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-secondary"
+                    >
+                      <span className="block font-medium text-primary group-hover:text-secondary">{item.label}</span>
+                      <span className="mt-1 block text-xs leading-5 text-muted-foreground">{item.description}</span>
+                    </Link>
+                  ))}
+                </div>
+              </article>
+            );
+          })}
+        </div>
+      </section>
+
+      <section aria-labelledby="transversal-title" className="border border-secondary/25 bg-secondary/5 p-6 md:p-8">
+        <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
+          <div>
+            <p className="text-[10px] font-bold uppercase tracking-[0.24em] text-secondary">Capacidades transversais</p>
+            <h2 id="transversal-title" className="mt-1 font-display text-2xl text-primary">
+              Ajudam todos os ambientes
+            </h2>
+            <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
+              Logos e Comunidade atravessam a experiência. Eles aparecem quando
+              fazem sentido no contexto, sem criar uma sexta ou sétima categoria
+              de navegação.
+            </p>
+          </div>
+          <div className="grid w-full gap-3 md:max-w-md md:grid-cols-2">
+            {TRANSVERSAL_MODULES.map((item) => (
+              <Link
+                key={item.id}
+                to={item.path}
+                className="border border-border/30 bg-background p-4 transition-colors hover:border-secondary/40"
+              >
+                {item.id === 'logos' ? (
+                  <Brain className="h-5 w-5 text-secondary" aria-hidden />
+                ) : (
+                  <Users className="h-5 w-5 text-secondary" aria-hidden />
+                )}
+                <span className="mt-3 block font-medium text-primary">{item.label}</span>
+                <span className="mt-1 block text-xs leading-5 text-muted-foreground">{item.description}</span>
+              </Link>
+            ))}
           </div>
         </div>
-      </div>
+      </section>
+
+      <section className="border-t border-border/30 pt-7">
+        <p className="text-xs leading-6 text-muted-foreground">
+          Administração, auditoria, telemetria, diagnósticos e ferramentas de
+          desenvolvimento permanecem fora da navegação pública e são acessíveis
+          apenas pelas áreas protegidas correspondentes.
+        </p>
+      </section>
     </div>
   );
 };
