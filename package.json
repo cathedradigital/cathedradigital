@@ -5,14 +5,15 @@
   "type": "module",
   "scripts": {
     "dev": "vite dev",
-    "build": "node scripts/check-deploy-assets.mjs && node scripts/validate-module-contracts.mjs && vite build",
+    "build": "node scripts/check-deploy-assets.mjs && node scripts/validate-module-contracts.mjs && node scripts/validate-security-boundaries.mjs && vite build",
     "build:dev": "vite build --mode development",
     "preview": "vite preview",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "format": "prettier --write .",
     "validate:modules": "node scripts/validate-module-contracts.mjs",
-    "validate:links": "node scripts/validate-internal-routes.mjs"
+    "validate:links": "node scripts/validate-internal-routes.mjs",
+    "validate:security": "node scripts/validate-security-boundaries.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.9.1",
