@@ -14,7 +14,7 @@ const ThemeExplorer: React.FC = () => {
         {themes.map((t) => (
           <li key={t.slug}>
             <a
-              href={`/pesquisar/tema/${t.slug}`}
+              href={`/temas/${t.slug}`}
               className="block p-3 rounded-md border border-border hover:bg-muted transition"
             >
               <div className="text-sm font-medium">{t.label}</div>

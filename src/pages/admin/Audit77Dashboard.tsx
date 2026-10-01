@@ -112,7 +112,7 @@ const initialAuditItems: AuditItem[] = [
   { 
     id: 'patristic', 
     module: 'Patrística', 
-    route: '/biblioteca/patristica',
+    route: '/biblioteca?filter=patristica',
     p: 'P1', 
     status: 'BLOCKED', 
     deviceStatus: { mobile: 'BLOCKED', desktop: 'BLOCKED' },
