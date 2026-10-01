@@ -640,8 +640,8 @@ const AppLayout: React.FC = () => {
               <Route path="/catechism" element={<Suspense fallback={<CatechismSkeleton />}><AtriumCatechismReader /></Suspense>} />
               <Route path="/catechism-legacy" element={<Suspense fallback={<CatechismSkeleton />}><Catechism /></Suspense>} />
               <Route path="/catecismo" element={<Navigate to="/catechism" replace />} />
-              {/* Entrada legada: a Home canônica agora é a única entrada principal. */}
-              <Route path="/igreja" element={<Navigate to="/" replace />} />
+              {/* Alias legado: a área Igreja agora desemboca na Comunidade canônica, evitando retorno à Home. */}
+              <Route path="/igreja" element={<Navigate to="/community" replace />} />
               <Route path="/rezar" element={<Suspense fallback={<LoadingFallback />}><RezarPage /></Suspense>} />
               <Route path="/magisterium" element={<Suspense fallback={<LoadingFallback />}><Magisterium /></Suspense>} />
               <Route path="/magisterio" element={<Navigate to="/magisterium" replace />} />
