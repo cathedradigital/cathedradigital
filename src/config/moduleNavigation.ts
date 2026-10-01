@@ -39,7 +39,7 @@ export const MODULE_NAVIGATION: ModuleNavGroup[] = [
       { id: 'library', label: 'Biblioteca', path: '/acervo', description: 'Acervo, obras e coleções.' },
       { id: 'saints', label: 'Santos', path: '/santos', description: 'Vidas e testemunhos de santidade.' },
       { id: 'nexus', label: 'Nexus', path: '/nexus', description: 'Conexões entre fontes e temas.' },
-      { id: 'church', label: 'Igreja Viva', path: '/igreja', description: 'Vida da Igreja, calendário e contexto atual.' },
+      { id: 'church', label: 'Igreja Viva', path: '/community', description: 'Vida da Igreja, calendário e contexto atual.' },
     ],
   },
   {
