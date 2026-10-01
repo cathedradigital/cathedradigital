@@ -162,7 +162,7 @@ const AtriumNexusPage: React.FC = () => {
     (a, b) => NEXUS_KIND_PRESETS[a].order - NEXUS_KIND_PRESETS[b].order,
   );
 
-  return (
+  const mobileModuleBar = <MobileTopBar kicker="Cathedra" title="Nexus" transparent />;\n\n  return (
     <div
       className="min-h-screen w-full min-w-0 overflow-x-hidden bg-stitch-background text-stitch-on-background"
       style={{
@@ -438,8 +438,7 @@ const AtriumNexusPage: React.FC = () => {
           </p>
         </section>
       </section>
-    </div>
+      </div>
+    </>
   );
-};
-
-export default AtriumNexusPage;
+};xport default AtriumNexusPage;
