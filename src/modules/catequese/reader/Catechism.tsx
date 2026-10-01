@@ -388,7 +388,7 @@ const LazyParagraph: React.FC<{
   onHighlightClick?: (note: UserNote) => void;
   onCreateNote?: (paragraph: number) => void;
   highlights?: UserNote[];
-}> = ({ paragraph: p, currentParagraph, paragraphsRead, isFavorite, toggleFavorite, handleNavigateToBible, onHighlightClick, highlights = [] }) => {
+}> = ({ paragraph: p, currentParagraph, paragraphsRead, isFavorite, toggleFavorite, handleNavigateToBible, onHighlightClick, onCreateNote, highlights = [] }) => {
   const { settings } = useReadingSettings();
 
   const ref = React.useRef<HTMLDivElement>(null);
