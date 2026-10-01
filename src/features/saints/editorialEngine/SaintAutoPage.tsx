@@ -23,6 +23,7 @@ import SacredImage from '@/components/cathedra/SacredImage';
 import { useSaintNexus } from '@/hooks/useSaintNexus';
 import { useReadingMarks } from '@/hooks/useReadingMarks';
 import ReadingMark from '@/components/cathedra/ReadingMark';
+import NotesPanel from '@/components/cathedra/NotesPanel';
 import type { SaintPageDescriptor } from './types';
 import { SaintBioBlock } from './blocks/SaintBioBlock';
 import { SaintTimelineBlock } from './blocks/SaintTimelineBlock';
@@ -120,6 +121,11 @@ export const SaintAutoPage: React.FC<Props> = ({ descriptor }) => {
     >
       <div className="min-w-0 space-y-spacing-lg">
         <div className="flex items-center justify-end border-b border-border/50 pb-spacing-xs">
+          <NotesPanel
+            contentType="saint"
+            contentId={descriptor.slug}
+            contentLabel={header.name}
+          />
           <ReadingMark
             contentType="saint"
             contentId={descriptor.slug}
