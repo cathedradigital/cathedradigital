@@ -394,3 +394,94 @@
 .shadow-premium-lg {
   box-shadow: 0 10px 40px -10px hsl(var(--foreground) / 0.12), 0 4px 16px -4px hsl(var(--foreground) / 0.08), 0 0 0 1px hsl(var(--foreground) / 0.02);
 }
+
+
+/* =========================================================
+   CÁTEDRA DESIGN SYSTEM — tokens de ritmo, superfície e interação
+   Mantém a linguagem atual e reduz variações visuais entre módulos.
+   ========================================================= */
+:root {
+  --catedra-content-max: 72rem;
+  --catedra-reading-max: 46rem;
+  --catedra-space-section: clamp(2.5rem, 6vw, 5rem);
+  --catedra-radius-sm: 0.625rem;
+  --catedra-radius-md: 0.875rem;
+  --catedra-radius-lg: 1.25rem;
+  --catedra-motion-fast: 150ms;
+  --catedra-motion-base: 220ms;
+}
+
+.catedra-page {
+  width: min(100% - 2rem, var(--catedra-content-max));
+  margin-inline: auto;
+}
+
+.catedra-section {
+  padding-block: var(--catedra-space-section);
+}
+
+.catedra-reading {
+  width: min(100%, var(--catedra-reading-max));
+  margin-inline: auto;
+}
+
+.catedra-surface {
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--catedra-radius-md);
+  background: hsl(var(--card));
+  color: hsl(var(--card-foreground));
+}
+
+.catedra-interactive {
+  transition: transform var(--catedra-motion-base) ease,
+    border-color var(--catedra-motion-base) ease,
+    box-shadow var(--catedra-motion-base) ease,
+    background-color var(--catedra-motion-base) ease;
+}
+
+.catedra-interactive:hover {
+  transform: translateY(-1px);
+}
+
+.catedra-interactive:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 3px;
+}
+
+.catedra-action {
+  min-height: 2.75rem;
+  padding-inline: 1rem;
+  border-radius: var(--catedra-radius-sm);
+}
+
+@media (max-width: 640px) {
+  .catedra-page {
+    width: min(100% - 1.25rem, var(--catedra-content-max));
+  }
+
+  .catedra-section {
+    padding-block: 2.25rem;
+  }
+
+  h1 {
+    font-size: clamp(2rem, 9vw, 2.5rem);
+  }
+
+  h2 {
+    font-size: clamp(1.6rem, 7vw, 2rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
