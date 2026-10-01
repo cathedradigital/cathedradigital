@@ -27,12 +27,12 @@ export const catechismAdapter: LibraryAdapter = {
         title: `§ ${paragraph}`,
         slug,
         summary: row.texto_base ? row.texto_base.slice(0, 240) : undefined,
-        href: `/catechism/${paragraph}`,
+        href: `/catechism?p=${encodeURIComponent(String(paragraph))}`,
       };
     });
   },
 
   resolveHref({ slug }) {
-    return `/catechism/${slug}`;
+    return `/catechism?p=${encodeURIComponent(slug)}`;
   },
 };
