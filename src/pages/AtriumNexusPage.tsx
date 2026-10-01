@@ -17,6 +17,7 @@
  */
 
 import React, { useEffect, useState } from 'react';
+import { MobileTopBar } from '@/components/mobile/MobileTopBar';
 import { Helmet } from '@/lib/helmet-compat';
 import { Link, useNavigate } from '@/lib/rr-compat';
 import {
@@ -160,6 +161,8 @@ const AtriumNexusPage: React.FC = () => {
   );
 
   return (
+    <>
+      <MobileTopBar kicker="Cathedra" title="Nexus" transparent />
     <div
       className="min-h-screen w-full min-w-0 overflow-x-hidden bg-stitch-background text-stitch-on-background"
       style={{
@@ -436,6 +439,7 @@ const AtriumNexusPage: React.FC = () => {
         </section>
       </section>
     </div>
+    </>
   );
 };
 

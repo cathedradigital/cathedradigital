@@ -10,6 +10,7 @@
  * `@/components/reader`.
  */
 import React from 'react';
+import { MobileTopBar } from '@/components/mobile/MobileTopBar';
 import {
   EditorialClosure,
   EditorialHero,
@@ -60,6 +61,9 @@ export const SaintAutoPage: React.FC<Props> = ({ descriptor }) => {
   const attributes = header.iconography?.attributes ?? [];
 
   return (
+    <>
+      <MobileTopBar kicker="Cathedra" title={header.name} transparent />
+
     <div className="min-w-0 w-full overflow-x-hidden" data-catedra-module-root data-catedra-module="saints">
     <ReaderShell
       contentMaxWidth="max-w-3xl"
@@ -168,5 +172,6 @@ export const SaintAutoPage: React.FC<Props> = ({ descriptor }) => {
       </div>
     </ReaderShell>
   </div>
+    </>
   );
 };

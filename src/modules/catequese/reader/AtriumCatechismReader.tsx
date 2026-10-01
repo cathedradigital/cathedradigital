@@ -74,7 +74,7 @@ const CatechismLanding: React.FC = () => {
         title="Catecismo"
       />
 
-      <section className="mx-auto w-full max-w-[1120px] px-5 pb-[calc(var(--stitch-mobile-bottomnav-h)+var(--stitch-mobile-safe-bottom)+2rem)] pt-10 md:px-16 md:pb-16 md:pt-14 animate-fade-in">
+      <section className="estudar-module-landing mx-auto w-full max-w-[1120px] px-5 pb-[calc(var(--stitch-mobile-bottomnav-h)+var(--stitch-mobile-safe-bottom)+2rem)] pt-10 md:px-16 md:pb-16 md:pt-14 animate-fade-in">
         {/* CAT-SP4 · Onda B.1 — Hero universal (Harmony) */}
         <EditorialHero density="balanced" rule={false}>
           <EditorialHero.Eyebrow>Depositum Fidei</EditorialHero.Eyebrow>
@@ -101,7 +101,8 @@ const CatechismLanding: React.FC = () => {
             return (
               <article
                 key={part.part}
-                className="grid grid-cols-1 gap-[var(--sp-l)] border-b border-stitch-outline-variant/20 pb-[var(--sp-xl)] last:border-b-0 md:grid-cols-12"
+                data-catechism-part={part.part}
+                className="estudar-catechism-part grid grid-cols-1 gap-[var(--sp-l)] border-b border-stitch-outline-variant/20 pb-[var(--sp-xl)] last:border-b-0 md:grid-cols-12"
               >
                 <header className="md:col-span-4">
                   <span className="type-rubrica">
