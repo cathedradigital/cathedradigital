@@ -12,13 +12,14 @@
  * manter compatibilidade com os 20+ call sites e com os testes existentes.
  */
 
-import React, { memo, useCallback, useState } from 'react';
+import React, { memo, useCallback, useMemo, useState } from 'react';
 import { useNavigate } from '@/lib/rr-compat';
 import { ReferencePopover } from '@/components/reader';
 import { supabase } from '@/lib/db';
 import { Icons } from '../../constants';
 import { buildBibleUrl } from '@/lib/bibleUrl';
 import { BOOK_NAME_BY_ABBR } from '@/lib/bibleCanon';
+import { resolveBibleAutoNexus } from '@/core/knowledge/adapters/bibleAutoNexus';
 
 interface BibleVersePopoverProps {
   abbr: string;
@@ -75,6 +76,8 @@ const BibleVersePopoverBody: React.FC<BodyProps> = ({ abbr, chapter, verse, onNa
   const [fetched, setFetched] = useState(false);
   const [bookName, setBookName] = useState<string>(() => sanitizeBookName(undefined, abbr));
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [studyOpen, setStudyOpen] = useState(false);
+  const study = useMemo(() => resolveBibleAutoNexus({ bookAbbr: abbr, bookName, chapter }), [abbr, bookName, chapter]);
 
   const fetchVerses = useCallback(async () => {
     const correlationId = `bvp-${abbr}-${chapter}-${Date.now()}`;
@@ -174,6 +177,20 @@ const BibleVersePopoverBody: React.FC<BodyProps> = ({ abbr, chapter, verse, onNa
         </p>
       )}
 
+      <div className="mt-spacing-sm border-t border-border pt-spacing-sm">
+        <button type="button" aria-expanded={studyOpen} onClick={() => setStudyOpen(value => !value)} className="flex w-full items-center justify-between rounded-xl border border-primary/10 bg-primary/[0.025] px-3 py-2.5 text-left transition-colors hover:bg-primary/[0.05] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">
+          <span><span className="block text-[10px] font-bold uppercase tracking-[0.14em] text-secondary">Estudar este versículo</span><span className="mt-0.5 block text-[10px] text-muted-foreground">Contexto, relações e outras edições</span></span>
+          <span aria-hidden="true" className="text-xs text-muted-foreground">{studyOpen ? '−' : '+'}</span>
+        </button>
+        {studyOpen && (<div className="mt-3 space-y-3" data-testid="bible-verse-study-panel">
+          <section className="rounded-xl bg-muted/30 p-3"><h5 className="text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground">Nesta leitura</h5>
+              <p className="mt-1.5 text-xs leading-relaxed text-foreground/80">Você está em {bookName} {chapter}{verse ? `,${verse}` : ''} . Use “Abrir completo” para continuar a leitura no capítulo sem perder o contexto.</p>
+          </section>
+          <section className="rounded-xl bg-muted/30 p-3"><h5 className="text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground">Conexões do capítulo</h5>
+            {study.suggestions.length > 0 ? (<div className="mt-2 space-y-2">{study.suggestions.slice(0, 4).map((item, index) => (<div key={item.id ?? index} className="rounded-lg border border-border/70 bg-background/50 px-2.5 py-2"><p className="text-[11px] font-semibold text-foreground">{item.title}</p>{item.description && <p className="mt-0.5 text-[10px] leading-relaxed text-muted-foreground">{item.description}</p>}</div>))}</div>) : <p className="mt-1.5 text-[10px] leading-relaxed text-muted-foreground">Ainda não há conexões editoriais cadastradas para este capítulo.</p>}
+          </section>
+        </div>)}
+      </div>
       <div className="mt-spacing-sm border-t border-border pt-spacing-sm">
         <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground mb-2">Outras edições</p>
         <div className="flex flex-wrap gap-2">
