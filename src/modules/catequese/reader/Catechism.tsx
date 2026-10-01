@@ -783,6 +783,7 @@ const Catechism: React.FC = memo(() => {
 
   return (
     <ContemplativeLayout maxW="max-w-5xl w-full">
+      <div data-catedra-module="catechism" className="min-w-0 w-full overflow-x-hidden">
       <SEOHead title="Catecismo da Igreja Católica | Cathedra Digital" description="Doutrina católica organizada por parágrafos." path="/catechism" />
       <div className="w-full space-y-8 md:space-y-14 pb-spacing-2xl md:pb-spacing-4xl">
         {/* HERO Noir & Gold */}
@@ -824,7 +825,7 @@ const Catechism: React.FC = memo(() => {
         </div>
 
         {/* BUSCA */}
-        <div className="sticky top-0 z-20 bg-background/85 backdrop-blur-md py-3 -mx-spacing-md px-spacing-md">
+        <div className="sticky top-0 z-20 bg-background/90 backdrop-blur-md py-2 md:py-3 -mx-spacing-md px-spacing-md">
           <div className="relative group max-w-2xl mx-auto">
             <Icons.Search className="absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 transition-colors" style={{ color: 'var(--gold-text)', opacity: 0.6 }} />
             <input 
@@ -834,7 +835,7 @@ const Catechism: React.FC = memo(() => {
               value={searchQuery} 
               onChange={(e) => setSearchQuery(e.target.value)} 
               onKeyDown={(e) => e.key === 'Enter' && jumpToParagraph(parseInt(searchQuery.replace('§', '')))} 
-              className="w-full bg-transparent border-0 border-b py-3 pl-12 pr-4 focus:outline-none focus:ring-0"
+              className="w-full min-w-0 bg-transparent border-0 border-b py-3 pl-10 md:pl-12 pr-3 md:pr-4 focus:outline-none focus:ring-0"
               style={{
                 borderBottomColor: '#c9a84c',
                 borderBottomWidth: 1,
@@ -848,13 +849,13 @@ const Catechism: React.FC = memo(() => {
         </div>
 
         {/* CARDS DE PARTES */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-6">
           {CIC_SECTIONS.map((part, idx) => (
             <div 
               key={part.part} 
               id={`part-card-${idx}`}
               onClick={() => { setLastFocusedElement(`part-card-${idx}`); setSelectedPart(part); setViewMode('sections'); }} 
-              className="group cursor-pointer p-6 md:p-8 flex flex-col justify-between min-h-[180px] text-left transition-all duration-500 rounded-none focus-visible:outline-none"
+              className="group cursor-pointer p-4 md:p-8 flex flex-col justify-between min-h-[140px] md:min-h-[180px] text-left transition-all duration-500 rounded-none focus-visible:outline-none"
               style={{
                 border: '1px solid rgba(201, 168, 76, 0.35)',
                 background: 'transparent',
@@ -902,6 +903,7 @@ const Catechism: React.FC = memo(() => {
         </div>
       </div>
       <CatechismDiagnosticPanel />
+      </div>
     </ContemplativeLayout>
   );
 });
