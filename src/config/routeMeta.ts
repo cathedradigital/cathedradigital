@@ -164,7 +164,9 @@ export const ROUTE_META: Record<string, RouteMeta> = {
   '/igreja': {
     title: 'Igreja — Vida Litúrgica e Espiritual',
     description:
-      'Explore a vida litúrgica da Igreja: liturgia diária, missal, breviário e as ricas tradições da oração comunitária.',
+      'Entrada legada da área Igreja. O destino canônico atual é a Comunidade.',
+    canonicalPath: '/community',
+    noindex: true,
   },
   '/liturgia/dia': {
     title: 'Dia Litúrgico — Missa, Horas e Santo do Dia',
