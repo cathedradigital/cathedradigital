@@ -524,11 +524,16 @@ const Bible: React.FC = () => {
   const handleSaveNote = async (text: string, color: string) => {
     if (!activeVerse || !selectedBook) return;
     
-    await addNote('bible', text, color, {
-      book_abbr: selectedBook.abbr,
-      chapter: selectedChapter,
-      verse: activeVerse.number
-    });
+    await addNote(
+      `${selectedBook.abbr}:${selectedChapter}:${activeVerse.number}`,
+      text,
+      color,
+      {
+        book_abbr: selectedBook.abbr,
+        chapter: selectedChapter,
+        verse: activeVerse.number
+      },
+    );
     
     setIsNoteModalOpen(false);
     toast.success('Nota salva');
