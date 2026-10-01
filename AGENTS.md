@@ -28,7 +28,7 @@ Cathedra / Digital Cathedral é um produto digital de formação católica. O ob
 - Nunca invente versículos, citações, documentos, números de parágrafo ou atribuições.
 - Preserve contexto e indicação da fonte.
 - Quando uma afirmação doutrinal exigir autoridade, use fonte identificável e verificável.
-- O Logos deve distinguir texto-fonte, interpretação, resumo e inferência.
+- O Cáter deve distinguir texto-fonte, interpretação, resumo e inferência.\n- O Cáter só pode afirmar conteúdo doutrinal com fonte verificável recuperada; sem fonte suficiente, deve recusar a geração doutrinal.\n- Opinião de teólogo, santo ou autor nunca deve ser apresentada como Magistério sem fonte e qualificação explícita.
 
 ## Segurança
 

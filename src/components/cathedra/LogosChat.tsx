@@ -30,7 +30,7 @@ const LogosChat = () => {
       {
         id: '1',
         role: 'assistant',
-        content: 'Bem-vindo ao Logos IA. Em que posso auxiliá-lo em sua oração ou reflexão hoje?',
+        content: 'Bem-vindo ao Cáter. Consulte a fé católica nas fontes da Cátedra. Eu não crio doutrina e não invento referências.',
         timestamp: new Date(),
       },
     ];
@@ -93,8 +93,8 @@ const LogosChat = () => {
                   <Icons.Sparkles className="w-spacing-md h-spacing-md text-primary" />
                 </div>
                 <div>
-                  <h3 className="text-premium-sm font-bold font-serif text-primary">Logos IA</h3>
-                  <p className="text-premium-xs text-muted-foreground uppercase tracking-widest font-black">Assistente Espiritual</p>
+                  <h3 className="text-premium-sm font-bold font-serif text-primary">Cáter</h3>
+                  <p className="text-premium-xs text-muted-foreground uppercase tracking-widest font-black">Assistente Teológico</p>
                 </div>
               </div>
               <Button onClick={() => setIsOpen(false)} className="text-muted-foreground hover:text-foreground">
@@ -143,7 +143,7 @@ const LogosChat = () => {
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyPress={(e) => e.key === 'Enter' && handleSend()}
-                  placeholder="Peça uma oração ou reflexão..."
+                  placeholder="Consulte uma fonte ou faça uma pergunta..."
                   className="w-full pl-spacing-md pr-spacing-2xl py-spacing-sm rounded-premium-full border border-border bg-background text-premium-sm focus:outline-none focus:ring-1 focus:ring-secondary/50 font-serif"
                 />
                 <Button
@@ -165,7 +165,7 @@ const LogosChat = () => {
         className="flex items-center justify-center gap-spacing-xs p-spacing-sm lg:px-spacing-md lg:py-spacing-sm bg-primary text-primary-foreground rounded-premium-full shadow-premium font-black uppercase tracking-widest text-premium-xs min-w-spacing-0"
       >
         <Icons.Sparkles className="w-spacing-md h-spacing-md shrink-0" />
-        <span className="hidden lg:inline">{isOpen ? 'Fechar' : 'Conversar com Logos'}</span>
+        <span className="hidden lg:inline">{isOpen ? 'Fechar' : 'Consultar Cáter'}</span>
       </motion.button>
     </div>
   );

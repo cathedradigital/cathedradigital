@@ -11,16 +11,16 @@ const LogosPage: React.FC = () => {
   return (
     <>
       <SEOHead
-        title="Logos IA — Cathedra Digital"
-        description="Assistente de estudo conectado às fontes e aos caminhos de formação da Cathedra."
+        title="Cáter — Assistente Teológico da Cátedra"
+        description="Assistente teológico fundamentado nas fontes verificáveis da Cátedra, sem criar doutrina."
       />
       <main className="mx-auto w-full max-w-5xl px-spacing-md md:px-spacing-xl py-spacing-2xl">
         <div className="mb-spacing-2xl">
           <p className="text-[10px] uppercase tracking-[0.32em] text-secondary/80">
-            Inteligência da Cathedra
+            Assistente Teológico da Cátedra
           </p>
           <h1 className="mt-spacing-sm font-serif italic text-3xl md:text-5xl text-primary">
-            Logos
+            Cáter
           </h1>
           <p className="mt-spacing-md max-w-2xl text-sm md:text-base text-muted-foreground leading-relaxed">
             Estude a partir do contexto da Cathedra e aprofunde conexões entre Escritura,
