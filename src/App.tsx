@@ -227,6 +227,9 @@ const LanguageAdmin = lazy(() => import('./components/cathedra/LanguageAdmin'));
 const BibleCoverageAdmin = lazy(() => import('./components/cathedra/BibleCoverageAdmin'));
 const DesignSystemGuide = lazy(() => import('./components/cathedra/DesignSystemGuide'));
 const SecurityDashboard = lazy(() => import('./pages/SecurityDashboard'));
+const DiagnosticoPage = lazy(() => import('./components/cathedra/DiagnosticoPage'));
+const CatechismDebug = lazy(() => import('./modules/catequese/components/CatechismDebug'));
+const CatechismIntegrity = lazy(() => import('./modules/catequese/components/CatechismIntegrity'));
 const CidComplianceDashboardPage = lazy(() => import('./pages/CidComplianceDashboardPage'));
 const BibleCacheAdminPage = lazy(() => import('./pages/BibleCacheAdminPage'));
 const BiblePerfDashboard = lazy(() => import('./pages/BiblePerfDashboard'));
@@ -642,6 +645,9 @@ const AppLayout: React.FC = () => {
               <Route path="/bible-legacy" element={<Suspense fallback={<BibleSkeleton />}><BibleReadGate><Bible /></BibleReadGate></Suspense>} />
               <Route path="/biblia" element={<Navigate to="/bible" replace />} />
               <Route path="/catechism" element={<Suspense fallback={<CatechismSkeleton />}><AtriumCatechismReader /></Suspense>} />
+              <Route path="/catechism/debug" element={<Suspense fallback={<LoadingFallback />}><AdminGuard><CatechismDebug /></AdminGuard></Suspense>} />
+              <Route path="/catechism/integrity" element={<Suspense fallback={<LoadingFallback />}><AdminGuard><CatechismIntegrity /></AdminGuard></Suspense>} />
+              <Route path="/catechism/verify" element={<Navigate to="/catechism/integrity" replace />} />
               <Route path="/catechism-legacy" element={<Suspense fallback={<CatechismSkeleton />}><Catechism /></Suspense>} />
               <Route path="/catecismo" element={<Navigate to="/catechism" replace />} />
               {/* Alias legado: a área Igreja agora desemboca na Comunidade canônica, evitando retorno à Home. */}
@@ -674,6 +680,7 @@ const AppLayout: React.FC = () => {
               <Route path="/hoje" element={<Suspense fallback={<LoadingFallback />}><HojePage /></Suspense>} />
               <Route path="/dashboard" element={<Navigate to="/hoje" replace />} />
               <Route path="/diario" element={<Suspense fallback={<LoadingFallback />}><AuthGuard><SpiritualJournalPage /></AuthGuard></Suspense>} />
+              <Route path="/diagnostico" element={<Suspense fallback={<LoadingFallback />}><DiagnosticoPage /></Suspense>} />
 
               {/* Sprint UX · Área do Usuário unificada. Rotas antigas acima preservadas. */}
               <Route path="/conta" element={<Suspense fallback={<LoadingFallback />}><AuthGuard><ContaLayout /></AuthGuard></Suspense>}>
@@ -799,6 +806,7 @@ const AppLayout: React.FC = () => {
               <Route path="/checkout" element={<Suspense fallback={<LoadingFallback />}><AuthGuard><CheckoutPage /></AuthGuard></Suspense>} />
               <Route path="/checkout/result" element={<Suspense fallback={<LoadingFallback />}><CheckoutResultPage /></Suspense>} />
               <Route path="/transactions" element={<Suspense fallback={<LoadingFallback />}><AuthGuard><UserTransactionsPage /></AuthGuard></Suspense>} />
+              <Route path="/transactions/my" element={<Navigate to="/transactions" replace />} />
               <Route path="/partners" element={<Suspense fallback={<LoadingFallback />}><PartnersPage /></Suspense>} />
               <Route path="/admin/parceiros" element={<Suspense fallback={<LoadingFallback />}><PartnersAdmin /></Suspense>} />
               <Route path="/transparencia" element={<Suspense fallback={<LoadingFallback />}><TransparencyPage /></Suspense>} />
@@ -812,7 +820,9 @@ const AppLayout: React.FC = () => {
               <Route path="/legal/lgpd" element={<Suspense fallback={<LoadingFallback />}><LGPDPage /></Suspense>} />
               <Route path="/legal/termos" element={<Navigate to="/terms" replace />} />
               <Route path="/terms" element={<Suspense fallback={<LoadingFallback />}><TermsPage /></Suspense>} />
+              <Route path="/termos" element={<Navigate to="/terms" replace />} />
               <Route path="/privacy" element={<Suspense fallback={<LoadingFallback />}><PrivacyPage /></Suspense>} />
+              <Route path="/privacidade" element={<Navigate to="/privacy" replace />} />
               <Route path="/contato" element={<Suspense fallback={<LoadingFallback />}><ContactPage /></Suspense>} />
               <Route path="/contact" element={<Navigate to="/contato" replace />} />
               <Route path="/docs" element={<Suspense fallback={<LoadingFallback />}><DocsPage /></Suspense>} />
@@ -832,6 +842,7 @@ const AppLayout: React.FC = () => {
               <Route path="/notes" element={<Navigate to="/diario" replace />} />
               <Route path="/telemetry" element={<Navigate to="/admin/telemetry" replace />} />
               <Route path="/security" element={<Navigate to="/admin/security" replace />} />
+              <Route path="/security-audit" element={<Navigate to="/admin/security" replace />} />
               <Route path="/catechism-explorer" element={<Navigate to="/catechism" replace />} />
               <Route path="/formacao" element={<Navigate to="/jornadas" replace />} />
               <Route path="/formar-se" element={<Navigate to="/jornadas" replace />} />

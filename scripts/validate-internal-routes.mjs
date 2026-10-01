@@ -21,6 +21,16 @@ const routePaths = [
 const redirects = [...app.matchAll(/<Navigate\s+to=["']([^"']+)["']/g)].map((m) => m[1]);
 const declared = new Set([...routePaths, ...redirects]);
 
+// Rotas filhas do shell /conta são declaradas como paths relativos no JSX.
+const contaStart = app.indexOf('<Route path="/conta"');
+const contaEnd = app.indexOf('/* Biblioteca */', contaStart);
+if (contaStart >= 0 && contaEnd > contaStart) {
+  const contaBlock = app.slice(contaStart, contaEnd);
+  for (const match of contaBlock.matchAll(/<Route\s+path=["']([^/"'][^"']*)["']/g)) {
+    declared.add(`/conta/${match[1]}`);
+  }
+}
+
 const ignored = [
   /^\/(?:assets|icons|images|fonts|favicon|manifest\.json|robots\.txt|sitemap\.xml)(?:\/|$)/,
   /^\/api(?:\/|$)/,
@@ -31,7 +41,10 @@ function matchesRoute(path) {
   if (declared.has(path)) return true;
   return [...declared].some((candidate) => {
     if (!candidate.startsWith('/')) return false;
-    if (candidate.endsWith('/*')) return path.startsWith(candidate.slice(0, -1));
+    if (candidate.endsWith('/*')) {
+      const base = candidate.slice(0, -1);
+      return path === base.slice(0, -1) || path.startsWith(base);
+    }
     const pattern = candidate
       .replace(/[.*+?^$()|[\]{}]/g, '\\$&')
       .replace(/:[^/]+/g, '[^/]+');
