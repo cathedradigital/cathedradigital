@@ -461,6 +461,11 @@ const AppLayout: React.FC = () => {
   }, [isHighContrast, updateSettings]);
 
   const handleOpenSidebar = useCallback(() => setIsSidebarOpen(true), []);
+
+  useEffect(() => {
+    window.addEventListener('open-sidebar', handleOpenSidebar);
+    return () => window.removeEventListener('open-sidebar', handleOpenSidebar);
+  }, [handleOpenSidebar]);
   const handleCloseSidebar = useCallback(() => {
     setIsSidebarOpen(false);
     // Focus content for accessibility after closing
