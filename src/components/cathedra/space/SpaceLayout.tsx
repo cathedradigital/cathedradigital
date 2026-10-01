@@ -114,6 +114,9 @@ export interface SpaceDoor {
   hint?: string;
   to: string;
   Icon?: React.ComponentType<{ className?: string }>;
+  /** Identidade visual do ambiente ao qual esta porta pertence. */
+  accent?: string;
+  accentSoft?: string;
 }
 
 interface SpaceDoorsProps {
@@ -146,16 +149,23 @@ export const SpaceDoors: React.FC<SpaceDoorsProps> = ({
           key={door.key}
           to={door.to}
           aria-label={`Entrar em ${door.label}`}
-          className="group relative flex flex-col border border-border/20 bg-card p-5 transition-all hover:border-secondary/40 hover:shadow-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2"
+          className="group relative flex flex-col border bg-card p-5 transition-all hover:shadow-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2"
+          style={{
+            borderColor: door.accent ? `${door.accent}55` : undefined,
+            backgroundColor: door.accentSoft,
+          }}
         >
-          <div className="absolute left-0 top-0 h-full w-1 origin-top scale-y-0 bg-secondary transition-transform group-hover:scale-y-100" />
+          <div
+            className="absolute left-0 top-0 h-full w-1 origin-top scale-y-0 transition-transform group-hover:scale-y-100"
+            style={{ backgroundColor: door.accent }}
+          />
           <div className="mb-4 flex items-center justify-between">
             {door.Icon ? (
-              <door.Icon className="h-6 w-6 text-secondary" aria-hidden />
+              <door.Icon className="h-6 w-6" style={{ color: door.accent }} aria-hidden />
             ) : (
               <span className="h-6 w-6" />
             )}
-            <span className="font-display text-[24px] italic text-secondary/70">
+            <span className="font-display text-[24px] italic" style={{ color: door.accent }}>
               {String(i + 1).padStart(2, '0')}
             </span>
           </div>
