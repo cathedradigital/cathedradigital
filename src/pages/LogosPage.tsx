@@ -12,7 +12,7 @@ const LogosPage: React.FC = () => {
 
   return (
     <>
-      <SEOHead title="Cáter — Assistente Teológico da Cátedra" description="Assistente teológico fundamentado nas fontes verificáveis da Cátedra, sem criar doutrina." />
+      <SEOHead title="Cáter — Assistente Teológico da Cátedra" description="Assistente teológico fundamentado nas fontes verificáveis da Cátedra, sem criar doutrina." path="/logos" />
       <main className="mx-auto w-full max-w-5xl px-spacing-md md:px-spacing-xl py-spacing-2xl">
         <div className="mb-spacing-2xl">
           <p className="text-[10px] uppercase tracking-[0.32em] text-secondary/80">Assistente Teológico da Cátedra</p>
