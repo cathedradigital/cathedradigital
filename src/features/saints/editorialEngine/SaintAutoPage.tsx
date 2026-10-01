@@ -169,6 +169,6 @@ export const SaintAutoPage: React.FC<Props> = ({ descriptor }) => {
         })}
       </div>
     </ReaderShell>
-      </div>
-    </>\n  );
+  </div>
+  );
 };
