@@ -18,9 +18,9 @@ export interface RouteConfig {
 // Aliases continuam registrados para compatibilidade/SEO.
 export const APP_ROUTES: RouteConfig[] = [
   // Core Routes (Hub Spiritual)
-  { path: '/bible', label: 'Bíblia', icon: Icons.BookOpen, showInMenu: false, category: 'core' },
+  { path: '/bible', label: 'Bíblia', icon: Icons.BookOpen, showInMenu: true, category: 'core' },
   { path: '/rezar', label: 'Orar', icon: Icons.Hand, showInMenu: true, category: 'core' },
-  { path: '/igreja', label: 'Igreja', icon: Icons.Church, showInMenu: true, category: 'core' },
+  { path: '/igreja', label: 'Igreja', icon: Icons.Church, showInMenu: false, category: 'core' },
   { path: '/santos', label: 'Santos', icon: Icons.Flame, showInMenu: true, category: 'core' },
   { path: '/jornadas', label: 'Jornadas', icon: Icons.Route, showInMenu: true, category: 'core' },
   { path: '/nexus', label: 'Nexus', icon: Icons.Orbit, showInMenu: true, category: 'core' },
