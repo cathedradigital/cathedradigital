@@ -645,6 +645,59 @@
   [data-catedra-module="community"] .estudar-community-feed {
     width: min(100%, 64rem);
   }
+
+  /* Documentos / Magistério — menos parede de filtros, mais superfície de leitura. */
+  [data-catedra-module="documents"] .estudar-doc-filter-stack {
+    max-width: 76rem;
+    margin-inline: auto;
+  }
+
+  [data-catedra-module="documents"] .estudar-doc-filter-stack > .relative {
+    max-width: 68rem;
+    margin-inline: auto;
+  }
+
+  [data-catedra-module="documents"] article {
+    min-width: 0;
+  }
+
+  /* Nexus — relações em cartões compactos e leitura em coluna larga. */
+  [data-catedra-module="nexus"] {
+    --estudar-nexus-content: 76rem;
+  }
+
+  [data-catedra-module="nexus"] main,
+  [data-catedra-module="nexus"] > section {
+    max-width: var(--estudar-nexus-content);
+    margin-inline: auto;
+  }
+
+  [data-catedra-module="nexus"] .grid {
+    min-width: 0;
+  }
+
+  [data-catedra-module="nexus"] .estudar-relation {
+    min-width: 0;
+  }
+
+  /* Biblioteca — descoberta sem cartões gigantes. */
+  [data-catedra-module="library"] {
+    --estudar-library-content: 76rem;
+  }
+
+  [data-catedra-module="library"] .estudar-module-landing,
+  [data-catedra-module="library"] main {
+    max-width: var(--estudar-library-content);
+    margin-inline: auto;
+  }
+
+  [data-catedra-module="library"] .estudar-item-card {
+    padding: .9rem 1rem;
+  }
+
+  [data-catedra-module="library"] :is(.grid.grid-cols-1.md\\:grid-cols-2, .grid.grid-cols-2.md\\:grid-cols-4) {
+    gap: .8rem;
+  }
 }
 
 /* =========================================================
