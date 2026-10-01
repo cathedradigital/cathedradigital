@@ -88,7 +88,7 @@ const PrayerLibraryPage: React.FC = () => {
     <>
 
 
-      <section className="mx-auto w-full max-w-[880px] px-4 pb-24 pt-8 md:px-8 md:pt-12">
+      <section className="catedra-page catedra-section pb-24 pt-8 md:pt-12">
         <EditorialHero density="minimal" align="center">
           <EditorialHero.Eyebrow>Um espaço para parar, silenciar e rezar.</EditorialHero.Eyebrow>
           <EditorialHero.Title>Sacrário</EditorialHero.Title>
@@ -112,7 +112,7 @@ const PrayerLibraryPage: React.FC = () => {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Buscar por título ou tema…"
-              className="h-12 w-full rounded-full border border-stitch-outline-variant/40 bg-stitch-surface pl-11 pr-4 font-stitch-body text-sm text-stitch-on-surface placeholder:text-stitch-on-surface-variant/70 focus:border-stitch-secondary focus:outline-none focus:ring-2 focus:ring-stitch-secondary/30"
+              className="catedra-action h-12 w-full rounded-full border border-stitch-outline-variant/40 bg-stitch-surface pl-11 pr-4 font-stitch-body text-sm text-stitch-on-surface placeholder:text-stitch-on-surface-variant/70 focus:border-stitch-secondary focus:outline-none focus:ring-2 focus:ring-stitch-secondary/30"
             />
           </div>
         </div>
