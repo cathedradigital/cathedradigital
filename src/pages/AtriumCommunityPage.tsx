@@ -7,6 +7,7 @@
  */
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { MobileTopBar } from '@/components/mobile/MobileTopBar';
 import { Helmet } from '@/lib/helmet-compat';
 import { Link, useNavigate } from '@/lib/rr-compat';
 import { MessageCircle, Plus, Heart, Sparkles, Users, ArrowRight, User, Calendar, BookOpen } from 'lucide-react';
@@ -158,6 +159,8 @@ const AtriumCommunityPage: React.FC = () => {
   );
 
   return (
+    <MobileTopBar kicker="Cathedra" title="Igreja Viva" transparent />
+
     <>
       <Helmet>
         <title>Comunidade — Cathedra</title>
