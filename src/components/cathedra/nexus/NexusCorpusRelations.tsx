@@ -9,7 +9,7 @@ type RelationRow = {
   confidence: number | null;
   source_document: { title: string; canonical_url: string } | null;
   target_document: { title: string; canonical_url: string } | null;
-  target_person: { display_name: string; canonical_url: string | null } | null;
+  target_person: { display_name: string; slug: string; canonical_url: string | null } | null;
 };
 
 const LABELS: Record<string, string> = {
@@ -38,7 +38,7 @@ const NexusCorpusRelations: React.FC = () => {
       const { data, error } = await supabase
         .from('corpus_relations')
         .select(
-          'id, relation_type, note, confidence, source_document:source_document_id(title, canonical_url), target_document:target_document_id(title, canonical_url), target_person:target_person_id(display_name, canonical_url)',
+          'id, relation_type, note, confidence, source_document:source_document_id(title, canonical_url), target_document:target_document_id(title, canonical_url), target_person:target_person_id(display_name, slug, canonical_url)',
         )
         .eq('status', 'published')
         .order('created_at', { ascending: false })
@@ -107,9 +107,8 @@ const NexusCorpusRelations: React.FC = () => {
                 {target.href ? (
                   <a
                     href={target.href}
-                    target="_blank"
-                    rel="noreferrer"
                     className="hover:text-stitch-secondary"
+                    aria-label={`Abrir ${target.label} na Cátedra`}
                   >
                     {target.label}
                   </a>
@@ -121,6 +120,16 @@ const NexusCorpusRelations: React.FC = () => {
                 {LABELS[row.relation_type] ?? row.relation_type}
                 {row.confidence != null ? ` · confiança ${Math.round(row.confidence * 100)}%` : ''}
               </p>
+              {row.target_person?.canonical_url && (
+                <a
+                  href={row.target_person.canonical_url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="mt-3 inline-flex text-[10px] font-bold uppercase tracking-[0.12em] text-stitch-secondary hover:underline"
+                >
+                  Fonte externa verificada
+                </a>
+              )}
               {row.note && (
                 <p className="mt-2 font-stitch-body text-[14px] leading-[22px] text-stitch-on-surface-variant">
                   {row.note}
