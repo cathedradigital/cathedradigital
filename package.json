@@ -18,7 +18,8 @@
     "validate:links": "node scripts/validate-internal-routes.mjs",
     "validate:security": "node scripts/validate-security-boundaries.mjs",
     "deploy:cloudflare": "npm run build && wrangler deploy",
-    "cf-typegen": "wrangler types"
+    "cf-typegen": "wrangler types",
+    "deploy": "wrangler deploy"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.9.1",
