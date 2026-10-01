@@ -276,3 +276,107 @@
     animation-duration: .01ms !important;
   }
 }
+
+
+/* Navegação contextual dos módulos + landing pages de Estudar. */
+.estudar-module-landing {
+  min-width: 0;
+}
+.estudar-bible-book-card,
+.estudar-catechism-part {
+  min-width: 0;
+}
+
+@media (max-width: 767px) {
+  /* O topo contextual substitui a necessidade de voltar ao hub a cada troca. */
+  .estudar-module-landing {
+    padding-bottom: calc(var(--stitch-mobile-bottomnav-h) + var(--stitch-mobile-safe-bottom) + 1.5rem);
+  }
+
+  .estudar-module-landing > section:first-of-type {
+    padding-top: 1rem;
+  }
+
+  /* Bíblia: menos moldura, mais leitura e seleção rápida. */
+  [data-catedra-module="bible"] .estudar-bible-book-grid {
+    gap: .65rem;
+  }
+  [data-catedra-module="bible"] .estudar-bible-book-card {
+    min-height: 11rem;
+    aspect-ratio: 4 / 5;
+    padding: .8rem;
+  }
+  [data-catedra-module="bible"] .estudar-bible-book-card :is(h3) {
+    font-size: 1rem;
+    line-height: 1.15;
+  }
+  [data-catedra-module="bible"] .estudar-bible-book-card :is(p) {
+    font-size: .7rem;
+    line-height: 1.25;
+  }
+  [data-catedra-module="bible"] .estudar-bible-book-card > div:first-child span {
+    font-size: 2rem;
+  }
+  [data-catedra-module="bible"] .estudar-module-landing > section {
+    padding-top: 1.5rem;
+  }
+
+  /* Catecismo: cada parte vira uma sequência clara, sem excesso de espaço. */
+  [data-catedra-module="catechism"] .estudar-catechism-part {
+    gap: 1rem;
+    padding-bottom: 1.5rem;
+  }
+  [data-catedra-module="catechism"] .estudar-catechism-part header {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: .35rem;
+  }
+  [data-catedra-module="catechism"] .estudar-catechism-part header > div {
+    margin-top: .35rem;
+  }
+  [data-catedra-module="catechism"] .estudar-catechism-part header > a {
+    margin-top: .75rem;
+  }
+  [data-catedra-module="catechism"] .estudar-catechism-part .grid {
+    gap: .65rem;
+  }
+
+  /* Documentos: filtros passam a ser uma faixa navegável, não uma parede de botões. */
+  [data-catedra-module="documents"] .estudar-doc-filter-stack {
+    gap: 1rem;
+  }
+  [data-catedra-module="documents"] .estudar-doc-filter-row {
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding: .1rem 0 .35rem;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  [data-catedra-module="documents"] .estudar-doc-filter-row::-webkit-scrollbar {
+    display: none;
+  }
+  [data-catedra-module="documents"] .estudar-doc-filter-row > * {
+    flex: 0 0 auto;
+  }
+  [data-catedra-module="documents"] .estudar-doc-sort-row {
+    align-items: stretch;
+    flex-direction: column;
+    gap: .65rem;
+  }
+  [data-catedra-module="documents"] .estudar-doc-sort-row > :last-child {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .35rem;
+  }
+  [data-catedra-module="documents"] .estudar-doc-sort-row button {
+    min-height: 2.5rem;
+    padding-inline: .7rem;
+  }
+
+  /* Hero editorial: reduz a altura sem retirar contexto. */
+  .estudar-module-landing [data-editorial-hero],
+  .estudar-module-landing [class*="EditorialHero"] {
+    margin-bottom: 0;
+  }
+}
