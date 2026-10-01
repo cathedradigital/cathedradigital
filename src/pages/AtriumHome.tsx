@@ -85,7 +85,7 @@ const MAIN_DOORS: SpaceDoor[] = [
     key: 'igreja', 
     label: 'IGREJA', 
     overline: 'Ecclesia', 
-    to: '/igreja', 
+    to: '/community', 
     Icon: GraduationCap, 
     hint: 'Acompanhe a vida da Igreja.' 
   },
