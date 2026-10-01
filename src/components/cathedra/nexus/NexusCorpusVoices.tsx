@@ -28,6 +28,7 @@ const LABELS: Record<string, string> = {
 
 export default function NexusCorpusVoices() {
   const [people, setPeople] = useState<CorpusPerson[]>([]);
+  const [popes, setPopes] = useState<CorpusPerson[]>([]);
 
   useEffect(() => {
     let active = true;
@@ -46,11 +47,17 @@ export default function NexusCorpusVoices() {
         return;
       }
       setPeople((data ?? []) as CorpusPerson[]);
+      const { data: papalData } = await supabase
+        .from('corpus_people')
+        .select('id,slug,display_name,person_kind,papal_number,papal_name,canonical_url')
+        .eq('status', 'published').eq('person_kind', 'pope')
+        .order('papal_number', { ascending: true }).limit(24);
+      if (active) setPopes((papalData ?? []) as CorpusPerson[]);
     })();
     return () => { active = false; };
   }, []);
 
-  if (people.length === 0) return null;
+  if (people.length === 0 && popes.length === 0) return null;
 
   return (
     <section className="mt-12 border-t border-stitch-secondary/20 pt-10" aria-labelledby="nexus-corpus-voices">
@@ -85,6 +92,24 @@ export default function NexusCorpusVoices() {
           );
         })}
       </div>
+      {popes.length > 0 ? (
+        <div className="mt-8 border border-stitch-secondary/15 bg-stitch-surface-container-lowest p-5">
+          <div className="flex items-center gap-2">
+            <Crown className="h-5 w-5 text-stitch-secondary" aria-hidden="true" />
+            <h3 className="font-stitch-display text-[22px] text-stitch-primary">Cronologia pontifícia</h3>
+          </div>
+          <p className="mt-2 text-sm leading-6 text-stitch-on-surface-variant">A lista oficial completa dos pontífices é mantida pela Santa Sé; o Cátedra exibe aqui apenas registros já verificados no corpus.</p>
+          <div className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
+            {popes.map((pope) => (
+              <a key={pope.id} href={pope.canonical_url ?? '/nexus'} target={pope.canonical_url ? '_blank' : undefined} rel={pope.canonical_url ? 'noreferrer' : undefined} className="flex items-center gap-2 border border-stitch-secondary/10 px-3 py-2 text-sm hover:bg-stitch-surface-container-low">
+                <span className="font-bold text-stitch-secondary">{pope.papal_number ?? '—'}</span>
+                <span className="truncate text-stitch-primary">{pope.display_name}</span>
+              </a>
+            ))}
+          </div>
+          <a className="mt-4 inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.12em] text-stitch-secondary" href="https://www.vatican.va/content/vatican/pt/holy-father.html" target="_blank" rel="noreferrer">Consultar lista oficial da Santa Sé <ExternalLink className="h-3.5 w-3.5" /></a>
+        </div>
+      ) : null}
     </section>
   );
 }
