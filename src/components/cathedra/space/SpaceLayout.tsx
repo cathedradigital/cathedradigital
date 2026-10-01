@@ -161,7 +161,7 @@ export const SpaceDoors: React.FC<SpaceDoorsProps> = ({
           />
           <div className="mb-4 flex items-center justify-between">
             {door.Icon ? (
-              <door.Icon className="h-6 w-6" style={{ color: door.accent }} aria-hidden />
+              <span style={{ color: door.accent }}><door.Icon className="h-6 w-6" aria-hidden /></span>
             ) : (
               <span className="h-6 w-6" />
             )}
