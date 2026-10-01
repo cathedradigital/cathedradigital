@@ -3,6 +3,7 @@ import React, { useState, useEffect, useCallback, useMemo, lazy, Suspense, useCo
 import { HelmetProvider } from '@/lib/helmet-compat';
 import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation, useParams } from '@/lib/rr-compat';
 import { resolveSpaceForPath } from '@/lib/spaces/resolveSpace';
+import { MODULE_NAVIGATION } from '@/config/moduleNavigation';
 
 import { AnimatePresence, motion, MotionConfig } from 'framer-motion';
 import { QueryClient } from '@tanstack/react-query';
@@ -432,6 +433,9 @@ const AppLayout: React.FC = () => {
   const { user, profile, signOut } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  const activeModule = useMemo(() => MODULE_NAVIGATION.find((group) => group.items.some((item) =>
+    location.pathname === item.path || (item.path !== '/' && location.pathname.startsWith(item.path + '/'))
+  )), [location.pathname]);
 
   const mainContentRef = React.useRef<HTMLDivElement>(null);
 
@@ -609,8 +613,9 @@ const AppLayout: React.FC = () => {
           id="main-content"
           ref={mainContentRef}
           tabIndex={-1}
-          className="outline-none"
+          className="outline-none catedra-module-shell"
           data-space={resolveSpaceForPath(location.pathname) ?? undefined}
+          data-catedra-module={activeModule?.key ?? undefined}
         >
           
           <SwipeNavigation>
