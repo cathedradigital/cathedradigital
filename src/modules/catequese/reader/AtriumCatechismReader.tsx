@@ -58,7 +58,7 @@ const CatechismLanding: React.FC = () => {
       style={{
         backgroundImage: 'url("https://www.transparenttextures.com/patterns/p6.png")',
       }}
-    >
+     data-catedra-module-root>
       <Helmet>
         <title>Cathedra — Catecismo da Igreja Católica</title>
         <meta
