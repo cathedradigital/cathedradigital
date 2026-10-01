@@ -31,7 +31,6 @@ import { EditorialReaderHeader, EditorialDivider } from '@/components/editorial'
 import { ReaderToolbar } from '@/components/reader';
 import SanctumEditorial, { SanctumCurationBadge } from './SanctumEditorial';
 import { SEO_CONFIG } from '@/config/seo';
-import SaintAILearn from './SaintAILearn';
 import { CATEGORY_LABELS } from './SaintDetail.categories';
 import { EditorialClosure } from '@/components/reader';
 import { resolveEditorialClosure } from '@/lib/editorial/resolveClosure';
@@ -289,7 +288,7 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
                   autoReflect={autoReflect}
                   onReflect={() => {
                     const targetId = (saint as any).slug || saint.id;
-                    navigate(`/logos?about=${encodeURIComponent(`saint:${targetId}`)}`);
+                    navigate('/jornadas');
                     onClose();
                   }}
                 />
