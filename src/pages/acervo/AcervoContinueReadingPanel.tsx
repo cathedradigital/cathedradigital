@@ -86,7 +86,7 @@ const AcervoContinueReadingPanel: React.FC = () => {
             Continue de onde você parou
           </h2>
           <Link
-            to="/conta/leituras"
+            to="/conta/jornada"
             className="text-premium-xs text-muted-foreground hover:text-primary underline underline-offset-4"
           >
             Ver histórico →
