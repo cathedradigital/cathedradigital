@@ -288,7 +288,7 @@ const Saints = React.forwardRef<HTMLDivElement, { legacyReader?: boolean }>((pro
         })}
       </script>
 
-      <div ref={ref} className="space-y-spacing-xl pb-spacing-3xl">
+      <div ref={ref} data-catedra-module="saints" className="space-y-spacing-xl pb-spacing-3xl">
         <SpaceHeader 
           align="center"
           kicker="Capellae"
