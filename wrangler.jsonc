@@ -6,6 +6,9 @@
     "nodejs_compat"
   ],
   "main": "@tanstack/react-start/server-entry",
+  "workers_dev": true,
+  "preview_urls": true,
+  "previews": {},
   "observability": {
     "enabled": true
   }
