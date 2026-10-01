@@ -752,18 +752,6 @@ const MagisteriumViewer: React.FC = () => {
             title="Minhas Notas neste Documento"
           />
 
-          {!settings.totalSilence && (
-            <LogosContextualSuggestions
-              type="magisterium"
-              context={`Documento do Magistério: ${content.title}`}
-              isVisible={settings.logosSuggestions === 'always' || (settings.logosSuggestions === 'first_selection' && logosSelectionsCount === 0)}
-              onSelectSuggestion={(prompt) => {
-                setLogosAIInitialQuery(prompt);
-                setShowLogosAI(true);
-                setLogosSelectionsCount(prev => prev + 1);
-              }}
-            />
-          )}
           <EditorialDivider variant="gold-fade" className="max-w-[240px] mx-auto" />
           <Relatio 
 
@@ -820,22 +808,6 @@ const MagisteriumViewer: React.FC = () => {
         </Button>
       </div>
 
-
-      {!settings.totalSilence && showLogosAI && (
-        <div className="w-full max-w-[70ch] mx-auto mt-spacing-4xl mb-spacing-4xl animate-in fade-in slide-in-from-bottom-spacing-md duration-1000">
-          <LogosAI 
-            isOpen={showLogosAI} 
-            onClose={() => {
-              setShowLogosAI(false);
-              setLogosAIInitialQuery('');
-            }} 
-            context={`Documento do Magistério: ${content.title}`}
-            initialQuery={logosAIInitialQuery}
-            type="magisterium"
-            variant="integrated"
-          />
-        </div>
-      )}
       <MagisteriumDiagnosticPanel />
     </ReaderShell>
   );
