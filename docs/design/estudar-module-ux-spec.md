@@ -53,3 +53,27 @@ Um módulo só sai desta revisão quando desktop e mobile forem coerentes, os es
 8. Igreja Viva.
 
 A ordem é de implementação, não de importância doutrinal.
+## Especificação visual da rodada 2 — módulos internos
+
+A segunda camada usa o mesmo sistema de leitura do Estudar e acrescenta uma assinatura cromática discreta por módulo. A assinatura aparece em filetes, foco, bordas e superfícies suaves; nunca substitui os neutros do texto.
+
+| Módulo | Assinatura | Estrutura principal | Regra mobile |
+|---|---|---|---|
+| Bíblia | azul/teal do Estudar | livro/capítulo → leitura → referências → continuidade | corpo ~17px, line-height ~1.82, coluna confortável, controles com alvo mínimo de 44px |
+| Catecismo | verde-teal editorial | partes/índice → parágrafo canônico → referências | índice em 1 coluna, leitura sem compressão |
+| Documentos | ocre editorial | metadados → índice/filtros → documento → referências | filtros compactáveis e texto em coluna de leitura |
+| Nexo | violeta editorial | busca → vozes → relações → destino | relações empilhadas e destino sempre identificável |
+| Biblioteca | âmbar editorial | busca → eixos/coleções → resultados → leitura | descoberta em uma coluna, abas/painéis roláveis |
+| Santos | vinho suave | identidade → biografia → fontes/obras → continuidade | hero compacto e blocos sequenciais |
+| Igreja Viva | verde comunitário | entrada → feed/perfis → ação principal | feed legível e CTA principal sem competir com o conteúdo |
+
+### Contrato responsivo
+- Mobile: gutters de aproximadamente 16px e alvos de toque de pelo menos 44px.
+- Tablet: conteúdo cresce sem transformar leitura em grade estreita.
+- Desktop: largura de leitura limitada a aproximadamente 46rem / 68ch.
+- O texto não é reduzido para acomodar mais itens.
+- Controles de leitura ficam próximos do conteúdo e não exigem navegação lateral para ações frequentes.
+- Estados de carregamento, vazio e erro devem preservar a estrutura da página e permitir recuperação quando aplicável.
+
+### Regra de implementação
+Os módulos recebem `data-catedra-module` e compartilham `src/styles/estudar-modules.css`. Isso permite evoluir cada módulo separadamente sem duplicar tokens, breakpoints ou regras de leitura.
