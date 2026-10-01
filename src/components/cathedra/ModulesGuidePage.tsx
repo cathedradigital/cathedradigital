@@ -1,8 +1,8 @@
 import React from 'react';
-import { BookOpen, HandHeart, GraduationCap, SearchCode, Compass, Brain, Users, ArrowRight } from 'lucide-react';
+import { BookOpen, HandHeart, GraduationCap, SearchCode, Compass, ArrowRight } from 'lucide-react';
 import { Link } from '@/lib/rr-compat';
 import { Helmet } from '@/lib/helmet-compat';
-import { MODULE_NAVIGATION, TRANSVERSAL_MODULES } from '@/config/moduleNavigation';
+import { MODULE_NAVIGATION } from '@/config/moduleNavigation';
 
 const ENV_ICONS = {
   'estudar': BookOpen,
@@ -32,8 +32,7 @@ const ModulesGuidePage: React.FC = () => {
         </h1>
         <p className="mt-5 text-base leading-7 text-muted-foreground md:text-lg">
           A Cathedra foi organizada em cinco ambientes. Os módulos vivem dentro
-          deles; ferramentas transversais, como Logos e Comunidade, não competem
-          com a navegação principal.
+          deles, mantendo a navegação principal simples e contextual.
         </p>
       </header>
 
@@ -101,39 +100,6 @@ const ModulesGuidePage: React.FC = () => {
               </article>
             );
           })}
-        </div>
-      </section>
-
-      <section aria-labelledby="transversal-title" className="border border-secondary/25 bg-secondary/5 p-6 md:p-8">
-        <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
-          <div>
-            <p className="text-[10px] font-bold uppercase tracking-[0.24em] text-secondary">Capacidades transversais</p>
-            <h2 id="transversal-title" className="mt-1 font-display text-2xl text-primary">
-              Ajudam todos os ambientes
-            </h2>
-            <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
-              Logos e Comunidade atravessam a experiência. Eles aparecem quando
-              fazem sentido no contexto, sem criar uma sexta ou sétima categoria
-              de navegação.
-            </p>
-          </div>
-          <div className="grid w-full gap-3 md:max-w-md md:grid-cols-2">
-            {TRANSVERSAL_MODULES.map((item) => (
-              <Link
-                key={item.id}
-                to={item.path}
-                className="border border-border/30 bg-background p-4 transition-colors hover:border-secondary/40"
-              >
-                {item.id === 'logos' ? (
-                  <Brain className="h-5 w-5 text-secondary" aria-hidden />
-                ) : (
-                  <Users className="h-5 w-5 text-secondary" aria-hidden />
-                )}
-                <span className="mt-3 block font-medium text-primary">{item.label}</span>
-                <span className="mt-1 block text-xs leading-5 text-muted-foreground">{item.description}</span>
-              </Link>
-            ))}
-          </div>
         </div>
       </section>
 
