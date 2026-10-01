@@ -79,9 +79,9 @@ const NexusCorpusRelations: React.FC = () => {
       <ul className="grid grid-cols-1 gap-4 md:grid-cols-2">
         {rows.map((row) => {
           const target = row.target_document
-            ? { label: row.target_document.title, href: row.target_document.canonical_url }
+            ? { label: row.target_document.title, href: row.target_document.canonical_url, external: true }
             : row.target_person
-              ? { label: row.target_person.display_name, href: row.target_person.canonical_url }
+              ? { label: row.target_person.display_name, href: `/santos/${encodeURIComponent(row.target_person.slug)}`, external: false }
               : null;
           if (!row.source_document || !target) return null;
 
