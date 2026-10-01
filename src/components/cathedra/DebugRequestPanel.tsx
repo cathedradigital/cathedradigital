@@ -162,14 +162,14 @@ function useFailedRequests() {
 }
 
 export const DebugRequestPanel: React.FC = () => {
+  const [enabled, setEnabled] = useEnabled();
+  const [open, setOpen] = React.useState(false);
+  const entries = useFailedRequests();
+
   // Debug de requests é ferramenta de desenvolvimento. Nunca deve aparecer
   // em produção, mesmo quando alguém envia ?debug=requests ou possui a chave
   // de localStorage de uma sessão de desenvolvimento.
   if (!import.meta.env.DEV) return null;
-
-  const [enabled, setEnabled] = useEnabled();
-  const [open, setOpen] = React.useState(false);
-  const entries = useFailedRequests();
 
   React.useEffect(() => {
     if (enabled) installInterceptor();
