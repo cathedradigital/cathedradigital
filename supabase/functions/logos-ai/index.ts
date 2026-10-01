@@ -195,7 +195,7 @@ async function searchBibleReference(
     ref: refLabel,
     title: refLabel + " — " + String(bookRow.name),
     excerpt: filtered.map((v) => String(v.number) + " " + String(v.text)).join(" ").slice(0, 1200),
-    href: "/biblia/" + encodeURIComponent(String(bookRow.abbrev)) + "/" + chapter,
+    href: "/bible?book=" + encodeURIComponent(String(bookRow.abbrev)) + "&chapter=" + chapter,
   }];
 }
 
@@ -292,7 +292,7 @@ async function searchRealSources(db: ReturnType<typeof createClient>, query: str
       ref: String(r.paragraph),
       title: "Catecismo §" + r.paragraph,
       excerpt: typeof r.texto_base === "string" ? r.texto_base.slice(0, 900) : undefined,
-      href: "/catechism/" + r.paragraph,
+      href: "/catechism?p=" + encodeURIComponent(String(r.paragraph)),
     });
   }
   for (const r of glossary.data ?? []) {
