@@ -1,6 +1,7 @@
 import React from "react";
 import { useSearchParams } from "@/lib/rr-compat";
 import LogosAI from "@/components/cathedra/LogosAI";
+import CaterAuthorityArchive from "@/components/cathedra/CaterAuthorityArchive";
 import SEOHead from "@/components/SEOHead";
 
 const LogosPage: React.FC = () => {
@@ -23,8 +24,8 @@ const LogosPage: React.FC = () => {
             Cáter
           </h1>
           <p className="mt-spacing-md max-w-2xl text-sm md:text-base text-muted-foreground leading-relaxed">
-            Estude a partir do contexto da Cathedra e aprofunde conexões entre Escritura,
-            Catecismo, Magistério, Santos, jornadas e oração.
+            Não é um chatbot genérico: o Cáter consulta o acervo da Cátedra, conecta fontes pelo Nexus
+            e mostra de onde cada resposta vem.
           </p>
         </div>
 
@@ -35,6 +36,8 @@ const LogosPage: React.FC = () => {
           context={context}
           initialQuery={initialQuery}
         />
+
+        <CaterAuthorityArchive />
       </main>
     </>
   );
