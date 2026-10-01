@@ -28,6 +28,7 @@ import { SaintWritingsBlock } from './blocks/SaintWritingsBlock';
 import { SaintPrayersBlock } from './blocks/SaintPrayersBlock';
 import { SaintSourcesBlock } from './blocks/SaintSourcesBlock';
 import { SaintMeditationBlock } from './blocks/SaintMeditationBlock';
+import { SaintCorpusSources } from './blocks/SaintCorpusSources';
 
 interface Props {
   descriptor: SaintPageDescriptor;
@@ -122,6 +123,8 @@ export const SaintAutoPage: React.FC<Props> = ({ descriptor }) => {
             {header.shortBio}
           </p>
         )}
+
+        <SaintCorpusSources slug={descriptor.slug} name={header.name} />
 
         {blocks.map((b) => {
           switch (b.id) {
