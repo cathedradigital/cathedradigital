@@ -155,7 +155,7 @@ const HomeUnified: React.FC = () => {
               <Eyebrow>Arquitetura da plataforma</Eyebrow>
               <h2 className="mt-2 font-display text-3xl md:text-5xl">Cinco ambientes. Uma jornada.</h2>
             </div>
-            <Link to="/modulos" className="hidden items-center gap-2 text-xs font-semibold uppercase tracking-wider text-primary md:flex">Ver mapa <ArrowRight className="h-4 w-4" /></Link>
+            <Link to="/guia-modulos" className="hidden items-center gap-2 text-xs font-semibold uppercase tracking-wider text-primary md:flex">Ver mapa <ArrowRight className="h-4 w-4" /></Link>
           </div>
 
           <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-5">
