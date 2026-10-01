@@ -385,6 +385,25 @@ function enrichSourcesWithAuthority(sources: RetrievedSource[], catalog: Authori
   });
 }
 
+function relevantAuthorityRelations(
+  relations: any[],
+  sources: RetrievedSource[],
+): any[] {
+  const types = new Set(
+    sources
+      .map((source) => source.authority?.source_type)
+      .filter((value): value is string => Boolean(value)),
+  );
+
+  if (types.size === 0) return [];
+
+  return relations.filter((relation) => {
+    const fromType = relation?.source?.source_type;
+    const toType = relation?.related_source?.source_type;
+    return types.has(fromType) || types.has(toType);
+  });
+}
+
 async function retrieveNexus(
   db: ReturnType<typeof createClient>,
   query: string,
@@ -398,6 +417,7 @@ async function retrieveNexus(
     loadAuthorityRelations(db),
   ]);
   const enrichedSources = enrichSourcesWithAuthority(realSources, authorityCatalog);
+  const relevantRelations = relevantAuthorityRelations(authorityRelations, enrichedSources);
   const node = contextNode(type, context, journeyId);
   const seedNodes = [
     ...(node ? [node] : []),
@@ -450,7 +470,7 @@ async function retrieveNexus(
   return {
     sources: Array.from(sourceMap.values()).slice(0, 24),
     relations,
-    authorityRelations,
+    authorityRelations: relevantRelations,
   };
 }
 
