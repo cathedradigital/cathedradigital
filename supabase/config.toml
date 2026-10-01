@@ -2,3 +2,6 @@ project_id = "gpwrpmoniglarqwfyryp"
 
 [functions.logos-ai]
 verify_jwt = true
+
+[functions.corpus-ingest]
+verify_jwt = true
