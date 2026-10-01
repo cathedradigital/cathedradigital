@@ -199,6 +199,47 @@ async function searchBibleReference(
   }];
 }
 
+async function searchCorpusSources(
+  db: ReturnType<typeof createClient>,
+  query: string,
+  limit = 8,
+): Promise<RetrievedSource[]> {
+  const terms = queryTerms(query);
+  if (terms.length === 0) return [];
+
+  const { data, error } = await db
+    .from("corpus_documents")
+    .select("id,slug,title,document_kind,author_name,canonical_url,excerpt,person:corpus_people(display_name,person_kind)")
+    .eq("status", "published")
+    .in("ingestion_status", ["verified", "ingested"])
+    .or(likeAny(["title", "author_name", "excerpt", "slug"], terms))
+    .limit(limit);
+
+  if (error) {
+    console.error("Cáter corpus retrieval error", error.message);
+    return [];
+  }
+
+  return (data ?? []).map((row: any) => {
+    const person = Array.isArray(row.person) ? row.person[0] : row.person;
+    const kind = row.document_kind === "patristic_work" || row.document_kind === "letter" || row.document_kind === "homily"
+      ? "patristic"
+      : row.document_kind === "papal_document" || row.document_kind === "church_document" || row.document_kind === "encyclical" || row.document_kind === "council_text"
+        ? "magisterium_doc"
+        : row.person?.person_kind === "saint" || person?.person_kind === "saint"
+          ? "saint"
+          : "theology";
+
+    return {
+      kind,
+      ref: String(row.slug || row.id),
+      title: String(row.title || row.slug || row.id),
+      excerpt: typeof row.excerpt === "string" ? row.excerpt.slice(0, 1200) : undefined,
+      href: typeof row.canonical_url === "string" ? row.canonical_url : undefined,
+    } as RetrievedSource;
+  });
+}
+
 async function searchRealSources(db: ReturnType<typeof createClient>, query: string, limit = 8): Promise<RetrievedSource[]> {
   const bibleHits = await searchBibleReference(db, query);
   const terms = queryTerms(query);
@@ -206,7 +247,7 @@ async function searchRealSources(db: ReturnType<typeof createClient>, query: str
 
   const hits: RetrievedSource[] = [];
 
-  const [catechism, glossary, saints, prayers, spiritual, journeys, collections] = await Promise.all([
+  const [catechism, glossary, saints, prayers, spiritual, journeys, collections, corpus] = await Promise.all([
     db.from("catechism_official")
       .select("paragraph, slug, texto_base")
       .eq("status", "published")
@@ -242,6 +283,7 @@ async function searchRealSources(db: ReturnType<typeof createClient>, query: str
       .eq("status", "published")
       .or(likeAny(["title", "subtitle", "description"], terms))
       .limit(limit),
+    searchCorpusSources(db, query, limit),
   ]);
 
   for (const r of catechism.data ?? []) {
@@ -303,6 +345,10 @@ async function searchRealSources(db: ReturnType<typeof createClient>, query: str
       href: "/jornadas/" + ref,
     });
   }
+  for (const r of corpus ?? []) {
+    hits.push(r);
+  }
+
   for (const r of collections.data ?? []) {
     const ref = String(r.slug || r.id);
     hits.push({

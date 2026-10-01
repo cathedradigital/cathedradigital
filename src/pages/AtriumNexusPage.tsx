@@ -40,6 +40,8 @@ import {
   NEXUS_KIND_PRESETS,
   type NexusKind,
 } from '@/components/cathedra/nexus/nexusPresets';
+import NexusCorpusVoices from '@/components/cathedra/nexus/NexusCorpusVoices';
+import NexusCorpusRelations from '@/components/cathedra/nexus/NexusCorpusRelations';
 
 // ─── Ícones canônicos por Kind ───────────────────────────────────────────────
 const KIND_ICON: Record<NexusKind, React.ComponentType<{ className?: string }>> = {
@@ -211,6 +213,9 @@ const AtriumNexusPage: React.FC = () => {
             </button>
           </form>
         </section>
+
+        <NexusCorpusVoices />
+        <NexusCorpusRelations />
 
         {/* ─── Bento: Introdução + CTA curadoria ───────────────────── */}
         <section className="mt-12 grid grid-cols-1 items-stretch gap-8 md:grid-cols-12">
