@@ -94,18 +94,32 @@ const SaintDetailTabs: React.FC<Props> = ({ saint, onReflect, autoReflect }) => 
           ) : (
             <>
               <TabsContent value="historia" className="focus-visible:outline-none">
-                <div className="prose prose-sm dark:prose-invert max-w-none">
-                  <RichText
-                    text={saint.bio || ''}
-                    className="text-premium-lg font-serif italic text-foreground/90 leading-relaxed border-l-4 border-primary/20 pl-spacing-lg py-spacing-2xs"
-                  />
-                  {saint.fullBio && (
-                    <div className="mt-spacing-lg text-muted-foreground leading-relaxed text-premium-sm space-y-spacing-md">
-                      {saint.fullBio.split('\n\n').map((p, i) => (
-                        <RichText key={i} text={p} />
-                      ))}
-                    </div>
-                  )}
+                <div className="space-y-spacing-lg">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                    {[
+                      ['Nascimento', saint.born],
+                      ['Falecimento', saint.died],
+                      ['Memória', saint.feastDay],
+                    ].filter(([, value]) => Boolean(value)).map(([label, value]) => (
+                      <div key={label} className="rounded-xl border border-border/60 bg-muted/20 px-3 py-2">
+                        <span className="block text-[9px] font-bold uppercase tracking-wider text-muted-foreground">{label}</span>
+                        <span className="mt-1 block text-sm font-serif text-foreground">{value}</span>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="prose prose-sm dark:prose-invert max-w-none">
+                    <RichText
+                      text={saint.bio || 'A biografia detalhada deste santo ainda está sendo organizada no acervo.'}
+                      className="text-premium-lg font-serif italic text-foreground/90 leading-relaxed border-l-4 border-primary/20 pl-spacing-lg py-spacing-2xs"
+                    />
+                    {saint.fullBio && (
+                      <div className="mt-spacing-lg text-muted-foreground leading-relaxed text-premium-sm space-y-spacing-md">
+                        {saint.fullBio.split('\n\n').map((p, i) => (
+                          <RichText key={i} text={p} />
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 </div>
               </TabsContent>
 
