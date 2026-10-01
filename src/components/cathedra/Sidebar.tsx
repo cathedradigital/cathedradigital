@@ -238,7 +238,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                 tabIndex={0}
                 onKeyDown={(e) => e.key === 'Enter' && handleNav('/', e)}
               >
-                <Icons.Logo className="w-10 h-10 text-primary" />
+                <Icons.Logo className="w-12 h-12 text-primary" />
                 <div className="flex flex-col leading-none gap-1">
                   <span
                     role="text"
@@ -246,7 +246,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                     style={{
                       fontFamily: "'Playfair Display', serif",
                       fontWeight: 600,
-                      fontSize: '1.1rem',
+                      fontSize: '1.25rem',
                       letterSpacing: '0.1em',
                       color: 'hsl(var(--foreground))',
                     }}
