@@ -631,6 +631,57 @@ export type Database = {
         }
         Relationships: []
       }
+      novenas: {
+        Row: {
+          category: string
+          closing: string
+          created_at: string
+          days: Json
+          final_prayer: string
+          is_published: boolean
+          latin: string | null
+          opening: string
+          order_index: number
+          patron: string
+          slug: string
+          summary: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          category?: string
+          closing?: string
+          created_at?: string
+          days?: Json
+          final_prayer?: string
+          is_published?: boolean
+          latin?: string | null
+          opening?: string
+          order_index?: number
+          patron?: string
+          slug: string
+          summary?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          closing?: string
+          created_at?: string
+          days?: Json
+          final_prayer?: string
+          is_published?: boolean
+          latin?: string | null
+          opening?: string
+          order_index?: number
+          patron?: string
+          slug?: string
+          summary?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       prayer_blocks: {
         Row: {
           audio_key: string | null
@@ -1551,6 +1602,8 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      admin_exists: { Args: never; Returns: boolean }
+      claim_first_admin: { Args: never; Returns: boolean }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -1559,6 +1612,7 @@ export type Database = {
         Returns: boolean
       }
       is_admin: { Args: never; Returns: boolean }
+      is_current_user_admin: { Args: never; Returns: boolean }
     }
     Enums: {
       app_role: "admin" | "moderator" | "user" | "editor" | "reviewer"
