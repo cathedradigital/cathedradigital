@@ -11,4 +11,4 @@
  */
 export const PUBLIC_SUPABASE_URL = 'https://isojguvcnfncokoxoauk.supabase.co';
 export const PUBLIC_SUPABASE_PUBLISHABLE_KEY =
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imdwd3JwbW9uaWdsYXJxd2Z5cnlwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI1ODYxNDMsImV4cCI6MjA4ODE2MjE0M30.wvD9JCiH1edvigTFg6RP3EFNIqXF7T9GPC01hTTiTTw';
+  'sb_publishable_UFqiEo_riy69x8xXLnxf7Q_1hO6AG7N';
