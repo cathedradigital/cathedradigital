@@ -69,7 +69,7 @@ const MAIN_DOORS: SpaceDoor[] = [
     key: 'estudar', 
     label: 'ESTUDAR', 
     overline: 'Studium', 
-    to: '/biblioteca', 
+    to: '/acervo', 
     Icon: MenuBook, 
     hint: 'Conheça os tesouros da fé.' 
   },
