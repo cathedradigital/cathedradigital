@@ -530,7 +530,7 @@ const Magisterium: React.FC = () => {
       <div className="w-full space-y-spacing-2xl pb-spacing-4xl" data-catedra-module-root data-catedra-module="documents">
 
         {/* Unified Search & Filters */}
-        <div className="space-y-spacing-xl">
+        <div className="estudar-doc-filter-stack space-y-spacing-xl">
           <div className="relative group w-full">
             <div className="absolute inset-0 bg-primary/[0.01] blur-xl rounded-premium-full opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
             <Icons.Search className="absolute left-spacing-lg top-spacing-2xs/2 -translate-y-1/2 w-spacing-md h-spacing-md text-primary/20 group-focus-within:text-primary transition-all duration-700" />
@@ -543,7 +543,7 @@ const Magisterium: React.FC = () => {
           </div>
 
           {/* Categoria (autoridade canônica) */}
-          <div className="flex items-center justify-center gap-spacing-xs flex-wrap py-spacing-xs">
+          <div className="estudar-doc-filter-row flex items-center justify-center gap-spacing-xs flex-wrap py-spacing-xs">
             <BubbleHint kind="category" label="Mostrar documentos de todas as categorias">
               <Button
                 variant="ghost"
@@ -594,7 +594,7 @@ const Magisterium: React.FC = () => {
           </div>
 
           {/* Ordenação + reset */}
-          <div className="flex items-center justify-between gap-spacing-md">
+          <div className="estudar-doc-sort-row flex items-center justify-between gap-spacing-md">
             <div className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/70">
               {pagination.totalItems === 0 ? (
                 <>0 documentos</>
