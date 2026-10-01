@@ -441,7 +441,7 @@ const TemaDetailPage = () => {
         </div>
 
         <AnimatePresence>
-          {(logosInsight || loadingLogos) && (
+          {(logosInsight || loadingLogos || logosError) && (
             <motion.div 
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
@@ -462,7 +462,12 @@ const TemaDetailPage = () => {
                     </div>
                     <Badge variant="outline" className="text-premium-xs font-black uppercase tracking-widest border-secondary/20 text-secondary animate-pulse px-spacing-sm">IA Ativa</Badge>
                   </div>
-                  {loadingLogos && !logosInsight ? (
+                  {logosError && !loadingLogos && !logosInsight ? (
+                    <div className="space-y-3">
+                      <p className="text-sm text-destructive">{logosError}</p>
+                      <Button variant="outline" size="sm" onClick={handleLoadInsight}>Tentar novamente</Button>
+                    </div>
+                  ) : loadingLogos && !logosInsight ? (
                     <div className="space-y-spacing-md">
                       <div className="h-spacing-md w-full bg-muted animate-pulse rounded-premium" />
                       <div className="h-spacing-md w-[90%] bg-muted animate-pulse rounded-premium opacity-70" />
