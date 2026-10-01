@@ -26,6 +26,9 @@ const csrfMiddleware = createCsrfMiddleware({
 });
 
 export const startInstance = createStart(() => ({
+  // Cátedra is a browser-first legacy SPA. Disable SSR by default so no
+  // route can accidentally execute browser-only code inside the Cloudflare Worker.
+  defaultSsr: false,
   functionMiddleware: [attachSupabaseAuth],
   requestMiddleware: [errorMiddleware, csrfMiddleware],
 }));
