@@ -507,6 +507,7 @@ Deno.serve(async (req) => {
     note: s.note,
     confidence: s.confidence,
     href: s.href,
+    authority: s.authority ?? null,
   }));
 
   const relationContext = retrieval.relations.map((r) => ({
