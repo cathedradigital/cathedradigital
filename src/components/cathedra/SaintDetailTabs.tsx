@@ -165,8 +165,8 @@ const SaintDetailTabs: React.FC<Props> = ({ saint, onReflect, autoReflect }) => 
               <TabsContent value="reflexao" className="focus-visible:outline-none">
                 <div className="space-y-spacing-md">
                   <p className="text-premium-sm text-muted-foreground font-serif italic">
-                    Refletir na Jornada sobre a vida e o testemunho de {saint.name}, aplicando à sua jornada
-                    espiritual de hoje.
+                    Levar o testemunho de {saint.name} para a sua jornada de hoje, transformando a leitura
+                    em uma decisão concreta.
                   </p>
                   <Button
                     onClick={() => {
@@ -186,7 +186,7 @@ const SaintDetailTabs: React.FC<Props> = ({ saint, onReflect, autoReflect }) => 
                     ) : (
                       <>
                         <Icons.Sparkles className="w-spacing-md h-spacing-md mr-spacing-xs" />
-                        Refletir com Logos
+                        Refletir na Jornada
                       </>
                     )}
                   </Button>
