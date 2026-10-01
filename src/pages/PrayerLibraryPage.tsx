@@ -128,21 +128,14 @@ const PrayerLibraryPage: React.FC = () => {
             label="Todas"
             onClick={() => setSelectedCat('all')}
           />
-          {['devocional', 'rosario', 'liturgia'].map((cat) => {
-            const labelMap: Record<string, string> = {
-              'devocional': 'Orações',
-              'rosario': 'Rosário',
-              'liturgia': 'Liturgia'
-            };
-            return (
-              <CategoryChip
-                key={cat}
-                active={selectedCat === (cat as PrayerCategory)}
-                label={labelMap[cat] || cat}
-                onClick={() => setSelectedCat(cat as PrayerCategory)}
-              />
-            );
-          })}
+          {PRAYER_CATEGORY_ORDER.map((cat) => (
+            <CategoryChip
+              key={cat}
+              active={selectedCat === cat}
+              label={PRAYER_CATEGORY_LABEL[cat]}
+              onClick={() => setSelectedCat(cat)}
+            />
+          ))}
         </div>
 
         {/* Estados */}
@@ -226,9 +219,10 @@ const PrayerLibraryPage: React.FC = () => {
         <SpaceFooter
           note="Toda oração conduz de volta à Palavra e à vida da Igreja."
           links={[
-            { label: 'Átrio', to: '/', hint: 'Voltar à entrada do Mosteiro' },
-            { label: 'Biblioteca', to: '/biblioteca', hint: 'Ler a Escritura e os Padres' },
-            { label: 'Rosário', to: '/oracao/rosario', hint: 'Contemplar os mistérios' },
+            { label: 'Estudar', to: '/bible', hint: 'Voltar às fontes da fé' },
+            { label: 'Bíblia', to: '/bible', hint: 'Ler a Sagrada Escritura' },
+            { label: 'Catecismo', to: '/catechism', hint: 'Aprofundar a doutrina' },
+            { label: 'Nexus', to: '/nexus', hint: 'Ver as conexões entre as fontes' },
           ]}
         />
       </section>
