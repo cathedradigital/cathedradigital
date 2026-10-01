@@ -1,11 +1,20 @@
 import React, { useState, useEffect } from 'react';
 
 const OfflineIndicator: React.FC = () => {
-  const [isOffline, setIsOffline] = useState(!navigator.onLine);
+  const [isOffline, setIsOffline] = useState(false);
   const [isSupabaseDown, setIsSupabaseDown] = useState(false);
-  const [isForcedOffline, setIsForcedOffline] = useState(() => localStorage.getItem('cathedra_offline_mode') === 'true');
+  const [isForcedOffline, setIsForcedOffline] = useState(false);
 
   useEffect(() => {
+    // Browser-only state must be read after hydration. This component is imported
+    // by the legacy SPA and must never touch navigator/localStorage during Worker SSR.
+    try {
+      setIsOffline(!navigator.onLine);
+      setIsForcedOffline(localStorage.getItem('cathedra_offline_mode') === 'true');
+    } catch {
+      // Storage/network APIs may be unavailable in restricted browser contexts.
+    }
+
     const goOffline = () => setIsOffline(true);
     const goOnline = () => setIsOffline(false);
     window.addEventListener('offline', goOffline);
