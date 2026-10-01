@@ -166,16 +166,14 @@ export const DebugRequestPanel: React.FC = () => {
   const [open, setOpen] = React.useState(false);
   const entries = useFailedRequests();
 
-  // Debug de requests é ferramenta de desenvolvimento. Nunca deve aparecer
-  // em produção, mesmo quando alguém envia ?debug=requests ou possui a chave
-  // de localStorage de uma sessão de desenvolvimento.
-  if (!import.meta.env.DEV) return null;
-
+  // Debug de requests é ferramenta de desenvolvimento. O hook permanece
+  // sempre na mesma ordem; em produção, o efeito não instala o interceptor.
   React.useEffect(() => {
-    if (enabled) installInterceptor();
+    if (!import.meta.env.DEV || !enabled) return;
+    installInterceptor();
   }, [enabled]);
 
-  if (!enabled) return null;
+  if (!import.meta.env.DEV || !enabled) return null;
 
   const failCount = entries.length;
 
