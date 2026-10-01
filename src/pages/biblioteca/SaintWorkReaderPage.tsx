@@ -307,7 +307,6 @@ const SaintWorkReaderPage: React.FC = () => {
             contentId={chapter.id}
             label={chapter.title}
             chapter={chapter.order}
-            url={window.location.pathname + window.location.search}
           />
         </div>
         <article
