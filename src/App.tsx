@@ -818,6 +818,7 @@ const AppLayout: React.FC = () => {
               <Route path="/contato" element={<Suspense fallback={<LoadingFallback />}><ContactPage /></Suspense>} />
               <Route path="/contact" element={<Navigate to="/contato" replace />} />
               <Route path="/docs" element={<Suspense fallback={<LoadingFallback />}><DocsPage /></Suspense>} />
+              <Route path="/404" element={<Suspense fallback={<LoadingFallback />}><NotFound /></Suspense>} />
               <Route path="/docs/:slug" element={<Suspense fallback={<LoadingFallback />}><DocsArticlePage /></Suspense>} />
 
               <Route path="/offline" element={<Suspense fallback={<LoadingFallback />}><OfflinePage /></Suspense>} />
