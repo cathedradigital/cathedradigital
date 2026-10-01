@@ -47,7 +47,7 @@ export function buildPassageUrl(passage: PassageDescriptor): string {
     case 'magisterium':
       return withHighlight(`/magisterium/${encodeURIComponent(passage.id)}`, passage.highlight);
     case 'father':
-      return withHighlight(`/padres/${encodeURIComponent(passage.slug)}`, passage.highlight);
+      return withHighlight(`/biblioteca/padres/${encodeURIComponent(passage.slug)}`, passage.highlight);
     case 'saint':
       return withHighlight(`/santos/${encodeURIComponent(passage.slug)}`, passage.highlight);
   }
