@@ -12,7 +12,7 @@ import { useAvatarUrl } from '@/lib/avatar';
 import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { useIsAdmin } from '@/hooks/useIsAdmin';
-import { APP_ROUTES } from '@/config/routes';
+import { MODULE_NAVIGATION, TRANSVERSAL_MODULES } from '@/config/moduleNavigation';
 
 
 
@@ -118,46 +118,71 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
   }, [isOpen, onClose]);
   
   const sections = useMemo(() => {
-    // ONDA 1: respeitar `showInMenu` — órfãs catalogadas ficam acessíveis via
-    // deep link mas não aparecem no Sidebar.
-    const inMenu = APP_ROUTES.filter(r => r.showInMenu);
+    const iconMap: Record<string, any> = {
+      bible: Icons.Bible,
+      catechism: Icons.Catechism,
+      magisterium: Icons.ScrollText,
+      library: Icons.Library,
+      saints: Icons.Flame,
+      nexus: Icons.Orbit,
+      church: Icons.Church,
+      pray: Icons.Hand,
+      liturgy: Icons.Liturgy,
+      lectio: Icons.BookOpen,
+      rosary: Icons.Hash,
+      viacrucis: Icons.Activity,
+      novenas: Icons.Calendar,
+      journeys: Icons.Route,
+      themes: Icons.Hash,
+      search: Icons.Search,
+      glossary: Icons.BookOpen,
+      atlas: Icons.Globe,
+      aquinas: Icons.Cross,
+      dogmas: Icons.Shield,
+      popes: Icons.User,
+      apparitions: Icons.Star,
+      today: Icons.Home,
+      journal: Icons.FileText,
+      favorites: Icons.Heart,
+      achievements: Icons.Trophy,
+      profile: Icons.User,
+      settings: Icons.Settings,
+    };
 
-    const adminRoutes = inMenu.filter(r => r.category === 'admin').map(r => ({
-      label: r.label,
-      path: r.path,
-      icon: <r.icon size={20} />
+    const environmentSections = MODULE_NAVIGATION.map((group) => ({
+      label: group.label,
+      items: group.items.map((item) => {
+        const Icon = iconMap[item.id] ?? Icons.Circle;
+        return {
+          label: item.label,
+          path: item.path,
+          description: item.description,
+          icon: <Icon size={19} />,
+        };
+      }),
     }));
 
-    const spiritualRoutes = inMenu.filter(r => r.category === 'spiritual').map(r => ({
-      label: r.label,
-      path: r.path,
-      icon: <r.icon size={20} />
-    }));
-
-    const coreRoutes = inMenu.filter(r => r.category === 'core' && r.path !== '/').map(r => ({
-      label: r.label,
-      path: r.path,
-      icon: <r.icon size={20} />
-    }));
-
-    const contentRoutes = inMenu.filter(r => r.category === 'content').map(r => ({
-      label: r.label,
-      path: r.path,
-      icon: <r.icon size={20} />
-    }));
-
-    const userRoutes = inMenu.filter(r => r.category === 'user').map(r => ({
-      label: r.label,
-      path: r.path,
-      icon: <r.icon size={20} />
-    }));
+    const transversalSection = {
+      label: 'Transversais',
+      items: TRANSVERSAL_MODULES.map((item) => ({
+        label: item.label,
+        path: item.path,
+        description: item.description,
+        icon: item.id === 'logos' ? <Icons.Brain size={19} /> : <Icons.Users size={19} />,
+      })),
+    };
 
     return [
-      ...(isAdmin ? [{ label: t('admin'), items: adminRoutes }] : []),
-      { label: 'Peregrinação', items: spiritualRoutes },
-      { label: 'Portal Sagrado', items: coreRoutes },
-      { label: 'Tesouros da Fé', items: contentRoutes },
-      { label: 'Sistema', items: userRoutes }
+      ...(isAdmin
+        ? [{
+            label: 'Administração',
+            items: [
+              { label: 'Painel Admin', path: '/admin', description: 'Operação protegida da plataforma.', icon: <Icons.Lock size={19} /> },
+            ],
+          }]
+        : []),
+      ...environmentSections,
+      transversalSection,
     ];
   }, [isAdmin, t]);
 
