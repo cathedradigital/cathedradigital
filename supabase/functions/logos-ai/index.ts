@@ -12,6 +12,15 @@ type NexusRow = {
   attributed_to?: string | null;
 };
 
+type AuthorityMeta = {
+  source_type: string;
+  authority_class: string;
+  authority_label: string;
+  author?: string | null;
+  citation?: string | null;
+  canonical_url?: string | null;
+};
+
 type RetrievedSource = {
   kind: string;
   ref: string;
@@ -21,6 +30,7 @@ type RetrievedSource = {
   note?: string | null;
   confidence?: number | null;
   href?: string;
+  authority?: AuthorityMeta | null;
 };
 
 const CORS = {
@@ -333,18 +343,65 @@ async function nexusForNode(
   ] as NexusRow[];
 }
 
+const AUTHORITY_KIND_TO_TYPE: Record<string, string> = {
+  bible_verse: "sacred_scripture",
+  catechism_paragraph: "catechism",
+  magisterium_doc: "magisterium",
+  patristic: "patristic",
+  saint: "saint",
+  theology: "theology",
+};
+
+async function loadAuthorityCatalog(db: ReturnType<typeof createClient>): Promise<AuthorityMeta[]> {
+  const { data, error } = await db
+    .from("authority_sources")
+    .select("source_type,authority_class,authority_label,author,citation,canonical_url")
+    .eq("status", "published");
+  if (error) {
+    console.error("Cáter authority catalog error", error.message);
+    return [];
+  }
+  return (data ?? []) as AuthorityMeta[];
+}
+
+async function loadAuthorityRelations(db: ReturnType<typeof createClient>) {
+  const { data, error } = await db
+    .from("authority_source_relations")
+    .select("relation_type,note,source:authority_sources!authority_source_relations_source_id_fkey(source_type,authority_label,title),related_source:authority_sources!authority_source_relations_related_source_id_fkey(source_type,authority_label,title)")
+    .eq("status", "published");
+  if (error) {
+    console.error("Cáter authority relations error", error.message);
+    return [];
+  }
+  return data ?? [];
+}
+
+function enrichSourcesWithAuthority(sources: RetrievedSource[], catalog: AuthorityMeta[]): RetrievedSource[] {
+  const byType = new Map(catalog.map((item) => [item.source_type, item]));
+  return sources.map((source) => {
+    const sourceType = AUTHORITY_KIND_TO_TYPE[source.kind];
+    const authority = sourceType ? byType.get(sourceType) ?? null : null;
+    return authority ? { ...source, authority } : source;
+  });
+}
+
 async function retrieveNexus(
   db: ReturnType<typeof createClient>,
   query: string,
   type: string | null,
   context: string,
   journeyId: string | null,
-): Promise<{ sources: RetrievedSource[]; relations: NexusRow[] }> {
-  const realSources = await searchRealSources(db, query, 6);
+): Promise<{ sources: RetrievedSource[]; relations: NexusRow[]; authorityRelations: any[] }> {
+  const [realSources, authorityCatalog, authorityRelations] = await Promise.all([
+    searchRealSources(db, query, 6),
+    loadAuthorityCatalog(db),
+    loadAuthorityRelations(db),
+  ]);
+  const enrichedSources = enrichSourcesWithAuthority(realSources, authorityCatalog);
   const node = contextNode(type, context, journeyId);
   const seedNodes = [
     ...(node ? [node] : []),
-    ...realSources.slice(0, 5).map((s) => ({ kind: s.kind, ref: s.ref })),
+    ...enrichedSources.slice(0, 5).map((s) => ({ kind: s.kind, ref: s.ref })),
   ];
 
   const relationLists = await Promise.all(
@@ -360,7 +417,7 @@ async function retrieveNexus(
   }
 
   const relations = Array.from(relationMap.values()).slice(0, 60);
-  const sourceMap = new Map(realSources.map((s) => [s.kind + ":" + s.ref, s]));
+  const sourceMap = new Map(enrichedSources.map((s) => [s.kind + ":" + s.ref, s]));
 
   for (const row of relations) {
     const source = refId(row.source_ref);
@@ -393,6 +450,7 @@ async function retrieveNexus(
   return {
     sources: Array.from(sourceMap.values()).slice(0, 24),
     relations,
+    authorityRelations,
   };
 }
 
@@ -428,7 +486,7 @@ Deno.serve(async (req) => {
     : [];
 
   const db = makeDbClient(req);
-  let retrieval = { sources: [] as RetrievedSource[], relations: [] as NexusRow[] };
+  let retrieval = { sources: [] as RetrievedSource[], relations: [] as NexusRow[], authorityRelations: [] as any[] };
   if (db) {
     retrieval = await retrieveNexus(
       db,
@@ -461,6 +519,12 @@ Deno.serve(async (req) => {
   }));
 
   const authoritativeKinds = new Set(["bible_verse", "catechism_paragraph", "magisterium_doc", "patristic"]);
+  const authority_nexus = retrieval.authorityRelations.map((r: any) => ({
+    relation: r.relation_type,
+    from: r.source,
+    to: r.related_source,
+    note: r.note,
+  }));
   const groundedSources = sourceContext.filter((source) =>
     authoritativeKinds.has(source.kind) && typeof source.excerpt === "string" && source.excerpt.trim().length > 0
   );
@@ -471,6 +535,7 @@ Deno.serve(async (req) => {
       text: "Não encontrei nas fontes verificáveis disponíveis na Cátedra elementos suficientes para responder com segurança. Não vou formular uma resposta doutrinal por conta própria.",
       sources: sourceContext,
       nexus: relationContext,
+      authority_nexus,
       retrieval: {
         source_count: sourceContext.length,
         relation_count: relationContext.length,
@@ -485,7 +550,9 @@ Deno.serve(async (req) => {
     "Você é Cáter, assistente teológico da Cátedra Digital.",
     "Use exclusivamente as fontes recuperadas da Cátedra e as relações curadas do Nexus para afirmações factuais e doutrinais.",
     "Cada afirmação doutrinal deve ser sustentada por uma fonte recuperada com texto/excerto verificável; cite título e referência.",
-    "Use relações do Nexus para explicar por que dois conteúdos estão conectados.",
+    "Use as relações do Nexus para explicar por que dois conteúdos estão conectados, mas nunca trate uma relação editorial como se ela mudasse a classe de autoridade de uma fonte.",
+    "Quando citar uma fonte, preserve sua natureza e referência; não transforme testemunho patrístico, santo ou teologia em ensinamento do Magistério.",
+    "Se houver uma fonte canônica disponível, prefira a referência e o endereço canônico fornecidos no contexto, sem inventar links.",
     "Não invente versículos, citações, documentos, números de parágrafo ou referências.",
     "Diferencie fonte, resumo, interpretação e inferência.",
     "Se uma afirmação não estiver sustentada pelos excertos recuperados, não a faça. Não use memória paramétrica para preencher lacunas.",
@@ -504,6 +571,7 @@ Deno.serve(async (req) => {
         trecho_selecionado: selectedText || null,
         fontes_reais_recuperadas: sourceContext,
         relacoes_nexus: relationContext,
+        nexus_de_autoridade: authority_nexus,
       }),
     },
     ...history,
@@ -548,6 +616,7 @@ Deno.serve(async (req) => {
       text: text.trim(),
       sources: sourceContext,
       nexus: relationContext,
+      authority_nexus,
       retrieval: {
         source_count: sourceContext.length,
         relation_count: relationContext.length,
