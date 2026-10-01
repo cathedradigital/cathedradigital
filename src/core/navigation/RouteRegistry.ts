@@ -20,7 +20,7 @@ interface RouteEntry {
 
 const ROUTES: Record<RouteKey, RouteEntry> = {
   'atrium':               { template: '/' },
-  'env.estudar':          { template: '/bible' },
+  'env.estudar':          { template: '/estudar' },
   'env.rezar':            { template: '/oracao' },
   'env.formar-se':        { template: '/jornadas' },
   'env.pesquisar':        { template: '/buscar' },

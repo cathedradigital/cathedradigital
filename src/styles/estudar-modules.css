@@ -26,6 +26,7 @@
   min-width: 0;
 }
 
+[data-catedra-module="estudar"] { --estudar-accent: var(--estudar-bible-accent); }
 [data-catedra-module="bible"] { --estudar-accent: var(--estudar-bible-accent); --estudar-reading-size: 1.0625rem; --estudar-reading-leading: 1.82; }
 [data-catedra-module="catechism"] { --estudar-accent: var(--estudar-catechism-accent); }
 [data-catedra-module="documents"] { --estudar-accent: var(--estudar-documents-accent); }
