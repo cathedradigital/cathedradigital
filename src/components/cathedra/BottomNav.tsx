@@ -8,7 +8,7 @@ import { isRouteActive, isLegitimateClick } from '@/lib/navigation-utils';
 import { Icons } from '@/constants';
 import { prefetchRoute } from '@/lib/prefetch';
 import { LangContext } from '@/contexts/LangContext';
-import { APP_ROUTES } from '@/config/routes';
+import { MODULE_NAVIGATION } from '@/config/moduleNavigation';
 import { SmartActionSheet } from './SmartActionButton';
 
 /**
@@ -177,19 +177,20 @@ const BottomNav: React.FC<BottomNavProps> = ({ user, onOpenSidebar }) => {
   const [atalhosOpen, setAtalhosOpen] = useState(false);
 
   const items = useMemo(() => {
-    // Arquitetura Hub Cathedra: 5 itens essenciais
-    const hubItems = [
-      { path: '/bible', label: 'Ler', icon: Icons.BookOpen },
-      { path: '/rezar', label: 'Orar', icon: Icons.Hand },
-      { path: '/igreja', label: 'Igreja', icon: Icons.Church },
-      { path: '/acervo', label: 'Biblioteca', icon: Icons.Library },
-      { path: '/profile', label: 'Perfil', icon: Icons.User },
-    ];
+    // A mesma taxonomia do desktop: cinco ambientes, sem uma segunda
+    // arquitetura de navegação no mobile.
+    const iconByEnvironment: Record<string, any> = {
+      'estudar': Icons.BookOpen,
+      'rezar': Icons.Hand,
+      'formar-se': Icons.Route,
+      'pesquisar': Icons.Search,
+      'minha-jornada': Icons.Compass,
+    };
 
-    return hubItems.map(item => ({
-      label: item.label,
-      route: item.path,
-      icon: item.icon,
+    return MODULE_NAVIGATION.map((group) => ({
+      label: group.label,
+      route: group.items[0]?.path,
+      icon: iconByEnvironment[group.key] ?? Icons.Circle,
       isMenu: false,
       isAtalhos: false,
     }));
