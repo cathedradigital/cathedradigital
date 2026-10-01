@@ -35,6 +35,28 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
   const avatarSrc = useAvatarUrl(user?.avatar, 96);
   const [isReady, setIsReady] = useState(false);
   const [openEnvironment, setOpenEnvironment] = useState<ModuleEnvironment | null>(null);
+  const activeGroup = MODULE_NAVIGATION.find((group) =>
+    pathname === group.items[0]?.path || group.items.some((item) => pathname === item.path || (item.path !== '/' && pathname.startsWith(item.path + '/'))),
+  );
+
+  React.useEffect(() => {
+    const root = document.documentElement;
+    if (!activeGroup) {
+      root.style.removeProperty('--catedra-module-accent');
+      root.style.removeProperty('--catedra-module-accent-soft');
+      root.removeAttribute('data-catedra-module');
+      return;
+    }
+    root.style.setProperty('--catedra-module-accent', activeGroup.accent);
+    root.style.setProperty('--catedra-module-accent-soft', activeGroup.accentSoft);
+    root.setAttribute('data-catedra-module', activeGroup.key);
+    return () => {
+      root.style.removeProperty('--catedra-module-accent');
+      root.style.removeProperty('--catedra-module-accent-soft');
+      root.removeAttribute('data-catedra-module');
+    };
+  }, [activeGroup]);
+
   
   useEffect(() => {
     setIsReady(true);
@@ -247,7 +269,7 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
               const group = MODULE_NAVIGATION.find((item) => item.key === openEnvironment);
               if (!group) return null;
               return (
-                <div className="border-t border-border/30" style={{ backgroundColor: group.accentSoft }}>
+                <div className="border-t border-border/30" style={{ backgroundColor: group.accentSoft, borderTopColor: group.accent }}>
                   <nav className="mx-auto flex max-w-7xl items-center gap-1 overflow-x-auto px-spacing-sm py-1.5 md:px-[var(--layout-padding)]" aria-label={`Tópicos de ${group.label}`}>
                     {group.items.map((item) => {
                       const selected = pathname === item.path || (item.path !== '/' && pathname.startsWith(item.path + '/'));
