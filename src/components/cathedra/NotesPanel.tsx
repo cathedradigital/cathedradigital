@@ -5,7 +5,7 @@ import { useNotes, UserNote } from '@/hooks/useNotes';
 import { useAuth } from '@/hooks/useAuth';
 
 interface NotesPanelProps {
-  contentType: 'magisterium' | 'catechism' | 'bible';
+  contentType: string;
   contentId: string;
   contentLabel?: string;
 }
@@ -22,7 +22,7 @@ const NotesPanel: React.FC<NotesPanelProps> = ({ contentType, contentId, content
   const { notes, loading, addNote, updateNote, deleteNote } = useNotes(contentType, contentId);
   const [isOpen, setIsOpen] = useState(false);
   const [newNote, setNewNote] = useState('');
-  const [selectedColor, setSelectedColor] = useState('yellow');
+  const [selectedColor, setSelectedColor] = useState('primary');
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editText, setEditText] = useState('');
 
