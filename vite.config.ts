@@ -1,12 +1,16 @@
-// @lovable.dev/vite-tanstack-config already includes TanStack Start, React,
-// Tailwind, path aliases and the Cloudflare build integration.
-// Do not register @cloudflare/vite-plugin a second time: duplicate plugin
-// registration can make the Cloudflare Workers build fail.
-import { defineConfig } from "@lovable.dev/vite-tanstack-config";
+import { defineConfig } from "vite";
+import { tanstackStart } from "@tanstack/react-start/plugin/vite";
+import react from "@vitejs/plugin-react";
+import { cloudflare } from "@cloudflare/vite-plugin";
+import tsconfigPaths from "vite-tsconfig-paths";
+import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
-  tanstackStart: {
-    // Use the project's SSR error wrapper as the server entry.
-    server: { entry: "server" },
-  },
+  plugins: [
+    cloudflare({ viteEnvironment: { name: "ssr" } }),
+    tanstackStart(),
+    react(),
+    tsconfigPaths(),
+    tailwindcss(),
+  ],
 });
