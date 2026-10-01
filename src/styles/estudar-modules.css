@@ -380,3 +380,97 @@
     margin-bottom: 0;
   }
 }
+
+
+/* Acabamento da leitura mobile — Estudar.
+ * O topo contextual permanece como orientação; o conteúdo ganha prioridade.
+ */
+@media (max-width: 767px) {
+  [data-catedra-module] {
+    overflow-x: clip;
+  }
+
+  /* A faixa de módulos ocupa uma segunda linha do chrome mobile. */
+  [data-catedra-module] .estudar-reading-column,
+  [data-catedra-module] .editorial-column {
+    width: min(100%, calc(100vw - 2rem));
+    margin-inline: auto;
+  }
+
+  /* Bíblia: cabeçalho enxuto e seleção dos livros mais respirada. */
+  [data-catedra-module="bible"] .estudar-bible-book-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  [data-catedra-module="bible"] .estudar-bible-book-card {
+    min-height: 10.25rem;
+  }
+  [data-catedra-module="bible"] .estudar-bible-book-card > div:last-child {
+    min-width: 0;
+  }
+  [data-catedra-module="bible"] .estudar-bible-book-card h3 {
+    overflow-wrap: anywhere;
+  }
+  [data-catedra-module="bible"] .estudar-chapter-nav {
+    position: sticky;
+    bottom: calc(var(--stitch-mobile-bottomnav-h) + var(--stitch-mobile-safe-bottom));
+    z-index: 15;
+    margin-inline: -.25rem;
+    padding: .5rem .25rem;
+    background: color-mix(in srgb, hsl(var(--background)) 94%, transparent);
+    backdrop-filter: blur(10px);
+    border-top: 1px solid var(--estudar-accent-border);
+  }
+
+  /* Catecismo: leitura longa com largura e ritmo constantes. */
+  [data-catedra-module="catechism"] .editorial-column {
+    padding-inline: .15rem;
+  }
+  [data-catedra-module="catechism"] .editorial-column > .space-y-spacing-xl {
+    gap: 1.25rem;
+  }
+  [data-catedra-module="catechism"] [data-testid^="paragrafo-"],
+  [data-catedra-module="catechism"] [id^="p"] {
+    scroll-margin-top: 8.5rem;
+  }
+  [data-catedra-module="catechism"] .estudar-reading-toolbar {
+    margin-inline: 0;
+  }
+
+  /* Documentos: catálogo antes de leitura; cartões sem colunas estreitas. */
+  [data-catedra-module="documents"] {
+    min-width: 0;
+  }
+  [data-catedra-module="documents"] main,
+  [data-catedra-module="documents"] section {
+    min-width: 0;
+  }
+  [data-catedra-module="documents"] :is(input, select) {
+    max-width: 100%;
+  }
+  [data-catedra-module="documents"] .estudar-doc-filter-row {
+    scroll-snap-type: x proximity;
+  }
+  [data-catedra-module="documents"] .estudar-doc-filter-row > * {
+    scroll-snap-align: start;
+  }
+  [data-catedra-module="documents"] article {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+  [data-catedra-module="documents"] article :is(h2,h3) {
+    line-height: 1.2;
+  }
+
+  /* O chrome inferior não pode cobrir o fim da leitura. */
+  [data-catedra-module] {
+    padding-bottom: max(
+      1.5rem,
+      calc(var(--stitch-mobile-bottomnav-h) + var(--stitch-mobile-safe-bottom) + 1.25rem)
+    );
+  }
+
+  /* Não deixar o segundo nível de navegação competir com o título. */
+  [data-catedra-module] :is(.estudar-module-landing) {
+    padding-top: .25rem;
+  }
+}

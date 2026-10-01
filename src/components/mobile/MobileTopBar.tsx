@@ -91,6 +91,11 @@ export function MobileTopBar({
       </Link>
 
       <div className="min-w-0 flex-1">
+        {kicker && (
+          <span className="block truncate font-[var(--font-stitch-label)] text-[9px] font-bold uppercase tracking-[0.12em] text-stitch-on-surface-variant">
+            {kicker}
+          </span>
+        )}
         {title && (
           <p
             className={cn(
