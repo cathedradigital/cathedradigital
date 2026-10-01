@@ -4,9 +4,9 @@
     /* --- Core Visual Tokens: Cathedra Premium System --- */
     
     /* 1. Colors (HSL) */
-    --background: 36 33% 98%; /* marfim editorial */
+    --background: 36 33% 98%; /* Revertendo para o tom sóbrio anterior */
 
-    --foreground: 222 35% 13%;
+    --foreground: 222 35% 13%; /* Aumentado de 10% para 15% para suavizar mas manter contraste */
 
     
     --card: 36 40% 99.5%;
@@ -15,12 +15,12 @@
     --primary: 222 100% 18%; 
     --primary-foreground: 45 40% 98%;
     
-    --secondary: 43 62% 38%;
+    --secondary: 43 62% 38%; /* Escurecido de 45% para 35% para melhor contraste no mobile */
     --secondary-foreground: 45 40% 98%;
 
     
     --muted: 36 20% 95%;
-    --muted-foreground: 222 15% 35%; 
+    --muted-foreground: 222 15% 35%; /* Aumentado de 35% para 25% para conformidade WCAG AA */ 
     
     --accent: 43 55% 92%;
     --accent-foreground: 222 60% 18%;
@@ -248,16 +248,16 @@
 
 
   .dark, [data-theme='dark'] {
-    --background: 222 35% 7%;
-    --foreground: 40 30% 95%;
+    --background: 220 15% 9%;
+    --foreground: 45 10% 95%; /* Maior brilho no dark para legibilidade */
     
-    --card: 222 30% 10%;
-    --card-foreground: 40 30% 92%;
+    --card: 220 15% 10%;
+    --card-foreground: 45 10% 88%;
     
-    --primary: 43 65% 68%;
-    --primary-foreground: 222 45% 8%;
+    --primary: 42 15% 70%;
+    --primary-foreground: 220 15% 5%;
     
-    --border: 40 18% 90% / 0.10;
+    --border: 45 15% 90% / 0.08;
     --shadow-premium: 0 20px 80px -20px rgba(0, 0, 0, 0.5);
     --rule-gold-ink: 43 60% 72%;
   }
@@ -998,3 +998,336 @@ header:hover {
   --space-atrium-rule: hsl(220 20% 82% / 0.5);
   --space-atrium-shadow: 0 1px 0 hsl(220 20% 80% / 0.35), 0 24px 60px -40px hsl(220 40% 14% / 0.18);
   --space-atrium-texture:
+    radial-gradient(1200px 600px at 50% -10%, hsl(42 60% 88% / 0.35), transparent 60%),
+    radial-gradient(800px 400px at 100% 0%, hsl(220 40% 90% / 0.25), transparent 55%);
+  --space-atrium-motion: 480ms cubic-bezier(0.22, 0.61, 0.36, 1);
+
+  /* --- IGREJA — dourado litúrgico, vitrais discretos, contemplação --- */
+  --space-church-bg: linear-gradient(180deg, hsl(220 42% 10%) 0%, hsl(222 44% 7%) 100%);
+  --space-church-surface: hsl(222 38% 12%);
+  --space-church-ink: hsl(40 30% 92%);
+  --space-church-accent: hsl(42 62% 62%);
+  --space-church-rule: hsl(42 40% 60% / 0.22);
+  --space-church-shadow:
+    inset 0 1px 0 hsl(42 40% 60% / 0.08),
+    0 40px 120px -60px hsl(0 0% 0% / 0.85);
+  --space-church-stained-glass:
+    radial-gradient(600px 900px at 20% 0%, hsl(220 70% 40% / 0.18), transparent 55%),
+    radial-gradient(500px 800px at 80% 10%, hsl(0 60% 40% / 0.14), transparent 55%),
+    radial-gradient(700px 900px at 50% 100%, hsl(42 70% 50% / 0.10), transparent 60%);
+  --space-church-column-shadow:
+    linear-gradient(90deg, hsl(0 0% 0% / 0.35) 0%, transparent 8%, transparent 92%, hsl(0 0% 0% / 0.35) 100%);
+  --space-church-halo: radial-gradient(closest-side, hsl(42 80% 70% / 0.35), transparent 70%);
+  --space-church-motion: 720ms cubic-bezier(0.19, 1, 0.22, 1);
+
+  /* --- BIBLIOTECA — pergaminho, madeira, capitulares, estantes --- */
+  --space-library-bg: linear-gradient(180deg, hsl(38 34% 92%) 0%, hsl(34 30% 88%) 100%);
+  --space-library-surface: hsl(40 40% 95%);
+  --space-library-ink: hsl(28 30% 16%);
+  --space-library-accent: hsl(24 46% 32%);
+  --space-library-wood: hsl(24 34% 28%);
+  --space-library-rule: hsl(28 30% 40% / 0.28);
+  --space-library-shadow:
+    0 1px 0 hsl(28 30% 40% / 0.15),
+    0 30px 60px -40px hsl(28 30% 16% / 0.35);
+  --space-library-parchment:
+    radial-gradient(1400px 700px at 30% 20%, hsl(38 60% 88% / 0.55), transparent 60%),
+    repeating-linear-gradient(115deg, hsl(28 30% 70% / 0.04) 0 2px, transparent 2px 7px),
+    repeating-linear-gradient(0deg, hsl(28 30% 60% / 0.03) 0 1px, transparent 1px 3px);
+  --space-library-shelf:
+    linear-gradient(180deg, transparent 0 calc(100% - 3px), hsl(24 34% 28% / 0.35) calc(100% - 3px) 100%);
+  --space-library-motion: 360ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* --- CLAUSTRO — jardim interior, silêncio, continuidade espiritual --- */
+  --space-cloister-bg: linear-gradient(180deg, hsl(150 18% 94%) 0%, hsl(150 14% 90%) 100%);
+  --space-cloister-surface: hsl(150 22% 97%);
+  --space-cloister-ink: hsl(180 22% 16%);
+  --space-cloister-accent: hsl(150 28% 38%);
+  --space-cloister-rule: hsl(150 20% 60% / 0.32);
+  --space-cloister-shadow:
+    0 1px 0 hsl(150 20% 60% / 0.25),
+    0 30px 80px -50px hsl(180 22% 16% / 0.28);
+  --space-cloister-garden:
+    radial-gradient(900px 600px at 20% 100%, hsl(150 40% 70% / 0.22), transparent 60%),
+    radial-gradient(700px 500px at 100% 0%, hsl(180 30% 80% / 0.20), transparent 60%);
+  --space-cloister-motion: 900ms cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+/* Ativação semântica por atributo (opt-in, não retroativo) */
+[data-space='atrium'] {
+  background: var(--space-atrium-bg), var(--space-atrium-texture);
+  color: var(--space-atrium-ink);
+}
+[data-space='church'] {
+  background: var(--space-church-bg), var(--space-church-stained-glass);
+  color: var(--space-church-ink);
+}
+[data-space='library'] {
+  background: var(--space-library-bg), var(--space-library-parchment);
+  color: var(--space-library-ink);
+}
+[data-space='cloister'] {
+  background: var(--space-cloister-bg), var(--space-cloister-garden);
+  color: var(--space-cloister-ink);
+}
+
+/* O ambiente "Igreja" é sempre escuro. Os tokens Stitch precisam acompanhar,
+   senão textos com `text-stitch-on-surface` ficam escuros sobre fundo escuro. */
+[data-space='church'] {
+  --stitch-background: 220 42% 10%;
+  --stitch-on-background: 40 30% 92%;
+  --stitch-surface: 222 38% 12%;
+  --stitch-on-surface: 40 30% 92%;
+  --stitch-on-surface-variant: 40 18% 78%;
+  --stitch-surface-container-lowest: 222 44% 8%;
+  --stitch-surface-container-low: 222 40% 11%;
+  --stitch-surface-container: 222 38% 14%;
+  --stitch-surface-container-high: 222 34% 17%;
+  --stitch-surface-container-highest: 222 30% 21%;
+  --stitch-surface-dim: 222 44% 8%;
+  --stitch-surface-bright: 222 30% 21%;
+  --stitch-secondary: 42 62% 62%;
+  --stitch-on-secondary: 48 100% 12%;
+  --stitch-outline: 42 20% 55%;
+  --stitch-outline-variant: 42 30% 60%;
+  --rule-gold-ink: 43 60% 72%;
+
+  /* Os tokens shadcn também precisam acompanhar o ambiente escuro, senão
+     ReaderShell (`bg-background`), cards (`bg-card`), muted e bordas
+     desenham superfícies claras sob textos claros — o defeito de contraste
+     observado dentro do leitor de orações. */
+  --background: 220 42% 10%;
+  --foreground: 40 30% 92%;
+  --card: 222 38% 12%;
+  --card-foreground: 40 30% 92%;
+  --popover: 222 40% 11%;
+  --popover-foreground: 40 30% 92%;
+  --muted: 222 34% 16%;
+  --muted-foreground: 40 16% 74%;
+  --accent: 222 34% 17%;
+  --accent-foreground: 40 30% 92%;
+  --primary: 42 62% 62%;
+  --primary-foreground: 222 44% 10%;
+  --border: 42 24% 46%;
+  --input: 42 24% 46%;
+  --ring: 42 62% 62%;
+}
+
+/* ─────────────────────────────────────────────────────────────
+ * Leitor de Orações — ritmo contemplativo
+ * Classe já referenciada pelo PrayerEngineReader (`cathedra-reader-article`),
+ * até aqui sem definição. Define respiro, medida e hierarquia de leitura
+ * usando exclusivamente a escala oficial (--sp-*, --reading-column-*).
+ * ───────────────────────────────────────────────────────────── */
+.cathedra-reader-article {
+  --prayer-line-height: 1.72;
+}
+.cathedra-reader-article > * + * {
+  margin-top: var(--sp-xl);
+}
+.cathedra-reader-article p {
+  line-height: var(--reader-line-height, var(--prayer-line-height));
+  text-wrap: pretty;
+}
+.cathedra-reader-article [data-prayer-voice] + [data-prayer-voice] {
+  margin-top: var(--sp-l);
+}
+/* Cada tipo de conteúdo tem identidade própria, sem cor hardcoded. */
+.cathedra-reader-article [data-prayer-voice='oracao'] p {
+  font-family: var(--font-display);
+}
+.cathedra-reader-article [data-prayer-voice='resposta'] p,
+.cathedra-reader-article [data-prayer-voice='refrao'] p {
+  font-style: italic;
+}
+/* Salmodia: coluna mais estreita e versos respirando um a um. */
+.cathedra-reader-article [data-prayer-voice='salmo'] p {
+  font-family: var(--font-display);
+  max-width: 46ch;
+  line-height: 1.85;
+}
+/* Antífona: voz que abre e fecha o salmo — filete dourado discreto. */
+.cathedra-reader-article [data-prayer-voice='antifona'] {
+  border-inline-start: 1px solid hsl(var(--rule-gold) / 0.45);
+  padding-inline-start: var(--sp-m);
+}
+.cathedra-reader-article [data-prayer-voice='antifona'] p {
+  font-style: italic;
+}
+/* Leitura: prosa proclamada — corpo sans, medida ampla. */
+.cathedra-reader-article [data-prayer-voice='leitura'] p {
+  font-family: var(--font-body);
+  font-size: 1.0625rem;
+}
+
+@media (max-width: 767px) {
+  .cathedra-reader-article > * + * {
+    margin-top: var(--sp-l);
+  }
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+ * CAT-SP4 · Lote B.2 — Refinamentos do ambiente Igreja
+ * Clima litúrgico: mais respiro no Hero, filete dourado presente,
+ * cards com bordas suaves e sombra quase imperceptível.
+ * ───────────────────────────────────────────────────────────── */
+[data-space='church'] [data-editorial-hero-universal] {
+  padding-top: calc(var(--sp-xl) * 1.15);
+  padding-bottom: calc(var(--sp-xl) * 1.15);
+}
+@media (min-width: 768px) {
+  [data-space='church'] [data-editorial-hero-universal] {
+    padding-top: calc(var(--sp-xxl) * 1.12);
+    padding-bottom: calc(var(--sp-xxl) * 1.12);
+  }
+}
+[data-space='church'] [data-editorial-hero-universal] [role='separator'] {
+  max-width: 320px;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    hsl(var(--rule-gold) / 0.9),
+    transparent
+  );
+}
+[data-space='church'] [data-editorial-card-universal] {
+  border-color: hsl(var(--border) / 0.35);
+  box-shadow:
+    0 1px 0 hsl(var(--rule-gold) / 0.05),
+    0 1px 2px hsl(220 40% 4% / 0.04);
+  transition:
+    border-color 480ms cubic-bezier(0.19, 1, 0.22, 1),
+    box-shadow 480ms cubic-bezier(0.19, 1, 0.22, 1);
+}
+[data-space='church'] [data-editorial-card-universal]:hover {
+  border-color: hsl(var(--rule-gold) / 0.55);
+  box-shadow:
+    0 1px 0 hsl(var(--rule-gold) / 0.15),
+    0 6px 24px hsl(220 40% 4% / 0.08);
+}
+[data-space='church'] [data-editorial-card-universal] + [data-editorial-card-universal] {
+  margin-top: var(--sp-s);
+}
+
+/* ─────────────────────────────────────────────────────────────
+ * CAT-SP4 · B.2.5 — Portal de Oração (homologação Rosário)
+ * Atmosfera: leve luz incidindo de cima, entrada em stagger,
+ * limiar de transição com fade suave. Respeita reduced-motion.
+ * ───────────────────────────────────────────────────────────── */
+[data-portal-oracao] {
+  position: relative;
+  isolation: isolate;
+  /* Defaults (tema church) — sobrescritos por [data-portal-theme] */
+  --portal-halo: var(--rule-gold);
+  --portal-halo-opacity: 0.10;
+  --portal-tint-top: transparent;
+  --portal-tint-bottom: transparent;
+  --portal-fil-opacity: 0.9;
+}
+[data-portal-oracao]::before {
+  content: '';
+  position: absolute;
+  inset: -10% 10% auto 10%;
+  height: 420px;
+  background: radial-gradient(
+    ellipse at 50% 0%,
+    hsl(var(--portal-halo) / var(--portal-halo-opacity)),
+    hsl(var(--portal-halo) / calc(var(--portal-halo-opacity) * 0.4)) 35%,
+    transparent 70%
+  );
+  pointer-events: none;
+  z-index: -1;
+}
+[data-portal-oracao]::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, var(--portal-tint-top), var(--portal-tint-bottom));
+  pointer-events: none;
+  z-index: -1;
+}
+[data-portal-oracao] [data-editorial-hero-universal] [role='separator'] {
+  opacity: var(--portal-fil-opacity);
+}
+[data-portal-oracao] > * {
+  animation: portal-rise 620ms cubic-bezier(0.19, 1, 0.22, 1) both;
+}
+[data-portal-oracao] > *:nth-child(1) { animation-delay: 60ms; }
+[data-portal-oracao] > *:nth-child(2) { animation-delay: 180ms; }
+[data-portal-oracao] > *:nth-child(3) { animation-delay: 300ms; }
+[data-portal-oracao] > *:nth-child(4) { animation-delay: 400ms; }
+[data-portal-oracao] > *:nth-child(5) { animation-delay: 500ms; }
+[data-portal-oracao] > *:nth-child(6) { animation-delay: 580ms; }
+
+/* ── Temas do Portal ── */
+[data-portal-theme='church'] {
+  --portal-halo: var(--rule-gold);
+  --portal-halo-opacity: 0.10;
+  --portal-fil-opacity: 0.9;
+}
+[data-portal-theme='passion'] {
+  --portal-halo: 340 40% 45%;
+  --portal-halo-opacity: 0.14;
+  --portal-tint-top: hsl(340 30% 30% / 0.06);
+  --portal-tint-bottom: hsl(280 25% 20% / 0.04);
+  --portal-fil-opacity: 0.55;
+}
+[data-portal-theme='dawn'] {
+  --portal-halo: 32 80% 65%;
+  --portal-halo-opacity: 0.16;
+  --portal-tint-top: hsl(32 60% 70% / 0.05);
+  --portal-fil-opacity: 0.8;
+}
+[data-portal-theme='noon'] {
+  --portal-halo: 48 90% 72%;
+  --portal-halo-opacity: 0.18;
+  --portal-tint-top: hsl(48 70% 80% / 0.04);
+  --portal-fil-opacity: 0.85;
+}
+[data-portal-theme='sunset'] {
+  --portal-halo: 18 75% 55%;
+  --portal-halo-opacity: 0.16;
+  --portal-tint-top: hsl(18 60% 45% / 0.06);
+  --portal-tint-bottom: hsl(340 40% 30% / 0.04);
+  --portal-fil-opacity: 0.75;
+}
+[data-portal-theme='night'] {
+  --portal-halo: 220 60% 75%;
+  --portal-halo-opacity: 0.10;
+  --portal-tint-top: hsl(220 40% 20% / 0.05);
+  --portal-fil-opacity: 0.5;
+}
+
+@keyframes portal-rise {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+[data-portal-threshold] {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background:
+    radial-gradient(ellipse at 50% 30%, hsl(var(--portal-halo, var(--rule-gold)) / 0.14), transparent 60%),
+    hsl(var(--background));
+  animation: portal-threshold 780ms cubic-bezier(0.4, 0, 0.2, 1) both;
+  pointer-events: all;
+}
+@keyframes portal-threshold {
+  0%   { opacity: 0; }
+  25%  { opacity: 1; }
+  75%  { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-space] { transition: none !important; animation: none !important; }
+  [data-portal-oracao] > * { animation: none !important; }
+  [data-portal-oracao]::before,
+  [data-portal-oracao]::after { display: none; }
+  [data-portal-threshold] { animation: none !important; opacity: 0; display: none; }
+}
+
+
