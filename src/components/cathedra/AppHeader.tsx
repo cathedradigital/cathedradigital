@@ -12,7 +12,8 @@ import { LanguageSwitcher } from '@/components/i18n/LanguageSwitcher';
 import { cn } from '@/lib/utils';
 import { useAvatarUrl } from '@/lib/avatar';
 import { isLegitimateClick } from '@/lib/navigation-utils';
-import { APP_ROUTES, getBreadcrumbs } from '@/config/routes';
+import { getBreadcrumbs } from '@/config/routes';
+import { MODULE_NAVIGATION } from '@/config/moduleNavigation';
 
 interface AppHeaderProps {
   user: any;
@@ -40,9 +41,12 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
   
   const isDashboard = pathname === '/';
   const breadcrumbs = useMemo(() => getBreadcrumbs(pathname), [pathname]);
-  const headerRoutes = useMemo(() => 
-    APP_ROUTES.filter(r => r.showInMenu && r.category === 'core').slice(0, 4)
-  , []);
+  const headerRoutes = useMemo(() =>
+    MODULE_NAVIGATION.map((group) => ({
+      path: group.items[0]?.path ?? '/',
+      label: group.label,
+    })),
+  []);
 
   return (
     <>
