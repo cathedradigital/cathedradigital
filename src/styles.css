@@ -485,3 +485,68 @@
     transition-duration: 0.01ms !important;
   }
 }
+
+
+/* Identidade do Átrio e cor contextual dos ambientes */
+:root {
+  --catedra-atrium-ink: #26333a;
+  --catedra-atrium-gold: #b08a3e;
+  --catedra-atrium-paper: #f7f4ed;
+  --catedra-module-accent: #2f6f8f;
+  --catedra-module-accent-soft: rgba(47,111,143,0.14);
+}
+
+.catedra-atrium {
+  background:
+    radial-gradient(circle at 12% 8%, rgba(176,138,62,0.08), transparent 28rem),
+    linear-gradient(180deg, var(--catedra-atrium-paper) 0%, hsl(var(--background)) 38rem);
+}
+
+.catedra-atrium-hero {
+  position: relative;
+}
+
+.catedra-atrium-hero::before {
+  content: "";
+  display: block;
+  width: 5rem;
+  height: 2px;
+  margin: 0 auto 1.75rem;
+  background: var(--catedra-atrium-gold);
+  opacity: .7;
+}
+
+@media (min-width: 768px) {
+  .catedra-atrium-hero::before {
+    margin-left: 0;
+  }
+}
+
+.catedra-atrium-doors {
+  position: relative;
+}
+
+.catedra-atrium-doors::before {
+  content: "CÁTEDRA · ÁTRIO";
+  display: block;
+  margin-bottom: .75rem;
+  color: color-mix(in srgb, var(--catedra-atrium-ink) 55%, transparent);
+  font-size: .65rem;
+  font-weight: 700;
+  letter-spacing: .28em;
+}
+
+[data-catedra-module] .catedra-module-accent {
+  color: var(--catedra-module-accent);
+}
+
+[data-catedra-module] .catedra-module-surface {
+  background: var(--catedra-module-accent-soft);
+  border-color: color-mix(in srgb, var(--catedra-module-accent) 35%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .catedra-atrium-hero::before {
+    transition: none;
+  }
+}
