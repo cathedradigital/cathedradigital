@@ -166,7 +166,7 @@ const AtriumNexusPage: React.FC = () => {
         backgroundImage:
           'url("https://www.transparenttextures.com/patterns/p6.png")',
       }}
-    >
+     data-catedra-module-root>
       <Helmet>
         <title>Cathedra — Nexus Theologicus</title>
         <meta
