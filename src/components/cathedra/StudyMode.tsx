@@ -333,7 +333,7 @@ const StudyMode: React.FC = () => {
         title="Logos IA | Inteligência Teológica Minimalista" 
         description="Consulte a Logos IA para resumos teológicos, conexões bíblicas e suporte espiritual baseado na Tradição e no Magistério da Igreja Católica." 
         path="/estudo"
-        image="https://gpwrpmoniglarqwfyryp.supabase.co/storage/v1/object/public/public-assets/og-logos.png"
+        image="https://isojguvcnfncokoxoauk.supabase.co/storage/v1/object/public/public-assets/og-logos.png"
         keywords="logos ia, inteligência artificial católica, estudo bíblico ia, catecismo ia, teologia católica digital"
         breadcrumbs={[
           { name: "Home", path: "/" },

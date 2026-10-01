@@ -336,7 +336,7 @@ const Index = () => {
         description="Bíblia Sagrada, Catecismo, Magistério e IA teológica em uma plataforma contemplativa para a vida espiritual moderna."
         path="/"
         keywords="bíblia católica premium, catecismo online, magistério da igreja, leitura bíblica diária, logos ia, espiritualidade minimalista, portal teológico sofisticado, cathedra digital"
-        image="https://gpwrpmoniglarqwfyryp.supabase.co/storage/v1/object/public/public-assets/og-premium-home.png"
+        image="https://isojguvcnfncokoxoauk.supabase.co/storage/v1/object/public/public-assets/og-premium-home.png"
         breadcrumbs={[
           { name: "Home", path: "/" }
         ]}

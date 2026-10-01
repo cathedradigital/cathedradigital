@@ -92,14 +92,31 @@ export async function uploadToStorage(
  * OAuth Provider Configuration
  * Google and Apple OAuth settings
  */
+function getPublicEnv(name: string): string | undefined {
+  if (typeof import.meta !== 'undefined' && import.meta.env) {
+    const value = import.meta.env[name];
+    if (typeof value === 'string' && value.trim()) return value;
+  }
+  return undefined;
+}
+
+function getBrowserOrigin(): string {
+  return typeof window !== 'undefined' ? window.location.origin : '';
+}
+
+/**
+ * OAuth providers are configured in Supabase Auth. The client only exposes
+ * whether the corresponding public client ID is present; secrets never belong
+ * in the browser bundle.
+ */
 export const OAUTH_CONFIG = {
   google: {
-    enabled: process.env.VITE_GOOGLE_CLIENT_ID ? true : false,
-    redirectUrl: `${window.location.origin}/auth/callback?provider=google`,
+    enabled: Boolean(getPublicEnv('VITE_GOOGLE_CLIENT_ID')),
+    redirectUrl: `${getBrowserOrigin()}/auth/callback?provider=google`,
   },
   apple: {
-    enabled: process.env.VITE_APPLE_CLIENT_ID ? true : false,
-    redirectUrl: `${window.location.origin}/auth/callback?provider=apple`,
+    enabled: Boolean(getPublicEnv('VITE_APPLE_CLIENT_ID')),
+    redirectUrl: `${getBrowserOrigin()}/auth/callback?provider=apple`,
   },
 };
 

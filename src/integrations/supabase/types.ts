@@ -10,7 +10,7 @@ export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "14.5"
+    PostgrestVersion: "14.18"
   }
   public: {
     Tables: {
@@ -38,6 +38,105 @@ export type Database = {
           is_enabled?: boolean | null
           metadata?: Json | null
           updated_at?: string | null
+        }
+        Relationships: []
+      }
+      authority_source_relations: {
+        Row: {
+          created_at: string
+          id: string
+          note: string | null
+          related_source_id: string
+          relation_type: string
+          source_id: string
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          note?: string | null
+          related_source_id: string
+          relation_type: string
+          source_id: string
+          status?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          note?: string | null
+          related_source_id?: string
+          relation_type?: string
+          source_id?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "authority_source_relations_related_source_id_fkey"
+            columns: ["related_source_id"]
+            isOneToOne: false
+            referencedRelation: "authority_sources"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "authority_source_relations_source_id_fkey"
+            columns: ["source_id"]
+            isOneToOne: false
+            referencedRelation: "authority_sources"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      authority_sources: {
+        Row: {
+          author: string | null
+          authority_class: string
+          authority_label: string
+          canonical_url: string | null
+          citation: string | null
+          created_at: string
+          description: string
+          id: string
+          language: string
+          slug: string
+          source_type: string
+          status: string
+          title: string
+          updated_at: string
+          verified_at: string | null
+        }
+        Insert: {
+          author?: string | null
+          authority_class: string
+          authority_label: string
+          canonical_url?: string | null
+          citation?: string | null
+          created_at?: string
+          description: string
+          id?: string
+          language?: string
+          slug: string
+          source_type: string
+          status?: string
+          title: string
+          updated_at?: string
+          verified_at?: string | null
+        }
+        Update: {
+          author?: string | null
+          authority_class?: string
+          authority_label?: string
+          canonical_url?: string | null
+          citation?: string | null
+          created_at?: string
+          description?: string
+          id?: string
+          language?: string
+          slug?: string
+          source_type?: string
+          status?: string
+          title?: string
+          updated_at?: string
+          verified_at?: string | null
         }
         Relationships: []
       }
@@ -335,6 +434,297 @@ export type Database = {
           title?: string
           track?: string | null
           updated_at?: string
+        }
+        Relationships: []
+      }
+      corpus_documents: {
+        Row: {
+          author_name: string | null
+          canonical_url: string
+          checksum: string | null
+          created_at: string
+          document_kind: string
+          excerpt: string | null
+          full_text: string | null
+          id: string
+          ingestion_status: string
+          original_language: string | null
+          person_id: string | null
+          publication_year: number | null
+          rights_note: string | null
+          rights_status: string
+          slug: string
+          source_id: string
+          status: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          author_name?: string | null
+          canonical_url: string
+          checksum?: string | null
+          created_at?: string
+          document_kind: string
+          excerpt?: string | null
+          full_text?: string | null
+          id?: string
+          ingestion_status?: string
+          original_language?: string | null
+          person_id?: string | null
+          publication_year?: number | null
+          rights_note?: string | null
+          rights_status?: string
+          slug: string
+          source_id: string
+          status?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          author_name?: string | null
+          canonical_url?: string
+          checksum?: string | null
+          created_at?: string
+          document_kind?: string
+          excerpt?: string | null
+          full_text?: string | null
+          id?: string
+          ingestion_status?: string
+          original_language?: string | null
+          person_id?: string | null
+          publication_year?: number | null
+          rights_note?: string | null
+          rights_status?: string
+          slug?: string
+          source_id?: string
+          status?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "corpus_documents_person_id_fkey"
+            columns: ["person_id"]
+            isOneToOne: false
+            referencedRelation: "corpus_people"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "corpus_documents_source_id_fkey"
+            columns: ["source_id"]
+            isOneToOne: false
+            referencedRelation: "corpus_sources"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      corpus_ingestion_jobs: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          error_message: string | null
+          id: string
+          items_found: number
+          items_ingested: number
+          items_skipped: number
+          requested_by: string | null
+          scope: string
+          source_id: string
+          started_at: string | null
+          status: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          items_found?: number
+          items_ingested?: number
+          items_skipped?: number
+          requested_by?: string | null
+          scope: string
+          source_id: string
+          started_at?: string | null
+          status?: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          items_found?: number
+          items_ingested?: number
+          items_skipped?: number
+          requested_by?: string | null
+          scope?: string
+          source_id?: string
+          started_at?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "corpus_ingestion_jobs_source_id_fkey"
+            columns: ["source_id"]
+            isOneToOne: false
+            referencedRelation: "corpus_sources"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      corpus_people: {
+        Row: {
+          biography: string | null
+          birth_year: number | null
+          canonical_url: string | null
+          created_at: string
+          death_year: number | null
+          display_name: string
+          feast_date: string | null
+          id: string
+          papal_name: string | null
+          papal_number: number | null
+          person_kind: string
+          slug: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          biography?: string | null
+          birth_year?: number | null
+          canonical_url?: string | null
+          created_at?: string
+          death_year?: number | null
+          display_name: string
+          feast_date?: string | null
+          id?: string
+          papal_name?: string | null
+          papal_number?: number | null
+          person_kind: string
+          slug: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          biography?: string | null
+          birth_year?: number | null
+          canonical_url?: string | null
+          created_at?: string
+          death_year?: number | null
+          display_name?: string
+          feast_date?: string | null
+          id?: string
+          papal_name?: string | null
+          papal_number?: number | null
+          person_kind?: string
+          slug?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      corpus_relations: {
+        Row: {
+          confidence: number | null
+          created_at: string
+          id: string
+          note: string | null
+          relation_type: string
+          source_document_id: string
+          status: string
+          target_document_id: string | null
+          target_person_id: string | null
+        }
+        Insert: {
+          confidence?: number | null
+          created_at?: string
+          id?: string
+          note?: string | null
+          relation_type: string
+          source_document_id: string
+          status?: string
+          target_document_id?: string | null
+          target_person_id?: string | null
+        }
+        Update: {
+          confidence?: number | null
+          created_at?: string
+          id?: string
+          note?: string | null
+          relation_type?: string
+          source_document_id?: string
+          status?: string
+          target_document_id?: string | null
+          target_person_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "corpus_relations_source_document_id_fkey"
+            columns: ["source_document_id"]
+            isOneToOne: false
+            referencedRelation: "corpus_documents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "corpus_relations_target_document_id_fkey"
+            columns: ["target_document_id"]
+            isOneToOne: false
+            referencedRelation: "corpus_documents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "corpus_relations_target_person_id_fkey"
+            columns: ["target_person_id"]
+            isOneToOne: false
+            referencedRelation: "corpus_people"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      corpus_sources: {
+        Row: {
+          canonical_url: string
+          created_at: string
+          id: string
+          language: string
+          publisher: string | null
+          rights_note: string | null
+          rights_status: string
+          slug: string
+          source_kind: string
+          status: string
+          title: string
+          updated_at: string
+          verified_at: string | null
+        }
+        Insert: {
+          canonical_url: string
+          created_at?: string
+          id?: string
+          language?: string
+          publisher?: string | null
+          rights_note?: string | null
+          rights_status?: string
+          slug: string
+          source_kind: string
+          status?: string
+          title: string
+          updated_at?: string
+          verified_at?: string | null
+        }
+        Update: {
+          canonical_url?: string
+          created_at?: string
+          id?: string
+          language?: string
+          publisher?: string | null
+          rights_note?: string | null
+          rights_status?: string
+          slug?: string
+          source_kind?: string
+          status?: string
+          title?: string
+          updated_at?: string
+          verified_at?: string | null
         }
         Relationships: []
       }

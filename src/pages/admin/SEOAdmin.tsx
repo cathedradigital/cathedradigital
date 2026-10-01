@@ -256,7 +256,7 @@ export default function SEOAdmin() {
               <div className="text-muted-foreground text-xs mt-1 break-all">/robots.txt</div>
             </a>
             <a
-              href="https://gpwrpmoniglarqwfyryp.supabase.co/functions/v1/glossary-rss?format=rss"
+              href="https://isojguvcnfncokoxoauk.supabase.co/functions/v1/glossary-rss?format=rss"
               target="_blank"
               rel="noopener noreferrer"
               className="rounded border p-3 hover:border-primary transition"

@@ -27,7 +27,7 @@ interface SEOPageData {
 }
 
 const BASE_URL = 'https://www.cathedradigital.com.br';
-const DEFAULT_OG_IMAGE = 'https://gpwrpmoniglarqwfyryp.supabase.co/storage/v1/object/public/public-assets/og-home.png';
+const DEFAULT_OG_IMAGE = 'https://isojguvcnfncokoxoauk.supabase.co/storage/v1/object/public/public-assets/og-home.png';
 
 const SEOVerificationPage = () => {
   const navigate = useNavigate();

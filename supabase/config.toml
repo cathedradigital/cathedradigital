@@ -1,4 +1,7 @@
-project_id = "gpwrpmoniglarqwfyryp"
+project_id = "isojguvcnfncokoxoauk"
 
 [functions.logos-ai]
+verify_jwt = true
+
+[functions.corpus-ingest]
 verify_jwt = true
