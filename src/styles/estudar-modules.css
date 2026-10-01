@@ -534,6 +534,172 @@
 }
 
 
+/* Desktop reading pass — density, width and module composition. */
+@media (min-width: 768px) {
+  [data-catedra-module="catechism"] .estudar-module-landing,
+  [data-catedra-module="catechism"] .editorial-column,
+  [data-catedra-module="catechism"] [data-reader-shell] {
+    width: min(100%, 76rem);
+    max-width: 76rem;
+    margin-inline: auto;
+  }
+
+  [data-catedra-module="catechism"] [data-reader-slot="content"],
+  [data-catedra-module="catechism"] .editorial-column {
+    max-width: 62rem;
+  }
+
+  [data-catedra-module="catechism"] article[id^="p"] {
+    padding-block: 1rem 1.5rem;
+  }
+
+  [data-catedra-module="catechism"] article[id^="p"] > div:first-child {
+    margin-bottom: .8rem;
+  }
+
+  [data-catedra-module="catechism"] article[id^="p"] .reader-text {
+    font-size: 1.08rem;
+    line-height: 1.86;
+  }
+
+  [data-catedra-module="catechism"] article[id^="p"] .reader-text > p {
+    max-width: 70ch;
+  }
+
+  [data-catedra-module="bible"] .estudar-bible-book-grid {
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+    gap: .6rem;
+  }
+
+  [data-catedra-module="bible"] .estudar-bible-book-card {
+    min-height: 8.5rem;
+    aspect-ratio: auto;
+    border-radius: .7rem;
+    padding: .7rem;
+    box-shadow: 0 8px 22px -22px hsl(var(--foreground) / .32);
+  }
+
+  [data-catedra-module="bible"] .estudar-bible-book-card > div:first-child span {
+    font-size: 1.55rem;
+  }
+
+  [data-catedra-module="bible"] .estudar-bible-book-card h3 {
+    font-size: .82rem;
+    line-height: 1.08;
+  }
+
+  [data-catedra-module="bible"] .estudar-bible-book-card p {
+    margin-top: .2rem;
+    font-size: .56rem;
+    line-height: 1.15;
+  }
+
+  [data-catedra-module="bible"] .estudar-bible-book-card .group-hover\\:opacity-100 {
+    display: none;
+  }
+
+  [data-catedra-module="nexus"] .estudar-relation {
+    min-height: 0;
+    padding: .85rem 1rem;
+  }
+
+  [data-catedra-module="nexus"] .estudar-relation + .estudar-relation {
+    margin-top: .55rem;
+  }
+
+  [data-catedra-module="library"] .estudar-discovery-grid {
+    gap: 1rem;
+  }
+
+  [data-catedra-module="library"] .estudar-item-card {
+    border-radius: .75rem;
+  }
+
+  [data-catedra-module="saints"] .estudar-editorial-column {
+    width: min(100%, 64rem);
+    max-width: 64rem;
+  }
+
+  [data-catedra-module="saints"] .max-w-5xl {
+    width: min(100%, 76rem);
+    max-width: 76rem;
+  }
+
+  [data-catedra-module="saints"] :is(.grid.grid-cols-1.md\\:grid-cols-2.lg\\:grid-cols-3) {
+    gap: .9rem;
+  }
+
+  [data-catedra-module="saints"] article,
+  [data-catedra-module="saints"] [role="article"] {
+    min-width: 0;
+  }
+
+  [data-catedra-module="saints"] .font-serif.text-premium-xl {
+    font-size: 1.15rem;
+  }
+
+  [data-catedra-module="saints"] .estudar-editorial-block {
+    padding-block: 1rem;
+  }
+
+  [data-catedra-module="community"] .estudar-community-feed {
+    width: min(100%, 64rem);
+  }
+
+  /* Documentos / Magistério — menos parede de filtros, mais superfície de leitura. */
+  [data-catedra-module="documents"] .estudar-doc-filter-stack {
+    max-width: 76rem;
+    margin-inline: auto;
+  }
+
+  [data-catedra-module="documents"] .estudar-doc-filter-stack > .relative {
+    max-width: 68rem;
+    margin-inline: auto;
+  }
+
+  [data-catedra-module="documents"] article {
+    min-width: 0;
+  }
+
+  /* Nexus — relações em cartões compactos e leitura em coluna larga. */
+  [data-catedra-module="nexus"] {
+    --estudar-nexus-content: 76rem;
+  }
+
+  [data-catedra-module="nexus"] main,
+  [data-catedra-module="nexus"] > section {
+    max-width: var(--estudar-nexus-content);
+    margin-inline: auto;
+  }
+
+  [data-catedra-module="nexus"] .grid {
+    min-width: 0;
+  }
+
+  [data-catedra-module="nexus"] .estudar-relation {
+    min-width: 0;
+  }
+
+  /* Biblioteca — descoberta sem cartões gigantes. */
+  [data-catedra-module="library"] {
+    --estudar-library-content: 76rem;
+  }
+
+  [data-catedra-module="library"] .estudar-module-landing,
+  [data-catedra-module="library"] main {
+    max-width: var(--estudar-library-content);
+    margin-inline: auto;
+  }
+
+  [data-catedra-module="library"] .estudar-item-card {
+    padding: .9rem 1rem;
+  }
+
+  [data-catedra-module="library"] :is(.grid.grid-cols-1.md\\:grid-cols-2, .grid.grid-cols-2.md\\:grid-cols-4) {
+    gap: .8rem;
+  }
+}
+
 /* =========================================================
    Desktop review — Estudar
    Objetivo: dar composição de biblioteca editorial no desktop,
@@ -675,5 +841,60 @@
 
   [data-catedra-module] .estudar-module-landing {
     padding-inline: 0;
+  }
+}
+
+/* Final desktop density overrides — applied after the legacy desktop review. */
+@media (min-width: 768px) {
+  [data-catedra-module="bible"] .estudar-bible-book-grid {
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+    gap: .6rem;
+  }
+
+  [data-catedra-module="bible"] .estudar-bible-book-card {
+    min-height: 8.5rem;
+    aspect-ratio: auto;
+    padding: .7rem;
+    border-radius: .7rem;
+  }
+
+  [data-catedra-module="bible"] .estudar-bible-book-card h3 {
+    font-size: .82rem;
+    line-height: 1.08;
+  }
+
+  [data-catedra-module="bible"] .estudar-bible-book-card p {
+    font-size: .56rem;
+    line-height: 1.15;
+  }
+
+  [data-catedra-module="bible"] .estudar-bible-book-card .group-hover\\:opacity-100 {
+    display: none;
+  }
+
+  [data-catedra-module="catechism"] [data-reader-slot="content"],
+  [data-catedra-module="catechism"] .editorial-column {
+    max-width: 62rem;
+  }
+
+  [data-catedra-module="catechism"] article[id^="p"] .reader-text {
+    font-size: 1.08rem;
+    line-height: 1.86;
+  }
+
+  [data-catedra-module="nexus"] .estudar-relation {
+    min-height: 0;
+    padding: .85rem 1rem;
+  }
+
+  [data-catedra-module="library"] .estudar-item-card {
+    min-height: 0;
+    padding: .9rem 1rem;
+  }
+}
+
+@media (min-width: 1200px) {
+  [data-catedra-module="bible"] .estudar-bible-book-grid {
+    grid-template-columns: repeat(8, minmax(0, 1fr));
   }
 }

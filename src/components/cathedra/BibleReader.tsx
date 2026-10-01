@@ -184,7 +184,7 @@ export const BibleReader: React.FC<BibleReaderProps> = ({
       <div
         ref={containerRef}
         className={cn(
-          'space-y-3 md:space-y-4',
+          'space-y-2.5 md:space-y-3',
           'catedra-reading',
           settings.fontSize === 'small' ? 'text-base' : settings.fontSize === 'large' ? 'text-xl' : 'text-lg',
           settings.fontFamily === 'serif' ? 'font-serif' : 'font-sans',
@@ -213,11 +213,11 @@ export const BibleReader: React.FC<BibleReaderProps> = ({
                 id={`verse-${v.number}`}
                 onClick={() => onVerseAction(v)}
                 className={cn(
-                  'relative group cursor-pointer transition-all duration-300 rounded-lg p-3 -mx-2 max-w-full overflow-hidden',
+                  'relative group cursor-pointer transition-all duration-300 rounded-lg px-3 py-2.5 md:px-4 md:py-3 -mx-2 max-w-full overflow-hidden',
                   highlightColor ? `bg-${highlightColor}/10` : 'hover:bg-primary/[0.02]',
                 )}
               >
-                <div className="flex items-start gap-2.5 md:gap-3 min-w-0">
+                <div className="grid grid-cols-[2rem_minmax(0,1fr)] md:grid-cols-[2.5rem_minmax(0,1fr)] items-start gap-2 md:gap-3 min-w-0">
                   <span
                     aria-label={`Versículo ${v.number}`}
                     className="mt-1 shrink-0 text-[9px] md:text-[10px] font-semibold text-secondary/80 select-none tabular-nums leading-none"
@@ -225,7 +225,7 @@ export const BibleReader: React.FC<BibleReaderProps> = ({
                     {v.number}
                   </span>
                   <p className={cn(
-                    'min-w-0 break-words leading-[1.78] md:leading-[1.82] transition-colors font-serif tracking-[0.002em]',
+                    'm-0 min-w-0 break-words leading-[1.72] md:leading-[1.78] transition-colors font-serif tracking-[0.002em]',
                     settings.theme === 'night' ? 'text-stone-300' : 'text-primary/90',
                   )}>
                     {v.text}
@@ -233,7 +233,7 @@ export const BibleReader: React.FC<BibleReaderProps> = ({
                 </div>
 
                 {finalConnections.length > 0 && (
-                  <div className="flex flex-wrap items-center gap-2 mt-3 ml-6 max-w-full">
+                  <div className="flex flex-wrap items-center gap-2 mt-2 md:mt-2.5 ml-8 md:ml-10 max-w-full">
                     {finalConnections.map((conn, idx) => {
                       const isEssential = conn.relevance_level === 'essential' || conn.relevance === 'essential';
                       return (

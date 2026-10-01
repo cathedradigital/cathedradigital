@@ -70,12 +70,12 @@ export const NoteEditModal: React.FC<NoteEditModalProps> = ({
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            className="relative w-full bg-card border border-primary/10 rounded-[2.5rem] shadow-premium overflow-hidden p-spacing-xl md:p-spacing-2xl space-y-spacing-xl"
+            className="relative w-full max-w-xl bg-card border border-primary/10 rounded-2xl shadow-2xl overflow-hidden p-5 md:p-6 space-y-5"
           >
             <div className="flex items-center justify-between">
               <div className="space-y-spacing-2xs">
-                <h3 className="text-premium-xl font-display font-light text-primary uppercase tracking-widest">{title}</h3>
-                <p className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/60 italic">Scriptum Sanctuarium</p>
+                <h3 className="text-lg md:text-xl font-display font-medium text-primary tracking-wide">{title}</h3>
+                <p className="text-[9px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">Scriptum Sanctuarium</p>
               </div>
               <Button variant="ghost" size="icon" onClick={onClose} className="rounded-premium-full opacity-40 hover:opacity-100">
                 <Icons.X className="w-spacing-md h-spacing-md" />
@@ -108,12 +108,12 @@ export const NoteEditModal: React.FC<NoteEditModalProps> = ({
                 onKeyDown={handleKeyDown}
                 placeholder="O que esta passagem diz ao seu coração?"
                 rows={4}
-                className="w-full bg-primary/[0.02] border border-primary/5 rounded-premium p-spacing-lg text-foreground font-serif italic text-premium-lg focus:outline-none focus:ring-2 focus:ring-primary/10 transition-all placeholder:text-primary/60 resize-none"
+                className="w-full min-h-40 bg-background border border-border/70 rounded-xl p-4 text-foreground font-serif text-base leading-relaxed focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all placeholder:text-muted-foreground resize-y"
                />
                <p className="text-center text-[9px] font-medium text-muted-foreground/40 uppercase tracking-widest">Atalho: Ctrl + Enter para salvar</p>
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-spacing-md">
+            <div className="flex flex-col sm:flex-row gap-2 pt-1">
               {isEditing && onDelete && (
                 <div className="flex-1 flex gap-spacing-xs">
                   {!showDeleteConfirm ? (

@@ -65,7 +65,7 @@ const NotesPanel: React.FC<NotesPanelProps> = ({ contentType, contentId, content
       </Button>
 
       {isOpen && (
-        <div className="absolute right-0 top-full mt-spacing-xs w-spacing-4xl max-h-spacing-4xl overflow-y-auto bg-card border border-border rounded-premium shadow-premium-hover z-50 p-spacing-md space-y-spacing-sm">
+        <div className="absolute right-0 top-full mt-2 w-[min(24rem,calc(100vw-2rem))] max-h-[min(32rem,70vh)] overflow-y-auto bg-background/95 backdrop-blur-xl border border-primary/10 rounded-2xl shadow-xl z-50 p-3 md:p-4 space-y-3">
           <div className="flex items-center justify-between">
             <h4 className="text-premium-xs font-black uppercase tracking-widest text-primary">
               Anotações {contentLabel && <span className="text-muted-foreground font-normal normal-case">— {contentLabel}</span>}
@@ -82,7 +82,7 @@ const NotesPanel: React.FC<NotesPanelProps> = ({ contentType, contentId, content
               onChange={e => setNewNote(e.target.value)}
               placeholder="Escreva sua anotação..."
               rows={2}
-              className="w-full px-spacing-sm py-spacing-xs rounded-premium-full border border-border bg-background text-foreground text-premium-sm resize-none focus:outline-none focus:ring-2 focus:ring-primary/50"
+              className="w-full min-h-24 px-3 py-2.5 rounded-xl border border-border/70 bg-background text-foreground text-sm leading-relaxed resize-y focus:outline-none focus:ring-2 focus:ring-primary/30"
             />
             <div className="flex items-center justify-between">
               <div className="flex gap-spacing-2xs">
@@ -109,14 +109,14 @@ const NotesPanel: React.FC<NotesPanelProps> = ({ contentType, contentId, content
           {notes.map(note => {
             const cfg = colorCfg(note.highlight_color);
             return (
-              <div key={note.id} className={`rounded-premium-full p-spacing-sm ${cfg.bg} border ${cfg.border} space-y-spacing-2xs`}>
+              <div key={note.id} className={`rounded-xl p-3 ${cfg.bg} border ${cfg.border} space-y-2`}>
                 {editingId === note.id ? (
                   <div className="space-y-spacing-xs">
                     <textarea
                       value={editText}
                       onChange={e => setEditText(e.target.value)}
                       rows={2}
-                      className="w-full px-spacing-xs py-spacing-2xs rounded-premium-full border border-border bg-background text-foreground text-premium-sm resize-none focus:outline-none"
+                      className="w-full min-h-20 px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm leading-relaxed resize-y focus:outline-none"
                     />
                     <div className="flex gap-spacing-xs">
                       <Button onClick={() => handleUpdate(note.id)} className="text-premium-xs font-bold text-primary">Salvar</Button>
