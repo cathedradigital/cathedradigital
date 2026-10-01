@@ -147,6 +147,7 @@ const TemaDetailPage = () => {
   const queryClient = useQueryClient();
   const [logosInsight, setLogosInsight] = useState<string | null>(null);
   const [loadingLogos, setLoadingLogos] = useState(false);
+  const [logosError, setLogosError] = useState<string | null>(null);
   const [bibleLimit, setBibleLimit] = useState(5);
   const [traditionLimit, setTraditionLimit] = useState(5);
   const [magisteriumLimit, setMagisteriumLimit] = useState(5);
@@ -232,11 +233,13 @@ const TemaDetailPage = () => {
   const handleLoadInsight = () => {
     if (!selectedTag || loadingLogos) return;
     setLoadingLogos(true);
+    setLogosError(null);
     supabase.functions.invoke('logos-spiritual-insight', {
       body: { query: selectedTag.label }
     }).then(({ data, error }) => {
       if (error) {
         console.error('Spiritual insight error:', error);
+        setLogosError('Não foi possível carregar a reflexão do Cáter agora.');
         // Handle specific status codes if possible via error object
         const status = (error as any).status || (error as any).status_code;
         if (status === 402) {
@@ -250,6 +253,7 @@ const TemaDetailPage = () => {
         }
       } else if (data?.insight) {
         setLogosInsight(data.insight);
+        setLogosError(null);
       } else if (data?.error) {
         // The function might return { error: "..." } with a 200/500 status
         if (data.error.includes('esgotados')) {
@@ -258,6 +262,10 @@ const TemaDetailPage = () => {
           }));
         }
       }
+      setLoadingLogos(false);
+    }).catch((error) => {
+      console.error('Spiritual insight unexpected error:', error);
+      setLogosError('Não foi possível carregar a reflexão do Cáter agora.');
       setLoadingLogos(false);
     });
   };
