@@ -186,8 +186,23 @@ const BibleVersePopoverBody: React.FC<BodyProps> = ({ abbr, chapter, verse, onNa
           <section className="rounded-xl bg-muted/30 p-3"><h5 className="text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground">Nesta leitura</h5>
               <p className="mt-1.5 text-xs leading-relaxed text-foreground/80">Você está em {bookName} {chapter}{verse ? `,${verse}` : ''} . Use “Abrir completo” para continuar a leitura no capítulo sem perder o contexto.</p>
           </section>
-          <section className="rounded-xl bg-muted/30 p-3"><h5 className="text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground">Conexões do capítulo</h5>
-            {study.suggestions.length > 0 ? (<div className="mt-2 space-y-2">{study.suggestions.slice(0, 4).map((item, index) => (<div key={item.id ?? index} className="rounded-lg border border-border/70 bg-background/50 px-2.5 py-2"><p className="text-[11px] font-semibold text-foreground">{item.title}</p>{item.description && <p className="mt-0.5 text-[10px] leading-relaxed text-muted-foreground">{item.description}</p>}</div>))}</div>) : <p className="mt-1.5 text-[10px] leading-relaxed text-muted-foreground">Ainda não há conexões editoriais cadastradas para este capítulo.</p>}
+          <section className="rounded-xl bg-muted/30 p-3">
+            <h5 className="text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground">Caminhos de estudo</h5>
+            {study.suggestions.length > 0 ? (
+              <div className="mt-2 space-y-2">
+                {study.suggestions.slice(0, 8).map((item, index) => (
+                  <button key={item.target.node.id ?? index} type="button" onClick={() => navigate(item.target.url)}
+                    className="block w-full rounded-lg border border-border/70 bg-background/50 px-2.5 py-2 text-left transition-colors hover:bg-muted focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary">
+                    <span className="block text-[9px] font-bold uppercase tracking-[0.12em] text-secondary">{item.eyebrow}</span>
+                    <span className="mt-0.5 block text-[11px] font-semibold text-foreground">{item.target.node.label}</span>
+                  </button>
+                ))}
+              </div>
+            ) : <p className="mt-1.5 text-[10px] leading-relaxed text-muted-foreground">Ainda não há conexões editoriais cadastradas para este capítulo.</p>}
+          </section>
+          <section className="rounded-xl border border-border/70 p-3">
+            <h5 className="text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground">Como o Cátedra conecta</h5>
+            <p className="mt-1.5 text-[10px] leading-relaxed text-muted-foreground">São exibidas somente relações já cadastradas no grafo de conhecimento. Quando uma relação não existe, ela não é inventada.</p>
           </section>
         </div>)}
       </div>
