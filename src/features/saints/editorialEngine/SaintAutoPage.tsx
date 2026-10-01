@@ -60,6 +60,7 @@ export const SaintAutoPage: React.FC<Props> = ({ descriptor }) => {
   const attributes = header.iconography?.attributes ?? [];
 
   return (
+    <div className="min-w-0 w-full overflow-x-hidden" data-catedra-module-root data-catedra-module="saints">
     <ReaderShell
       contentMaxWidth="max-w-3xl"
       ariaLabel={`Santo — ${header.name}`}
@@ -101,9 +102,9 @@ export const SaintAutoPage: React.FC<Props> = ({ descriptor }) => {
         />
       }
     >
-      <div className="space-y-spacing-lg">
+      <div className="min-w-0 space-y-spacing-lg">
         {image && (
-          <figure className="mx-auto max-w-sm space-y-spacing-2xs">
+          <figure className="mx-auto w-full max-w-sm space-y-spacing-2xs">
             <SacredImage
               src={image}
               alt={header.iconography?.imageAlt ?? `Representação de ${header.name}`}
@@ -166,5 +167,6 @@ export const SaintAutoPage: React.FC<Props> = ({ descriptor }) => {
         })}
       </div>
     </ReaderShell>
+  </div>
   );
 };
