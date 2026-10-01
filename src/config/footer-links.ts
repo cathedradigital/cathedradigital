@@ -53,7 +53,7 @@ export const CONDITIONAL_FOOTER_LINKS: FooterLink[] = [
  */
 export const EXTERNAL_FOOTER_LINKS: FooterLink[] = [
   {
-    href: 'https://gpwrpmoniglarqwfyryp.supabase.co/functions/v1/glossary-rss?format=rss',
+    href: 'https://isojguvcnfncokoxoauk.supabase.co/functions/v1/glossary-rss?format=rss',
     label: 'RSS Léxico',
     external: true,
     ariaLabel: 'Feed RSS do Léxico Teológico',
