@@ -158,8 +158,7 @@ const AtriumCommunityPage: React.FC = () => {
     [loading, posts.length],
   );
 
-  return (
-    <MobileTopBar kicker="Cathedra" title="Igreja Viva" transparent />
+  return (\n    <>\n      <MobileTopBar kicker="Cathedra" title="Igreja Viva" transparent />
     <>
       <Helmet>
         <title>Comunidade — Cathedra</title>
