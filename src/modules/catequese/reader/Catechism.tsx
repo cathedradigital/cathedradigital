@@ -642,7 +642,7 @@ const Catechism: React.FC = memo(() => {
 
           <ReaderShell
             ariaLabel={`Catecismo — ${selectedSection.title}`}
-            contentMaxWidth="max-w-4xl"
+            contentMaxWidth="max-w-6xl"
             hero={
               <EditorialHero
                 kicker={`Catecismo · ${selectedPart.part}`}
