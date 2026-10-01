@@ -102,7 +102,7 @@ export function BiblePickerSheet({
       size="full"
     >
       {!book ? (
-        <div className="space-y-6">
+        <div className="space-y-6 rounded-2xl bg-stitch-surface p-1">
           {/* Testamento */}
           <div className="flex gap-2 border-b border-stitch-outline-variant/30">
             {(Object.keys(BIBLE_DATA) as Testament[]).map((t) => {
@@ -135,7 +135,7 @@ export function BiblePickerSheet({
               <p className="mb-2 font-stitch-body text-[11px] font-bold uppercase tracking-[0.15em] text-stitch-on-surface-variant">
                 {cat.name}
               </p>
-              <div className="grid grid-cols-3 gap-2">
+              <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
                 {cat.books.map((b) => (
                   <button
                     key={b.abbr}
@@ -143,8 +143,8 @@ export function BiblePickerSheet({
                     onClick={() => setBook(b)}
                     style={{ minHeight: "var(--stitch-mobile-touch-min)" }}
                     className={cn(
-                      "flex flex-col items-start justify-center rounded-md border border-stitch-outline-variant/30",
-                      "bg-stitch-surface-container-lowest px-3 py-2 text-left transition-colors",
+                      "flex min-h-16 flex-col items-start justify-center rounded-lg border border-stitch-outline-variant/60 bg-stitch-surface-container-lowest px-3 py-2.5 text-left shadow-sm transition-colors",
+                      
                       "hover:border-stitch-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stitch-secondary",
                     )}
                   >
@@ -161,7 +161,7 @@ export function BiblePickerSheet({
           ))}
         </div>
       ) : (
-        <div className="space-y-4">
+        <div className="space-y-4 rounded-2xl bg-stitch-surface p-1">
           <button
             type="button"
             onClick={() => setBook(null)}

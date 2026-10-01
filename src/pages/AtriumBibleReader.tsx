@@ -30,7 +30,17 @@ const Bible = lazy(() => import('@/components/cathedra/Bible'));
 
 type Testament = 'Antigo Testamento' | 'Novo Testamento';
 
-const TESTAMENT_META: Record<Testament, { kicker: string; blurb: string }> = {
+
+
+type BibleEditionStatus = 'católica' | 'estudo' | 'referência';
+
+const BIBLE_EDITION_ROADMAP: Array<{ name: string; status: BibleEditionStatus; note: string }> = [
+  { name: 'Edição católica principal', status: 'católica', note: 'Fonte editorial principal da Cátedra.' },
+  { name: 'Vulgata Latina', status: 'referência', note: 'Preparada para comparação do texto latino e das tradições de tradução.' },
+  { name: 'Ave Maria', status: 'católica', note: 'Prevista como edição comparável, conforme licenciamento e fonte editorial.' },
+  { name: 'Outras traduções', status: 'estudo', note: 'Espaço para traduções de estudo, sempre identificadas quanto à tradição e ao estatuto.' },
+];
+\nconst TESTAMENT_META: Record<Testament, { kicker: string; blurb: string }> = {
   'Antigo Testamento': {
     kicker: 'Primeira Aliança',
     blurb: 'Da Criação à espera do Messias — a preparação divina para a plenitude dos tempos.',
@@ -234,7 +244,39 @@ const BibleLanding: React.FC = () => {
           </div>
         </section>
 
-        {/* Categorias e livros */}
+
+        <section className="mt-10 rounded-2xl border border-stitch-outline-variant/35 bg-stitch-surface-container-lowest p-5 shadow-sm">
+          <div className="flex flex-col gap-1 md:flex-row md:items-end md:justify-between">
+            <div>
+              <p className="font-stitch-body text-[10px] font-bold uppercase tracking-[0.18em] text-stitch-secondary">Estudo comparado</p>
+              <h2 className="mt-1 font-stitch-display text-[22px] text-stitch-primary">Edições e traduções</h2>
+              <p className="mt-1 max-w-2xl font-stitch-body text-[13px] leading-relaxed text-stitch-on-surface-variant">
+                A estrutura já fica preparada para comparar futuras edições da Escritura, sem misturar tradução, tradição e estatuto editorial.
+              </p>
+            </div>
+            <span className="font-stitch-body text-[10px] font-bold uppercase tracking-[0.14em] text-stitch-on-surface-variant">Em preparação</span>
+          </div>
+          <div className="mt-4 grid gap-2 sm:grid-cols-2">
+            {BIBLE_EDITION_ROADMAP.map((edition) => (
+              <div key={edition.name} className="rounded-xl border border-stitch-outline-variant/30 bg-stitch-surface px-3 py-3">
+                <div className="flex items-center justify-between gap-3">
+                  <span className="font-stitch-body text-[13px] font-semibold text-stitch-on-surface">{edition.name}</span>
+                  <span className="shrink-0 rounded-full bg-stitch-secondary-container px-2 py-1 font-stitch-body text-[9px] font-bold uppercase tracking-[0.1em] text-stitch-primary">{edition.status}</span>
+                </div>
+                <p className="mt-1 text-[11px] leading-relaxed text-stitch-on-surface-variant">{edition.note}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section className="mt-4 rounded-2xl border border-stitch-outline-variant/30 bg-stitch-surface-container-lowest p-5">
+          <p className="font-stitch-body text-[10px] font-bold uppercase tracking-[0.18em] text-stitch-secondary">Evangelhos sinóticos</p>
+          <h2 className="mt-1 font-stitch-display text-[21px] text-stitch-primary">Mateus · Marcos · Lucas</h2>
+          <p className="mt-1 max-w-2xl font-stitch-body text-[13px] leading-relaxed text-stitch-on-surface-variant">
+            Área reservada para estudo comparado dos três Evangelhos sinóticos, com referências às fontes e distinção clara entre texto bíblico, tradição e material de apoio.
+          </p>
+        </section>
+\n        {/* Categorias e livros */}
         <section className="pt-10 space-y-14">
           {categories.map((cat) => (
             <div key={cat.name}>

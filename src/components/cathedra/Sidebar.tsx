@@ -12,7 +12,7 @@ import { useAvatarUrl } from '@/lib/avatar';
 import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { useIsAdmin } from '@/hooks/useIsAdmin';
-import { MODULE_NAVIGATION, TRANSVERSAL_MODULES } from '@/config/moduleNavigation';
+import { MODULE_NAVIGATION } from '@/config/moduleNavigation';
 
 
 
@@ -162,16 +162,6 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
       }),
     }));
 
-    const transversalSection = {
-      label: 'Transversais',
-      items: TRANSVERSAL_MODULES.map((item) => ({
-        label: item.label,
-        path: item.path,
-        description: item.description,
-        icon: item.id === 'logos' ? <Icons.Brain size={19} /> : <Icons.Users size={19} />,
-      })),
-    };
-
     return [
       ...(isAdmin
         ? [{
@@ -182,7 +172,6 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
           }]
         : []),
       ...environmentSections,
-      transversalSection,
     ];
   }, [isAdmin, t]);
 
