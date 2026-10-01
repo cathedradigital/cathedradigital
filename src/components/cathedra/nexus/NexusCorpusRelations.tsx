@@ -114,7 +114,7 @@ const NexusCorpusRelations: React.FC = () => {
                     {target.label}
                   </a>
                 ) : (
-                  target.title ?? target.display_name
+                  target.label
                 )}
               </div>
               <p className="mt-2 font-stitch-body text-[11px] font-bold uppercase tracking-[0.16em] text-stitch-secondary">
