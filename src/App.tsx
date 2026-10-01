@@ -291,6 +291,7 @@ const DocsArticlePage = lazy(() => import('./pages/DocsArticlePage'));
 // ProductionReadyDashboard movido para o topo para evitar duplicidade
 
 const PrayerAdmin = lazy(() => import('./pages/admin/PrayerAdmin'));
+const CadastroAdmin = lazy(() => import('./pages/admin/CadastroAdmin'));
 const LiturgyMeditationFallbackPanel = lazy(() => import('./pages/admin/LiturgyMeditationFallbackPanel'));
 
 const BibleAbbrValidatePage = lazy(() => import('./pages/BibleAbbrValidatePage'));
@@ -869,6 +870,8 @@ const AppLayout: React.FC = () => {
                   </Suspense>
                 }
               />
+
+              <Route path="/admin/cadastro" element={<Suspense fallback={<LoadingFallback />}><CadastroAdmin /></Suspense>} />
 
               {/* Admin Routes with dedicated Layout */}
               <Route path="/admin/*" element={

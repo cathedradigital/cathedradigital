@@ -14,7 +14,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { NOVENAS, type Novena } from '@/data/novenas';
+import { type Novena } from '@/data/novenas';
+import { useNovenasList } from '@/hooks/useNovenas';
 import {
   downloadJson,
   exportAllProgress,
@@ -72,6 +73,7 @@ function readStoredFilters(): StoredFilters {
 }
 
 const NovenasPage: React.FC = () => {
+  const NOVENAS = useNovenasList();
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
 
