@@ -73,8 +73,10 @@ export function withLocalePath(pathname: string, locale: Language): string {
  * `basename` do router para a URL atual. Deve ser calculado uma única vez
  * no boot da aplicação.
  */
-export function resolveRouterBasename(pathname: string = window.location.pathname): string {
-  const locale = detectLocaleFromPath(pathname);
+export function resolveRouterBasename(pathname?: string): string {
+  const currentPathname =
+    pathname ?? (typeof window !== 'undefined' ? window.location.pathname : '/');
+  const locale = detectLocaleFromPath(currentPathname);
   return locale === DEFAULT_LOCALE ? '/' : `/${locale}`;
 }
 
