@@ -47,6 +47,11 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
       label: group.label,
     })),
   []);
+  const activeEnvironment = useMemo(() =>
+    MODULE_NAVIGATION.find((group) => group.items.some((item) =>
+      pathname === item.path || (item.path !== '/' && pathname.startsWith(item.path + '/'))
+    )),
+  [pathname]);
 
   return (
     <>
@@ -214,6 +219,30 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
             )}
           </div>
         </div>
+        {!isLanding && activeEnvironment && (
+          <div className="hidden border-t border-border/40 bg-background/70 backdrop-blur-xl lg:block">
+            <nav className="mx-auto flex max-w-7xl items-center gap-1 px-spacing-sm md:px-[var(--layout-padding)]" aria-label="Ambientes da Cátedra">
+              {MODULE_NAVIGATION.map((group) => {
+                const active = group.key === activeEnvironment.key;
+                return (
+                  <button
+                    key={group.key}
+                    type="button"
+                    onClick={() => navigate(group.items[0]?.path ?? '/')}
+                    className={cn(
+                      "relative px-4 py-2.5 text-[9px] font-semibold uppercase tracking-[0.18em] transition-colors",
+                      active ? "text-primary" : "text-muted-foreground hover:text-foreground"
+                    )}
+                    aria-current={active ? "page" : undefined}
+                  >
+                    {group.label}
+                    {active && <span className="absolute inset-x-3 bottom-0 h-0.5 bg-primary" aria-hidden />}
+                  </button>
+                );
+              })}
+            </nav>
+          </div>
+        )}
       </header>
     </>
   );
