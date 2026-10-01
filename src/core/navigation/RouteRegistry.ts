@@ -2,7 +2,7 @@
  * RouteRegistry — única fonte de rotas canônicas.
  *
  * Consumidores usam `RouteRegistry.resolve('study.bible', { book, chapter })`
- * em vez de escrever `/estudar/biblia/${book}/${chapter}`.
+ * em vez de escrever rotas legadas diretamente.
  *
  * Se uma rota mudar, altera-se aqui. Zero refactor nos consumidores.
  */
