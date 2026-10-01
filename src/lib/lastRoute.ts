@@ -15,6 +15,20 @@ const EXCLUDED_PREFIXES = [
 
 const EXCLUDED_EXACT = new Set<string>(['/', '']);
 
+/** Aliases que não devem sobreviver como destino de retorno após login. */
+const CANONICAL_ALIASES: Record<string, string> = {
+  '/igreja': '/community',
+  '/atrium': '/',
+  '/home': '/',
+  '/home-v3': '/',
+  '/legacy-home': '/',
+};
+
+export function canonicalizeRoute(pathname: string): string {
+  const clean = pathname.split(/[?#]/)[0] || '/';
+  return CANONICAL_ALIASES[clean] ?? clean;
+}
+
 export function isTrackableRoute(pathname: string): boolean {
   if (!pathname) return false;
   const clean = pathname.split(/[?#]/)[0];
@@ -24,8 +38,9 @@ export function isTrackableRoute(pathname: string): boolean {
 
 export function setLastRoute(pathname: string): void {
   try {
-    if (!isTrackableRoute(pathname)) return;
-    localStorage.setItem(KEY, pathname);
+    const canonical = canonicalizeRoute(pathname);
+    if (!isTrackableRoute(canonical)) return;
+    localStorage.setItem(KEY, canonical);
   } catch {
     /* storage indisponível */
   }
@@ -34,7 +49,11 @@ export function setLastRoute(pathname: string): void {
 export function getLastRoute(): string | null {
   try {
     const v = localStorage.getItem(KEY);
-    return v && isTrackableRoute(v) ? v : null;
+    if (!v) return null;
+    const canonical = canonicalizeRoute(v);
+    if (!isTrackableRoute(canonical)) return null;
+    if (canonical !== v) localStorage.setItem(KEY, canonical);
+    return canonical;
   } catch {
     return null;
   }
