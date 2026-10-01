@@ -73,6 +73,11 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
 }
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
+  // The legacy Cátedra application is a browser-only SPA. Keep the TanStack
+  // Start HTML shell on the server, but never render the application tree in
+  // the Cloudflare Worker. This prevents browser-only modules from executing
+  // during Worker SSR while preserving client-side navigation.
+  ssr: false,
   head: () => ({
     meta: [
       { charSet: "utf-8" },
