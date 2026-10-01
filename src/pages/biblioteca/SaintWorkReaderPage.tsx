@@ -22,6 +22,9 @@ import { Button } from '@/components/ui/button';
 import { Icons } from '@/constants';
 import { EditorialClosure } from '@/components/reader';
 import { resolveEditorialClosure } from '@/lib/editorial/resolveClosure';
+import ReadingMark from '@/components/cathedra/ReadingMark';
+import NotesPanel from '@/components/cathedra/NotesPanel';
+import { useReadingMarks } from '@/hooks/useReadingMarks';
 
 type ChapterSummary = Pick<SaintWorkChapter, 'id' | 'order' | 'title' | 'subtitle' | 'reading_minutes'>;
 
@@ -104,6 +107,7 @@ const SaintWorkReaderPage: React.FC = () => {
   const [chapters, setChapters] = useState<ChapterSummary[]>([]);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
+  const { saveLastRead } = useReadingMarks();
 
   useEffect(() => {
     let alive = true;
@@ -150,6 +154,19 @@ const SaintWorkReaderPage: React.FC = () => {
       next: idx >= 0 && idx < chapters.length - 1 ? chapters[idx + 1] : null,
     };
   }, [chapters, currentOrder]);
+
+  // Mantém a Biblioteca dentro do contrato de continuidade global:
+  // ao abrir um capítulo, o ponto atual passa a ser retomável em Minha Jornada.
+  useEffect(() => {
+    if (!chapter || !work || !autor || !obra) return;
+    void saveLastRead({
+      content_type: 'patristic',
+      content_id: chapter.id,
+      chapter: chapter.order,
+      label: chapter.title,
+      url: window.location.pathname + window.location.search,
+    });
+  }, [chapter, work, autor, obra, saveLastRead]);
 
   // Realce dos termos vindos de ?highlight= + scroll até a 1ª ocorrência.
   useEffect(() => {
@@ -279,6 +296,20 @@ const SaintWorkReaderPage: React.FC = () => {
           </div>
         }
       >
+        <div className="max-w-[68ch] mx-auto flex items-center justify-end gap-spacing-xs border-b border-border/50 py-spacing-xs mb-spacing-lg">
+          <NotesPanel
+            contentType="patristic"
+            contentId={chapter.id}
+            contentLabel={chapter.title}
+          />
+          <ReadingMark
+            contentType="patristic"
+            contentId={chapter.id}
+            label={chapter.title}
+            chapter={chapter.order}
+            url={window.location.pathname + window.location.search}
+          />
+        </div>
         <article
           ref={articleRef}
           className="prose prose-lg dark:prose-invert max-w-none font-serif leading-relaxed"
