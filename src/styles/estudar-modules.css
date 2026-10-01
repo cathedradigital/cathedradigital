@@ -397,18 +397,37 @@
     margin-inline: auto;
   }
 
-  /* Bíblia: cabeçalho enxuto e seleção dos livros mais respirada. */
+  /* Bíblia: catálogo compacto — o usuário deve enxergar muitos livros de uma vez. */
   [data-catedra-module="bible"] .estudar-bible-book-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: .5rem;
   }
   [data-catedra-module="bible"] .estudar-bible-book-card {
-    min-height: 10.25rem;
+    min-height: 6.75rem;
+    aspect-ratio: auto;
+    padding: .65rem;
+    border-radius: .7rem;
   }
   [data-catedra-module="bible"] .estudar-bible-book-card > div:last-child {
     min-width: 0;
   }
+  [data-catedra-module="bible"] .estudar-bible-book-card > div:first-child span {
+    font-size: 1.35rem;
+    line-height: 1;
+  }
   [data-catedra-module="bible"] .estudar-bible-book-card h3 {
     overflow-wrap: anywhere;
+    font-size: .9rem;
+    line-height: 1.12;
+  }
+  [data-catedra-module="bible"] .estudar-bible-book-card p {
+    margin-top: .2rem;
+    font-size: .6rem;
+    line-height: 1.2;
+    letter-spacing: .1em;
+  }
+  [data-catedra-module="bible"] .estudar-bible-book-card .group-hover\\:opacity-100 {
+    display: none;
   }
   [data-catedra-module="bible"] .estudar-chapter-nav {
     position: sticky;
