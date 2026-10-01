@@ -20,7 +20,7 @@ export interface SaintNexusInput {
 }
 
 const BUCKETS: readonly ReaderNexusBucket[] = [
-  'prayer', 'bible', 'glossary', 'journey', 'catechism', 'liturgy',
+  'bible', 'catechism', 'magisterium', 'father', 'glossary', 'prayer', 'liturgy', 'journey',
 ];
 
 const CACHE_MAX = 64;
