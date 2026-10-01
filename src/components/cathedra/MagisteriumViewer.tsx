@@ -74,6 +74,12 @@ const MagisteriumViewer: React.FC = () => {
   const contentRef = useRef<HTMLDivElement>(null);
   const { notes: docNotes, addNote, updateNote, deleteNote: deleteDocNote } = useNotes('magisterium');
 
+  const openDocumentNote = useCallback(() => {
+    setActiveParagraphId(activeParagraphId || 'documento');
+    setActiveHighlight(null);
+    setIsNoteModalOpen(true);
+  }, [activeParagraphId]);
+
   // Update history
   useEffect(() => {
     const currentUrl = window.location.pathname + window.location.search;
