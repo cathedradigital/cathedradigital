@@ -156,7 +156,7 @@ const BibleLanding: React.FC = () => {
         }
       />
 
-      <section className="mx-auto w-full max-w-[1120px] px-5 pb-[calc(var(--stitch-mobile-bottomnav-h)+var(--stitch-mobile-safe-bottom)+2rem)] pt-6 md:px-16 md:pt-14 md:pb-16 animate-fade-in">
+      <section className="estudar-module-landing mx-auto w-full max-w-[1120px] px-5 pb-[calc(var(--stitch-mobile-bottomnav-h)+var(--stitch-mobile-safe-bottom)+2rem)] pt-6 md:px-16 md:pt-14 md:pb-16 animate-fade-in">
         {/* CAT-SP4 · Onda B.1 — Hero universal (Harmony) — irmão do Catecismo */}
         <EditorialHero density="balanced" rule={false}>
           <EditorialHero.Eyebrow>Sacra Scriptura</EditorialHero.Eyebrow>
