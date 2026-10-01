@@ -3,7 +3,7 @@
   "name": "cathedradigital",
   "compatibility_date": "2026-10-01",
   "compatibility_flags": ["nodejs_compat"],
-  "main": "src/server.ts",
+  "main": "@tanstack/react-start/server-entry",
   "observability": {
     "enabled": true
   }
