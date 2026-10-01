@@ -100,7 +100,8 @@ const AtriumBibleReader: React.FC = () => {
           <Bible />
         </BibleReadGate>
         <BiblePickerSheet open={pickerOpen} onOpenChange={setPickerOpen} />
-      </Suspense>
+        </Suspense>
+      </div>
     );
   }
 
