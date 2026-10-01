@@ -90,7 +90,7 @@ export const BibleReader: React.FC<BibleReaderProps> = ({
   );
 
   return (
-    <div className="flex flex-col md:flex-row w-full min-h-screen">
+    <div className="flex flex-col md:flex-row w-full min-h-screen" data-catedra-module="bible">
       {/* Desktop Sidebar: Sacred Image/Icon */}
       <div className="hidden md:flex md:w-[40%] sticky top-0 h-screen overflow-hidden bg-primary/5 border-r border-primary/5">
         <SacredImage 
