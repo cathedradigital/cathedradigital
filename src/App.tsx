@@ -616,6 +616,10 @@ const AppLayout: React.FC = () => {
           className="outline-none catedra-module-shell"
           data-space={resolveSpaceForPath(location.pathname) ?? undefined}
           data-catedra-module={activeModule?.key ?? undefined}
+          style={activeModule ? {
+            '--catedra-module-accent': activeModule.accent,
+            '--catedra-module-accent-soft': activeModule.accentSoft,
+          } as React.CSSProperties : undefined}
         >
           
           <SwipeNavigation>
