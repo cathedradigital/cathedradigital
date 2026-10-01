@@ -13,7 +13,7 @@ import { cn } from '@/lib/utils';
 import { useAvatarUrl } from '@/lib/avatar';
 import { isLegitimateClick } from '@/lib/navigation-utils';
 import { getBreadcrumbs } from '@/config/routes';
-import { MODULE_NAVIGATION, ModuleEnvironment } from '@/config/moduleNavigation';
+import { MODULE_NAVIGATION, type ModuleEnvironment } from '@/config/moduleNavigation';
 
 interface AppHeaderProps {
   user: any;
