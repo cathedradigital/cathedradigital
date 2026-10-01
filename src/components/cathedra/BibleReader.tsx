@@ -93,7 +93,7 @@ export const BibleReader: React.FC<BibleReaderProps> = ({
       <div className="w-full min-w-0 overflow-x-hidden">
         <ReaderShell
           className="pb-32"
-          contentMaxWidth="max-w-[46rem]"
+          contentMaxWidth="max-w-6xl"
           ariaLabel={`${t('bible_reader_kicker')} — ${book.name} ${chapter}`}
           hero={
             <EditorialHero
