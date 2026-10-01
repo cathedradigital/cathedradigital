@@ -3,6 +3,9 @@
   "private": true,
   "sideEffects": false,
   "type": "module",
+  "engines": {
+    "node": ">=22.0.0"
+  },
   "scripts": {
     "dev": "vite dev",
     "build": "node scripts/check-deploy-assets.mjs && node scripts/validate-module-contracts.mjs && node scripts/validate-security-boundaries.mjs && vite build",
