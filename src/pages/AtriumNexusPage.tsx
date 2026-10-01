@@ -441,4 +441,6 @@ const AtriumNexusPage: React.FC = () => {
       </div>
     </>
   );
-};xport default AtriumNexusPage;
+};
+
+export default AtriumNexusPage;
