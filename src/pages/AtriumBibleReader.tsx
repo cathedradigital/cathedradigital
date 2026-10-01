@@ -121,7 +121,7 @@ const BibleLanding: React.FC = () => {
 
   return (
     <div
-      className="min-h-screen w-full bg-stitch-background text-stitch-on-background"
+      className="min-h-screen w-full bg-stitch-background text-stitch-on-background" data-catedra-module="bible"
       style={{
         backgroundImage: 'url("https://www.transparenttextures.com/patterns/p6.png")',
       }}
