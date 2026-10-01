@@ -2,6 +2,7 @@ import { NavLink, useLocation } from '@/lib/rr-compat';
 import { Icons } from "@/constants";
 import { cn } from "@/lib/utils";
 import type { LucideIcon } from "lucide-react";
+import { MODULE_NAVIGATION } from "@/config/moduleNavigation";
 
 interface MobileNavItem {
   to: string;
@@ -11,13 +12,24 @@ interface MobileNavItem {
   matches?: RegExp;
 }
 
-const DEFAULT_ITEMS: MobileNavItem[] = [
-  { to: "/bible", label: "LER", icon: Icons.BookOpen, matches: /^\/(bible|catechism|magisterium|santos)/ },
-  { to: "/oracao", label: "ORAR", icon: Icons.Prayer, matches: /^\/oracao/ },
-  { to: "/community", label: "IGREJA", icon: Icons.Church, matches: /^\/(community|igreja)/ },
-  { to: "/biblioteca", label: "BIBLIOTECA", icon: Icons.Library, matches: /^\/(acervo|biblioteca)/ },
-  { to: "/conta", label: "PERFIL", icon: Icons.User, matches: /^\/conta|perfil/ },
-];
+const ICON_BY_ENVIRONMENT: Record<string, LucideIcon> = {
+  "estudar": Icons.BookOpen,
+  "rezar": Icons.Prayer,
+  "formar-se": Icons.Route,
+  "pesquisar": Icons.Search,
+  "minha-jornada": Icons.Compass,
+};
+
+const DEFAULT_ITEMS: MobileNavItem[] = MODULE_NAVIGATION.map((environment) => ({
+  to: environment.items[0]?.path ?? "/",
+  label: environment.label,
+  icon: ICON_BY_ENVIRONMENT[environment.key] ?? Icons.Circle,
+  matches: new RegExp(
+    `^${environment.items
+      .map((item) => item.path.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))
+      .join("|")}`
+  ),
+}));
 
 interface MobileBottomNavProps {
   items?: MobileNavItem[];
