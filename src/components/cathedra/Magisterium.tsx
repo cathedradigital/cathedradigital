@@ -485,6 +485,7 @@ const Magisterium: React.FC = () => {
 
   return (
     <ContemplativeLayout>
+      <div data-catedra-module="documents" className="min-w-0 w-full overflow-x-hidden">
       <SEOHead 
         title="Magistério da Igreja | Cathedra" 
         description="Acesse os documentos fundamentais da Igreja Católica em uma experiência premium." 
@@ -776,7 +777,7 @@ const Magisterium: React.FC = () => {
                 transition={{ delay: idx * 0.05 }}
                 className="group h-full"
               >
-                <div className="p-spacing-md flex flex-col gap-spacing-md h-full text-left">
+                <div className="p-3 md:p-spacing-md flex flex-col gap-spacing-sm md:gap-spacing-md h-full min-w-0 text-left">
                   <div className="flex justify-between items-start">
                     <div className="w-spacing-xl h-spacing-xl rounded-premium bg-primary/[0.02] border border-primary/5 flex items-center justify-center text-primary/60 group-hover:text-primary transition-colors">
                       {doc.type === 'Encíclica' ? <Icons.Scroll className="w-spacing-md h-spacing-md" strokeWidth={1} /> : <Icons.FileText className="w-spacing-md h-spacing-md" strokeWidth={1} />}
@@ -815,7 +816,7 @@ const Magisterium: React.FC = () => {
 
           if (!groupedDocs) {
             return (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-spacing-md w-full">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-spacing-md w-full min-w-0">
                 {visibleDocs.map((doc, idx) => renderCard(doc, idx))}
               </div>
             );
@@ -886,6 +887,7 @@ const Magisterium: React.FC = () => {
             <p className="font-serif italic text-premium-sm">Nenhum documento encontrado no silêncio da busca.</p>
           </div>
         )}
+      </div>
       </div>
     </ContemplativeLayout>
   );
