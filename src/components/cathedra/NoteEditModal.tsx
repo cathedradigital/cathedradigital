@@ -88,7 +88,7 @@ export const NoteEditModal: React.FC<NoteEditModalProps> = ({
                 {COLORS.map((c) => (
                   <button
                     key={c.name}
-                    onClick={() => setColor(c.name)}
+                    aria-label={`Cor ${c.name}`} onClick={() => setColor(c.name)}
                     className={`w-spacing-xl h-spacing-xl rounded-premium-full ${c.value} border-2 transition-all hover:scale-110 flex items-center justify-center ${
                       color === c.name ? 'border-primary shadow-premium ring-4 ring-primary/5' : 'border-white/20'
                     }`}
