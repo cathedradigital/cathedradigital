@@ -74,6 +74,37 @@ async function sha256Hex(value: string) {
   return Array.from(new Uint8Array(digest)).map((b) => b.toString(16).padStart(2, "0")).join("");
 }
 
+async function fetchUpstream(url: string, correlation: string) {
+  const maxAttempts = 3;
+  let lastStatus = 502;
+
+  for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
+    try {
+      const response = await fetch(url, {
+        headers: { "Accept": "application/json", "User-Agent": "CathedraDigital/1.0" },
+      });
+
+      if (response.ok || response.status === 404) return response;
+      lastStatus = response.status;
+
+      if (response.status < 500 || attempt === maxAttempts) return response;
+      await new Promise((resolve) => setTimeout(resolve, 150 * attempt));
+    } catch (error) {
+      lastStatus = 502;
+      console.warn("[bible-text] upstream attempt failed", {
+        correlation,
+        attempt,
+        url,
+        error: error instanceof Error ? error.message : String(error),
+      });
+      if (attempt === maxAttempts) break;
+      await new Promise((resolve) => setTimeout(resolve, 150 * attempt));
+    }
+  }
+
+  return new Response(null, { status: lastStatus });
+}
+
 Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: cors });
   const correlation = correlationId(req);
@@ -103,9 +134,7 @@ Deno.serve(async (req: Request) => {
   try {
     for (const candidate of candidates) {
       const url = `${ORDINARIUM_BASE}/${encodeURIComponent(candidate)}/${chapter}`;
-      const response = await fetch(url, {
-        headers: { "Accept": "application/json", "User-Agent": "CathedraDigital/1.0" },
-      });
+      const response = await fetchUpstream(url, correlation);
       if (response.ok) { upstream = response; break; }
       lastStatus = response.status;
       if (response.status !== 404) break;
