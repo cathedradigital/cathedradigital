@@ -45,6 +45,7 @@ const MagisteriumViewer: React.FC = () => {
 
   const [searchParams] = useSearchParams();
   const highlight = searchParams.get('highlight') || searchParams.get('text');
+  const requestedParagraph = searchParams.get('p');
   const navigate = useNavigate();
   
   const [content, setContent] = useState<{ title: string; text: string } | null>(null);
@@ -225,6 +226,24 @@ const MagisteriumViewer: React.FC = () => {
   }, [id, retryNonce]);
 
 
+  // Restaura o parágrafo exato solicitado pelo Diário/Minha Jornada.
+  // O índice persistido nas anotações é 0-based (para-N); a UI exibe §N+1.
+  useEffect(() => {
+    if (!content || loading || requestedParagraph === null) return;
+    const paragraphIndex = Number(requestedParagraph);
+    if (!Number.isInteger(paragraphIndex) || paragraphIndex < 0) return;
+
+    const targetId = `para-${paragraphIndex}`;
+    const target = document.getElementById(targetId);
+    if (!target) return;
+
+    requestAnimationFrame(() => {
+      target.scrollIntoView({ behavior: 'auto', block: 'center' });
+      target.classList.add('bg-primary/10');
+      window.setTimeout(() => target.classList.remove('bg-primary/10'), 2200);
+    });
+  }, [content, loading, requestedParagraph]);
+
   // Track visible paragraph for bookmarking
   useEffect(() => {
     if (loading || !content) return;
@@ -314,7 +333,7 @@ const MagisteriumViewer: React.FC = () => {
       await updateNote(activeHighlight.id, text, color);
       setActiveHighlight(null);
     } else {
-      const match = pendingSelectionAnchorId?.match(/^para-(\\d+)$/);
+      const match = pendingSelectionAnchorId?.match(/^para-(\d+)$/);
       const paragraphIndex = match ? Number(match[1]) : undefined;
       const contentId = paragraphIndex !== undefined ? `${id}:${paragraphIndex}` : id;
       await addNote(contentId, text, color, paragraphIndex !== undefined ? { paragraph: paragraphIndex + 1 } : undefined);
