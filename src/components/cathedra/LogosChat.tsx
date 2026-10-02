@@ -90,7 +90,7 @@ const LogosChat = () => {
             <div className="p-spacing-md border-b border-border bg-background flex items-center justify-between">
               <div className="flex items-center gap-spacing-xs">
                 <div className="w-spacing-xl h-spacing-xl rounded-premium bg-secondary flex items-center justify-center">
-                  <Icons.Sparkles className="w-spacing-md h-spacing-md text-primary" />
+                  <Icons.MessageCircle className="w-spacing-md h-spacing-md text-primary" />
                 </div>
                 <div>
                   <h3 className="text-premium-sm font-bold font-serif text-primary">Cáter</h3>
