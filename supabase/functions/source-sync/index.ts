@@ -59,7 +59,7 @@ async function fetchRetry(url:string){
 }
 function stripHtml(html:string){return html.replace(/<script[\s\S]*?<\/script>/gi," ").replace(/<style[\s\S]*?<\/style>/gi," ").replace(/<br\s*\/?>/gi," ").replace(/<\/p>/gi," ").replace(/<\/div>/gi," ").replace(/<\/li>/gi," ").replace(/<[^>]+>/g," ").replace(/&nbsp;/gi," ").replace(/&quot;/gi,'"').replace(/&#39;/gi,"'").replace(/&amp;/gi,"&").replace(/\s+/g," ").trim();}
 function parsePage(text:string,from:number,to:number){
-  const m=[...text.matchAll(/(?:^|\s)(\d{1,4})\.\s+/g)];const out:{paragraph:number;content:string}[]=[];
+  const m=[...text.matchAll(/(?:^|\\s)(\\d{1,4})(?:\\.)?\\s+/g)];const out:{paragraph:number;content:string}[]=[];
   for(let i=0;i<m.length;i++){const n=Number(m[i][1]);if(n<from||n>to)continue;const start=(m[i].index??0)+(m[i][0].startsWith(" ")?1:0);const end=i+1<m.length?(m[i+1].index??text.length):text.length;const content=text.slice(start,end).replace(/^\d{1,4}\.\s+/,"").trim();if(content.length>=5)out.push({paragraph:n,content});}
   return out;
 }
