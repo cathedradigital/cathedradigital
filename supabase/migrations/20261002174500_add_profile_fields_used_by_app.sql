@@ -1,0 +1,28 @@
+alter table if exists public.profiles
+  add column if not exists bio text,
+  add column if not exists role text,
+  add column if not exists premium_status text,
+  add column if not exists premium_expires_at timestamptz,
+  add column if not exists mercado_pago_subscription_id text,
+  add column if not exists xp integer not null default 0,
+  add column if not exists streak integer not null default 0,
+  add column if not exists max_streak integer not null default 0,
+  add column if not exists level integer not null default 1,
+  add column if not exists last_visit timestamptz,
+  add column if not exists completed_books text[] not null default '{}',
+  add column if not exists badges text[] not null default '{}',
+  add column if not exists total_minutes_read integer not null default 0,
+  add column if not exists estado text,
+  add column if not exists diocese text,
+  add column if not exists paroquia text,
+  add column if not exists movimento_pastoral text,
+  add column if not exists reading_settings jsonb,
+  add column if not exists journey_reminder_time text,
+  add column if not exists weekly_goal integer not null default 7,
+  add column if not exists spiritual_themes text[] not null default '{}',
+  add column if not exists contemplative_preferences jsonb,
+  add column if not exists notification_settings jsonb,
+  add column if not exists push_enabled boolean not null default true,
+  add column if not exists ritual_reminder_time text;
+
+create index if not exists profiles_last_visit_idx on public.profiles(last_visit);
