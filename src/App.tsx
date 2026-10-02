@@ -600,7 +600,7 @@ const AppLayout: React.FC = () => {
             </Suspense>
           )}
         
-        {(!settings.immersiveMode || !location.pathname.startsWith('/bible')) && !location.pathname.startsWith('/prototype-2.0') && (
+        {(!settings.immersiveMode || !location.pathname.startsWith('/bible')) && !location.pathname.startsWith('/prototype-2.0') && !isAccountArea && (
           <Suspense fallback={null}>
             <CathedralSidebar 
               isOpen={isSidebarOpen}
