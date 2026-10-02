@@ -7,18 +7,12 @@ import { Button } from '@/components/ui/button';
 import { GuidedReadingFlow } from '@/components/cathedra/GuidedReadingFlow';
 import SEOHead from '@/components/SEOHead';
 import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
-import { useAuth } from '@/hooks/useAuth';
-import { useLang } from '@/hooks/useLang';
-import { useReadingMode } from '@/hooks/useReadingMode';
 import ContemplativeLayout from '@/components/cathedra/ContemplativeLayout';
 import { MobileTopBar } from '@/components/mobile/MobileTopBar';
 
 const GuidedReadingPage: React.FC = () => {
   const navigate = useNavigate();
   const { settings } = useReadingSettings();
-  const { user, signOut } = useAuth();
-  const { lang, setLang } = useLang();
-  const { isNight, toggle } = useReadingMode();
 
   return (
     <div className="min-h-screen bg-background text-foreground transition-colors duration-1000">
