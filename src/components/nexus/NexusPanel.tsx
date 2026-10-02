@@ -33,6 +33,13 @@ export interface NexusPanelProps {
 }
 
 const DEFAULT_LIMIT = 4;
+const NEXUS_RETURN_KEY = 'cathedra:nexus-return';
+
+function rememberReaderPosition(): void {
+  if (typeof window === 'undefined') return;
+  const source = window.location.pathname + window.location.search;
+  sessionStorage.setItem(NEXUS_RETURN_KEY, JSON.stringify({ source, scrollY: window.scrollY }));
+}
 
 export const NexusPanel: React.FC<NexusPanelProps> = ({
   output,
@@ -168,6 +175,7 @@ const NexusItem: React.FC<NexusItemProps> = ({ node, bucket }) => {
         {href ? (
           <Link
             to={href}
+            onClick={rememberReaderPosition}
             className="group block focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary rounded-sm"
             aria-label={`Abrir ${label}`}
           >
