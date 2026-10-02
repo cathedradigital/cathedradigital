@@ -35,6 +35,22 @@ export interface NexusPanelProps {
 const DEFAULT_LIMIT = 4;
 const NEXUS_RETURN_KEY = 'cathedra:nexus-return';
 
+const RELATION_LABEL: Record<string, string> = {
+  develops: 'Desenvolve este tema',
+  cites: 'Cita este conteúdo',
+  'commented-by': 'Comentado por',
+  'defined-in': 'Define este conceito',
+  'applies-to': 'Aplica este conceito',
+  'prayed-as': 'Expressa-se em oração',
+  'related-to': 'Relação temática',
+};
+
+const EVIDENCE_LABEL: Record<string, string> = {
+  graph: 'Relação estruturada',
+  editorial: 'Referência editorial',
+  thematic: 'Correspondência temática',
+};
+
 function rememberReaderPosition(): void {
   if (typeof window === 'undefined') return;
   const source = window.location.pathname + window.location.search;
@@ -114,9 +130,14 @@ export const NexusPanel: React.FC<NexusPanelProps> = ({
               data-nexus-bucket={bucket}
               className="space-y-spacing-xs"
             >
-              <h3 className="font-stitch-label text-stitch-label-sm uppercase tracking-[0.24em] text-secondary">
-                CONEXÕES RELACIONADAS
-              </h3>
+              <div className="flex items-center justify-between gap-spacing-xs">
+                <h3 className="font-stitch-label text-stitch-label-sm uppercase tracking-[0.24em] text-secondary">
+                  {label}
+                </h3>
+                <span className="text-[9px] uppercase tracking-widest text-muted-foreground/50">
+                  Conexo
+                </span>
+              </div>
               <ul className="space-y-spacing-xs">
                 {nodes.map((r) => (
                   <NexusItem key={r.node.id} node={r} bucket={bucket} />
@@ -151,6 +172,20 @@ const NexusItem: React.FC<NexusItemProps> = ({ node, bucket }) => {
           <p className="text-[10px] md:text-[11px] font-reader italic text-primary/80 leading-relaxed border-l-2 border-gold-text/40 pl-spacing-sm py-spacing-xs bg-gold/5 rounded-r-premium shadow-sm transition-all group-hover:bg-gold/10">
             {nexusExplanation}
           </p>
+        )}
+        {(node.nexusEvidence || node.nexusRelationKind) && (
+          <div className="flex flex-wrap items-center gap-1.5 pt-1">
+            {node.nexusEvidence && (
+              <span className="text-[8px] uppercase tracking-widest text-muted-foreground/60 border border-border/40 rounded-full px-1.5 py-0.5">
+                {EVIDENCE_LABEL[node.nexusEvidence] ?? node.nexusEvidence}
+              </span>
+            )}
+            {node.nexusRelationKind && (
+              <span className="text-[8px] uppercase tracking-widest text-primary/60 border border-primary/10 rounded-full px-1.5 py-0.5">
+                {RELATION_LABEL[node.nexusRelationKind] ?? node.nexusRelationKind}
+              </span>
+            )}
+          </div>
         )}
       </div>
       {summary && (
