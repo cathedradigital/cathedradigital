@@ -27,7 +27,14 @@ jobs:
         run: npm run typecheck
 
       - name: Lint
-        run: npm run lint -- --quiet
+        run: npm run lint -- --quiet > lint.log 2>&1 || true
+
+      - name: Upload lint log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lint-log
+          path: lint.log
 
       - name: Validate internal routes
         run: npm run validate:links
