@@ -93,7 +93,7 @@ const SplashScreen = React.forwardRef<HTMLDivElement, { onComplete: () => void }
             <motion.div
               aria-hidden="true"
               animate={{ rotate: 360 }}
-              transition={{ duration: 1.75, repeat: 0, ease: 'easeInOut' }}
+              transition={{ duration: 2, repeat: 0, ease: 'easeInOut' }}
               className="absolute w-[clamp(9.5rem,48vw,15rem)] h-[clamp(9.5rem,48vw,15rem)] rounded-full border border-primary/10"
               style={{
                 background: 'conic-gradient(from 0deg, transparent 0 18%, hsl(var(--primary) / 0.32) 22%, transparent 30% 48%, hsl(var(--primary) / 0.18) 54%, transparent 60% 100%)',
@@ -103,7 +103,7 @@ const SplashScreen = React.forwardRef<HTMLDivElement, { onComplete: () => void }
             <motion.div
               aria-hidden="true"
               animate={{ rotate: -360 }}
-              transition={{ duration: 1.75, repeat: 0, ease: 'easeInOut' }}
+              transition={{ duration: 2, repeat: 0, ease: 'easeInOut' }}
               className="absolute w-[clamp(8.5rem,42vw,13.5rem)] h-[clamp(8.5rem,42vw,13.5rem)] rounded-full border border-primary/[0.08] border-dashed"
             />
             <div className="relative flex items-center justify-center w-[clamp(7.5rem,36vw,12rem)] h-[clamp(7.5rem,36vw,12rem)] rounded-full border border-primary/10 shadow-premium-hover bg-background/75 backdrop-blur-md">
