@@ -139,7 +139,7 @@ const NexusItem: React.FC<NexusItemProps> = ({ node, bucket }) => {
   const href = node.url;
   const label = node.node.label;
   const summary = node.node.summary;
-  const nexusExplanation = (node.node as any).nexusExplanation;
+  const nexusExplanation = node.nexusExplanation;
 
   const body = (
     <>
