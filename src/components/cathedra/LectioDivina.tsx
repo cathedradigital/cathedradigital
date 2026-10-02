@@ -7,7 +7,6 @@ import LectioStep from './lectio/LectioStep';
 import LectioConclusio from './lectio/LectioConclusio';
 import LectioNotesSheet from './lectio/LectioNotesSheet';
 import { LectioMobileNav } from './lectio/LectioMobileNav';
-import { MobileBottomNav } from '@/components/mobile/MobileBottomNav';
 import {
   useLectioProgress,
   getLectioProgress,
@@ -147,7 +146,6 @@ const LectioDivina: React.FC = () => {
             onPassageChange={setSelectedPassage}
             onStart={handleStart}
           />
-          <MobileBottomNav />
         </>
       )}
 
@@ -159,7 +157,6 @@ const LectioDivina: React.FC = () => {
             seconds={seconds}
             onRestart={handleRestart}
           />
-          <MobileBottomNav />
         </>
       )}
 
