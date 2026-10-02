@@ -4,7 +4,6 @@ import { Helmet } from '@/lib/helmet-compat';
 import { Link } from '@/lib/rr-compat';
 import { MODULE_NAVIGATION } from '@/config/moduleNavigation';
 import { MobileTopBar } from '@/components/mobile/MobileTopBar';
-import { MobileBottomNav } from '@/components/mobile/MobileBottomNav';
 
 const ICONS = {
   bible: BookOpen,
@@ -127,7 +126,6 @@ const EstudarHubPage: React.FC = () => {
         </section>
       </main>
 
-      <MobileBottomNav />
     </div>
   );
 };
