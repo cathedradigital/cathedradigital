@@ -477,7 +477,7 @@ export async function preloadBible(bookAbbr: string, startChapter: number, count
 
     try {
       const { data, error } = await supabase.functions.invoke('bible-text', { 
-        body: { book: bookAbbr, chapter } 
+        body: { abbrev: bookAbbr, chapter } 
       });
       if (!error && data) {
         await cacheBibleChapter(bookAbbr, chapter, data);
