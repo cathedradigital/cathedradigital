@@ -32,6 +32,7 @@ import useReadingAutoHide from '@/hooks/useReadingAutoHide';
 import { UserNote, useNotes } from '@/hooks/useNotes';
 import { cn } from '@/lib/utils';
 import PassageActions from '@/components/shared/PassageActions';
+import { HighlightMenu } from '@/components/cathedra/HighlightMenu';
 import { NoteEditModal } from '@/components/cathedra/NoteEditModal';
 import { CathedraCard } from '@/components/cathedra/CathedraCard';
 import CatechismDiagnosticPanel from '../components/CatechismDiagnosticPanel';
@@ -366,12 +367,9 @@ const CatechismContent: React.FC<{
       })}
       {data?.content && (
         <div className="mt-spacing-md pt-spacing-sm border-t border-primary/[0.06]">
-          <PassageActions
-            text={data.content}
-            reference={`CIC §${paragraph}`}
-            title={`Cathedra — CIC §${paragraph}`}
-            passage={{ kind: 'catechism', paragraph }}
-          />
+          <p className="text-[9px] font-medium uppercase tracking-[0.16em] text-muted-foreground/45">
+            Toque no ✨ ao lado do parágrafo para abrir a bolha Cátedra.
+          </p>
         </div>
       )}
     </div>
@@ -393,6 +391,7 @@ const LazyParagraph: React.FC<{
 
   const ref = React.useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
+  const [isContextualOpen, setIsContextualOpen] = useState(false);
 
   useEffect(() => {
     const el = ref.current;
@@ -439,6 +438,16 @@ const LazyParagraph: React.FC<{
               title="Adicionar anotação"
             >
               <Icons.PenLine className="w-spacing-sm h-spacing-sm" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon-sm"
+              onClick={() => setIsContextualOpen(true)}
+              className="rounded-premium-full text-muted-foreground/50 hover:text-secondary hover:bg-secondary/5"
+              aria-label={`Abrir ações da leitura para o parágrafo ${p}`}
+              title="Ações da leitura"
+            >
+              <Icons.Sparkles className="w-spacing-sm h-spacing-sm" />
             </Button>
           </div>
         </div>
