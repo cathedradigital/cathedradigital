@@ -1082,17 +1082,12 @@ const AppProviders: React.FC<{ children: React.ReactNode }> = ({ children }) => 
 };
 
 const App: React.FC = () => {
-  const [showSplash, setShowSplash] = useState(() => {
-    try { return !sessionStorage.getItem('cathedra_splash_shown'); } catch { return true; }
-  });
-  
+  // A abertura da Cátedra acontece a cada carregamento completo da aplicação.
+  // Navegação interna continua instantânea; somente um novo carregamento mostra a identidade de abertura.
+  const [showSplash, setShowSplash] = useState(true);
+
   const handleSplashComplete = useCallback(() => {
     setShowSplash(false);
-    try { 
-      sessionStorage.setItem('cathedra_splash_shown', '1'); 
-    } catch (error) {
-      console.error('Failed to set splash screen flag:', error);
-    }
   }, []);
 
   return (

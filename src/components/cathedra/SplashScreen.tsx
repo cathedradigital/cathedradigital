@@ -83,10 +83,28 @@ const SplashScreen = React.forwardRef<HTMLDivElement, { onComplete: () => void }
             initial={{ opacity: 0, scale: 0.3, rotateY: -90 }}
             animate={{ opacity: 1, scale: 1, rotateY: 0 }}
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="relative z-10"
+            className="relative z-10 flex items-center justify-center"
+            style={{ perspective: 800 }}
           >
-            <div className="w-spacing-4xl h-spacing-4xl md:w-spacing-4xl md:h-spacing-4xl rounded-premium overflow-hidden border-[1px] border-primary/5 shadow-premium-hover bg-background/50 backdrop-blur-md">
-              <Icons.Logo className="w-full h-full p-spacing-md opacity-40" variant="dark" />
+            {/* Anel de inicialização: movimento contínuo e discreto, como um motor entrando em funcionamento. */}
+            <motion.div
+              aria-hidden="true"
+              animate={{ rotate: 360 }}
+              transition={{ duration: 3.2, repeat: Infinity, ease: 'linear' }}
+              className="absolute w-[clamp(9.5rem,48vw,15rem)] h-[clamp(9.5rem,48vw,15rem)] rounded-full border border-primary/10"
+              style={{
+                background: 'conic-gradient(from 0deg, transparent 0 18%, hsl(var(--primary) / 0.32) 22%, transparent 30% 48%, hsl(var(--primary) / 0.18) 54%, transparent 60% 100%)',
+                boxShadow: '0 0 45px hsl(var(--primary) / 0.08)',
+              }}
+            />
+            <motion.div
+              aria-hidden="true"
+              animate={{ rotate: -360 }}
+              transition={{ duration: 5.5, repeat: Infinity, ease: 'linear' }}
+              className="absolute w-[clamp(8.5rem,42vw,13.5rem)] h-[clamp(8.5rem,42vw,13.5rem)] rounded-full border border-primary/[0.08] border-dashed"
+            />
+            <div className="relative flex items-center justify-center w-[clamp(7.5rem,36vw,12rem)] h-[clamp(7.5rem,36vw,12rem)] rounded-full border border-primary/10 shadow-premium-hover bg-background/75 backdrop-blur-md">
+              <Icons.Logo className="w-full h-full p-spacing-lg opacity-65" variant="dark" />
             </div>
           </motion.div>
 
@@ -112,9 +130,17 @@ const SplashScreen = React.forwardRef<HTMLDivElement, { onComplete: () => void }
             >
               Mosteiro Digital
             </motion.h2>
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.55 }}
+              transition={{ duration: 0.6, delay: 0.7 }}
+              className="text-[8px] md:text-[9px] uppercase tracking-[0.28em] text-muted-foreground mt-3"
+            >
+              Preparando o sistema
+            </motion.p>
           </motion.div>
 
-          <motion.div className="absolute bottom-spacing-2xl w-spacing-4xl h-spacing-3xs bg-card/50 rounded-premium overflow-hidden">
+          <motion.div className="absolute bottom-spacing-2xl w-[min(72vw,18rem)] h-spacing-3xs bg-card/50 rounded-premium overflow-hidden">
             <motion.div
               initial={{ width: '0%' }}
               animate={{ width: '100%' }}
