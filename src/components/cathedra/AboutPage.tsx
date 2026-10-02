@@ -89,7 +89,6 @@ const AboutPage: React.FC = () => (
             { icon: <Icons.Youtube className="w-spacing-lg h-spacing-lg" />, label: 'YouTube', url: SOCIAL_LINKS.YOUTUBE, color: 'hover:text-red-600' },
             { icon: <Icons.Twitter className="w-spacing-lg h-spacing-lg" />, label: 'X (Twitter)', url: SOCIAL_LINKS.TWITTER, color: 'hover:text-sky-500' },
             { icon: <Icons.Facebook className="w-spacing-lg h-spacing-lg" />, label: 'Facebook', url: SOCIAL_LINKS.FACEBOOK, color: 'hover:text-blue-600' },
-            { icon: <Icons.Whatsapp className="w-spacing-lg h-spacing-lg" />, label: 'WhatsApp', url: SOCIAL_LINKS.WHATSAPP, color: 'hover:text-green-600' },
           ].map((social) => (
             <a
               key={social.label}
