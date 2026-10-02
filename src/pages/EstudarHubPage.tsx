@@ -11,7 +11,7 @@ const ICONS = {
   documents: Landmark,
   nexus: Network,
   library: Library,
-  saints: Sparkles,
+  saints: Flame,
   church: UsersRound,
 } as const;
 
