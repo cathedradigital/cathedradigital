@@ -24,7 +24,6 @@ import {
 } from 'lucide-react';
 import { AppRoute } from '@/types';
 import { MobileTopBar } from '@/components/mobile/MobileTopBar';
-import { MobileBottomNav } from '@/components/mobile/MobileBottomNav';
 import { BiblePickerSheet } from '@/components/mobile/BiblePickerSheet';
 
 const GlobalSearchPage = lazy(
@@ -298,7 +297,6 @@ const AtriumBuscarPage: React.FC = () => {
         )}
       </section>
 
-      <MobileBottomNav />
       <BiblePickerSheet
         open={pickerOpen}
         onOpenChange={setPickerOpen}
