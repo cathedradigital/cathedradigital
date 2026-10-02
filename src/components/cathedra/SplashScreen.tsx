@@ -10,10 +10,11 @@ const SplashScreen = React.forwardRef<HTMLDivElement, { onComplete: () => void }
     // but also provide a browser-native CSS safety timeout in case the
     // animation/runtime is interrupted or React is unable to commit the
     // completion callback.
-    const t1 = setTimeout(() => setPhase('text'), 200);
-    const t2 = setTimeout(() => setPhase('exit'), 600);
-    const t3 = setTimeout(onComplete, 1200);
-    const safety = setTimeout(onComplete, 2500);
+    // Sequência intencional: primeiro o "motor" de abertura; só depois a identidade textual.
+    const t1 = setTimeout(() => setPhase('text'), 950);
+    const t2 = setTimeout(() => setPhase('exit'), 1550);
+    const t3 = setTimeout(onComplete, 2200);
+    const safety = setTimeout(onComplete, 3000);
 
     return () => {
       clearTimeout(t1);
@@ -82,7 +83,7 @@ const SplashScreen = React.forwardRef<HTMLDivElement, { onComplete: () => void }
           <motion.div
             initial={{ opacity: 0, scale: 0.3, rotateY: -90 }}
             animate={{ opacity: 1, scale: 1, rotateY: 0 }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
             className="relative z-10 flex items-center justify-center"
             style={{ perspective: 800 }}
           >
@@ -90,7 +91,7 @@ const SplashScreen = React.forwardRef<HTMLDivElement, { onComplete: () => void }
             <motion.div
               aria-hidden="true"
               animate={{ rotate: 360 }}
-              transition={{ duration: 3.2, repeat: Infinity, ease: 'linear' }}
+              transition={{ duration: 2.6, repeat: Infinity, ease: 'linear' }}
               className="absolute w-[clamp(9.5rem,48vw,15rem)] h-[clamp(9.5rem,48vw,15rem)] rounded-full border border-primary/10"
               style={{
                 background: 'conic-gradient(from 0deg, transparent 0 18%, hsl(var(--primary) / 0.32) 22%, transparent 30% 48%, hsl(var(--primary) / 0.18) 54%, transparent 60% 100%)',
@@ -109,15 +110,15 @@ const SplashScreen = React.forwardRef<HTMLDivElement, { onComplete: () => void }
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: phase === 'text' || phase === 'logo' ? 1 : 0, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.8 }}
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: phase === 'text' ? 1 : 0, y: phase === 'text' ? 0 : 16 }}
+            transition={{ duration: 0.45, ease: 'easeOut' }}
             className="relative z-10 mt-spacing-xl text-center"
           >
             <motion.h1
               initial={{ opacity: 0, letterSpacing: '0.5em' }}
               animate={{ opacity: 1, letterSpacing: '0.3em' }}
-              transition={{ duration: 1, delay: 0.9 }}
+              transition={{ duration: 0.6, ease: 'easeOut' }}
               className="text-premium-2xl md:text-premium-3xl font-display font-semibold text-primary uppercase tracking-[0.2em]"
             >
               Cathedra
@@ -125,7 +126,7 @@ const SplashScreen = React.forwardRef<HTMLDivElement, { onComplete: () => void }
             <motion.h2 aria-hidden="true"
               initial={{ opacity: 0 }}
               animate={{ opacity: 0.8 }}
-              transition={{ duration: 0.8, delay: 1.3 }}
+              transition={{ duration: 0.5, delay: 0.08 }}
               className="text-[9px] md:text-[11px] font-bold uppercase tracking-[0.4em] text-gold mt-spacing-sm"
             >
               Mosteiro Digital
@@ -133,7 +134,7 @@ const SplashScreen = React.forwardRef<HTMLDivElement, { onComplete: () => void }
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 0.55 }}
-              transition={{ duration: 0.6, delay: 0.7 }}
+              transition={{ duration: 0.45, delay: 0.04 }}
               className="text-[8px] md:text-[9px] uppercase tracking-[0.28em] text-muted-foreground mt-3"
             >
               Preparando o sistema
