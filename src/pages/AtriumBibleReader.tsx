@@ -18,7 +18,6 @@ import BibleReadGate from '@/components/cathedra/BibleReadGate';
 import { BibleSkeleton } from '@/components/cathedra/RouteSkeletons';
 import { ReaderToolbar } from '@/components/reader';
 import { MobileTopBar } from '@/components/mobile/MobileTopBar';
-import { MobileBottomNav } from '@/components/mobile/MobileBottomNav';
 import {
   BiblePickerSheet,
   getBibleLastRead,
@@ -344,7 +343,6 @@ const BibleLanding: React.FC = () => {
         </section>
       </section>
 
-      <MobileBottomNav />
       <BiblePickerSheet open={pickerOpen} onOpenChange={setPickerOpen} />
     </div>
   );
