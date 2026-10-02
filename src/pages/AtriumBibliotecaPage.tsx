@@ -48,7 +48,7 @@ const MODULE_ICON: Record<string, React.ComponentType<{ className?: string }>> =
   bible: BookOpen,
   catechism: BookMarked,
   magisterium: Gavel,
-  saints: Sparkles,
+  saints: Flame,
 };
 
 const COLLECTIONS: Collection[] = LIBRARY_ACERVOS.map((a) => ({
