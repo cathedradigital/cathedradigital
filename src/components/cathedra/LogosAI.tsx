@@ -515,6 +515,9 @@ const LogosAI: React.FC<LogosAIProps> = ({
             transition={springConfig}
             className="fixed right-0 inset-y-0 w-full sm:w-[500px] bg-background border-l border-border/10 z-[200] shadow-premium flex flex-col"
             style={{ height: viewportHeight ? `${viewportHeight}px` : '100dvh' }}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="logos-ai-title"
           >
             <div className="p-spacing-lg md:p-spacing-xl border-b border-border/5 flex items-center justify-between">
               <div className="flex items-center gap-spacing-md">
@@ -522,7 +525,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
                   <Icons.Sparkles className="w-spacing-md h-spacing-md" strokeWidth={0.5} />
                 </div>
                 <div>
-                  <h3 className="text-premium-sm font-bold uppercase tracking-[0.4em] text-primary">Cáter</h3>
+                  <h3 id="logos-ai-title" className="text-premium-sm font-bold uppercase tracking-[0.4em] text-primary">Cáter</h3>
                   <p className="text-[9px] text-muted-foreground/60 uppercase font-black tracking-widest mt-spacing-2xs">Mentor Espiritual</p>
                 </div>
               </div>
