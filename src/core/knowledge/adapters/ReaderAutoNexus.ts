@@ -198,11 +198,11 @@ export function buildBucketedSuggestions(
 
   const queryTokens = (opts.fallbackQueries ?? []).flatMap(normalize);
   const self = opts.selfId ? KnowledgeGraph.findNode(opts.selfId) : undefined;
-  const selfTokens = self ? normalize(\`\${self.label} \${self.summary ?? ''}\`) : [];
+  const selfTokens = self ? normalize(`${self.label} ${self.summary ?? ''}`) : [];
 
   const scoreText = (node: ResolvedNode): number => {
     if (!queryTokens.length) return 0;
-    const hay = normalize(\`\${node.node.label} \${node.node.summary ?? ''}\`);
+    const hay = normalize(`${node.node.label} ${node.node.summary ?? ''}`);
     const haySet = new Set(hay);
     const overlap = queryTokens.filter((token) => haySet.has(token)).length;
     const phrase = queryTokens.length > 1 && hay.join(' ').includes(queryTokens.join(' ')) ? 8 : 0;
@@ -285,7 +285,7 @@ export function buildBucketedSuggestions(
         ? (node.kind as ReaderNexusBucket)
         : null;
       if (!bucket) continue;
-      const hay = normalize(\`\${node.label} \${node.summary ?? ''}\`);
+      const hay = normalize(`${node.label} ${node.summary ?? ''}`);
       const overlap = selfTokens.filter((token) => hay.includes(token)).length;
       if (!overlap) continue;
       const resolved = KnowledgeGraph.resolve(node.id);
