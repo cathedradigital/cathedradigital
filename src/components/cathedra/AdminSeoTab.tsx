@@ -280,7 +280,7 @@ const AdminSeoTab: React.FC = () => {
                     <Icons.Globe className="w-spacing-sm h-spacing-sm text-muted-foreground" />
                   </div>
                   <div className="text-premium-small text-[#202124]">
-                    cathedradigital.lovable.app
+                    cathedradigital.com.br
                   </div>
                 </div>
                 <h3 className="text-[20px] text-[#1a0dab] hover:underline cursor-pointer leading-tight">
