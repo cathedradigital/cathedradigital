@@ -197,6 +197,7 @@ Deno.serve(async (req: Request) => {
   const chapter = typeof body.chapter === "number" ? body.chapter : Number(body.chapter);
   const translationId = typeof body.translation_id === "string" ? body.translation_id : null;
   const modernize = body.modernize === true;
+  const persist = body.persist !== false;
 
   if (!abbrev || !Number.isInteger(chapter) || chapter <= 0) {
     return errorPayload("Parâmetros inválidos: abbrev e chapter são obrigatórios.", abbrev, Number.isFinite(chapter) ? chapter : 1, correlation, 400);
@@ -246,12 +247,14 @@ Deno.serve(async (req: Request) => {
     if (!verses.length) return errorPayload(`O capítulo ${abbrev} ${chapter} não retornou versículos válidos.`, abbrev, chapter, correlation, 404);
 
     const contentHash = await sha256Hex(JSON.stringify({ book: bookName, chapter, verses }));
-    await persistBibleChapter(
-      abbrev,
-      chapter,
-      verses,
-      upstream.url || `${ORDINARIUM_BASE}/${encodeURIComponent(API_BOOK_MAP[abbrev] ?? bookName)}/${chapter}`,
-    );
+    if (persist) {
+      await persistBibleChapter(
+        abbrev,
+        chapter,
+        verses,
+        upstream.url || `${ORDINARIUM_BASE}/${encodeURIComponent(API_BOOK_MAP[abbrev] ?? bookName)}/${chapter}`,
+      );
+    }
     const etag = `"${contentHash}"`;
     if (req.headers.get("if-none-match") === etag) {
       return new Response(null, { status: 304, headers: { ...cors, ETag: etag, "Cache-Control": "public, max-age=3600, stale-while-revalidate=86400" } });
