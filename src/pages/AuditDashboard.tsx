@@ -12,7 +12,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { ExternalLink, Search, RefreshCw, AlertCircle } from 'lucide-react';
+import { Search, RefreshCw, AlertCircle } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 
 interface AuditLog {
@@ -131,13 +131,12 @@ export default function AuditDashboard() {
                 <TableHead>Livro/Cap</TableHead>
                 <TableHead>Correlation ID</TableHead>
                 <TableHead>SHA-256 Hash</TableHead>
-                <TableHead>Ações</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {loading ? (
                 <TableRow>
-                  <TableCell colSpan={7} className="text-center py-8">Carregando auditoria...</TableCell>
+                  <TableCell colSpan={6} className="text-center py-8">Carregando auditoria...</TableCell>
                 </TableRow>
               ) : logs.length === 0 ? (
                 <TableRow>
@@ -168,13 +167,6 @@ export default function AuditDashboard() {
                           )}
                         </div>
                       ) : '-'}
-                    </TableCell>
-                    <TableCell>
-                      <Button variant="ghost" size="icon" title="Ver no Relatório CI" asChild>
-                        <a href={`https://github.com/lovable/cathedra/actions/runs/audit/${log.correlation_id}`} target="_blank" rel="noreferrer">
-                          <ExternalLink className="h-4 w-4" />
-                        </a>
-                      </Button>
                     </TableCell>
                   </TableRow>
                 ))
