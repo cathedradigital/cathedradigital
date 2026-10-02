@@ -17,7 +17,6 @@ import { Link, useParams, useSearchParams } from '@/lib/rr-compat';
 import { Loader2, Star, Clock, BookOpen, Church, ArrowLeft, Minus, Plus } from 'lucide-react';
 import { ReaderShell, ReaderContinuation } from '@/components/reader';
 import { MobileTopBar } from '@/components/mobile/MobileTopBar';
-import { MobileBottomNav } from '@/components/mobile/MobileBottomNav';
 import { Button } from '@/components/ui/button';
 import { usePrayer, usePrayers, PRAYER_CATEGORY_LABEL } from '@/hooks/usePrayers';
 import { useDevotionalFavorites } from '@/hooks/useDevotionalFavorites';
@@ -415,7 +414,6 @@ const PrayerDetailPageInner: React.FC = () => {
         )}
       </ReaderShell>
 
-      <MobileBottomNav />
     </>
   );
 };
