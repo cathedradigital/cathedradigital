@@ -236,14 +236,32 @@ const MagisteriumViewer: React.FC = () => {
     if (!Number.isInteger(paragraphIndex) || paragraphIndex < 0) return;
 
     const targetId = `para-${paragraphIndex}`;
-    const target = document.getElementById(targetId);
-    if (!target) return;
+    let cancelled = false;
+    let attempts = 0;
+    const maxAttempts = 10;
 
-    requestAnimationFrame(() => {
-      target.scrollIntoView({ behavior: 'auto', block: 'center' });
-      target.classList.add('bg-primary/10');
-      window.setTimeout(() => target.classList.remove('bg-primary/10'), 2200);
-    });
+    const restoreRequestedParagraph = () => {
+      if (cancelled) return;
+      const target = document.getElementById(targetId);
+      if (target) {
+        target.scrollIntoView({ behavior: 'auto', block: 'center' });
+        target.classList.add('bg-primary/10');
+        window.setTimeout(() => {
+          if (!cancelled) target.classList.remove('bg-primary/10');
+        }, 2200);
+        return;
+      }
+      if (attempts < maxAttempts) {
+        attempts += 1;
+        window.setTimeout(restoreRequestedParagraph, 100);
+      }
+    };
+
+    const frame = window.requestAnimationFrame(restoreRequestedParagraph);
+    return () => {
+      cancelled = true;
+      window.cancelAnimationFrame(frame);
+    };
   }, [content, loading, requestedParagraph]);
 
   // Track visible paragraph for bookmarking
@@ -424,7 +442,7 @@ const MagisteriumViewer: React.FC = () => {
 
   // Restore scroll position
   useEffect(() => {
-    if (content && id) {
+    if (content && id && requestedParagraph === null) {
       const savedScroll = localStorage.getItem(`cathedra_last_magisterium_scroll_${id}`);
       if (savedScroll && !highlight) {
         setTimeout(() => {
@@ -433,7 +451,7 @@ const MagisteriumViewer: React.FC = () => {
         }, 800);
       }
     }
-  }, [content, id, highlight]);
+  }, [content, id, highlight, requestedParagraph]);
 
 
   // Scroll to highlight when content is loaded
@@ -569,7 +587,7 @@ const MagisteriumViewer: React.FC = () => {
         <EditorialHero
           kicker={`Magistério${docMeta?.category ? ` · ${docMeta.category}` : ''}`}
           title={docMeta?.title ?? content.title}
-          subtitle={docMeta ? [docMeta.type, docMeta.author].filter(Boolean).join(' · ') : undefined}
+          subtitle={requestedParagraph !== null ? `Leitura em foco · §${Number(requestedParagraph) + 1}` : (docMeta ? [docMeta.type, docMeta.author].filter(Boolean).join(' · ') : undefined)}
           meta={docMeta?.year ? String(docMeta.year) : undefined}
         />
       }
