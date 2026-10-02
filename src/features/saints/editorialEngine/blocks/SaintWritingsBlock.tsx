@@ -53,9 +53,9 @@ export const SaintWritingsBlock: React.FC<Props> = ({ writings }) => {
   return (
     <section
       aria-labelledby="saint-writings"
-      className="rounded-2xl border border-border/60 bg-card/40 p-spacing-lg"
+      className="rounded-xl border border-border/50 bg-card/30 p-spacing-md"
     >
-      <div className="flex flex-wrap items-center justify-between gap-spacing-sm mb-spacing-sm">
+      <div className="flex flex-wrap items-center justify-between gap-spacing-sm mb-spacing-xs">
         <h2 id="saint-writings" className="font-serif text-premium-lg text-foreground">
           Escritos
         </h2>
@@ -78,7 +78,7 @@ export const SaintWritingsBlock: React.FC<Props> = ({ writings }) => {
       <div
         role="tablist"
         aria-label="Filtrar por origem"
-        className="flex flex-wrap gap-1.5 mb-spacing-md"
+        className="flex flex-wrap gap-1.5 mb-spacing-sm"
       >
         {filterOptions.map((opt) => {
           const active = filter === opt.id;
@@ -125,7 +125,7 @@ export const SaintWritingsBlock: React.FC<Props> = ({ writings }) => {
               w.attribution || w.license || w.isPublicDomain || w.canonicalUrl || w.externalUrl,
             );
             return (
-              <li key={w.id} className="rounded-xl border border-border/50 p-spacing-md">
+              <li key={w.id} className="rounded-lg border border-border/50 p-spacing-sm">
                 <Wrapper {...wrapperProps} className="flex items-start gap-spacing-xs group">
                   {hosted ? (
                     <BookOpen
