@@ -2077,7 +2077,7 @@ const Bible: React.FC = () => {
         verseText={activeVerse?.text}
         reference={
           activeVerse && selectedBook
-            ? `${selectedBook.name} ${selectedChapter}:${activeVerse.number}`
+            ? `${selectedBook.abbr} ${selectedChapter}:${activeVerse.number}`
             : undefined
         }
         passage={
