@@ -718,8 +718,8 @@ const MagisteriumViewer: React.FC = () => {
                         size="icon-sm"
                         onClick={() => setContextualPassage({ index: idx, text: para })}
                         className="rounded-premium-full text-muted-foreground/50 hover:text-secondary hover:bg-secondary/5"
-                        aria-label={`Abrir ações da leitura para o parágrafo ${idx + 1}`}
-                        title="Ações da leitura"
+                        aria-label={`Abrir Yá para o parágrafo ${idx + 1}`}
+                        title="Yá"
                       >
                         <Icons.Sparkles className="w-spacing-sm h-spacing-sm" />
                       </Button>
