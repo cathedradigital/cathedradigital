@@ -5,7 +5,6 @@ import SEOHead from '@/components/SEOHead';
 import { Button } from '@/components/ui/button';
 import ContemplativeLayout from './ContemplativeLayout';
 
-import { SOCIAL_LINKS } from '@/config/site-config';
 import { trackEvent } from '@/lib/analytics';
 
 const TransparencyPage: React.FC = () => {
