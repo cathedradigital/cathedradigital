@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
+import { Link } from '@/lib/rr-compat';
 import { useLang } from '@/hooks/useLang';
 
 const CookieConsent = () => {
@@ -42,7 +43,7 @@ const CookieConsent = () => {
           initial={{ y: 100, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: 100, opacity: 0 }}
-          className="fixed bottom-spacing-md left-spacing-md right-spacing-md md:left-auto md:right-spacing-xl md:w-[400px] z-[300] bg-background  border border-border p-spacing-lg rounded-premium-full shadow-premium-hover"
+          className="fixed bottom-spacing-md left-spacing-md right-spacing-md md:left-auto md:right-spacing-xl md:w-[400px] max-w-[calc(100vw-1.5rem)] z-[300] bg-background  border border-border p-spacing-lg rounded-premium-full shadow-premium-hover"
         >
           <div className="space-y-spacing-md">
             <h2 className="text-premium-sm text-muted-foreground leading-relaxed">
@@ -55,8 +56,8 @@ const CookieConsent = () => {
               >
                 {t.accept}
               </Button>
-              <Button className="text-premium-xs font-black uppercase tracking-widest text-primary hover:underline">
-                {t.policy}
+              <Button asChild variant="ghost" className="text-premium-xs font-black uppercase tracking-widest text-primary hover:underline">
+                <Link to="/privacy">{t.policy}</Link>
               </Button>
             </div>
           </div>
