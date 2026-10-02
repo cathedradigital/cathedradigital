@@ -1,0 +1,184 @@
+import "jsr:@supabase/functions-js/edge-runtime.d.ts";
+
+const ORDINARIUM_BASE = "https://api.ordinarium.com.br/api/v1/bible";
+
+const BOOK_MAP: Record<string, string> = {
+  "Gn": "Gênesis", "Ex": "Êxodo", "Lv": "Levítico", "Nm": "Números", "Dt": "Deuteronômio",
+  "Js": "Josué", "Jz": "Juízes", "Rt": "Rute", "1 Sm": "1 Samuel", "2 Sm": "2 Samuel",
+  "1 Rs": "1 Reis", "2 Rs": "2 Reis", "1 Cr": "1 Crônicas", "2 Cr": "2 Crônicas",
+  "Esd": "Esdras", "Ne": "Neemias", "Tb": "Tobias", "Jdt": "Judite", "Est": "Ester",
+  "1 Mc": "1 Macabeus", "2 Mc": "2 Macabeus", "Jó": "Jó", "Sl": "Salmos",
+  "Pr": "Provérbios", "Ecl": "Eclesiastes", "Ct": "Cântico dos Cânticos",
+  "Sb": "Sabedoria", "Eclo": "Eclesiástico", "Is": "Isaías", "Jr": "Jeremias",
+  "Lm": "Lamentações", "Br": "Baruc", "Ez": "Ezequiel", "Dn": "Daniel",
+  "Os": "Oseias", "Jl": "Joel", "Am": "Amós", "Abd": "Abdias", "Jn": "Jonas",
+  "Mq": "Miqueias", "Na": "Naum", "Hab": "Habacuc", "Sf": "Sofonias",
+  "Ag": "Ageu", "Zc": "Zacarias", "Ml": "Malaquias",
+  "Mt": "Mateus", "Mc": "Marcos", "Lc": "Lucas", "Jo": "João",
+  "At": "Atos", "Rm": "Romanos", "1 Cor": "1 Coríntios", "2 Cor": "2 Coríntios",
+  "Gl": "Gálatas", "Ef": "Efésios", "Fl": "Filipenses", "Cl": "Colossenses",
+  "1 Ts": "1 Tessalonicenses", "2 Ts": "2 Tessalonicenses", "1 Tm": "1 Timóteo",
+  "2 Tm": "2 Timóteo", "Tt": "Tito", "Fm": "Filemon", "Hb": "Hebreus",
+  "Tg": "Tiago", "1 Pd": "1 Pedro", "2 Pd": "2 Pedro", "1 Jo": "1 João",
+  "2 Jo": "2 João", "3 Jo": "3 João", "Jd": "Judas", "Ap": "Apocalipse",
+};
+
+const ALIASES: Record<string, string> = {
+  "Jo": "joao",
+  "Jó": "jó",
+};
+
+const cors = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-correlation-id, if-none-match",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+};
+
+function json(body: unknown, status = 200, headers: Record<string, string> = {}) {
+  return new Response(JSON.stringify(body), {
+    status,
+    headers: { ...cors, "Content-Type": "application/json; charset=utf-8", ...headers },
+  });
+}
+
+function correlationId(req: Request) {
+  return req.headers.get("x-correlation-id") || crypto.randomUUID();
+}
+
+function errorPayload(
+  reason: string,
+  abbrev: string,
+  chapter: number,
+  correlation: string,
+  status: number,
+) {
+  return json({
+    error: status === 400 ? "Parâmetros inválidos" : "Texto bíblico indisponível",
+    reason,
+    received_abbrev: abbrev,
+    canonical_abbr: BOOK_MAP[abbrev] ? abbrev : null,
+    book_name: BOOK_MAP[abbrev] ?? null,
+    bollsId: null,
+    chapter,
+    correlationId: correlation,
+  }, status);
+}
+
+async function sha256Hex(value: string) {
+  const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(value));
+  return Array.from(new Uint8Array(digest)).map((b) => b.toString(16).padStart(2, "0")).join("");
+}
+
+Deno.serve(async (req: Request) => {
+  if (req.method === "OPTIONS") return new Response("ok", { headers: cors });
+  const correlation = correlationId(req);
+
+  if (req.method !== "POST") {
+    return errorPayload("Método não permitido.", "", 1, correlation, 405);
+  }
+
+  let body: Record<string, unknown>;
+  try {
+    body = await req.json();
+  } catch {
+    return errorPayload("Parâmetros inválidos: JSON inválido.", "", 1, correlation, 400);
+  }
+
+  const abbrev = typeof body.abbrev === "string" ? body.abbrev.trim() : "";
+  const chapter = typeof body.chapter === "number" ? body.chapter : Number(body.chapter);
+  const translationId = typeof body.translation_id === "string" ? body.translation_id : null;
+  const modernize = body.modernize === true;
+
+  if (!abbrev || !Number.isInteger(chapter) || chapter <= 0) {
+    return errorPayload("Parâmetros inválidos: abbrev e chapter são obrigatórios.", abbrev, Number.isFinite(chapter) ? chapter : 1, correlation, 400);
+  }
+
+  const bookName = BOOK_MAP[abbrev];
+  if (!bookName) {
+    return errorPayload("Abreviação não reconhecida.", abbrev, chapter, correlation, 404);
+  }
+
+  const apiBook = ALIASES[abbrev] ?? bookName;
+  const url = `${ORDINARIUM_BASE}/${encodeURIComponent(apiBook)}/${chapter}`;
+
+  try {
+    const upstream = await fetch(url, {
+      headers: {
+        "Accept": "application/json",
+        "User-Agent": "CathedraDigital/1.0",
+      },
+    });
+
+    if (!upstream.ok) {
+      const reason = upstream.status === 404
+        ? `O capítulo ${abbrev} ${chapter} não foi encontrado em nenhuma fonte.`
+        : `A fonte bíblica retornou HTTP ${upstream.status}.`;
+      return errorPayload(reason, abbrev, chapter, correlation, upstream.status === 404 ? 404 : 502);
+    }
+
+    const raw = await upstream.json();
+    const rawVerses = Array.isArray(raw) ? raw : raw?.verses;
+    if (!Array.isArray(rawVerses) || rawVerses.length === 0) {
+      return errorPayload(`O capítulo ${abbrev} ${chapter} não foi encontrado em nenhuma fonte.`, abbrev, chapter, correlation, 404);
+    }
+
+    const verses = rawVerses
+      .map((v: unknown) => {
+        const item = v as Record<string, unknown>;
+        return {
+          number: Number(item.number ?? item.verse),
+          text: typeof item.text === "string" ? item.text.trim() : "",
+          ...(typeof item.comment === "string" ? { comment: item.comment } : {}),
+        };
+      })
+      .filter((v: { number: number; text: string }) => Number.isInteger(v.number) && v.number > 0 && v.text.length > 0)
+      .sort((a: { number: number }, b: { number: number }) => a.number - b.number);
+
+    if (verses.length === 0) {
+      return errorPayload(`O capítulo ${abbrev} ${chapter} não foi encontrado em nenhuma fonte.`, abbrev, chapter, correlation, 404);
+    }
+
+    const contentHash = await sha256Hex(JSON.stringify({ book: bookName, chapter, verses }));
+    const etag = `"${contentHash}"`;
+    if (req.headers.get("if-none-match") === etag) {
+      return new Response(null, { status: 304, headers: { ...cors, ETag: etag, "Cache-Control": "public, max-age=3600, stale-while-revalidate=86400" } });
+    }
+
+    const responseBody = {
+      book: bookName,
+      chapter,
+      verses,
+      metadata: {
+        source: "Ordinarium API",
+        correlationId: correlation,
+        cache_version: contentHash.slice(0, 12),
+        logic_version: 1,
+        current_version: 1,
+        contentHash,
+        ttl_hours: 24,
+        shouldInvalidateL1: false,
+        stale: false,
+        received_abbrev: abbrev,
+        canonical_abbr: abbrev,
+        bollsId: null,
+        translation_id: translationId,
+        translation_code: null,
+        modernized: modernize,
+      },
+    };
+
+    return json(responseBody, 200, {
+      ETag: etag,
+      "Cache-Control": "public, max-age=3600, stale-while-revalidate=86400",
+      "X-Cathedra-Correlation-Id": correlation,
+    });
+  } catch (error) {
+    console.error("[bible-text] upstream failure", {
+      correlation,
+      abbrev,
+      chapter,
+      error: error instanceof Error ? error.message : String(error),
+    });
+    return errorPayload("Não foi possível consultar a fonte bíblica no momento.", abbrev, chapter, correlation, 502);
+  }
+});
