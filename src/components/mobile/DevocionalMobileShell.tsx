@@ -14,8 +14,7 @@
 
 import React, { useState } from "react";
 import { MobileTopBar } from "@/components/mobile/MobileTopBar";
-import { MobileBottomNav, type MobileNavItem } from "@/components/mobile/MobileBottomNav";
-import { Home, BookOpen, Heart, Sparkles, Search, List, Star } from "lucide-react";
+import { List, Star } from "lucide-react";
 import {
   DevotionalReaderProvider,
   useDevotionalReader,
@@ -24,24 +23,6 @@ import { DevotionalIndexSheet } from "@/components/mobile/DevotionalIndexSheet";
 import { useDevotionalFavorites } from "@/hooks/useDevotionalFavorites";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
-
-const DEVOCIONAL_NAV: MobileNavItem[] = [
-  { to: "/", label: "Átrio", icon: Home, matches: /^\/$/ },
-  {
-    to: "/biblioteca",
-    label: "Biblioteca",
-    icon: BookOpen,
-    matches: /^\/(biblioteca|bible|catechism|magisterium|santos)/,
-  },
-  {
-    to: "/oracao",
-    label: "Oração",
-    icon: Heart,
-    matches: /^\/(oracao|rosary|viacrucis|missal|breviary|litanies|lectio|contemplatio|liturgia)/,
-  },
-  { to: "/buscar", label: "Buscar", icon: Search, matches: /^\/buscar/ },
-  { to: "/nexus", label: "Nexus", icon: Sparkles, matches: /^\/nexus/ },
-];
 
 interface Props {
   kicker?: string;
@@ -107,8 +88,7 @@ function ShellChrome({ kicker, title, children }: Props) {
   return (
     <>
       <MobileTopBar kicker={kicker} title={title} showBack transparent actions={actions} />
-      <div className="md:pb-0 pb-24">{children}</div>
-      <MobileBottomNav items={DEVOCIONAL_NAV} />
+      <div>{children}</div>
       {hasIndex && (
         <DevotionalIndexSheet
           open={indexOpen}
