@@ -17,10 +17,9 @@ export const BiblePartialCoverageBanner: React.FC = () => {
   if (isLoading || roleLoading) return null;
   if (isAdmin) return null;
 
-  // P0.2.0 — Contenção: banner permanece exibido durante toda a
-  // reconstrução da Bíblia, independentemente do gate de integridade.
-  // A base atual só possui os 9 livros deuterocanônicos importados;
-  // esconder este aviso enganaria o leitor.
+  // O índice local ainda está incompleto (capítulos/versículos no banco).
+  // A leitura, porém, pode usar a fonte bíblica de produção via Edge Function;
+  // o aviso deve explicar a limitação sem mascarar a disponibilidade da leitura.
   return (
     <div
       role="status"
@@ -30,11 +29,11 @@ export const BiblePartialCoverageBanner: React.FC = () => {
       <div className="container mx-auto flex items-start gap-3 px-4 py-2 text-sm text-amber-900 dark:text-amber-100">
         <ShieldAlert className="mt-0.5 h-4 w-4 shrink-0" aria-hidden />
         <div className="flex-1">
-          <h2 className="font-medium">Bíblia em reconstrução</h2>
+          <h2 className="font-medium">Índice bíblico em sincronização</h2>
           <p className="text-xs opacity-90">
-            Estamos importando o cânon completo (73 livros). Apenas os livros
-            já disponíveis podem ser lidos; os demais aparecerão conforme forem
-            certificados. A busca bíblica está temporariamente desativada.
+            O índice local ainda está sendo reconstruído. A leitura dos capítulos
+            consulta a fonte bíblica de produção; alguns recursos, como a busca
+            indexada, podem permanecer indisponíveis até a sincronização terminar.
           </p>
         </div>
         <Link
