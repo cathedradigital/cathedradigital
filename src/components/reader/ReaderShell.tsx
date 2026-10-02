@@ -23,6 +23,8 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 
+const NEXUS_RETURN_KEY = 'cathedra:nexus-return';
+
 export interface ReaderShellProps {
   /** Cabeçalho editorial da leitura (use EditorialHero). */
   hero: React.ReactNode;
@@ -62,6 +64,34 @@ export const ReaderShell: React.FC<ReaderShellProps> = ({
   contentMaxWidth = 'max-w-[68ch]',
   ariaLabel = 'Leitura',
 }) => {
+  React.useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    let frame1 = 0;
+    let frame2 = 0;
+    try {
+      const raw = sessionStorage.getItem(NEXUS_RETURN_KEY);
+      if (!raw) return;
+      const saved = JSON.parse(raw) as { source?: string; scrollY?: number };
+      const current = window.location.pathname + window.location.search;
+      if (saved.source !== current || typeof saved.scrollY !== 'number') return;
+
+      frame1 = window.requestAnimationFrame(() => {
+        frame2 = window.requestAnimationFrame(() => {
+          window.scrollTo({ top: saved.scrollY!, behavior: 'auto' });
+          sessionStorage.removeItem(NEXUS_RETURN_KEY);
+        });
+      });
+    } catch {
+      sessionStorage.removeItem(NEXUS_RETURN_KEY);
+    }
+
+    return () => {
+      if (frame1) window.cancelAnimationFrame(frame1);
+      if (frame2) window.cancelAnimationFrame(frame2);
+    };
+  }, []);
+
   return (
     <article
       className={cn(
