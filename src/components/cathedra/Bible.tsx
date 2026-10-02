@@ -1688,7 +1688,7 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
             </header>
 
             <div
-              className="grid grid-cols-4 gap-spacing-sm"
+              className="grid grid-cols-6 gap-1.5 sm:grid-cols-8 md:grid-cols-10 lg:grid-cols-12"
               data-testid="chapter-grid"
               role="grid"
               aria-label={`Capítulos de ${selectedBook.name}`}
@@ -1701,7 +1701,7 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                 const btns = Array.from(e.currentTarget.querySelectorAll<HTMLButtonElement>('[data-chapter-btn]'));
                 const idx = btns.indexOf(target as HTMLButtonElement);
                 if (idx < 0) return;
-                const cols = 4;
+                const cols = window.matchMedia('(min-width: 1024px)').matches ? 12 : window.matchMedia('(min-width: 768px)').matches ? 10 : window.matchMedia('(min-width: 640px)').matches ? 8 : 6;
                 let next = idx;
                 if (e.key === 'ArrowRight') next = Math.min(idx + 1, btns.length - 1);
                 else if (e.key === 'ArrowLeft') next = Math.max(idx - 1, 0);
@@ -1727,7 +1727,7 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                   aria-current={selectedChapter === ch ? 'page' : undefined}
                   title={missing ? MISSING_CHAPTER_REASON : undefined}
                   className={cn(
-                    "aspect-square flex flex-col items-center justify-center rounded-xl border transition-all group shadow-sm",
+                    "min-h-10 sm:min-h-11 flex flex-col items-center justify-center rounded-lg border transition-all group shadow-sm",
                     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary/60 focus-visible:ring-offset-1",
                     missing
                       ? "bg-muted/40 border-dashed border-primary/10 opacity-60 cursor-not-allowed"
@@ -1740,7 +1740,7 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
 
                 >
                   <span className={cn(
-                    "text-lg font-display transition-colors",
+                    "text-sm sm:text-base font-display transition-colors",
                     missing
                       ? "text-primary/40 line-through decoration-primary/30"
                       : selectedChapter === ch ? "text-secondary font-bold" : "text-primary/70 group-hover:text-secondary group-active:text-secondary"
