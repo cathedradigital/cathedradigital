@@ -11,7 +11,7 @@ import {
   Route,
   Scroll,
   ScrollText,
-  Sparkles,
+  Heart,
   UserRound,
   type LucideIcon,
 } from 'lucide-react';
@@ -32,7 +32,7 @@ export const LIBRARY_MODULE_META: Record<LibraryModule, LibraryModuleMeta> = {
   glossary:    { module: 'glossary',    label: 'Glossário',   icon: BookMarked, doctrinalWeight: 12 },
   liturgy:     { module: 'liturgy',     label: 'Liturgia',    icon: Church,     doctrinalWeight: 11 },
   patristics:  { module: 'patristics',  label: 'Patrística',  icon: Feather,    doctrinalWeight: 10 },
-  prayers:     { module: 'prayers',     label: 'Orações',     icon: Sparkles,   doctrinalWeight: 9  },
+  prayers:     { module: 'prayers',     label: 'Orações',     icon: Heart,      doctrinalWeight: 9  },
   saints:      { module: 'saints',      label: 'Santos',      icon: UserRound,  doctrinalWeight: 8  },
   collections: { module: 'collections', label: 'Coleções',    icon: Library,    doctrinalWeight: 6  },
   journeys:    { module: 'journeys',    label: 'Jornadas',    icon: Route,      doctrinalWeight: 5  },
