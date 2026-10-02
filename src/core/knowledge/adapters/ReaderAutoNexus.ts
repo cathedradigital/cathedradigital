@@ -123,8 +123,8 @@ export function buildBucketedSuggestions(
     value
       .toLowerCase()
       .normalize('NFD')
-      .replace(/[\\u0300-\\u036f]/g, '')
-      .split(/\\s+/)
+      .replace(/[\u0300-\u036f]/g, '')
+      .split(/\s+/)
       .map((token) => token.replace(/[^a-z0-9-]/g, ''))
       .filter((token) => token.length >= 3);
 
