@@ -31,6 +31,7 @@ import { ReaderContinuation } from '@/components/shared/ReaderContinuation';
 import { resolveMagisteriumAutoNexus } from '@/core/knowledge/adapters/magisteriumAutoNexus';
 import { NexusPanel, ReaderShell, EditorialHero } from '@/components/reader';
 import { EditorialDivider } from '@/components/editorial';
+import { HighlightMenu } from './HighlightMenu';
 
 
 const MIN_DOC_LEN = 500;
@@ -58,6 +59,7 @@ const MagisteriumViewer: React.FC = () => {
   const [readingProgress, setReadingProgress] = useState(0);
   const [activeHighlight, setActiveHighlight] = useState<UserNote | null>(null);
   const [activeParagraphId, setActiveParagraphId] = useState<string | null>(null);
+  const [contextualPassage, setContextualPassage] = useState<{ index: number; text: string } | null>(null);
 
   const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
   // STAB-004.3.2 — busca interna do documento
@@ -693,6 +695,16 @@ const MagisteriumViewer: React.FC = () => {
                     <div className="absolute top-spacing-0 -right-spacing-2xl flex flex-col gap-spacing-xs opacity-0 group-hover:opacity-100 transition-opacity no-print">
                       <NotesPanel contentType="magisterium" contentId={`${id}:${idx}`} contentLabel={`${content.title} §${idx + 1}`} />
                       <ReadingMark contentType="magisterium" contentId={`${id}:${idx}`} label={`${content.title} Parágrafo ${idx + 1}`} />
+                      <Button
+                        variant="ghost"
+                        size="icon-sm"
+                        onClick={() => setContextualPassage({ index: idx, text: para })}
+                        className="rounded-premium-full text-muted-foreground/50 hover:text-secondary hover:bg-secondary/5"
+                        aria-label={`Abrir ações da leitura para o parágrafo ${idx + 1}`}
+                        title="Ações da leitura"
+                      >
+                        <Icons.Sparkles className="w-spacing-sm h-spacing-sm" />
+                      </Button>
                     </div>
                   </div>
                 );
@@ -700,6 +712,30 @@ const MagisteriumViewer: React.FC = () => {
             </div>
             </div>
             
+            <HighlightMenu
+              isOpen={contextualPassage !== null}
+              onClose={() => setContextualPassage(null)}
+              onSelectColor={async (color) => {
+                if (!contextualPassage || !id) return;
+                const existing = currentDocNotes.find(n => n.content_id === `${id}:${contextualPassage.index}`);
+                if (existing) {
+                  await updateNote(existing.id, existing.note_text, color);
+                } else {
+                  await addNote(`${id}:${contextualPassage.index}`, 'Destacado para meditação', color, { paragraph: contextualPassage.index + 1 });
+                }
+                setContextualPassage(null);
+              }}
+              onAddNote={() => {
+                if (!contextualPassage) return;
+                setPendingSelectionAnchorId(`para-${contextualPassage.index}`);
+                setContextualPassage(null);
+                setIsNoteModalOpen(true);
+              }}
+              verseText={contextualPassage?.text}
+              reference={contextualPassage ? `${content.title} · §${contextualPassage.index + 1}` : undefined}
+              passage={contextualPassage ? { kind: 'magisterium', id: id ?? 'documento', highlight: `para-${contextualPassage.index}` } : undefined}
+            />
+
             <TextSelectionToolbar 
               activeHighlightId={activeHighlight?.id}
               activeColor={activeHighlight?.highlight_color}
