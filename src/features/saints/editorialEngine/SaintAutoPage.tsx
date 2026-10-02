@@ -70,6 +70,19 @@ export const SaintAutoPage: React.FC<Props> = ({ descriptor }) => {
   }, [descriptor.slug, header.name, saveLastRead]);
 
 
+  const saintScrollKey = 'cathedra_last_saint_scroll_' + descriptor.slug;
+
+  // Mantém o ponto exato do perfil ao seguir uma relação e retornar.
+  React.useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const raw = localStorage.getItem(saintScrollKey);
+    const saved = raw ? Number(raw) : NaN;
+    if (Number.isFinite(saved) && saved > 0) requestAnimationFrame(() => window.scrollTo({ top: saved, behavior: 'auto' }));
+    const onScroll = () => localStorage.setItem(saintScrollKey, String(window.scrollY));
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, [saintScrollKey]);
+
   const image = header.iconography?.imageUrl;
   const attributes = header.iconography?.attributes ?? [];
 
