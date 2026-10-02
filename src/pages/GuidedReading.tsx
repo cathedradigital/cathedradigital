@@ -1,18 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React from 'react';
 import { useNavigate } from '@/lib/rr-compat';
-import { Icons } from '@/constants';
-import { AppRoute } from '@/types';
-import { Button } from '@/components/ui/button';
 import { GuidedReadingFlow } from '@/components/cathedra/GuidedReadingFlow';
 import SEOHead from '@/components/SEOHead';
-import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
 import ContemplativeLayout from '@/components/cathedra/ContemplativeLayout';
 import { MobileTopBar } from '@/components/mobile/MobileTopBar';
 
 const GuidedReadingPage: React.FC = () => {
   const navigate = useNavigate();
-  const { settings } = useReadingSettings();
 
   return (
     <div className="min-h-screen bg-background text-foreground transition-colors duration-1000">
