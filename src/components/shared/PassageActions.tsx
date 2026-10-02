@@ -15,7 +15,7 @@
  * PA-1 endurece: loading/erro por ação, aria-busy/aria-live, foco
  * visível e tap targets 44×44 em todos os breakpoints.
  */
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate } from '@/lib/rr-compat';
 import { toast } from 'sonner';
 import { Icons } from '@/constants';
@@ -78,6 +78,17 @@ const PassageActions: React.FC<PassageActionsProps> = ({
   const [successMap, setSuccessMap] = useState<Partial<Record<ActionKey, boolean>>>({});
   const [errorMap, setErrorMap] = useState<Partial<Record<ActionKey, string>>>({});
   const [status, setStatus] = useState<string>('');
+  const [shareOpen, setShareOpen] = useState(false);
+  const shareRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!shareOpen) return;
+    const onPointerDown = (event: PointerEvent) => {
+      if (!shareRef.current?.contains(event.target as Node)) setShareOpen(false);
+    };
+    document.addEventListener('pointerdown', onPointerDown);
+    return () => document.removeEventListener('pointerdown', onPointerDown);
+  }, [shareOpen]);
 
   // URL efetiva: prop direta ou derivada de `passage`.
   const effectiveUrl = url ?? (passage ? buildPassageUrl(passage) : '');
@@ -148,6 +159,7 @@ const PassageActions: React.FC<PassageActionsProps> = ({
           url: effectiveUrl || undefined,
         });
         onShare?.();
+        setShareOpen(false);
       }, 'Compartilhado');
     },
     [run, share, title, reference, text, effectiveUrl, onShare],
@@ -208,41 +220,58 @@ const PassageActions: React.FC<PassageActionsProps> = ({
         {status}
       </span>
 
-      <button
-        type="button"
-        onClick={handleCopyText}
-        className={btnBase}
-        aria-label={`Copiar trecho de ${reference}`}
-        aria-busy={loadingMap.text || undefined}
-        disabled={!!loadingMap.text}
-      >
-        {renderIcon('text', Icons.Quote)}
-        <span>Copiar trecho</span>
-      </button>
+      <div ref={shareRef} className="relative">
+        <button
+          type="button"
+          onClick={(e) => { e.stopPropagation(); setShareOpen((open) => !open); }}
+          className={btnBase}
+          aria-label={`Compartilhar ${reference}`}
+          aria-expanded={shareOpen}
+          aria-haspopup="menu"
+          aria-busy={loadingMap.share || undefined}
+          disabled={!!loadingMap.share}
+        >
+          {renderIcon('share', Icons.Share)}
+          <span>Compartilhar</span>
+        </button>
 
-      <button
-        type="button"
-        onClick={handleCopyReference}
-        className={btnBase}
-        aria-label={`Copiar referência ${reference}`}
-        aria-busy={loadingMap.reference || undefined}
-        disabled={!!loadingMap.reference}
-      >
-        {renderIcon('reference', Icons.Link)}
-        <span>Copiar referência</span>
-      </button>
-
-      <button
-        type="button"
-        onClick={handleShare}
-        className={btnBase}
-        aria-label={`Compartilhar ${reference}`}
-        aria-busy={loadingMap.share || undefined}
-        disabled={!!loadingMap.share}
-      >
-        {renderIcon('share', Icons.Share)}
-        <span>Compartilhar</span>
-      </button>
+        {shareOpen && (
+          <div
+            role="menu"
+            aria-label={`Opções de compartilhamento para ${reference}`}
+            className="absolute right-0 z-50 mt-2 min-w-[190px] overflow-hidden rounded-xl border border-border/60 bg-background/95 p-1.5 shadow-premium-lg backdrop-blur-md"
+          >
+            <button
+              type="button"
+              role="menuitem"
+              onClick={handleCopyText}
+              className="flex min-h-10 w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-xs text-muted-foreground hover:bg-primary/5 hover:text-primary"
+            >
+              {renderIcon('text', Icons.Quote)}
+              <span>Copiar trecho</span>
+            </button>
+            <button
+              type="button"
+              role="menuitem"
+              onClick={handleCopyReference}
+              className="flex min-h-10 w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-xs text-muted-foreground hover:bg-primary/5 hover:text-primary"
+            >
+              {renderIcon('reference', Icons.Link)}
+              <span>Copiar referência</span>
+            </button>
+            <div className="my-1 border-t border-border/40" />
+            <button
+              type="button"
+              role="menuitem"
+              onClick={handleShare}
+              className="flex min-h-10 w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-medium text-primary hover:bg-primary/5"
+            >
+              {renderIcon('share', Icons.Share)}
+              <span>Compartilhar agora</span>
+            </button>
+          </div>
+        )}
+      </div>
 
       {canHighlight && (
         <button
