@@ -6,7 +6,6 @@ import LectioIntro from './lectio/LectioIntro';
 import LectioStep from './lectio/LectioStep';
 import LectioConclusio from './lectio/LectioConclusio';
 import LectioNotesSheet from './lectio/LectioNotesSheet';
-import { LectioMobileNav } from './lectio/LectioMobileNav';
 import {
   useLectioProgress,
   getLectioProgress,
@@ -183,11 +182,6 @@ const LectioDivina: React.FC = () => {
             onStepChange={setCurrentStep}
           />
 
-          <LectioMobileNav
-            currentStep={currentStep}
-            onStepChange={setCurrentStep}
-            disabled={isBibleLoading}
-          />
         </>
       )}
     </>
