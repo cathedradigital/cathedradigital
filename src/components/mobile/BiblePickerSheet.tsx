@@ -135,7 +135,7 @@ export function BiblePickerSheet({
               <p className="mb-2 font-stitch-body text-[11px] font-bold uppercase tracking-[0.15em] text-stitch-on-surface-variant">
                 {cat.name}
               </p>
-              <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+              <div className="grid grid-cols-2 gap-1.5 sm:grid-cols-3">
                 {cat.books.map((b) => (
                   <button
                     key={b.abbr}
@@ -143,7 +143,7 @@ export function BiblePickerSheet({
                     onClick={() => setBook(b)}
                     style={{ minHeight: "var(--stitch-mobile-touch-min)" }}
                     className={cn(
-                      "flex min-h-16 flex-col items-start justify-center rounded-lg border border-stitch-outline-variant/60 bg-stitch-surface-container-lowest px-3 py-2.5 text-left shadow-sm transition-colors",
+                      "flex min-h-12 flex-col items-start justify-center rounded-lg border border-stitch-outline-variant/60 bg-stitch-surface-container-lowest px-2.5 py-2 text-left shadow-sm transition-colors",
                       
                       "hover:border-stitch-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stitch-secondary",
                     )}
@@ -170,7 +170,7 @@ export function BiblePickerSheet({
             <ArrowLeft className="h-4 w-4" />
             Trocar livro
           </button>
-          <div className="grid grid-cols-6 gap-2 sm:grid-cols-8">
+          <div className="grid grid-cols-6 gap-1.5 sm:grid-cols-8">
             {Array.from({ length: book.chapters }, (_, i) => i + 1).map((n) => (
               <button
                 key={n}
