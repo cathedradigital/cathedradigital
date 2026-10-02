@@ -2265,6 +2265,10 @@ const Bible: React.FC = () => {
               }
             : undefined
         }
+        onOpenNexus={() => {
+          setIsHighlightMenuOpen(false);
+          setIsNexusContribOpen(true);
+        }}
       />
 
 
