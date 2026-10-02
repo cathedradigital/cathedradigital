@@ -1087,6 +1087,9 @@ const App: React.FC = () => {
   const [showSplash, setShowSplash] = useState(() => {\n    if (typeof window === 'undefined') return true;\n    return sessionStorage.getItem('cathedra_splash_seen') !== '1';\n  });
 
   const handleSplashComplete = useCallback(() => {
+    if (typeof window !== 'undefined') {
+      sessionStorage.setItem('cathedra_splash_seen', '1');
+    }
     setShowSplash(false);
   }, []);
 
