@@ -95,8 +95,6 @@ const TransparencyPage: React.FC = () => {
                 Enviar E-mail
               </a>
             </Button>
-            <Button 
-              variant="secondary"
           </div>
         </section>
 
