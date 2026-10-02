@@ -19,7 +19,7 @@ const MODULE_ICON: Record<LibraryModule, typeof BookOpen> = {
   bible: BookMarked,
   catechism: BookOpen,
   saints: Users,
-  prayers: Sparkles,
+  prayers: Heart,
   collections: Library,
   journeys: Compass,
   magisterium: ScrollText,
