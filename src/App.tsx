@@ -570,6 +570,16 @@ const AppLayout: React.FC = () => {
     <MotionConfig reducedMotion={settings.reduceAnimations ? "always" : "never"}>
       <Suspense fallback={null}><PausedBanner /></Suspense>
       <div className="min-h-screen bg-background text-foreground transition-colors duration-500">
+        <button
+          type="button"
+          className="mobile-menu-fallback fixed left-3 z-[155] md:hidden inline-flex h-10 w-10 items-center justify-center rounded-full border border-primary/15 bg-background/90 text-foreground shadow-sm backdrop-blur-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+          style={{ top: 'calc(var(--stitch-mobile-safe-top, 0px) + 0.5rem)' }}
+          aria-label="Abrir menu de navegação"
+          onClick={handleOpenSidebar}
+        >
+          <Icons.Menu className="h-5 w-5" aria-hidden="true" />
+        </button>
+
         <a 
           href="#main-content" 
           className="sr-only focus:not-sr-only focus:fixed focus:top-spacing-lg focus:left-spacing-lg focus:z-[250] focus:px-spacing-lg focus:py-spacing-sm focus:bg-primary focus:text-primary-foreground focus:rounded-premium-full focus:shadow-premium focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-4 focus:ring-offset-background transition-all duration-300 font-bold uppercase tracking-[0.2em] text-[10px]"
