@@ -11,11 +11,11 @@ const SplashScreen = React.forwardRef<HTMLDivElement, { onComplete: () => void }
     // animation/runtime is interrupted or React is unable to commit the
     // completion callback.
     // Sequência intencional: primeiro o "motor" de abertura; só depois a identidade textual.
-    const t1 = setTimeout(() => setPhase('logo'), 1750);
-    const t2 = setTimeout(() => setPhase('text'), 2450);
-    const t3 = setTimeout(() => setPhase('exit'), 3300);
-    const t4 = setTimeout(onComplete, 3950);
-    const safety = setTimeout(onComplete, 4500);
+    const t1 = setTimeout(() => setPhase('logo'), 2050);
+    const t2 = setTimeout(() => setPhase('text'), 2200);
+    const t3 = setTimeout(() => setPhase('exit'), 3050);
+    const t4 = setTimeout(onComplete, 3650);
+    const safety = setTimeout(onComplete, 4200);
 
     return () => {
       clearTimeout(t1);
