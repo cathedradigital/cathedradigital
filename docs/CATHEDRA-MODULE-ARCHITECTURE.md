@@ -19,11 +19,13 @@ CATHEDRA
 ├── ESTUDAR
 │   ├── Bíblia
 │   ├── Catecismo
-│   ├── Magistério
-│   ├── Biblioteca
-│   ├── Santos
+│   └── Magistério
+
+├── PESQUISAR
+│   ├── Buscar
 │   ├── Nexus
-│   └── Igreja Viva
+│   ├── Biblioteca
+│   └── demais ferramentas de referência
 │
 ├── REZAR
 │   ├── Orar
@@ -36,15 +38,6 @@ CATHEDRA
 ├── FORMAR-SE
 │   ├── Jornadas
 │   └── Temas
-│
-├── PESQUISAR
-│   ├── Buscar
-│   ├── Glossário
-│   ├── Atlas
-│   ├── Aquino
-│   ├── Dogmas
-│   ├── Papas
-│   └── Aparições
 │
 └── MINHA JORNADA
     ├── Hoje
