@@ -117,19 +117,61 @@ export function useNotes(contentType: string, contentId?: string) {
   }, [user, contentType]);
 
   const updateNote = useCallback(async (noteId: string, text: string, color?: string) => {
-    if (!user) return;
-    const updates: any = { note_text: text.trim(), updated_at: new Date().toISOString() };
-    if (color) updates.highlight_color = color;
-    
-    await supabase.from('user_notes').update(updates).eq('id', noteId);
-    setNotes(prev => prev.map(n => n.id === noteId ? { ...n, ...updates } : n));
-  }, [user]);
+    if (!user || !text.trim()) return false;
+
+    const previous = notes.find((note) => note.id === noteId);
+    if (!previous) return false;
+
+    const updates: Partial<UserNote> = {
+      note_text: text.trim(),
+      updated_at: new Date().toISOString(),
+      ...(color ? { highlight_color: color } : {}),
+    };
+
+    // Keep the UI responsive, but never claim persistence until Supabase confirms it.
+    setNotes((prev) => prev.map((note) => note.id === noteId ? { ...note, ...updates } : note));
+
+    const { data, error } = await supabase
+      .from('user_notes')
+      .update(updates)
+      .eq('id', noteId)
+      .eq('user_id', user.id)
+      .select()
+      .single();
+
+    if (error || !data) {
+      console.error('Error updating note:', error);
+      setNotes((prev) => prev.map((note) => note.id === noteId ? previous : note));
+      return false;
+    }
+
+    setNotes((prev) => prev.map((note) => note.id === noteId ? (data as UserNote) : note));
+    return true;
+  }, [user, notes]);
 
   const deleteNote = useCallback(async (noteId: string) => {
-    if (!user) return;
-    await supabase.from('user_notes').delete().eq('id', noteId);
-    setNotes(prev => prev.filter(n => n.id !== noteId));
-  }, [user]);
+    if (!user) return false;
+
+    const previous = notes.find((note) => note.id === noteId);
+    if (!previous) return false;
+
+    // Optimistic delete with rollback if RLS/network rejects the mutation.
+    setNotes((prev) => prev.filter((note) => note.id !== noteId));
+
+    const { error } = await supabase
+      .from('user_notes')
+      .delete()
+      .eq('id', noteId)
+      .eq('user_id', user.id);
+
+    if (error) {
+      console.error('Error deleting note:', error);
+      setNotes((prev) => prev.some((note) => note.id === noteId) ? prev : [...prev, previous]);
+      return false;
+    }
+
+    return true;
+  }, [user, notes]);
 
   return { notes, loading, addNote, updateNote, deleteNote, refetch: fetchNotes };
 }
