@@ -1,4 +1,5 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
+import { createClient } from "npm:@supabase/supabase-js@2";
 
 const VATICAN_BASE = "https://www.vatican.va/archive/cathechism_po/index_new/";
 
@@ -29,6 +30,34 @@ function json(body: unknown, status = 200) {
     status,
     headers: { ...cors, "Content-Type": "application/json; charset=utf-8" },
   });
+}
+
+
+async function persistCatechismParagraph(paragraph: number, content: string, sourceUrl: string) {
+  const supabaseUrl = Deno.env.get("SUPABASE_URL");
+  const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+  if (!supabaseUrl || !serviceRoleKey) {
+    console.warn("[catechism-text] persistence skipped: Supabase service configuration missing");
+    return;
+  }
+
+  const db = createClient(supabaseUrl, serviceRoleKey, {
+    auth: { persistSession: false, autoRefreshToken: false },
+  });
+  const { error } = await db.from("catechism_official").upsert({
+    paragraph,
+    content,
+    source_name: "Santa Sé · vatican.va",
+    source_url: sourceUrl,
+    source_retrieved_at: new Date().toISOString(),
+  }, { onConflict: "paragraph" });
+
+  if (error) {
+    console.warn("[catechism-text] persistence failed", {
+      paragraph,
+      error: error.message,
+    });
+  }
 }
 
 function pageFor(paragraph: number) {
@@ -92,6 +121,8 @@ Deno.serve(async (req: Request) => {
     if (!content) {
       return json({ error: "Parágrafo não localizado na fonte oficial.", code: "not_found", paragraph }, 404);
     }
+
+    await persistCatechismParagraph(paragraph, content, url);
 
     return json({
       paragraph,
