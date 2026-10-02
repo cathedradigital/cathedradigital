@@ -65,42 +65,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const authRequestId = useRef(0);
 
   const fetchProfile = useCallback(async (currentUser: SupabaseUser) => {
-    const [profileResult, sensitiveResult, premiumResult] = await Promise.all([
-      supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', currentUser.id)
-        .maybeSingle(),
-      (supabase as any)
-        .from('user_sensitive_data')
-        .select('email, diagnosis_result')
-        .eq('user_id', currentUser.id)
-        .maybeSingle(),
-      supabase
-        .from('transactions')
-        .select('id', { count: 'exact', head: true })
-        .eq('user_id', currentUser.id)
-        .eq('status', 'approved'),
-    ]);
+    // Keep session hydration dependent only on the canonical profile row.
+    // Optional legacy tables are not present in the current production schema;
+    // querying them here previously generated avoidable 404/PostgREST errors
+    // during every authenticated session.
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('id', currentUser.id)
+      .maybeSingle();
 
-    if (profileResult.error) {
-      console.error('Erro ao buscar perfil:', profileResult.error);
+    if (error) {
+      console.error('Erro ao buscar perfil:', error);
       return null;
     }
 
-    if (premiumResult.error) {
-      console.error('Erro ao verificar acesso premium:', premiumResult.error);
-    }
-
-    if (!profileResult.data) {
-      return null;
-    }
+    if (!data) return null;
 
     return {
-      ...profileResult.data,
-      is_premium: Boolean(profileResult.data.is_premium || (premiumResult.count ?? 0) > 0),
-      _sensitive: sensitiveResult.data as SensitiveData | undefined,
-    } as Profile & { _sensitive?: { email: string; diagnosis_result: any } };
+      ...data,
+      is_premium: Boolean(data.is_premium),
+    } as Profile;
   }, []);
 
   const updateStreak = useCallback(async (currentUser: SupabaseUser, currentProfile: Profile) => {
@@ -141,10 +126,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const checkAndAwardBadges = useCallback(async (currentUser: SupabaseUser, currentProfile: Profile, streak: number) => {
     try {
       // 1. Fetch all necessary stats for badge conditions
-      const [journeyRes, postsRes, likesRes, notesRes] = await Promise.all([
+      const [journeyRes, notesRes] = await Promise.all([
         supabase.from('journey_progress').select('journey_id', { count: 'exact', head: true }).eq('user_id', currentUser.id),
-        supabase.from('community_posts').select('id', { count: 'exact', head: true }).eq('user_id', currentUser.id),
-        supabase.from('community_likes').select('id', { count: 'exact', head: true }).eq('user_id', currentUser.id),
         supabase.from('user_notes').select('id', { count: 'exact', head: true }).eq('user_id', currentUser.id),
       ]);
 
@@ -155,8 +138,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         totalMinutesRead: currentProfile.total_minutes_read || 0,
         streak,
         completedJourneys: journeyRes.count || 0,
-        posts: postsRes.count || 0,
-        likes: likesRes.count || 0,
+        // Community tables are not part of the current production schema.
+        // Keep their badge inputs at zero rather than issuing failing queries.
+        posts: 0,
+        likes: 0,
         notes: notesRes.count || 0,
       } as any;
 
