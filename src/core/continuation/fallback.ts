@@ -53,7 +53,7 @@ export function fallbackSuggestions(
           intent: 'study',
           label: 'Próximo capítulo',
           description: `${bookAbbr.toUpperCase()} ${chapter + 1}`,
-          href: `/bible?book=${bookAbbr}&chapter=${chapter + 1}`,
+          href: `/bible?book=${encodeURIComponent(bookAbbr)}&ch=${chapter + 1}`,
         });
       }
       if (paragraph) {
