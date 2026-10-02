@@ -23,9 +23,20 @@ const BOOK_MAP: Record<string, string> = {
   "2 Jo": "2 João", "3 Jo": "3 João", "Jd": "Judas", "Ap": "Apocalipse",
 };
 
-const ALIASES: Record<string, string> = {
-  "Jo": "joao",
-  "Jó": "jó",
+// O Ordinarium documenta abreviações sem acentos como entrada estável.
+// Mantemos o nome humano acima e usamos a abreviação para evitar falhas
+// de URL com espaços/acentos; se a abreviação não existir, tentamos o nome.
+const API_BOOK_MAP: Record<string, string> = {
+  "Gn":"gn","Ex":"ex","Lv":"lv","Nm":"nm","Dt":"dt","Js":"js","Jz":"jz","Rt":"rt",
+  "1 Sm":"1sm","2 Sm":"2sm","1 Rs":"1rs","2 Rs":"2rs","1 Cr":"1cr","2 Cr":"2cr",
+  "Esd":"esd","Ne":"ne","Tb":"tb","Jdt":"jdt","Est":"est","1 Mc":"1mc","2 Mc":"2mc",
+  "Jó":"jo","Sl":"sl","Pr":"pv","Ecl":"ecl","Ct":"ct","Sb":"sb","Eclo":"eclo","Is":"is",
+  "Jr":"jr","Lm":"lm","Br":"br","Ez":"ez","Dn":"dn","Os":"os","Jl":"jl","Am":"am",
+  "Abd":"abd","Jn":"jn","Mq":"mq","Na":"na","Hab":"hab","Sf":"sf","Ag":"ag","Zc":"zc","Ml":"ml",
+  "Mt":"mt","Mc":"mc","Lc":"lc","Jo":"joao","At":"at","Rm":"rm","1 Cor":"1cor","2 Cor":"2cor",
+  "Gl":"gl","Ef":"ef","Fl":"fl","Cl":"cl","1 Ts":"1ts","2 Ts":"2ts","1 Tm":"1tm","2 Tm":"2tm",
+  "Tt":"tt","Fm":"fm","Hb":"hb","Tg":"tg","1 Pd":"1pd","2 Pd":"2pd","1 Jo":"1jo","2 Jo":"2jo",
+  "3 Jo":"3jo","Jd":"jd","Ap":"ap",
 };
 
 const cors = {
@@ -45,13 +56,7 @@ function correlationId(req: Request) {
   return req.headers.get("x-correlation-id") || crypto.randomUUID();
 }
 
-function errorPayload(
-  reason: string,
-  abbrev: string,
-  chapter: number,
-  correlation: string,
-  status: number,
-) {
+function errorPayload(reason: string, abbrev: string, chapter: number, correlation: string, status: number) {
   return json({
     error: status === 400 ? "Parâmetros inválidos" : "Texto bíblico indisponível",
     reason,
@@ -72,15 +77,10 @@ async function sha256Hex(value: string) {
 Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: cors });
   const correlation = correlationId(req);
-
-  if (req.method !== "POST") {
-    return errorPayload("Método não permitido.", "", 1, correlation, 405);
-  }
+  if (req.method !== "POST") return errorPayload("Método não permitido.", "", 1, correlation, 405);
 
   let body: Record<string, unknown>;
-  try {
-    body = await req.json();
-  } catch {
+  try { body = await req.json(); } catch {
     return errorPayload("Parâmetros inválidos: JSON inválido.", "", 1, correlation, 400);
   }
 
@@ -94,32 +94,34 @@ Deno.serve(async (req: Request) => {
   }
 
   const bookName = BOOK_MAP[abbrev];
-  if (!bookName) {
-    return errorPayload("Abreviação não reconhecida.", abbrev, chapter, correlation, 404);
-  }
+  if (!bookName) return errorPayload("Abreviação não reconhecida.", abbrev, chapter, correlation, 404);
 
-  const apiBook = ALIASES[abbrev] ?? bookName;
-  const url = `${ORDINARIUM_BASE}/${encodeURIComponent(apiBook)}/${chapter}`;
+  const candidates = [API_BOOK_MAP[abbrev], bookName].filter(Boolean) as string[];
+  let upstream: Response | null = null;
+  let lastStatus = 502;
 
   try {
-    const upstream = await fetch(url, {
-      headers: {
-        "Accept": "application/json",
-        "User-Agent": "CathedraDigital/1.0",
-      },
-    });
+    for (const candidate of candidates) {
+      const url = `${ORDINARIUM_BASE}/${encodeURIComponent(candidate)}/${chapter}`;
+      const response = await fetch(url, {
+        headers: { "Accept": "application/json", "User-Agent": "CathedraDigital/1.0" },
+      });
+      if (response.ok) { upstream = response; break; }
+      lastStatus = response.status;
+      if (response.status !== 404) break;
+    }
 
-    if (!upstream.ok) {
-      const reason = upstream.status === 404
-        ? `O capítulo ${abbrev} ${chapter} não foi encontrado em nenhuma fonte.`
-        : `A fonte bíblica retornou HTTP ${upstream.status}.`;
-      return errorPayload(reason, abbrev, chapter, correlation, upstream.status === 404 ? 404 : 502);
+    if (!upstream) {
+      const reason = lastStatus === 404
+        ? `O capítulo ${abbrev} ${chapter} não foi encontrado na fonte bíblica.`
+        : `A fonte bíblica retornou HTTP ${lastStatus}.`;
+      return errorPayload(reason, abbrev, chapter, correlation, lastStatus === 404 ? 404 : 502);
     }
 
     const raw = await upstream.json();
     const rawVerses = Array.isArray(raw) ? raw : raw?.verses;
     if (!Array.isArray(rawVerses) || rawVerses.length === 0) {
-      return errorPayload(`O capítulo ${abbrev} ${chapter} não foi encontrado em nenhuma fonte.`, abbrev, chapter, correlation, 404);
+      return errorPayload(`O capítulo ${abbrev} ${chapter} não retornou versículos.`, abbrev, chapter, correlation, 404);
     }
 
     const verses = rawVerses
@@ -134,9 +136,7 @@ Deno.serve(async (req: Request) => {
       .filter((v: { number: number; text: string }) => Number.isInteger(v.number) && v.number > 0 && v.text.length > 0)
       .sort((a: { number: number }, b: { number: number }) => a.number - b.number);
 
-    if (verses.length === 0) {
-      return errorPayload(`O capítulo ${abbrev} ${chapter} não foi encontrado em nenhuma fonte.`, abbrev, chapter, correlation, 404);
-    }
+    if (!verses.length) return errorPayload(`O capítulo ${abbrev} ${chapter} não retornou versículos válidos.`, abbrev, chapter, correlation, 404);
 
     const contentHash = await sha256Hex(JSON.stringify({ book: bookName, chapter, verses }));
     const etag = `"${contentHash}"`;
@@ -144,7 +144,7 @@ Deno.serve(async (req: Request) => {
       return new Response(null, { status: 304, headers: { ...cors, ETag: etag, "Cache-Control": "public, max-age=3600, stale-while-revalidate=86400" } });
     }
 
-    const responseBody = {
+    return json({
       book: bookName,
       chapter,
       verses,
@@ -152,8 +152,8 @@ Deno.serve(async (req: Request) => {
         source: "Ordinarium API",
         correlationId: correlation,
         cache_version: contentHash.slice(0, 12),
-        logic_version: 1,
-        current_version: 1,
+        logic_version: 2,
+        current_version: 2,
         contentHash,
         ttl_hours: 24,
         shouldInvalidateL1: false,
@@ -165,20 +165,13 @@ Deno.serve(async (req: Request) => {
         translation_code: null,
         modernized: modernize,
       },
-    };
-
-    return json(responseBody, 200, {
+    }, 200, {
       ETag: etag,
       "Cache-Control": "public, max-age=3600, stale-while-revalidate=86400",
       "X-Cathedra-Correlation-Id": correlation,
     });
   } catch (error) {
-    console.error("[bible-text] upstream failure", {
-      correlation,
-      abbrev,
-      chapter,
-      error: error instanceof Error ? error.message : String(error),
-    });
+    console.error("[bible-text] upstream failure", { correlation, abbrev, chapter, error: error instanceof Error ? error.message : String(error) });
     return errorPayload("Não foi possível consultar a fonte bíblica no momento.", abbrev, chapter, correlation, 502);
   }
 });
