@@ -5,13 +5,13 @@ import { Icons } from '@/constants';
 import { AppRoute } from '@/types';
 import { Button } from '@/components/ui/button';
 import { GuidedReadingFlow } from '@/components/cathedra/GuidedReadingFlow';
-import AppHeader from '@/components/cathedra/AppHeader';
 import SEOHead from '@/components/SEOHead';
 import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
 import { useAuth } from '@/hooks/useAuth';
 import { useLang } from '@/hooks/useLang';
 import { useReadingMode } from '@/hooks/useReadingMode';
 import ContemplativeLayout from '@/components/cathedra/ContemplativeLayout';
+import { MobileTopBar } from '@/components/mobile/MobileTopBar';
 
 const GuidedReadingPage: React.FC = () => {
   const navigate = useNavigate();
@@ -20,20 +20,13 @@ const GuidedReadingPage: React.FC = () => {
   const { lang, setLang } = useLang();
   const { isNight, toggle } = useReadingMode();
 
-  const handleToggleSidebar = () => {
-    // Implement or dispatch event if needed
-  };
-
   return (
     <div className="min-h-screen bg-background text-foreground transition-colors duration-1000">
-      <AppHeader 
-        user={user}
-        isDark={isNight}
-        onToggleDark={toggle}
-        lang={lang}
-        onChangeLang={setLang}
-        onSignOut={signOut}
-        onOpenSidebar={handleToggleSidebar}
+      <MobileTopBar
+        kicker="Cátedra"
+        title="Jornada de Leitura"
+        showBack
+        onBack={() => navigate(-1)}
       />
       
       <SEOHead 
