@@ -8,7 +8,6 @@
 import React, { useMemo, useState, useEffect } from 'react';
 import { Link } from '@/lib/rr-compat';
 import { Search, Clock, ChevronRight, Loader2 } from 'lucide-react';
-import { MobileBottomNav } from '@/components/mobile/MobileBottomNav';
 import { EditorialHero } from '@/components/editorial/harmony';
 
 import {
@@ -228,7 +227,6 @@ const PrayerLibraryPage: React.FC = () => {
       </section>
 
 
-      <MobileBottomNav />
     </>
   );
 };
