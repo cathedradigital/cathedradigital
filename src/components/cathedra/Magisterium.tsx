@@ -79,7 +79,6 @@ import ReadingMark from './ReadingMark';
 import { CathedraCard } from './CathedraCard';
 import { cn } from '@/lib/utils';
 import { MobileTopBar } from '@/components/mobile/MobileTopBar';
-import { MobileBottomNav } from '@/components/mobile/MobileBottomNav';
 import {
   MAGISTERIUM_DOCUMENTS,
   MAGISTERIUM_CATEGORIES,
