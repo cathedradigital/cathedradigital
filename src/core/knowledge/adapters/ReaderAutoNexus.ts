@@ -15,7 +15,7 @@
 
 import { KnowledgeGraph } from '../KnowledgeGraph';
 import { KnowledgeRegistry } from '../KnowledgeRegistry';
-import type { KnowledgeNodeId, ResolvedNode } from '../types';
+import type { KnowledgeNodeId, KnowledgeRelation, KnowledgeRelationKind, ResolvedNode } from '../types';
 import type { ContinuationSuggestion } from '../continuation';
 import { KIND_SPECS, ensureNode } from './glossaryAutoNexus';
 
@@ -116,6 +116,74 @@ export function buildBucketedSuggestions(
     score: number;
   };
 
+  const RELATION_EXPLANATION: Record<KnowledgeRelationKind, { outgoing: string; incoming: string }> = {
+    develops: {
+      outgoing: 'Desenvolve este tema',
+      incoming: 'É desenvolvido por este conteúdo',
+    },
+    cites: {
+      outgoing: 'Cita este conteúdo',
+      incoming: 'É citado por este conteúdo',
+    },
+    'commented-by': {
+      outgoing: 'É comentado por',
+      incoming: 'Comenta este conteúdo',
+    },
+    'defined-in': {
+      outgoing: 'É definido neste conteúdo',
+      incoming: 'Define este conceito',
+    },
+    'applies-to': {
+      outgoing: 'Aplica este conceito',
+      incoming: 'É uma aplicação deste conteúdo',
+    },
+    'prayed-as': {
+      outgoing: 'Expressa-se em oração',
+      incoming: 'Conduz a esta oração',
+    },
+    'related-to': {
+      outgoing: 'Relaciona-se com este conteúdo',
+      incoming: 'Relaciona-se com este conteúdo',
+    },
+  };
+
+  const strongestRelation = (nodeId: KnowledgeNodeId): { relation: KnowledgeRelation; outgoing: boolean } | null => {
+    if (!opts.selfId) return null;
+    const relations = [
+      ...KnowledgeRegistry.relationsFrom(opts.selfId).map((relation) => ({ relation, outgoing: true })),
+      ...KnowledgeRegistry.relationsTo(opts.selfId).map((relation) => ({ relation, outgoing: false })),
+    ].filter(({ relation }) => relation.to === nodeId || relation.from === nodeId);
+
+    return relations.sort(
+      (a, b) => (b.relation.weight ?? 0) - (a.relation.weight ?? 0),
+    )[0] ?? null;
+  };
+
+  const withExplanation = (
+    resolved: ResolvedNode,
+    evidence: ResolvedNode['nexusEvidence'],
+  ): ResolvedNode => {
+    const relation = strongestRelation(resolved.node.id);
+    if (relation) {
+      const copy = RELATION_EXPLANATION[relation.relation.kind];
+      return {
+        ...resolved,
+        nexusEvidence: 'graph',
+        nexusRelationKind: relation.relation.kind,
+        nexusExplanation: relation.outgoing ? copy.outgoing : copy.incoming,
+      };
+    }
+
+    return {
+      ...resolved,
+      nexusEvidence: evidence,
+      nexusExplanation:
+        evidence === 'editorial'
+          ? 'Referência editorial desta passagem'
+          : 'Correspondência temática encontrada pelo Conexo',
+    };
+  };
+
   const byBucket: Partial<Record<ReaderNexusBucket, ResolvedNode[]>> = {};
   const candidates = new Map<ReaderNexusBucket, Map<KnowledgeNodeId, Candidate>>();
 
@@ -150,15 +218,21 @@ export function buildBucketedSuggestions(
     return relations.reduce((total, relation) => total + 20 + Math.round((relation.weight ?? 0) * 20), 0);
   };
 
-  const push = (bucket: ReaderNexusBucket, resolved: ResolvedNode, bonus = 0) => {
+  const push = (
+    bucket: ReaderNexusBucket,
+    resolved: ResolvedNode,
+    bonus = 0,
+    evidence: ResolvedNode['nexusEvidence'] = 'thematic',
+  ) => {
     if (!resolved?.url || resolved.node.id === opts.selfId) return;
     const arr = candidates.get(bucket) ?? new Map<KnowledgeNodeId, Candidate>();
     candidates.set(bucket, arr);
 
     const score = bonus + scoreRelation(resolved.node.id) + scoreText(resolved);
+    const explained = withExplanation(resolved, evidence);
     const previous = arr.get(resolved.node.id);
     if (!previous || score > previous.score) {
-      arr.set(resolved.node.id, { resolved, score });
+      arr.set(resolved.node.id, { resolved: explained, score });
     }
   };
 
@@ -170,7 +244,7 @@ export function buildBucketedSuggestions(
       const id = ensureNode(spec, raw);
       if (!id) continue;
       const resolved = KnowledgeGraph.resolve(id);
-      if (resolved) push(bucket, resolved, 100);
+      if (resolved) push(bucket, resolved, 100, 'editorial');
     }
   }
 
@@ -182,7 +256,7 @@ export function buildBucketedSuggestions(
         : null;
       if (!bucket) return;
       const resolved = KnowledgeGraph.resolve(node.id);
-      if (resolved) push(bucket, resolved, 45);
+      if (resolved) push(bucket, resolved, 45, 'graph');
     });
   }
 
