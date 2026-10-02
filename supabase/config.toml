@@ -8,3 +8,6 @@ verify_jwt = true
 
 [functions.bible-text]
 verify_jwt = false
+
+[functions.vatican-document]
+verify_jwt = false
