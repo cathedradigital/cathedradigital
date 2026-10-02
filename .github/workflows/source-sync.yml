@@ -1,0 +1,36 @@
+name: Sync official sources
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: official-source-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Request GitHub OIDC token
+        id: oidc
+        shell: bash
+        run: |
+          set -euo pipefail
+          RESPONSE="$(curl -sSf             -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN"             -H "Accept: application/json; api-version=2.0"             "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=https%3A%2F%2Fcathedradigital.com.br%2Fsource-sync")"
+          TOKEN="$(printf '%s' "$RESPONSE" | jq -r '.value')"
+          test -n "$TOKEN" && test "$TOKEN" != "null"
+          printf 'token=%s\n' "$TOKEN" >> "$GITHUB_OUTPUT"
+
+      - name: Process next official-source batch
+        env:
+          OIDC_TOKEN: ${{ steps.oidc.outputs.token }}
+        run: |
+          set -euo pipefail
+          curl -sSf             -X POST             -H "Authorization: Bearer $OIDC_TOKEN"             -H "Content-Type: application/json"             --data '{"max_bible_chapters":8,"max_catechism_pages":1}'             "https://isojguvcnfncokoxoauk.supabase.co/functions/v1/source-sync"
