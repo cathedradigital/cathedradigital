@@ -116,7 +116,23 @@ const StudyJournal: React.FC = () => {
                   note={note} 
                   onUpdate={handleUpdateNote} 
                   onDelete={handleDeleteNote}
-                  onNavigate={() => navigate(note.content_type === 'bible' ? `/bible?ref=${note.content_id}` : (note.content_type === 'catechism' ? `/catechism?p=${note.content_id}` : `/magisterium?doc=${note.content_id}`))}
+                  onNavigate={() => {
+                    const params = new URLSearchParams();
+                    let url = '/';
+
+                    if (note.content_type === 'bible' && note.book_abbr && note.chapter) {
+                      params.set('book', note.book_abbr);
+                      params.set('ch', String(note.chapter));
+                      if (note.verse) params.set('v', String(note.verse));
+                      url = `/bible?${params.toString()}`;
+                    } else if (note.content_type === 'catechism' && note.paragraph) {
+                      url = `/catechism?p=${encodeURIComponent(String(note.paragraph))}`;
+                    } else if (note.content_type === 'magisterium' && note.content_id) {
+                      url = `/magisterium/${encodeURIComponent(note.content_id)}`;
+                    }
+
+                    navigate(url);
+                  }}
                 />
               ))
             ) : (
