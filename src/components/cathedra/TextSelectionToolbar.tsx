@@ -115,7 +115,7 @@ export const TextSelectionToolbar: React.FC<TextSelectionToolbarProps> = ({
                 variant="ghost"
                 size="sm"
                 onClick={() => {
-                  onAddNote();
+                  onAddNote(selectedText, selectionAnchorId);
                   setPosition(null);
                 }}
                 className="h-spacing-xl rounded-premium px-spacing-sm text-[10px] font-bold uppercase tracking-widest gap-spacing-xs hover:bg-primary/5 flex-1"
