@@ -8,6 +8,7 @@ import { useIsAdmin } from '@/hooks/useIsAdmin';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { SOCIAL_LINKS, EXTERNAL_URLS } from '@/config/site-config';
 import { trackEvent } from '@/lib/analytics';
+import { MODULE_NAVIGATION } from '@/config/moduleNavigation';
 import {
   PUBLIC_FOOTER_LINKS,
   CONDITIONAL_FOOTER_LINKS,
@@ -262,7 +263,7 @@ const Footer: React.FC = React.memo(() => {
     >
       <div className="mx-auto w-full max-w-[1280px] px-spacing-xl md:px-spacing-2xl lg:px-spacing-3xl pt-spacing-3xl md:pt-spacing-4xl pb-spacing-2xl">
         {/* Faixa principal — 4 colunas equilibradas */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-spacing-2xl md:gap-spacing-3xl lg:gap-spacing-4xl">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-spacing-2xl md:gap-spacing-3xl lg:gap-spacing-4xl">
           {/* Coluna 1 — Marca */}
           <div className="flex flex-col gap-spacing-lg">
             <div className="flex flex-col gap-2">
@@ -332,6 +333,31 @@ const Footer: React.FC = React.memo(() => {
               ))}
             </div>
           </div>
+
+          {/* Coluna 2 — Navegação principal */}
+          <FooterSection
+            title={lang === 'pt' ? 'Cátedra' : 'Cathedra'}
+            id="navigation"
+            isMobile={isMobile}
+            openId={openId}
+            onToggle={toggleSection}
+          >
+            <ul className="flex flex-col" role="list">
+              {MODULE_NAVIGATION.map((item) => (
+                <li key={item.key}>
+                  <Button
+                    variant="ghost"
+                    onClick={() => navigate(item.items[0]?.path ?? '/')}
+                    className={linkItem}
+                    style={{ fontFamily: FONT_BODY, fontSize: '0.9375rem' }}
+                  >
+                    <span aria-hidden="true" className="w-1 h-1 shrink-0" style={{ background: GOLD_SOFT }} />
+                    <span>{item.label}</span>
+                  </Button>
+                </li>
+              ))}
+            </ul>
+          </FooterSection>
 
           {/* Coluna 2 — Santa Sé */}
           <FooterSection
