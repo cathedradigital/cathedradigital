@@ -20,8 +20,10 @@ const AuthGuard = React.forwardRef<HTMLDivElement, AuthGuardProps>(({ children }
   }
 
   if (!user) {
-    // Redirect to login but save the current location to redirect back after login
-    return <Navigate to={AppRoute.LOGIN} state={{ from: location }} replace />;
+    // Carry the full internal destination through the login screen.
+    const next = `${location.pathname}${location.search ?? ''}${location.hash ?? ''}`;
+    const loginPath = `${AppRoute.LOGIN}?next=${encodeURIComponent(next)}`;
+    return <Navigate to={loginPath} replace />;
   }
 
   return <div ref={ref}>{children}</div>;
