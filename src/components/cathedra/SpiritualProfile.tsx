@@ -41,14 +41,28 @@ const SpiritualProfile: React.FC = () => {
   const updatePreference = async (key: string, value: any) => {
     if (!user) return;
     const newPrefs = { ...preferences, [key]: value };
+    const { error } = await supabase
+      .from('profiles')
+      .update({ contemplative_preferences: newPrefs })
+      .eq('id', user.id);
+    if (error) {
+      console.error('Erro ao salvar preferência contemplativa:', error);
+      return;
+    }
     setPreferences(newPrefs);
-    await supabase.from('profiles').update({ contemplative_preferences: newPrefs }).eq('id', user.id);
   };
 
   const toggleEmailReminders = async () => {
     if (!user) return;
     const newSettings = { ...profile.notification_settings, email_reminders: !profile.notification_settings?.email_reminders };
-    await supabase.from('profiles').update({ notification_settings: newSettings }).eq('id', user.id);
+    const { error } = await supabase
+      .from('profiles')
+      .update({ notification_settings: newSettings })
+      .eq('id', user.id);
+    if (error) {
+      console.error('Erro ao salvar lembretes:', error);
+      return;
+    }
     window.location.reload(); // Refresh to update profile context
   };
 
