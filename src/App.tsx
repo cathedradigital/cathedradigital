@@ -200,7 +200,6 @@ const PopeDetailPage = lazy(() => import('./components/cathedra/PopeDetailPage')
 const PrayerDetailPage = lazy(() => import('./pages/PrayerDetailPage'));
 const LectioDivina = lazy(() => import('./components/cathedra/LectioDivina'));
 const ContemplatioPage = lazy(() => import('./pages/ContemplatioPage'));
-const RezarPage = lazy(() => import('./pages/RezarPage'));
 const PoenitentiaPage = lazy(() => import('./components/cathedra/PoenitentiaPage'));
 const DogmasPage = lazy(() => import('./components/cathedra/DogmasPage'));
 
@@ -672,7 +671,6 @@ const AppLayout: React.FC = () => {
               <Route path="/catecismo" element={<Navigate to="/catechism" replace />} />
               {/* Alias legado: a área Igreja agora desemboca na Comunidade canônica, evitando retorno à Home. */}
               <Route path="/igreja" element={<Navigate to="/community" replace />} />
-              <Route path="/rezar" element={<Suspense fallback={<LoadingFallback />}><RezarPage /></Suspense>} />
               <Route path="/magisterium" element={<Suspense fallback={<LoadingFallback />}><Magisterium /></Suspense>} />
               <Route path="/magisterio" element={<Navigate to="/magisterium" replace />} />
               <Route path="/magisterio/:id" element={<MagisterioLegacyRedirect />} />
@@ -681,7 +679,6 @@ const AppLayout: React.FC = () => {
 
               <Route path="/buscar" element={<Suspense fallback={<LoadingFallback />}><AtriumBuscarPage /></Suspense>} />
               <Route path="/buscar-legacy" element={<Suspense fallback={<LoadingFallback />}><GlobalSearchPage /></Suspense>} />
-              <Route path="/search" element={<Navigate to="/buscar" replace />} />
               <Route path="/logos" element={<Suspense fallback={<LoadingFallback />}><LogosPage /></Suspense>} />
 
               <Route path="/chat" element={<Navigate to="/logos" replace />} />
@@ -730,7 +727,6 @@ const AppLayout: React.FC = () => {
               {/* Glossário — rota canônica /glossario + redirects legados */}
               <Route path="/glossario" element={<Suspense fallback={<LoadingFallback />}><GlossaryPage /></Suspense>} />
               <Route path="/glossario/:slug" element={<Suspense fallback={<LoadingFallback />}><GlossaryTermPage /></Suspense>} />
-              <Route path="/glossary" element={<Navigate to="/glossario" replace />} />
               <Route path="/glossary/:slug" element={<Navigate to="/glossario" replace />} />
               <Route path="/az-faith" element={<Navigate to="/glossario" replace />} />
               <Route path="/encyclopedia" element={<Navigate to="/glossario" replace />} />
