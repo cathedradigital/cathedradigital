@@ -91,7 +91,7 @@ const TransparencyPage: React.FC = () => {
               asChild
               className="h-spacing-2xl px-spacing-xl w-full sm:w-auto shadow-premium-hover"
             >
-              <a href="mailto:contato@cathedradigital.com" className="flex items-center gap-spacing-sm">
+              <a href="mailto:contato@cathedradigital.com.br" className="flex items-center gap-spacing-sm">
                 <Icons.Mail className="w-spacing-md h-spacing-md" />
                 Enviar E-mail
               </a>
