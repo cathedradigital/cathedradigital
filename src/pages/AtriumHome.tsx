@@ -24,7 +24,6 @@ import {
   Megaphone,
 } from 'lucide-react';
 import { MobileTopBar } from '@/components/mobile/MobileTopBar';
-import { MobileBottomNav } from '@/components/mobile/MobileBottomNav';
 import {
   useResume,
   useLiturgyToday,
@@ -459,7 +458,6 @@ const AtriumHome: React.FC = () => {
       </section>
     </div>
 
-    <MobileBottomNav />
   </SpaceLayout>
 );
 };
