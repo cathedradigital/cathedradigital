@@ -9,7 +9,7 @@ import { EditorialHero } from "@/components/editorial/harmony/EditorialHero";
 import { EditorialCard } from "@/components/editorial/harmony/EditorialCard";
 import { Button } from "@/components/ui/button";
 import {
-  Target, ClipboardList, Network, Library, Sparkles, GraduationCap, Compass, Users, ShieldCheck, ArrowRight, Activity,
+  Target, ClipboardList, Network, Library, Layers, GraduationCap, Compass, Users, ShieldCheck, ArrowRight, Activity,
 } from "lucide-react";
 
 import { useIsAdmin } from "@/hooks/useIsAdmin";
@@ -25,7 +25,7 @@ const groups = [
   {
     label: "Conteúdo", items: [
       { icon: Library,        title: "Glossário",        description: "Verbetes, permissões e publicação.",                 href: "/admin/glossario" },
-      { icon: Sparkles,       title: "Coleções",         description: "Curadoria e ordenação editorial.",                   href: "/admin/collections" },
+      { icon: Layers,         title: "Coleções",         description: "Curadoria e ordenação editorial.",                   href: "/admin/collections" },
       { icon: GraduationCap,  title: "Santos",           description: "Reimportação e curadoria hagiográfica.",             href: "/admin/saints" },
       { icon: Compass,        title: "Jornadas",         description: "Programas de formação estruturada.",                 href: "/admin/jornadas" },
     ],
