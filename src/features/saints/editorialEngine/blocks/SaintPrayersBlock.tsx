@@ -8,8 +8,8 @@ interface Props {
 }
 
 export const SaintPrayersBlock: React.FC<Props> = ({ prayers }) => (
-  <section aria-labelledby="saint-prayers" className="rounded-2xl border border-border/60 bg-card/40 p-spacing-lg">
-    <h2 id="saint-prayers" className="font-serif text-premium-lg text-foreground mb-spacing-sm">
+  <section aria-labelledby="saint-prayers" className="rounded-xl border border-border/50 bg-card/30 p-spacing-md">
+    <h2 id="saint-prayers" className="font-serif text-premium-lg text-foreground mb-spacing-xs">
       Orações associadas
     </h2>
     <ul className="space-y-spacing-2xs">
@@ -17,7 +17,7 @@ export const SaintPrayersBlock: React.FC<Props> = ({ prayers }) => (
         <li key={p.id}>
           <Link
             to={`/oracao/${p.slug}`}
-            className="flex items-center gap-spacing-xs rounded-lg p-spacing-sm hover:bg-primary/[0.05] transition-colors group"
+            className="flex items-center gap-spacing-xs rounded-lg p-spacing-xs hover:bg-primary/[0.05] transition-colors group"
           >
             <Sparkles className="w-4 h-4 text-primary flex-shrink-0" aria-hidden />
             <span className="font-serif text-premium-md text-foreground group-hover:text-primary transition-colors">
