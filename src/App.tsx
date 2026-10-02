@@ -58,6 +58,7 @@ const CatechismSkeleton = (props: any) => <Suspense fallback={null}><RouteSkelet
 const LogosSkeleton = (props: any) => <Suspense fallback={null}><RouteSkeletons {...props} Component="LogosSkeleton" /></Suspense>;
 import BibleReadGate from './components/cathedra/BibleReadGate';
 
+const GlobalLogosAI = lazy(() => import('./components/cathedra/GlobalLogosAI').then(m => ({ default: m.GlobalLogosAI })));
 const CommandCenter = lazy(() => import('./components/cathedra/CommandCenter'));
 const PWAInstallPrompt = lazy(() => import('./components/cathedra/PWAInstallPrompt').then(m => ({ default: m.PWAInstallPrompt })));
 const A11ySettingsPanel = lazy(() => import('./components/cathedra/A11ySettingsPanel'));
@@ -1047,6 +1048,7 @@ const AppLayout: React.FC = () => {
             isOpen={showReadingPreferences} 
             onClose={handleCloseReadingPreferences} 
           />
+          <GlobalLogosAI />
           <CommandCenter />
           <PWAInstallPrompt />
         </Suspense>
