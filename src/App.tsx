@@ -464,9 +464,10 @@ const AppLayout: React.FC = () => {
     setIsSidebarOpen(false);
     // Erro de navegação: Garantir reset de scroll entre rotas no mobile
     window.scrollTo({ top: 0, behavior: 'instant' });
-    // Persistir última rota autenticada para retomar contexto após novo login.
-    setLastRoute(location.pathname);
-  }, [location.pathname]);
+    // Persistir a rota completa para que uma leitura com query (ex.: Bíblia
+    // livro/capítulo ou Catecismo §) possa ser retomada exatamente no ponto.
+    setLastRoute(`${location.pathname}${location.search ?? ''}${location.hash ?? ''}`);
+  }, [location.pathname, location.search, location.hash]);
 
 
   const isDark = settings.theme === 'dark' || settings.theme === 'night';
