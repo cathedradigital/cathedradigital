@@ -314,7 +314,6 @@ const Footer: React.FC = React.memo(() => {
               {[
                 { icon: <Icons.Instagram />, platform: 'Instagram', url: SOCIAL_LINKS.INSTAGRAM },
                 { icon: <Icons.Youtube />, platform: 'Youtube', url: SOCIAL_LINKS.YOUTUBE },
-                { icon: <Icons.Whatsapp />, platform: 'Whatsapp', url: SOCIAL_LINKS.WHATSAPP },
               ].map((social, i) => (
                 <a
                   key={i}
