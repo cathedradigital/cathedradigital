@@ -314,7 +314,7 @@ const ReadingJournal: React.FC = () => {
                           // Preserve that exact paragraph when returning from the journal.
                           const [docId, paragraphIndex] = note.content_id.split(':');
                           url = `/magisterium/${encodeURIComponent(docId)}`;
-                          if (paragraphIndex !== undefined && /^\\d+$/.test(paragraphIndex)) {
+                          if (paragraphIndex !== undefined && /^\d+$/.test(paragraphIndex)) {
                             params.set('p', paragraphIndex);
                             url += `?${params.toString()}`;
                           }
