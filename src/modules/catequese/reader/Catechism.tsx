@@ -512,6 +512,42 @@ const Catechism: React.FC = memo(() => {
 
 
 
+  // R1.2.3 — restaura o parágrafo exato do deep-link depois que a seção foi renderizada.
+  // Isso fecha o retorno do Diário mesmo quando o Catecismo já está montado.
+  useEffect(() => {
+    if (typeof initialParagraph !== 'number' || viewMode !== 'reading' || !selectedSection) return;
+
+    let cancelled = false;
+    let attempts = 0;
+    const maxAttempts = 8;
+
+    const restoreParagraph = () => {
+      if (cancelled) return;
+      const element = document.getElementById(`p${initialParagraph}`);
+
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        element.classList.add('bg-secondary/10');
+        window.setTimeout(() => {
+          if (!cancelled) element.classList.remove('bg-secondary/10');
+        }, 3000);
+        return;
+      }
+
+      if (attempts < maxAttempts) {
+        attempts += 1;
+        window.setTimeout(restoreParagraph, 100);
+      }
+    };
+
+    const frame = window.requestAnimationFrame(restoreParagraph);
+    return () => {
+      cancelled = true;
+      window.cancelAnimationFrame(frame);
+    };
+  }, [initialParagraph, selectedSection, viewMode]);
+
+
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
