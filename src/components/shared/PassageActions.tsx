@@ -131,6 +131,7 @@ const PassageActions: React.FC<PassageActionsProps> = ({
         if (!ok) throw new Error('Não foi possível copiar');
         toast.success('Trecho copiado');
         onCopy?.('text');
+        setShareOpen(false);
       }, 'Trecho copiado');
     },
     [run, text, reference, effectiveUrl, onCopy],
@@ -144,6 +145,7 @@ const PassageActions: React.FC<PassageActionsProps> = ({
         if (!ok) throw new Error('Não foi possível copiar');
         toast.success('Referência copiada');
         onCopy?.('reference');
+        setShareOpen(false);
       }, 'Referência copiada');
     },
     [run, reference, onCopy],
