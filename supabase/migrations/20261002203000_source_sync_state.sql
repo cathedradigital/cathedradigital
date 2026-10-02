@@ -16,3 +16,13 @@ create index if not exists idx_source_sync_state_status on public.source_sync_st
 insert into public.source_sync_state (source_kind)
 values ('bible'), ('catechism')
 on conflict (source_kind) do nothing;
+
+
+drop policy if exists "source_sync_state_no_browser_read" on public.source_sync_state;
+drop policy if exists "source_sync_state_no_browser_write" on public.source_sync_state;
+
+create policy "source_sync_state_no_browser_read" on public.source_sync_state
+  for select to anon, authenticated using (false);
+
+create policy "source_sync_state_no_browser_write" on public.source_sync_state
+  for all to anon, authenticated using (false) with check (false);
