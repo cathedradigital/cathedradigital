@@ -51,7 +51,7 @@ export function MobileTopBar({
   };
 
   return (
-    <div className="md:hidden">
+    <div className="md:hidden" data-mobile-topbar="true">
     <header
       className={cn(
         "sticky top-0 z-40 w-full max-w-[100vw] overflow-hidden",
