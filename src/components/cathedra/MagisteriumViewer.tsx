@@ -119,7 +119,7 @@ const MagisteriumViewer: React.FC = () => {
     }
   }, [id]);
 
-  // Guard contra StrictMode double-invoke: cada (id, retryNonce) executa 1x
+  // Restaura a posição exata deste documento depois de voltar do Nexus.\n  useEffect(() => {\n    if (!id || loading || !content) return;\n    const key = 'cathedra_last_magisterium_scroll_' + id;\n    const raw = localStorage.getItem(key);\n    const saved = raw ? Number(raw) : NaN;\n    const dbPosition = lastReadMark?.content_id === id && typeof lastReadMark.position === 'number' ? lastReadMark.position : NaN;\n    const position = Number.isFinite(saved) && saved > 0 ? saved : dbPosition;\n    if (!Number.isFinite(position) || position <= 0) return;\n    requestAnimationFrame(() => window.scrollTo({ top: position, left: 0, behavior: 'auto' }));\n  }, [id, loading, content, lastReadMark]);\n\n  // Guard contra StrictMode double-invoke: cada (id, retryNonce) executa 1x
   const lastFetchKey = useRef<string | null>(null);
   useEffect(() => {
     const fetchDoc = async () => {
