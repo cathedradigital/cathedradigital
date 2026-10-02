@@ -31,7 +31,6 @@ import ContemplativeLayout from '@/components/cathedra/ContemplativeLayout';
 import useReadingAutoHide from '@/hooks/useReadingAutoHide';
 import { UserNote, useNotes } from '@/hooks/useNotes';
 import { cn } from '@/lib/utils';
-import PassageActions from '@/components/shared/PassageActions';
 import { HighlightMenu } from '@/components/cathedra/HighlightMenu';
 import { NoteEditModal } from '@/components/cathedra/NoteEditModal';
 import { CathedraCard } from '@/components/cathedra/CathedraCard';
@@ -454,6 +453,17 @@ const LazyParagraph: React.FC<{
         <div className="h-[0.5px] flex-1 bg-gradient-to-r from-primary/[0.05] via-transparent to-transparent" />
       </div>
       <CatechismContent paragraph={p} onNavigateToBible={handleNavigateToBible} isVisible={isVisible} onHighlightClick={onHighlightClick} onCreateNote={onCreateNote} highlights={highlights} />
+      <HighlightMenu
+        isOpen={isContextualOpen}
+        onClose={() => setIsContextualOpen(false)}
+        onAddNote={() => {
+          setIsContextualOpen(false);
+          onCreateNote?.(p);
+        }}
+        verseText={undefined}
+        reference={`CIC §${p}`}
+        passage={{ kind: 'catechism', paragraph: p }}
+      />
     </article>
   );
 };
