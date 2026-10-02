@@ -7,6 +7,7 @@ import { MobileTopBar } from '@/components/mobile/MobileTopBar';
 import { JourneyService } from '@/core/journey/JourneyService';
 import type { Journey } from '@/core/journey/types';
 import { supabase } from '@/lib/db';
+import { getStudyContext, type StudyContext } from '@/services/studyContextService';
 
 const ICONS = {
   bible: BookOpen,
@@ -18,6 +19,9 @@ const EstudarHubPage: React.FC = () => {
   const [journeys, setJourneys] = useState<Journey[]>([]);
   const [nexusCount, setNexusCount] = useState<number | null>(null);
   const [journeysLoading, setJourneysLoading] = useState(true);
+  const [studyQuery, setStudyQuery] = useState('');
+  const [studyContext, setStudyContext] = useState<StudyContext | null>(null);
+  const [studyLoading, setStudyLoading] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -34,6 +38,30 @@ const EstudarHubPage: React.FC = () => {
     });
     return () => { active = false; };
   }, []);
+
+  useEffect(() => {
+    const query = studyQuery.trim();
+    if (query.length < 2) {
+      setStudyContext(null);
+      setStudyLoading(false);
+      return;
+    }
+    let active = true;
+    setStudyLoading(true);
+    const timer = window.setTimeout(() => {
+      getStudyContext(query).then((context) => {
+        if (active) setStudyContext(context);
+      }).catch(() => {
+        if (active) setStudyContext({ query, sources: [], journeys: [], nexus: [] });
+      }).finally(() => {
+        if (active) setStudyLoading(false);
+      });
+    }, 250);
+    return () => {
+      active = false;
+      window.clearTimeout(timer);
+    };
+  }, [studyQuery]);
 
   const environment = MODULE_NAVIGATION.find((item) => item.key === 'estudar');
   const items = environment?.items ?? [];
@@ -70,6 +98,70 @@ const EstudarHubPage: React.FC = () => {
             Em vez de procurar cada fonte separadamente, comece por um tema. O Cátedra organiza o caminho para você aprofundar, conectar e continuar.
           </p>
         </header>
+
+        <section aria-labelledby="estudar-busca" className="mb-8 md:mb-10">
+          <div className="rounded-2xl border border-stitch-secondary/20 bg-stitch-surface-container-low p-4 md:p-5">
+            <div className="flex items-start gap-3">
+              <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-stitch-secondary" aria-hidden="true" />
+              <div className="min-w-0 flex-1">
+                <h2 id="estudar-busca" className="font-stitch-display text-[18px] text-stitch-primary md:text-[20px]">Comece por um tema</h2>
+                <p className="mt-1.5 font-stitch-body text-[12px] leading-5 text-stitch-on-surface-variant md:text-[13px]">
+                  A busca consulta somente fontes persistidas e publicadas. A Yá poderá organizar esse contexto depois; aqui a recuperação continua determinística e verificável.
+                </p>
+                <input
+                  value={studyQuery}
+                  onChange={(event) => setStudyQuery(event.target.value)}
+                  placeholder="Ex.: esperança, oração, Eucaristia"
+                  aria-label="Buscar um tema no acervo do Cátedra"
+                  className="mt-3 w-full rounded-xl border border-stitch-outline-variant/30 bg-stitch-surface-container-lowest px-3 py-2.5 font-stitch-body text-sm text-stitch-primary outline-none focus:border-stitch-secondary"
+                />
+              </div>
+            </div>
+            {studyQuery.trim().length >= 2 && (
+              <div className="mt-4 border-t border-stitch-outline-variant/20 pt-4">
+                {studyLoading ? (
+                  <p className="text-sm text-stitch-on-surface-variant">Consultando o acervo real…</p>
+                ) : studyContext && (studyContext.sources.length > 0 || studyContext.journeys.length > 0) ? (
+                  <div className="space-y-4">
+                    {studyContext.sources.length > 0 && (
+                      <div>
+                        <p className="mb-2 font-stitch-body text-[10px] font-bold uppercase tracking-[0.16em] text-stitch-secondary">Fontes encontradas</p>
+                        <div className="grid gap-2 sm:grid-cols-2">
+                          {studyContext.sources.slice(0, 6).map((source) => (
+                            <div key={source.kind + ':' + source.ref} className="rounded-xl border border-stitch-outline-variant/20 bg-stitch-surface-container-lowest p-3">
+                              <p className="font-stitch-display text-[15px] text-stitch-primary">{source.title}</p>
+                              {source.author && <p className="mt-0.5 text-[11px] text-stitch-on-surface-variant">{source.author}</p>}
+                              {source.excerpt && <p className="mt-1 line-clamp-2 text-[11px] leading-4 text-stitch-on-surface-variant">{source.excerpt}</p>}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    {studyContext.journeys.length > 0 && (
+                      <div>
+                        <p className="mb-2 font-stitch-body text-[10px] font-bold uppercase tracking-[0.16em] text-stitch-secondary">Jornadas relacionadas</p>
+                        <div className="flex flex-wrap gap-2">
+                          {studyContext.journeys.map((journey) => (
+                            <Link key={journey.id} to={`/jornadas/${journey.id}`} className="rounded-full border border-stitch-secondary/25 bg-stitch-secondary-container/25 px-3 py-1.5 text-xs text-stitch-primary">
+                              {journey.title}
+                            </Link>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    <p className="text-[11px] text-stitch-on-surface-variant">
+                      {studyContext.nexus.length > 0
+                        ? studyContext.nexus.length + ' conexões publicadas foram encontradas para este contexto.'
+                        : 'Nenhuma conexão Nexus publicada foi encontrada para este contexto.'}
+                    </p>
+                  </div>
+                ) : (
+                  <p className="text-sm text-stitch-on-surface-variant">Nenhuma fonte publicada correspondeu a este tema. O Cátedra não preencherá a ausência com conteúdo inventado.</p>
+                )}
+              </div>
+            )}
+          </div>
+        </section>
 
         <section aria-labelledby="estudar-jornadas" className="pb-8 md:pb-10">
           <div className="mb-4 flex items-end justify-between gap-4 md:mb-6">
