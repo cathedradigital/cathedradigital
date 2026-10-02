@@ -141,7 +141,7 @@ export function BiblePickerSheet({
                     key={b.abbr}
                     type="button"
                     onClick={() => setBook(b)}
-                    style={{ minHeight: "var(--stitch-mobile-touch-min)" }}
+                    style={{ minHeight: "44px" }}
                     className={cn(
                       "flex min-h-12 flex-col items-start justify-center rounded-lg border border-stitch-outline-variant/60 bg-stitch-surface-container-lowest px-2.5 py-2 text-left shadow-sm transition-colors",
                       
