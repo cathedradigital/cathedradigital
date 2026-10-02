@@ -644,3 +644,8 @@
 [data-catedra-module="estudar"] [data-catedra-module-root] a:focus-visible {
   outline-color: var(--catedra-module-accent);
 }
+
+/* Rotas que já renderizam MobileTopBar usam o menu da própria barra; as rotas legadas recebem o fallback global. */
+body:has([data-mobile-topbar="true"]) .mobile-menu-fallback {
+  display: none;
+}
