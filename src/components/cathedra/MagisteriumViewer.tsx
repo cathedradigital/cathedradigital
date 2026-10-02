@@ -561,7 +561,7 @@ const MagisteriumViewer: React.FC = () => {
   return (
     <ReaderShell
       className="w-full pb-spacing-4xl relative overflow-x-hidden"
-      contentMaxWidth="max-w-none"
+      contentMaxWidth="max-w-3xl"
       ariaLabel={`Documento do Magistério — ${content.title}`}
       hero={
         <EditorialHero
@@ -637,7 +637,7 @@ const MagisteriumViewer: React.FC = () => {
         onClose={() => setIsSearchOpen(false)}
       />
 
-      <div className="flex flex-col gap-spacing-2xl lg:gap-spacing-4xl items-start">
+      <div className="flex flex-col gap-spacing-xl lg:gap-spacing-2xl items-start">
 
 
 
@@ -673,11 +673,11 @@ const MagisteriumViewer: React.FC = () => {
                 if (id) localStorage.setItem(`cathedra_last_magisterium_scroll_${id}`, window.scrollY.toString());
               }}
               className={`w-full max-w-[70ch] mx-auto px-spacing-md md:px-spacing-0
-                py-spacing-xl md:py-spacing-4xl prose prose-slate dark:prose-invert reader-text
+                py-spacing-lg md:py-spacing-2xl prose prose-slate dark:prose-invert reader-text
                 font-size-${settings.fontSize} font-family-${settings.fontFamily}
-                prose-p:leading-[1.8] prose-p:mb-spacing-xl
-                prose-headings:font-serif prose-headings:text-primary prose-headings:mb-spacing-xl
-                prose-blockquote:border-primary/10 prose-blockquote:bg-primary/[0.01] prose-blockquote:p-spacing-xl prose-blockquote:rounded-premium prose-blockquote:italic
+                prose-p:leading-[1.72] prose-p:mb-spacing-md
+                prose-headings:font-serif prose-headings:text-primary prose-headings:mb-spacing-md
+                prose-blockquote:border-primary/10 prose-blockquote:bg-primary/[0.01] prose-blockquote:p-spacing-md prose-blockquote:rounded-premium prose-blockquote:italic
                 prose-strong:text-primary prose-strong:font-bold transition-all duration-300`}
             >
 
@@ -685,7 +685,7 @@ const MagisteriumViewer: React.FC = () => {
                 const note = currentDocNotes.find(n => n.content_id === `${id}:${idx}` && n.highlight_color);
                 
                 return (
-                  <div key={idx} className="group relative mb-spacing-md" id={`para-${idx}`}>
+                  <div key={idx} className="group relative mb-spacing-sm" id={`para-${idx}`}>
                     <div className={cn(note ? `highlight-${note.highlight_color} px-spacing-2xs rounded-premium-sm cursor-pointer` : '')}
                          onClick={() => note && setActiveHighlight(note)}>
                       <ReactMarkdown>{para}</ReactMarkdown>
