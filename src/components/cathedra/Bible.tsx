@@ -1814,7 +1814,7 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
             </header>
 
             <motion.div 
-              className="px-spacing-lg py-spacing-xl pb-40 max-w-prose mx-auto"
+              className="w-full px-3 sm:px-5 lg:px-8 py-5 sm:py-8 pb-32 mx-auto max-w-5xl"
               drag="x"
               dragConstraints={{ left: 0, right: 0 }}
               dragElastic={0.1}
@@ -1883,7 +1883,7 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                         </div>
                       </div>
                     ) : (
-                      <div className="space-y-spacing-lg">
+                      <div className="space-y-2 sm:space-y-3">
                         {verses.map((v, index) => {
 
 
@@ -1903,7 +1903,7 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                             setIsHighlightMenuOpen(true);
                           }}
                           className={cn(
-                            "flex gap-spacing-md group relative transition-all duration-700 cursor-pointer active:bg-primary/[0.05] p-spacing-xs -mx-spacing-xs rounded-lg",
+                            "w-full flex items-start gap-2 sm:gap-3 group relative transition-all duration-300 cursor-pointer active:bg-primary/[0.05] px-2 py-2 sm:px-3 sm:py-2.5 rounded-xl border border-transparent hover:border-primary/5",
                             highlights[`${selectedBook.abbr}-${selectedChapter}-${v.number}`] === 'yellow' && "bg-yellow-200/40",
                             highlights[`${selectedBook.abbr}-${selectedChapter}-${v.number}`] === 'green' && "bg-green-200/40",
                             highlights[`${selectedBook.abbr}-${selectedChapter}-${v.number}`] === 'blue' && "bg-blue-200/40",
@@ -1911,8 +1911,8 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                           )}
                         >
 
-                          <div className="flex flex-col items-center gap-spacing-xs.5 mt-spacing-xs w-5 shrink-0">
-                            <span className="text-[10px] font-serif font-bold text-secondary/30 tabular-nums">{v.number}</span>
+                          <div className="flex flex-col items-center gap-1 mt-1 w-5 sm:w-6 shrink-0">
+                            <span className="text-[10px] sm:text-[11px] font-serif font-bold text-secondary/40 tabular-nums">{v.number}</span>
                             {cicCitationMap.verses.has(`${selectedChapter}-${v.number}`) && (
                               <div
                                 role="img"
@@ -1942,7 +1942,7 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                             <p 
                               data-testid={`verse-text-${v.number}`}
                               className={cn(
-                                "leading-[1.85] font-serif text-primary/85 tracking-tight relative",
+                                "leading-[1.8] font-serif text-primary/85 tracking-tight relative flex-1 min-w-0",
                                 settings.fontSize === 'small' && "text-[16px]",
                                 settings.fontSize === 'medium' && "text-[19px]",
                                 settings.fontSize === 'large' && "text-[22px]",
@@ -1962,7 +1962,7 @@ const KNOWLEDGE_CONNECTIONS: Record<string, { type: 'catechism' | 'document' | '
                                   handleOpenAnnotation(v);
                                 }}
                                 aria-label={`Anotar versículo ${v.number}`}
-                                className="absolute -right-8 top-1 p-spacing-xs min-h-11 min-w-11 flex items-center justify-center text-primary/10 hover:text-secondary opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-all"
+                                className="absolute right-0 top-0 p-1.5 min-h-10 min-w-10 flex items-center justify-center text-primary/20 hover:text-secondary opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-all"
                               >
                                 <Icons.PenLine className="w-3.5 h-3.5" aria-hidden="true" />
                               </button>
