@@ -546,7 +546,7 @@ const Magisterium: React.FC = () => {
             <BubbleHint kind="category" label="Mostrar documentos de todas as categorias">
               <Button
                 variant="ghost"
-                className={`rounded-premium-full px-spacing-lg py-spacing-xs text-[9px] font-black uppercase tracking-[0.2em] transition-all duration-700 ${selectedCategory === null ? 'bg-primary text-white shadow-premium scale-[1.05]' : 'text-primary/70 hover:text-primary'}`}
+                className={`rounded-premium-full px-3 py-2 text-[10px] font-semibold tracking-normal transition-all duration-700 md:px-spacing-lg md:py-spacing-xs md:text-[9px] md:font-black md:uppercase md:tracking-[0.2em] ${selectedCategory === null ? 'bg-primary text-white shadow-premium scale-[1.05]' : 'text-primary/70 hover:text-primary'}`}
                 onClick={() => setSelectedCategory(null)}
               >
                 Todas as Categorias
@@ -560,7 +560,7 @@ const Magisterium: React.FC = () => {
               >
                 <Button
                   variant="ghost"
-                  className={`rounded-premium-full px-spacing-lg py-spacing-xs text-[9px] font-black uppercase tracking-[0.2em] transition-all duration-700 ${selectedCategory === cat.name ? 'bg-primary text-white shadow-premium scale-[1.05]' : 'text-primary/70 hover:text-primary'}`}
+                  className={`rounded-premium-full px-3 py-2 text-[10px] font-semibold tracking-normal transition-all duration-700 md:px-spacing-lg md:py-spacing-xs md:text-[9px] md:font-black md:uppercase md:tracking-[0.2em] ${selectedCategory === cat.name ? 'bg-primary text-white shadow-premium scale-[1.05]' : 'text-primary/70 hover:text-primary'}`}
                   onClick={() => setSelectedCategory(cat.name)}
                 >
                   {cat.name}
@@ -582,7 +582,7 @@ const Magisterium: React.FC = () => {
                   <Button
                     variant="ghost"
                     aria-pressed={active}
-                    className={`rounded-premium-full px-spacing-md py-spacing-2xs text-[9px] font-black uppercase tracking-[0.2em] transition-all duration-500 ${active ? 'bg-primary text-white shadow-premium' : 'text-primary/70 hover:text-primary border border-primary/10'}`}
+                    className={`rounded-premium-full px-3 py-2 text-[10px] font-semibold tracking-normal transition-all duration-500 md:px-spacing-md md:py-spacing-2xs md:text-[9px] md:font-black md:uppercase md:tracking-[0.2em] ${active ? 'bg-primary text-white shadow-premium' : 'text-primary/70 hover:text-primary border border-primary/10'}`}
                     onClick={() => toggleTheme(theme)}
                   >
                     {theme}
@@ -788,7 +788,7 @@ const Magisterium: React.FC = () => {
                   </div>
 
                   <div className="space-y-spacing-xs flex-1">
-                    <h3 className="text-premium-lg font-display font-light text-foreground/80 group-hover:text-primary transition-colors leading-snug">
+                    <h3 className="text-[16px] md:text-premium-lg font-display font-light text-foreground/80 group-hover:text-primary transition-colors leading-snug break-words">
                       {renderHighlighted(doc.title, searchQuery)}
                       {doc.abbr && (
                         <span className="ml-spacing-2xs text-[9px] font-black text-primary/70 tracking-[0.2em] align-middle">
