@@ -58,4 +58,10 @@ export interface ResolvedNode {
   node: KnowledgeNode;
   /** URL absoluta resolvida via RouteRegistry, ou `null` se o nó não tem rota. */
   url: string | null;
+  /** Explicação contextual gerada pelo Conexo quando o nó é exibido como conexão. */
+  nexusExplanation?: string;
+  /** Evidência que sustentou a conexão (editorial, grafo ou temática). */
+  nexusEvidence?: 'editorial' | 'graph' | 'thematic';
+  /** Relação semântica usada pelo Conexo, quando houver. */
+  nexusRelationKind?: KnowledgeRelationKind;
 }
