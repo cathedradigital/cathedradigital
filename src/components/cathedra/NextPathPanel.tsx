@@ -36,7 +36,7 @@ export const NextPathPanel: React.FC<NextPathPanelProps> = ({
   return (
     <section className={className} data-testid="next-path-panel" aria-label={title}>
       <div className="mb-4 flex items-baseline gap-2">
-        <Sparkles className="h-4 w-4 text-stitch-secondary" aria-hidden />
+        <Compass className="h-4 w-4 text-stitch-secondary" aria-hidden />
         <h2 className="font-stitch-display text-[22px] italic text-stitch-primary md:text-[26px]">
           {title}
         </h2>
