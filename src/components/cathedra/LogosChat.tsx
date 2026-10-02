@@ -84,7 +84,7 @@ const LogosChat = () => {
             initial={{ opacity: 0, scale: 0.9, y: 20, transformOrigin: 'bottom right' }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className="absolute bottom-spacing-3xl right-0 w-[350px] sm:w-[400px] h-[500px] bg-card border border-border shadow-premium-hover rounded-premium-full flex flex-col overflow-hidden"
+            className="absolute bottom-spacing-3xl right-0 w-[calc(100vw-1.5rem)] max-w-[400px] h-[min(500px,70vh)]" bg-card border border-border shadow-premium-hover rounded-premium-full flex flex-col overflow-hidden"
           >
             {/* Header */}
             <div className="p-spacing-md border-b border-border bg-background flex items-center justify-between">
