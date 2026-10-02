@@ -13,7 +13,7 @@ const TransparencyPage: React.FC = () => {
     <ContemplativeLayout>
       <SEOHead 
         title="Transparência e Integridade | Cathedra" 
-        description="Saiba como os conteúdos da Cathedra são gerados e revisados. Nosso compromisso com a verdade sem uso de Inteligência Artificial."
+        description="Saiba como os conteúdos da Cathedra são gerados e revisados. O conteúdo editorial e doutrinal é curado por humanos; o Cáter é um recurso separado de consulta assistida por IA."
         path="/transparencia"
       />
       
@@ -32,7 +32,7 @@ const TransparencyPage: React.FC = () => {
           </p>
         </div>
 
-        {/* No AI Section */}
+        {/* Editorial integrity section */}
         <motion.section 
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -45,13 +45,13 @@ const TransparencyPage: React.FC = () => {
           <div className="relative space-y-spacing-lg">
             <div className="flex items-center gap-spacing-sm text-primary">
               <Icons.CheckCircle className="w-spacing-lg h-spacing-lg" />
-              <h2 className="text-premium-xl font-bold uppercase tracking-wider">Compromisso 100% Sem IA</h2>
+              <h2 className="text-premium-xl font-bold uppercase tracking-wider">Curadoria humana e IA com função delimitada</h2>
             </div>
             <p className="text-foreground/80 leading-relaxed font-serif text-premium-lg">
-              A Cathedra Digital assume o compromisso público de <strong>não utilizar Inteligência Artificial</strong> para a geração de comentários bíblicos, interpretações teológicas ou reflexões espirituais. 
+              A Cathedra Digital mantém a <strong>curadoria humana</strong> dos conteúdos editoriais e doutrinais. O Cáter, por sua vez, é um recurso separado de consulta assistida por IA, limitado às fontes verificáveis recuperadas na Cátedra. 
             </p>
             <p className="text-foreground/80 leading-relaxed">
-              Diferente de outras plataformas, aqui nenhum algoritmo decide o que é relevante para sua alma. Acreditamos que a transmissão da Fé exige a mediação humana, fundamentada na Tradição e no Magistério Vivo da Igreja.
+              A IA não é apresentada como autoridade eclesial: sua função é consultar, organizar e explicar fontes recuperadas, enquanto a autoridade do conteúdo permanece nas fontes e na curadoria editorial humana.
             </p>
           </div>
         </motion.section>
