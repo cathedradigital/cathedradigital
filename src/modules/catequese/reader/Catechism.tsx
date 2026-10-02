@@ -372,7 +372,7 @@ const CatechismContent: React.FC<{
       {data?.content && (
         <div className="mt-spacing-md pt-spacing-sm border-t border-primary/[0.06]">
           <p className="text-[9px] font-medium uppercase tracking-[0.16em] text-muted-foreground/45">
-            Toque no ✨ ao lado do parágrafo para abrir a bolha Cátedra.
+            Toque no ✨ ao lado do parágrafo para abrir a Yá.
           </p>
         </div>
       )}
@@ -449,8 +449,8 @@ const LazyParagraph: React.FC<{
               size="icon-sm"
               onClick={() => setIsContextualOpen(true)}
               className="rounded-premium-full text-muted-foreground/50 hover:text-secondary hover:bg-secondary/5"
-              aria-label={`Abrir ações da leitura para o parágrafo ${p}`}
-              title="Ações da leitura"
+              aria-label={`Abrir Yá para o parágrafo ${p}`}
+              title="Yá"
             >
               <Icons.Sparkles className="w-spacing-sm h-spacing-sm" />
             </Button>
