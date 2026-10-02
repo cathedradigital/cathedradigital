@@ -9,7 +9,6 @@ import { ReaderToolbar } from '@/components/reader';
 import { MAGISTERIUM_CATEGORIES } from '@/data/magisterium-urls';
 import { AppRoute } from '@/types';
 import { MobileTopBar } from '@/components/mobile/MobileTopBar';
-import { MobileBottomNav } from '@/components/mobile/MobileBottomNav';
 
 const MagisteriumViewer = lazy(
   () => import('@/components/cathedra/MagisteriumViewer'),
@@ -46,7 +45,6 @@ const AtriumMagisteriumViewer: React.FC = () => {
       <Suspense fallback={null}>
         <MagisteriumViewer />
       </Suspense>
-      <MobileBottomNav />
     </div>
   );
 };
