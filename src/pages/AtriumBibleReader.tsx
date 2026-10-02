@@ -247,36 +247,26 @@ const BibleLanding: React.FC = () => {
         </section>
 
 
-        <section className="mt-10 rounded-2xl border border-stitch-outline-variant/35 bg-stitch-surface-container-lowest p-5 shadow-sm">
-          <div className="flex flex-col gap-1 md:flex-row md:items-end md:justify-between">
-            <div>
-              <p className="font-stitch-body text-[10px] font-bold uppercase tracking-[0.18em] text-stitch-secondary">Estudo comparado</p>
-              <h2 className="mt-1 font-stitch-display text-[22px] text-stitch-primary">Edições e traduções</h2>
-              <p className="mt-1 max-w-2xl font-stitch-body text-[13px] leading-relaxed text-stitch-on-surface-variant">
-                A estrutura já fica preparada para comparar futuras edições da Escritura, sem misturar tradução, tradição e estatuto editorial.
-              </p>
-            </div>
-            <span className="font-stitch-body text-[10px] font-bold uppercase tracking-[0.14em] text-stitch-on-surface-variant">Em preparação</span>
-          </div>
-          <div className="mt-4 grid gap-2 sm:grid-cols-2">
-            {BIBLE_EDITION_ROADMAP.map((edition) => (
-              <div key={edition.name} className="rounded-xl border border-stitch-outline-variant/30 bg-stitch-surface px-3 py-3">
-                <div className="flex items-center justify-between gap-3">
-                  <span className="font-stitch-body text-[13px] font-semibold text-stitch-on-surface">{edition.name}</span>
-                  <span className="shrink-0 rounded-full bg-stitch-secondary-container px-2 py-1 font-stitch-body text-[9px] font-bold uppercase tracking-[0.1em] text-stitch-primary">{edition.status}</span>
-                </div>
-                <p className="mt-1 text-[11px] leading-relaxed text-stitch-on-surface-variant">{edition.note}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <section className="mt-4 rounded-2xl border border-stitch-outline-variant/30 bg-stitch-surface-container-lowest p-5">
-          <p className="font-stitch-body text-[10px] font-bold uppercase tracking-[0.18em] text-stitch-secondary">Evangelhos sinóticos</p>
+        <section className="mt-8 rounded-2xl border border-stitch-outline-variant/30 bg-stitch-surface-container-lowest p-4 md:p-5">
+          <p className="font-stitch-body text-[9px] font-bold uppercase tracking-[0.16em] text-stitch-secondary">Evangelhos sinóticos</p>
           <h2 className="mt-1 font-stitch-display text-[21px] text-stitch-primary">Mateus · Marcos · Lucas</h2>
           <p className="mt-1 max-w-2xl font-stitch-body text-[13px] leading-relaxed text-stitch-on-surface-variant">
-            Área reservada para estudo comparado dos três Evangelhos sinóticos, com referências às fontes e distinção clara entre texto bíblico, tradição e material de apoio.
+            Três testemunhos do mesmo mistério de Cristo. A Cátedra poderá ligar episódios paralelos, referências e diferenças de redação sem misturar o texto bíblico com comentários.
           </p>
+          <div className="mt-4 grid grid-cols-3 gap-2">
+            {[
+              { abbr: 'Mt', name: 'Mateus', note: 'Evangelho segundo Mateus' },
+              { abbr: 'Mc', name: 'Marcos', note: 'Evangelho segundo Marcos' },
+              { abbr: 'Lc', name: 'Lucas', note: 'Evangelho segundo Lucas' },
+            ].map((gospel) => (
+              <Link key={gospel.abbr} to={buildBibleUrl({ abbr: gospel.abbr, chapter: 1 })}
+                className="group rounded-xl border border-stitch-outline-variant/30 bg-stitch-surface p-3 transition-colors hover:border-stitch-secondary">
+                <span className="font-stitch-display text-[22px] text-stitch-secondary">{gospel.abbr}</span>
+                <span className="mt-1 block font-stitch-body text-[13px] font-semibold text-stitch-primary">{gospel.name}</span>
+                <span className="mt-0.5 block text-[10px] leading-snug text-stitch-on-surface-variant">{gospel.note}</span>
+              </Link>
+            ))}
+          </div>
         </section>
 
         {/* Categorias e livros */}
@@ -305,22 +295,22 @@ const BibleLanding: React.FC = () => {
                   <Link
                     key={book.abbr}
                     to={buildBibleUrl({ abbr: book.abbr, chapter: 1 })}
-                    className="estudar-bible-book-card group relative flex min-h-[92px] flex-col justify-between overflow-hidden rounded-xl border border-stitch-outline-variant/20 bg-stitch-surface-container-lowest p-2.5 transition-all hover:border-stitch-secondary hover:shadow-lg hover:shadow-black/[0.05] md:min-h-[104px] md:p-3"
+                    className="estudar-bible-book-card group relative flex min-h-[78px] sm:min-h-[92px] flex-col justify-between overflow-hidden rounded-xl border border-stitch-outline-variant/20 bg-stitch-surface-container-lowest p-2.5 transition-all hover:border-stitch-secondary hover:shadow-lg hover:shadow-black/[0.05] md:min-h-[104px] md:p-3"
                   >
                     <div className="absolute inset-0 bg-gradient-to-br from-stitch-primary/[0.03] to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
                     <div className="relative">
-                      <span className="font-stitch-display text-[24px] italic leading-none text-stitch-secondary/75 md:text-[28px]">
+                      <span className="font-stitch-display text-[18px] italic leading-none text-stitch-secondary/75 sm:text-[22px] md:text-[28px]">
                         {String(i + 1).padStart(2, '0')}
                       </span>
                     </div>
                     <div className="relative">
-                      <h3 className="font-stitch-display text-[14px] leading-tight text-stitch-primary transition-colors group-hover:text-stitch-secondary md:text-[15px]">
+                      <h3 className="font-stitch-display text-[12px] leading-tight text-stitch-primary sm:text-[14px] transition-colors group-hover:text-stitch-secondary md:text-[15px]">
                         {book.name}
                       </h3>
                       <p className="mt-0.5 font-stitch-body text-[9px] font-bold uppercase tracking-[0.08em] text-stitch-on-surface-variant md:text-[10px]">
                         {book.abbr} · {book.chapters} cap.
                       </p>
-                      <div className="mt-1.5 flex items-center justify-between text-stitch-secondary opacity-100 transition-opacity">
+                      <div className="mt-1 flex items-center justify-between text-stitch-secondary opacity-100 transition-opacity">
                         <span className="font-stitch-body text-[11px] uppercase tracking-[0.15em]">
                           Abrir
                         </span>
@@ -332,6 +322,27 @@ const BibleLanding: React.FC = () => {
               </div>
             </div>
           ))}
+        </section>
+
+        <section className="mt-12 rounded-2xl border border-stitch-outline-variant/30 bg-stitch-surface-container-lowest p-4 md:p-5">
+          <div className="flex items-end justify-between gap-3">
+            <div>
+              <p className="font-stitch-body text-[9px] font-bold uppercase tracking-[0.16em] text-stitch-secondary">Edições e traduções</p>
+              <h2 className="mt-1 font-stitch-display text-[20px] text-stitch-primary">Escolha a tradição de leitura</h2>
+            </div>
+            <span className="hidden text-[9px] font-bold uppercase tracking-[0.12em] text-stitch-on-surface-variant sm:block">Em preparação</span>
+          </div>
+          <div className="-mx-4 mt-4 flex snap-x gap-2 overflow-x-auto px-4 pb-1 scrollbar-none md:mx-0 md:grid md:grid-cols-3 md:overflow-visible md:px-0">
+            {BIBLE_EDITION_ROADMAP.map((edition) => (
+              <div key={edition.name} className="min-w-[220px] snap-start rounded-xl border border-stitch-outline-variant/25 bg-stitch-surface p-3 md:min-w-0">
+                <div className="flex items-start justify-between gap-2">
+                  <span className="font-stitch-body text-[12px] font-semibold leading-snug text-stitch-on-surface">{edition.name}</span>
+                  <span className="shrink-0 rounded-full bg-stitch-secondary-container px-2 py-1 text-[8px] font-bold uppercase tracking-[0.08em] text-stitch-primary">{edition.status}</span>
+                </div>
+                <p className="mt-1 text-[10px] leading-relaxed text-stitch-on-surface-variant">{edition.note}</p>
+              </div>
+            ))}
+          </div>
         </section>
 
         {/* Rodapé contemplativo */}
