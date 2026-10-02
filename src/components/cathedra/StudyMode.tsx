@@ -330,30 +330,30 @@ const StudyMode: React.FC = () => {
   return (
     <div className="flex flex-col items-center justify-center min-h-[60vh] text-center space-y-spacing-2xl max-w-spacing-2xl mx-auto py-spacing-2xl">
       <SEOHead 
-        title="Logos IA | Inteligência Teológica Minimalista" 
-        description="Consulte a Logos IA para resumos teológicos, conexões bíblicas e suporte espiritual baseado na Tradição e no Magistério da Igreja Católica." 
+        title="Estudo | Cátedra" 
+        description="Aprofunde um tema no Cátedra, relacionando Escritura, Catecismo, Magistério e tradição." 
         path="/estudo"
         image="https://isojguvcnfncokoxoauk.supabase.co/storage/v1/object/public/public-assets/og-logos.png"
-        keywords="logos ia, inteligência artificial católica, estudo bíblico ia, catecismo ia, teologia católica digital"
+        keywords="estudo católico, Bíblia, Catecismo, Magistério, tradição, Cátedra"
         breadcrumbs={[
           { name: "Home", path: "/" },
-          { name: "Logos IA", path: "/estudo" }
+          { name: "Estudar", path: "/estudo" }
         ]}
       />
       <div className="w-spacing-4xl h-spacing-4xl rounded-premium bg-primary/10 flex items-center justify-center border border-primary/20">
-        <Icons.Shield className="w-spacing-2xl h-spacing-2xl text-primary" />
+        <Icons.Sparkles className="w-spacing-2xl h-spacing-2xl text-primary" />
       </div>
       
       <div className="space-y-spacing-md">
-        <h1 className="text-premium-3xl md:text-premium-5xl font-serif font-black text-primary">Estudo e Verdade</h1>
+        <h1 className="text-premium-3xl md:text-premium-5xl font-serif font-black text-primary">Aprofunde este tema</h1>
         <p className="text-premium-lg text-muted-foreground font-serif italic">
-          "Para garantir a integridade absoluta da doutrina e a soberania da sua experiência espiritual, a Cathedra Digital optou por não utilizar serviços de Inteligência Artificial."
+          "O Cátedra conecta fontes e contextos para ajudar você a compreender a fé com mais profundidade."
         </p>
       </div>
 
       <div className="bg-card border border-border p-spacing-xl rounded-[2.5rem] shadow-premium-md space-y-spacing-lg">
         <p className="text-premium-sm text-foreground/80 leading-relaxed">
-          O <strong>Modo Estudo</strong> está sendo reformulado para focar exclusivamente em <strong>Curadoria Humana</strong> e <strong>Fontes Oficiais</strong> da Igreja, permitindo que você navegue pela Tradição e pelo Magistério com total segurança.
+          O <strong>Modo Estudo</strong> organiza a conversa a partir do contexto do seu estudo e pode levar você a referências bíblicas e ao Catecismo. As fontes continuam sendo a base do caminho.
         </p>
         <div className="flex flex-col sm:flex-row gap-spacing-md justify-center">
           <Button 
