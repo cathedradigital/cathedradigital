@@ -8,7 +8,7 @@ import type { PassageDescriptor } from '@/lib/passageUrl';
 interface HighlightMenuProps {
   isOpen: boolean;
   onClose: () => void;
-  onSelectColor: (color: string) => void;
+  onSelectColor?: (color: string) => void;
   onAddNote: () => void;
   onShare?: () => void;
   verseText?: string;
@@ -91,6 +91,7 @@ export const HighlightMenu: React.FC<HighlightMenuProps> = ({
                 </button>
               </div>
 
+              {onSelectColor && (
               <div className="grid grid-cols-4 gap-2" aria-label="Cores de destaque">
                 {COLORS.map((color) => (
                   <button
@@ -107,6 +108,7 @@ export const HighlightMenu: React.FC<HighlightMenuProps> = ({
                   </button>
                 ))}
               </div>
+              )}
 
               <div className="flex flex-wrap gap-2">
                 <button
