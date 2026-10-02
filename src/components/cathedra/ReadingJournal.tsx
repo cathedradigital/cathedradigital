@@ -310,7 +310,11 @@ const ReadingJournal: React.FC = () => {
                         } else if (note.content_type === 'catechism' && note.paragraph) {
                           url = `/catechism?p=${encodeURIComponent(String(note.paragraph))}`;
                         } else if (note.content_type === 'magisterium' && note.content_id) {
-                          url = `/magisterium/${encodeURIComponent(note.content_id)}`;
+                          // Notes created from a Magisterium paragraph use docId:paragraphIndex.
+                          const docId = note.content_id.split(':')[0];
+                          url = `/magisterium/${encodeURIComponent(docId)}`;
+                        } else if (note.content_type === 'saint' && note.content_id) {
+                          url = `/santos/${encodeURIComponent(note.content_id)}`;
                         }
 
                         navigate(url);
