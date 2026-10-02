@@ -299,8 +299,20 @@ const ReadingJournal: React.FC = () => {
                       size="sm" 
                       className="text-[10px] uppercase font-black tracking-widest text-primary gap-spacing-2xs"
                       onClick={() => {
-                        const url = note.content_type === 'bible' ? `/bible?book=${note.book_abbr}&ch=${note.chapter}` : 
-                                  note.content_type === 'catechism' ? `/catechism?p=${note.paragraph}` : '/';
+                        const params = new URLSearchParams();
+                        let url = '/';
+
+                        if (note.content_type === 'bible' && note.book_abbr && note.chapter) {
+                          params.set('book', note.book_abbr);
+                          params.set('ch', String(note.chapter));
+                          if (note.verse) params.set('v', String(note.verse));
+                          url = `/bible?${params.toString()}`;
+                        } else if (note.content_type === 'catechism' && note.paragraph) {
+                          url = `/catechism?p=${encodeURIComponent(String(note.paragraph))}`;
+                        } else if (note.content_type === 'magisterium' && note.content_id) {
+                          url = `/magisterium/${encodeURIComponent(note.content_id)}`;
+                        }
+
                         navigate(url);
                       }}
                     >
