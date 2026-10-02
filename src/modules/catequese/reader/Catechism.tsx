@@ -456,7 +456,7 @@ const Catechism: React.FC = memo(() => {
   const { settings } = useReadingSettings();
   const navigate = useNavigate();
   useAutoFocus();
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const initialParagraph = useMemo(() => {
     const raw = getParagraphParam(searchParams);
     if (raw == null) return null;
@@ -488,8 +488,29 @@ const Catechism: React.FC = memo(() => {
     if (!activeParagraphId) return;
     const paragraph = Number(activeParagraphId.replace(/^p/, ''));
     if (!Number.isFinite(paragraph) || paragraph <= 0) return;
-    void saveLastRead({ content_type: 'catechism', content_id: String(paragraph), paragraph, label: 'Catecismo §' + paragraph, url: '/catechism?p=' + paragraph, is_last_read: true });
-  }, [activeParagraphId, saveLastRead]);
+    const nextUrl = `/catechism?p=${paragraph}`;
+
+    // Keep the reading position in the URL while the reader advances.
+    // This makes Nexus → voltar preserve the exact paragraph even when the
+    // browser returns to the same mounted reader instead of opening the index.
+    setSearchParams(
+      (prev) => {
+        const next = new URLSearchParams(prev);
+        next.set('p', String(paragraph));
+        return next;
+      },
+      { replace: true },
+    );
+
+    void saveLastRead({
+      content_type: 'catechism',
+      content_id: String(paragraph),
+      paragraph,
+      label: 'Catecismo §' + paragraph,
+      url: nextUrl,
+      is_last_read: true,
+    });
+  }, [activeParagraphId, saveLastRead, setSearchParams]);
 
   useEffect(() => {
     if (initialParagraph === 'invalid') {
