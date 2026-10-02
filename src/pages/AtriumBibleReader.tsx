@@ -301,27 +301,27 @@ const BibleLanding: React.FC = () => {
                 </span>
               </div>
 
-              <div className="estudar-bible-book-grid grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+              <div className="estudar-bible-book-grid grid grid-cols-2 gap-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8">
                 {cat.books.map((book: BibleBook, i: number) => (
                   <Link
                     key={book.abbr}
                     to={buildBibleUrl({ abbr: book.abbr, chapter: 1 })}
-                    className="estudar-bible-book-card group relative flex aspect-[3/4] flex-col justify-between overflow-hidden border border-stitch-outline-variant/20 bg-stitch-surface-container-lowest p-4 transition-all hover:border-stitch-secondary hover:shadow-lg hover:shadow-black/[0.05]"
+                    className="estudar-bible-book-card group relative flex min-h-[92px] flex-col justify-between overflow-hidden rounded-xl border border-stitch-outline-variant/20 bg-stitch-surface-container-lowest p-2.5 transition-all hover:border-stitch-secondary hover:shadow-lg hover:shadow-black/[0.05] md:min-h-[104px] md:p-3"
                   >
                     <div className="absolute inset-0 bg-gradient-to-br from-stitch-primary/[0.03] to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
                     <div className="relative">
-                      <span className="font-stitch-display text-[48px] italic leading-none text-stitch-secondary/75">
+                      <span className="font-stitch-display text-[24px] italic leading-none text-stitch-secondary/75 md:text-[28px]">
                         {String(i + 1).padStart(2, '0')}
                       </span>
                     </div>
                     <div className="relative">
-                      <h3 className="font-stitch-display text-[18px] leading-tight text-stitch-primary transition-colors group-hover:text-stitch-secondary">
+                      <h3 className="font-stitch-display text-[14px] leading-tight text-stitch-primary transition-colors group-hover:text-stitch-secondary md:text-[15px]">
                         {book.name}
                       </h3>
-                      <p className="mt-1 font-stitch-body text-[11px] font-bold uppercase tracking-[0.15em] text-stitch-on-surface-variant">
+                      <p className="mt-0.5 font-stitch-body text-[9px] font-bold uppercase tracking-[0.08em] text-stitch-on-surface-variant md:text-[10px]">
                         {book.abbr} · {book.chapters} cap.
                       </p>
-                      <div className="mt-3 flex items-center justify-between text-stitch-secondary opacity-0 transition-opacity group-hover:opacity-100">
+                      <div className="mt-1.5 flex items-center justify-between text-stitch-secondary opacity-100 transition-opacity">
                         <span className="font-stitch-body text-[11px] uppercase tracking-[0.15em]">
                           Abrir
                         </span>
