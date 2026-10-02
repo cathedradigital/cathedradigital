@@ -111,15 +111,58 @@ export interface BuildBucketedOptions {
 export function buildBucketedSuggestions(
   opts: BuildBucketedOptions,
 ): { byBucket: Partial<Record<ReaderNexusBucket, ResolvedNode[]>>; suggestions: ContinuationSuggestion[] } {
-  const byBucket: Partial<Record<ReaderNexusBucket, ResolvedNode[]>> = {};
-
-  const push = (bucket: ReaderNexusBucket, resolved: ResolvedNode) => {
-    if (!resolved?.url) return;
-    const arr = (byBucket[bucket] ??= []);
-    if (!arr.some((r) => r.node.id === resolved.node.id)) arr.push(resolved);
+  type Candidate = {
+    resolved: ResolvedNode;
+    score: number;
   };
 
-  // 1. Refs explícitas.
+  const byBucket: Partial<Record<ReaderNexusBucket, ResolvedNode[]>> = {};
+  const candidates = new Map<ReaderNexusBucket, Map<KnowledgeNodeId, Candidate>>();
+
+  const normalize = (value: string): string[] =>
+    value
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\\u0300-\\u036f]/g, '')
+      .split(/\\s+/)
+      .map((token) => token.replace(/[^a-z0-9-]/g, ''))
+      .filter((token) => token.length >= 3);
+
+  const queryTokens = (opts.fallbackQueries ?? []).flatMap(normalize);
+  const self = opts.selfId ? KnowledgeGraph.findNode(opts.selfId) : undefined;
+  const selfTokens = self ? normalize(\`\${self.label} \${self.summary ?? ''}\`) : [];
+
+  const scoreText = (node: ResolvedNode): number => {
+    if (!queryTokens.length) return 0;
+    const hay = normalize(\`\${node.node.label} \${node.node.summary ?? ''}\`);
+    const haySet = new Set(hay);
+    const overlap = queryTokens.filter((token) => haySet.has(token)).length;
+    const phrase = queryTokens.length > 1 && hay.join(' ').includes(queryTokens.join(' ')) ? 8 : 0;
+    return overlap * 5 + phrase;
+  };
+
+  const scoreRelation = (nodeId: KnowledgeNodeId): number => {
+    if (!opts.selfId) return 0;
+    const relations = [
+      ...KnowledgeRegistry.relationsFrom(opts.selfId),
+      ...KnowledgeRegistry.relationsTo(opts.selfId),
+    ].filter((relation) => relation.to === nodeId || relation.from === nodeId);
+    return relations.reduce((total, relation) => total + 20 + Math.round((relation.weight ?? 0) * 20), 0);
+  };
+
+  const push = (bucket: ReaderNexusBucket, resolved: ResolvedNode, bonus = 0) => {
+    if (!resolved?.url || resolved.node.id === opts.selfId) return;
+    const arr = candidates.get(bucket) ?? new Map<KnowledgeNodeId, Candidate>();
+    candidates.set(bucket, arr);
+
+    const score = bonus + scoreRelation(resolved.node.id) + scoreText(resolved);
+    const previous = arr.get(resolved.node.id);
+    if (!previous || score > previous.score) {
+      arr.set(resolved.node.id, { resolved, score });
+    }
+  };
+
+  // 1. Refs explícitas: são a evidência mais forte de intenção editorial.
   for (const bucket of opts.buckets) {
     const spec = KIND_SPECS[bucket];
     if (!spec) continue;
@@ -127,43 +170,65 @@ export function buildBucketedSuggestions(
       const id = ensureNode(spec, raw);
       if (!id) continue;
       const resolved = KnowledgeGraph.resolve(id);
-      if (resolved) push(bucket, resolved);
+      if (resolved) push(bucket, resolved, 100);
     }
   }
 
-  // 2. Fallback semântico para buckets vazios.
-  const emptyBuckets = opts.buckets.filter((b) => (byBucket[b]?.length ?? 0) === 0);
-  if (emptyBuckets.length > 0 && (opts.fallbackQueries?.length ?? 0) > 0) {
-    const seen = new Set<KnowledgeNodeId>();
-    for (const q of opts.fallbackQueries!) {
-      if (!q || q.length < 3) continue;
-      const found = KnowledgeGraph.search(q, { limit: 24 });
-      for (const n of found) {
-        if (seen.has(n.id) || n.id === opts.selfId) continue;
-        seen.add(n.id);
-        const bucket = (opts.buckets as readonly string[]).includes(n.kind)
-          ? (n.kind as ReaderNexusBucket)
-          : null;
-        if (!bucket || (byBucket[bucket]?.length ?? 0) > 0) continue;
-        const resolved = KnowledgeGraph.resolve(n.id);
-        if (resolved) push(bucket, resolved);
-      }
-    }
-  }
-
-  // 3. Vizinhança direta como último recurso.
+  // 2. Relações diretas do grafo: conexão estrutural tem prioridade sobre texto.
   if (opts.selfId && KnowledgeRegistry.hasNode(opts.selfId)) {
-    KnowledgeGraph.neighbors(opts.selfId).forEach((n) => {
-      const bucket = (opts.buckets as readonly string[]).includes(n.kind)
-        ? (n.kind as ReaderNexusBucket)
+    KnowledgeGraph.neighbors(opts.selfId).forEach((node) => {
+      const bucket = (opts.buckets as readonly string[]).includes(node.kind)
+        ? (node.kind as ReaderNexusBucket)
         : null;
-      if (!bucket || (byBucket[bucket]?.length ?? 0) > 0) return;
-      const resolved = KnowledgeGraph.resolve(n.id);
-      if (resolved) push(bucket, resolved);
+      if (!bucket) return;
+      const resolved = KnowledgeGraph.resolve(node.id);
+      if (resolved) push(bucket, resolved, 45);
     });
   }
 
-  // 4. Monta sugestões finais (1 por bucket, ordem canônica).
+  // 3. Descoberta textual: coleta todos os matches elegíveis e os ranqueia,
+  //    em vez de parar no primeiro item encontrado de cada bucket.
+  for (const q of opts.fallbackQueries ?? []) {
+    if (!q || q.trim().length < 3) continue;
+    const found = KnowledgeGraph.search(q, { limit: 48 });
+    for (const node of found) {
+      if (node.id === opts.selfId) continue;
+      const bucket = (opts.buckets as readonly string[]).includes(node.kind)
+        ? (node.kind as ReaderNexusBucket)
+        : null;
+      if (!bucket) continue;
+      const resolved = KnowledgeGraph.resolve(node.id);
+      if (resolved) push(bucket, resolved, 10);
+    }
+  }
+
+  // 4. Compatibilidade lexical com o próprio nó. Útil quando o conteúdo
+  //    chegou sem refs explícitas e o índice possui nós semanticamente próximos.
+  if (selfTokens.length) {
+    for (const node of KnowledgeGraph.allNodes()) {
+      if (node.id === opts.selfId) continue;
+      const bucket = (opts.buckets as readonly string[]).includes(node.kind)
+        ? (node.kind as ReaderNexusBucket)
+        : null;
+      if (!bucket) continue;
+      const hay = normalize(\`\${node.label} \${node.summary ?? ''}\`);
+      const overlap = selfTokens.filter((token) => hay.includes(token)).length;
+      if (!overlap) continue;
+      const resolved = KnowledgeGraph.resolve(node.id);
+      if (resolved) push(bucket, resolved, overlap * 2);
+    }
+  }
+
+  // 5. Materializa os candidatos ordenados. Mantemos vários itens por bucket
+  //    para que o Nexus possa exibir profundidade sem perder a relevância.
+  for (const bucket of opts.buckets) {
+    const ranked = Array.from(candidates.get(bucket)?.values() ?? [])
+      .sort((a, b) => b.score - a.score || a.resolved.node.label.localeCompare(b.resolved.node.label))
+      .slice(0, 8);
+    if (ranked.length) byBucket[bucket] = ranked.map((item) => item.resolved);
+  }
+
+  // 6. Uma sugestão de continuidade por bucket, usando o melhor candidato.
   const suggestions: ContinuationSuggestion[] = [];
   for (const bucket of opts.buckets) {
     const first = byBucket[bucket]?.[0];
