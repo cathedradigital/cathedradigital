@@ -334,7 +334,7 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
                   },
                 });
                 if (oauthError) {
-                  console.error('Google Auth Error:', result.error);
+                  console.error('Google Auth Error:', oauthError);
                   setError('Não foi possível conectar com o Google. Verifique sua conexão e tente novamente.');
                 } else {
                   handleSuccess();
