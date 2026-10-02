@@ -101,7 +101,7 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart }: HeroContent
               trackEvent('navigation_click', { target: 'bible', source: 'hero' });
               navigate('/bible');
             }}
-            className="w-full md:w-auto min-w-[240px] md:min-w-[300px] border-primary/5 hover:border-primary/20 text-primary/40 hover:text-primary transition-all duration-1000 bg-transparent rounded-premium-full h-spacing-2xl md:h-spacing-3xl uppercase tracking-[0.4em] text-[9px] md:text-[10px] font-bold"
+            className="w-full max-w-[calc(100vw-2rem)] md:w-auto md:min-w-[300px] border-primary/5 hover:border-primary/20 text-primary/40 hover:text-primary transition-all duration-1000 bg-transparent rounded-premium-full h-spacing-2xl md:h-spacing-3xl uppercase tracking-[0.4em] text-[9px] md:text-[10px] font-bold"
             aria-label="Explorar Escrituras"
           >
             Explorar Escrituras
@@ -114,7 +114,7 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart }: HeroContent
               trackEvent('conversion', { type: 'start_journey', source: 'hero' });
               onStart();
             }}
-            className="w-full md:w-auto min-w-[260px] md:min-w-[320px] bg-primary text-primary-foreground hover:bg-primary/90 transition-all duration-1000 rounded-premium-full h-spacing-3xl md:h-spacing-4xl shadow-premium shadow-primary/10 uppercase tracking-[0.6em] text-[10px] md:text-[11px] font-black group overflow-hidden relative border-none"
+            className="w-full max-w-[calc(100vw-2rem)] md:w-auto md:min-w-[320px] bg-primary text-primary-foreground hover:bg-primary/90 transition-all duration-1000 rounded-premium-full h-spacing-3xl md:h-spacing-4xl shadow-premium shadow-primary/10 uppercase tracking-[0.6em] text-[10px] md:text-[11px] font-black group overflow-hidden relative border-none"
             aria-label="Continuar jornada"
           >
             <span className="relative z-10">Continuar jornada</span>
@@ -125,7 +125,7 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart }: HeroContent
             size="lg"
             variant="ghost"
             onClick={() => navigate('/biblioteca')}
-            className="w-full md:w-auto min-w-[240px] md:min-w-[300px] text-primary/75 hover:text-primary transition-all duration-1000 rounded-premium-full h-spacing-2xl md:h-spacing-3xl uppercase tracking-[0.4em] text-[9px] md:text-[10px] font-bold"
+            className="w-full max-w-[calc(100vw-2rem)] md:w-auto md:min-w-[300px] text-primary/75 hover:text-primary transition-all duration-1000 rounded-premium-full h-spacing-2xl md:h-spacing-3xl uppercase tracking-[0.4em] text-[9px] md:text-[10px] font-bold"
             aria-label="Iniciar leitura"
           >
             Iniciar leitura
