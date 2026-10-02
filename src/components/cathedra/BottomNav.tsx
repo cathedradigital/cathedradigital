@@ -9,16 +9,6 @@ import { Icons } from '@/constants';
 import { prefetchRoute } from '@/lib/prefetch';
 import { LangContext } from '@/contexts/LangContext';
 import { MODULE_NAVIGATION } from '@/config/moduleNavigation';
-import { SmartActionSheet } from './SmartActionButton';
-
-/**
- * Ícone dedicado do item "Atalhos": Sparkles renderizado mais fino que os
- * demais para pesar menos visualmente, mesmo herdando `size` do BottomNavItem.
- * Ignora `strokeWidth` passado pelo pai — traço travado em 1.3.
- */
-const AtalhosIcon: React.FC<{ size?: number; className?: string }> = ({ size = 18, className }) => (
-  <Icons.Sparkles size={size} strokeWidth={1.3} className={className} aria-hidden="true" />
-);
 
 /* ── Ripple helper ── */
 function useRipple() {
@@ -174,7 +164,6 @@ const BottomNav: React.FC<BottomNavProps> = ({ user, onOpenSidebar }) => {
   const triggerRipple = useRipple();
   const { t } = useContext(LangContext);
   const shouldReduceMotion = useReducedMotion();
-  const [atalhosOpen, setAtalhosOpen] = useState(false);
 
   const items = useMemo(() => {
     // A mesma taxonomia do desktop: cinco ambientes, sem uma segunda
@@ -231,8 +220,6 @@ const BottomNav: React.FC<BottomNavProps> = ({ user, onOpenSidebar }) => {
 
                 if (item.isMenu) {
                   onOpenSidebar();
-                } else if (item.isAtalhos) {
-                  setAtalhosOpen(true);
                 } else if (item.route) {
                   if (location.pathname === item.route) return;
                   navigate(item.route);
@@ -244,7 +231,6 @@ const BottomNav: React.FC<BottomNavProps> = ({ user, onOpenSidebar }) => {
           );
         })}
       </div>
-      <SmartActionSheet open={atalhosOpen} onOpenChange={setAtalhosOpen} />
     </nav>
   );
 };
