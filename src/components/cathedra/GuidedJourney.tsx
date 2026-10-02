@@ -97,12 +97,6 @@ const GuidedJourney = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
     }
   };
 
-  const getWhatsAppLink = () => {
-    const theme = answers[0] || "espiritualidade";
-    const text = encodeURIComponent(`Olá! Concluí minha jornada guiada no Cathedra sobre o tema "${theme}". Gostaria de aprofundar minha reflexão.`);
-    return `${SOCIAL_LINKS.WHATSAPP}?text=${text}`;
-  };
-
   if (!isOpen) return null;
 
   return (
@@ -271,24 +265,11 @@ const GuidedJourney = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
               </div>
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-spacing-sm">
-              <Button 
-                asChild
-                className="flex-1 h-spacing-2xl rounded-premium-full text-premium-xs font-black uppercase tracking-[0.1em]"
-              >
-                <a 
-                  href={getWhatsAppLink()} 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  onClick={() => trackEvent('social_link_click', { platform: 'WhatsApp', url: getWhatsAppLink() })}
-                >
-                  Aprofundar via WhatsApp
-                </a>
-              </Button>
+            <div className="flex flex-col gap-spacing-sm">
               <Button 
                 variant="outline"
                 onClick={onClose}
-                className="h-spacing-2xl rounded-premium-full text-premium-xs font-black uppercase tracking-[0.1em] px-spacing-xl"
+                className="w-full h-spacing-2xl rounded-premium-full text-premium-xs font-black uppercase tracking-[0.1em] px-spacing-xl"
               >
                 Concluir
               </Button>
