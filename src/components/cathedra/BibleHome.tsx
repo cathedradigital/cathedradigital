@@ -1,10 +1,7 @@
 import React from 'react';
 
 import { Icons } from '@/constants';
-import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { toast } from 'sonner';
-import { useNavigate } from '@/lib/rr-compat';
 import { BibleBook, BIBLE_DATA } from '@/data/bible-books';
 import { EditorialHero } from '@/components/editorial/harmony';
 
@@ -18,9 +15,12 @@ interface BibleHomeProps {
 }
 
 export const BibleHome: React.FC<BibleHomeProps> = ({ onSelectBook, searchQuery, setSearchQuery }) => {
-  const navigate = useNavigate();
   const lastReadRaw = localStorage.getItem('cathedra_bible_last_read');
   const lastRead = React.useMemo(() => lastReadRaw ? JSON.parse(lastReadRaw) : null, [lastReadRaw]);
+
+  const navigateToReading = (bookAbbr: string, chapter: number, verse: number) => {
+    window.location.href = `/bible?book=${encodeURIComponent(bookAbbr)}&ch=${chapter}&v=${verse}`;
+  };
 
   return (
     <div className="flex flex-col md:flex-row w-full min-h-screen bg-background">
@@ -66,7 +66,9 @@ export const BibleHome: React.FC<BibleHomeProps> = ({ onSelectBook, searchQuery,
             onClick={() => {
               const allBooks = Object.values(BIBLE_DATA).flat().flatMap(cat => cat.books);
               const book = allBooks.find(b => b.abbr === lastRead.bookAbbr);
-              if (book) onSelectBook(book);
+              if (book) {
+                navigateToReading(book.abbr, Number(lastRead.chapter) || 1, Number(lastRead.verse) || 1);
+              }
             }}
             className="p-4 rounded-3xl border border-primary/5 bg-card hover:bg-primary/[0.01] transition-all text-left group shadow-premium-sm"
           >
@@ -94,20 +96,6 @@ export const BibleHome: React.FC<BibleHomeProps> = ({ onSelectBook, searchQuery,
             </div>
           </button>
         ) : null}
-      </div>
-
-      {/* Quick Access Grid */}
-      <div className="grid grid-cols-3 gap-3">
-        {[
-          { icon: Icons.Calendar, label: 'Leitura Diária', action: () => navigate('/hoje') },
-          { icon: Icons.Bookmark, label: 'Marcadores', action: () => navigate('/favorites') },
-          { icon: Icons.Book, label: 'Biblioteca', action: () => navigate('/biblioteca') }
-        ].map((item) => (
-          <button key={item.label} onClick={item.action} className="flex flex-col items-center p-4 rounded-2xl border border-primary/5 bg-background hover:bg-primary/[0.02] transition-all group">
-            <item.icon className="w-5 h-5 text-primary/30 group-hover:text-secondary transition-colors mb-2" />
-            <span className="text-[10px] font-bold uppercase tracking-tight text-primary/40 text-center">{item.label}</span>
-          </button>
-        ))}
       </div>
 
       {/* Bible Library - Accordion Style */}
