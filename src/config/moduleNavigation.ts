@@ -40,10 +40,6 @@ export const MODULE_NAVIGATION: ModuleNavGroup[] = [
       { id: 'bible', label: 'Bíblia', path: '/bible', description: 'A Palavra que ilumina o caminho.' },
       { id: 'catechism', label: 'Catecismo', path: '/catechism', description: 'A fé compreendida e transmitida.' },
       { id: 'documents', label: 'Documentos', path: '/magisterium', description: 'A voz da Igreja através do tempo.' },
-      { id: 'nexus', label: 'Nexus', path: '/nexus', description: 'Onde as fontes se encontram.' },
-      { id: 'library', label: 'Biblioteca', path: '/acervo', description: 'Um acervo para descobrir, ler e retornar.' },
-      { id: 'saints', label: 'Santos', path: '/santos', description: 'Vidas que testemunharam a fé.' },
-      { id: 'church', label: 'Igreja Viva', path: '/community', description: 'A fé vivida no presente.' },
     ],
   },
   {
@@ -84,6 +80,9 @@ export const MODULE_NAVIGATION: ModuleNavGroup[] = [
     description: 'Descoberta universal e ferramentas de referência.',
     items: [
       { id: 'search', label: 'Buscar', path: '/buscar', description: 'Pesquisa transversal em toda a plataforma.' },
+      { id: 'nexus', label: 'Nexus', path: '/nexus', description: 'Relações entre fontes, temas e conteúdos.' },
+      { id: 'library', label: 'Biblioteca', path: '/acervo', description: 'Um acervo para descobrir, ler e retornar.' },
+      { id: 'saints', label: 'Santos', path: '/santos', description: 'Vidas que testemunharam a fé.' },
       { id: 'glossary', label: 'Glossário', path: '/glossario', description: 'Termos e conceitos da fé.' },
       { id: 'atlas', label: 'Atlas', path: '/atlas', description: 'Exploração geográfica e histórica.' },
       { id: 'aquinas', label: 'Aquino', path: '/aquinas', description: 'Obras e pensamento de Tomás de Aquino.' },
