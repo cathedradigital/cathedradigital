@@ -111,7 +111,7 @@ const HomeUnified: React.FC = () => {
               <div className="rounded-3xl border border-border bg-card/80 p-6 shadow-sm backdrop-blur">
                 <div className="flex items-center gap-3">
                   <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                    <Sparkles className="h-5 w-5" />
+                    <Compass className="h-5 w-5" />
                   </div>
                   <div>
                     <Eyebrow>Seu ponto de continuidade</Eyebrow>
