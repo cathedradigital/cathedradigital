@@ -79,7 +79,7 @@ const CatechismContent: React.FC<{
   onCreateNote?: (paragraph: number) => void;
   highlights?: UserNote[];
   onContentLoaded?: (text: string) => void;
-}> = ({ paragraph, onNavigateToBible, isVisible = true, onHighlightClick, onCreateNote, highlights = [] }) => {
+}> = ({ paragraph, onNavigateToBible, isVisible = true, onHighlightClick, onCreateNote, highlights = [], onContentLoaded }) => {
   const { data, isLoading, isError, error, refetch, isFetching } = useCatechismParagraph(paragraph, isVisible);
   const prefetch = usePrefetchCatechismParagraph();
   const { settings } = useReadingSettings();
