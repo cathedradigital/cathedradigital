@@ -305,17 +305,24 @@ const MagisteriumViewer: React.FC = () => {
     };
   }, [id, content, saveLastRead]);
 
+  const [pendingSelectionAnchorId, setPendingSelectionAnchorId] = useState<string | null>(null);
+
   const handleAddNoteOrHighlight = useCallback(async (color: string, text: string) => {
     if (!id) return;
-    
+
     if (activeHighlight) {
-       await updateNote(activeHighlight.id, text, color);
-       setActiveHighlight(null);
+      await updateNote(activeHighlight.id, text, color);
+      setActiveHighlight(null);
     } else {
-      await addNote(id, text, color);
+      const match = pendingSelectionAnchorId?.match(/^para-(\\d+)$/);
+      const paragraphIndex = match ? Number(match[1]) : undefined;
+      const contentId = paragraphIndex !== undefined ? `${id}:${paragraphIndex}` : id;
+      await addNote(contentId, text, color, paragraphIndex !== undefined ? { paragraph: paragraphIndex + 1 } : undefined);
     }
+
+    setPendingSelectionAnchorId(null);
     setIsNoteModalOpen(false);
-  }, [id, activeHighlight, addNote]);
+  }, [id, activeHighlight, addNote, pendingSelectionAnchorId, updateNote]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -690,8 +697,9 @@ const MagisteriumViewer: React.FC = () => {
                   setActiveHighlight(null);
                 }
               }}
-              onAddNote={() => {
+              onAddNote={(_selectedText, anchorId) => {
                 if (id || activeHighlight) {
+                  setPendingSelectionAnchorId(anchorId ?? null);
                   setIsNoteModalOpen(true);
                 }
               }}
