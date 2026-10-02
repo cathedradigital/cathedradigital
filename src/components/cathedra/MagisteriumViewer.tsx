@@ -705,7 +705,9 @@ const MagisteriumViewer: React.FC = () => {
               activeColor={activeHighlight?.highlight_color}
               onHighlight={(color) => {
                 if (activeHighlight) {
-                  supabase.from('user_notes').update({ highlight_color: color }).eq('id', activeHighlight.id).then(() => setActiveHighlight(null));
+                  updateNote(activeHighlight.id, activeHighlight.note_text, color).then((ok) => {
+                    if (ok) setActiveHighlight(null);
+                  });
                 } else if (id) {
                   addNote(id, 'Destacado para meditação', color);
                 }
