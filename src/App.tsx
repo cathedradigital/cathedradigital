@@ -448,6 +448,7 @@ const AppLayout: React.FC = () => {
   const { user, profile, signOut } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  const isAccountArea = location.pathname.startsWith('/conta');
   const activeModule = useMemo(() => MODULE_NAVIGATION.find((group) => group.items.some((item) =>
     location.pathname === item.path || (item.path !== '/' && location.pathname.startsWith(item.path + '/'))
   )), [location.pathname]);
@@ -584,7 +585,7 @@ const AppLayout: React.FC = () => {
 
         <Suspense fallback={null}><ScrollToTop /></Suspense>
         <Suspense fallback={null}><AppErrorBoundary>
-          {(!settings.immersiveMode || !location.pathname.startsWith('/bible')) && !location.pathname.startsWith('/prototype-2.0') && location.pathname !== '/' && location.pathname !== '/auth' && location.pathname !== '/login' && location.pathname !== '/atlas' && (
+          {(!settings.immersiveMode || !location.pathname.startsWith('/bible')) && !location.pathname.startsWith('/prototype-2.0') && location.pathname !== '/' && location.pathname !== '/auth' && location.pathname !== '/login' && location.pathname !== '/atlas' && !isAccountArea && (
             <Suspense fallback={null}>
               <AppHeader 
                 user={authUserAdapter} 
