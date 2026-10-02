@@ -13,7 +13,6 @@ import { CIC_SECTIONS } from '@/data/catechism';
 import { AppRoute } from '@/types';
 import { CatechismSkeleton } from '@/components/cathedra/RouteSkeletons';
 import { MobileTopBar } from '@/components/mobile/MobileTopBar';
-import { MobileBottomNav } from '@/components/mobile/MobileBottomNav';
 import { EditorialHero, EditorialCard } from '@/components/editorial/harmony';
 
 const Catechism = lazy(() => import('./Catechism'));
@@ -43,7 +42,6 @@ const AtriumCatechismReader: React.FC = () => {
           showBack
         />
         <Catechism />
-        <MobileBottomNav />
       </Suspense>
     );
   }
@@ -160,7 +158,6 @@ const CatechismLanding: React.FC = () => {
         </section>
       </section>
 
-      <MobileBottomNav />
     </div>
   );
 };
