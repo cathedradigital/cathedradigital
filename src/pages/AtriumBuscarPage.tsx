@@ -65,7 +65,7 @@ const TERRITORIES: Territory[] = [
     meta: 'Termos Teológicos',
     description: 'Definições curadas com Nexus contextual.',
     to: AppRoute.GLOSSARY,
-    Icon: Sparkles,
+    Icon: BookOpen,
   },
   {
     title: 'Temas',
