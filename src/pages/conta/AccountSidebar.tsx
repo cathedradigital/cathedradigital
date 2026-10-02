@@ -47,7 +47,7 @@ export function AccountSidebar() {
     { title: "Editorial Audit",   description: "ICE, gate, freeze",                 url: "/admin/editorial-audit",     icon: ClipboardList },
     { title: "Nexus Audit",       description: "Grafo teológico",                   url: "/admin/nexus-audit",         icon: Network },
     { title: "Glossário",         description: "Verbetes e curadoria",              url: "/admin/glossario",           icon: Library },
-    { title: "Coleções",          description: "Curadoria editorial",               url: "/admin/collections",         icon: Sparkles },
+    { title: "Coleções",          description: "Curadoria editorial",               url: "/admin/collections",         icon: Layers },
     { title: "Santos",            description: "Reimportação e curadoria",          url: "/admin/saints",              icon: GraduationCap },
     { title: "Jornadas",          description: "Formação estruturada",              url: "/admin/jornadas",            icon: Compass },
     { title: "Usuários",          description: "Papéis e permissões",               url: "/admin/users",               icon: Users },
