@@ -70,7 +70,9 @@ export function useBibleNavigation(): UseBibleNavigation {
 
   const rawView = searchParams.get('view') as BibleViewMode | null;
   const bookParam = searchParams.get('book');
-  const chapterParam = searchParams.get('ch');
+  // `ch` is the active URL key; accept `chapter` too because older Nexus/search/adapters emit it.
+  // Setters continue writing `ch` so the URL converges to one canonical form.
+  const chapterParam = searchParams.get('ch') ?? searchParams.get('chapter');
   const searchQuery = searchParams.get('q') ?? '';
 
   const selectedBook = useMemo(() => findBook(bookParam), [bookParam]);
