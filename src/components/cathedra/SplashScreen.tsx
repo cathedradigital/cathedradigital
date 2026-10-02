@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Icons } from '@/constants';
 
 const SplashScreen = React.forwardRef<HTMLDivElement, { onComplete: () => void }>(({ onComplete }, ref) => {
-  const [phase, setPhase] = useState<'logo' | 'text' | 'exit'>('logo');
+  const [phase, setPhase] = useState<'motor' | 'logo' | 'text' | 'exit'>('motor');
 
   useEffect(() => {
     // The splash must never block the application. Keep the animated exit,
@@ -11,15 +11,17 @@ const SplashScreen = React.forwardRef<HTMLDivElement, { onComplete: () => void }
     // animation/runtime is interrupted or React is unable to commit the
     // completion callback.
     // Sequência intencional: primeiro o "motor" de abertura; só depois a identidade textual.
-    const t1 = setTimeout(() => setPhase('text'), 950);
-    const t2 = setTimeout(() => setPhase('exit'), 1550);
-    const t3 = setTimeout(onComplete, 2200);
-    const safety = setTimeout(onComplete, 3000);
+    const t1 = setTimeout(() => setPhase('logo'), 1750);
+    const t2 = setTimeout(() => setPhase('text'), 2450);
+    const t3 = setTimeout(() => setPhase('exit'), 3300);
+    const t4 = setTimeout(onComplete, 3950);
+    const safety = setTimeout(onComplete, 4500);
 
     return () => {
       clearTimeout(t1);
       clearTimeout(t2);
       clearTimeout(t3);
+      clearTimeout(t4);
       clearTimeout(safety);
     };
   }, [onComplete]);
@@ -40,7 +42,7 @@ const SplashScreen = React.forwardRef<HTMLDivElement, { onComplete: () => void }
           animate={{ opacity: phase === 'exit' ? 0 : 1 }}
           transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
           style={{
-            animation: 'cathedra-splash-safety-exit 2.2s ease-out 1.2s forwards',
+            animation: 'cathedra-splash-safety-exit 3.9s ease-out 3.3s forwards',
             pointerEvents: 'none',
           }}
           aria-hidden="true"
@@ -48,8 +50,8 @@ const SplashScreen = React.forwardRef<HTMLDivElement, { onComplete: () => void }
         >
           <motion.div
             initial={{ opacity: 0, scale: 0.5 }}
-            animate={{ opacity: 0.15, scale: 1.5 }}
-            transition={{ duration: 2, ease: 'easeOut' }}
+            animate={{ opacity: phase === 'motor' ? 0.15 : 0.08, scale: phase === 'motor' ? 1.5 : 1.2 }}
+            transition={{ duration: 1.6, ease: 'easeOut' }}
             className="absolute w-[500px] h-[500px] rounded-premium-full"
             style={{
               background: 'radial-gradient(circle, hsl(var(--secondary) / 0.4) 0%, transparent 70%)',
@@ -58,7 +60,7 @@ const SplashScreen = React.forwardRef<HTMLDivElement, { onComplete: () => void }
 
           <motion.div
             initial={{ opacity: 0, rotate: 0 }}
-            animate={{ opacity: 0.08, rotate: 360 }}
+            animate={{ opacity: phase === 'motor' ? 0.08 : 0.04, rotate: 360 }}
             transition={{ opacity: { duration: 1 }, rotate: { duration: 30, repeat: Infinity, ease: 'linear' } }}
             className="absolute w-[600px] h-[600px]"
             style={{
@@ -91,7 +93,7 @@ const SplashScreen = React.forwardRef<HTMLDivElement, { onComplete: () => void }
             <motion.div
               aria-hidden="true"
               animate={{ rotate: 360 }}
-              transition={{ duration: 2.6, repeat: Infinity, ease: 'linear' }}
+              transition={{ duration: 1.75, repeat: 0, ease: 'easeInOut' }}
               className="absolute w-[clamp(9.5rem,48vw,15rem)] h-[clamp(9.5rem,48vw,15rem)] rounded-full border border-primary/10"
               style={{
                 background: 'conic-gradient(from 0deg, transparent 0 18%, hsl(var(--primary) / 0.32) 22%, transparent 30% 48%, hsl(var(--primary) / 0.18) 54%, transparent 60% 100%)',
@@ -101,7 +103,7 @@ const SplashScreen = React.forwardRef<HTMLDivElement, { onComplete: () => void }
             <motion.div
               aria-hidden="true"
               animate={{ rotate: -360 }}
-              transition={{ duration: 5.5, repeat: Infinity, ease: 'linear' }}
+              transition={{ duration: 1.75, repeat: 0, ease: 'easeInOut' }}
               className="absolute w-[clamp(8.5rem,42vw,13.5rem)] h-[clamp(8.5rem,42vw,13.5rem)] rounded-full border border-primary/[0.08] border-dashed"
             />
             <div className="relative flex items-center justify-center w-[clamp(7.5rem,36vw,12rem)] h-[clamp(7.5rem,36vw,12rem)] rounded-full border border-primary/10 shadow-premium-hover bg-background/75 backdrop-blur-md">
