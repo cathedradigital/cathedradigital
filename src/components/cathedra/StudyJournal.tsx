@@ -25,11 +25,13 @@ const StudyJournal: React.FC = () => {
   const { notes: bibleNotes, updateNote: updateBibleNote, deleteNote: deleteBibleNote } = useNotes('bible');
   const { notes: catechismNotes, updateNote: updateCatechismNote, deleteNote: deleteCatechismNote } = useNotes('catechism');
   const { notes: magisteriumNotes, updateNote: updateMagisteriumNote, deleteNote: deleteMagisteriumNote } = useNotes('magisterium');
+  const { notes: saintNotes, updateNote: updateSaintNote, deleteNote: deleteSaintNote } = useNotes('saint');
   
   const allNotes = useMemo(() => [
     ...bibleNotes,
     ...catechismNotes,
-    ...magisteriumNotes
+    ...magisteriumNotes,
+    ...saintNotes
   ].sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()), 
   [bibleNotes, catechismNotes, magisteriumNotes]);
 
@@ -59,6 +61,7 @@ const StudyJournal: React.FC = () => {
     if (note.content_type === 'bible') await updateBibleNote(note.id, newText);
     else if (note.content_type === 'catechism') await updateCatechismNote(note.id, newText);
     else if (note.content_type === 'magisterium') await updateMagisteriumNote(note.id, newText);
+    else if (note.content_type === 'saint') await updateSaintNote(note.id, newText);
     toast.success('Anotação atualizada');
   };
 
@@ -66,6 +69,7 @@ const StudyJournal: React.FC = () => {
     if (note.content_type === 'bible') await deleteBibleNote(note.id);
     else if (note.content_type === 'catechism') await deleteCatechismNote(note.id);
     else if (note.content_type === 'magisterium') await deleteMagisteriumNote(note.id);
+    else if (note.content_type === 'saint') await deleteSaintNote(note.id);
     toast.info('Anotação removida');
   };
 
