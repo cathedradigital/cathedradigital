@@ -7,7 +7,7 @@ import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
 
 interface TextSelectionToolbarProps {
   onHighlight: (color: string) => void;
-  onAddNote: () => void;
+  onAddNote: (selectedText: string, anchorId?: string) => void;
   onDeleteHighlight?: () => void;
   onAskLogos?: (text: string) => void;
   activeHighlightId?: string | null;
@@ -25,6 +25,7 @@ export const TextSelectionToolbar: React.FC<TextSelectionToolbarProps> = ({
   const { settings } = useReadingSettings();
   const [position, setPosition] = useState<{ top: number; left: number } | null>(null);
   const [selectedText, setSelectedText] = useState('');
+  const [selectionAnchorId, setSelectionAnchorId] = useState<string | undefined>();
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -35,6 +36,10 @@ export const TextSelectionToolbar: React.FC<TextSelectionToolbarProps> = ({
         const rect = range.getBoundingClientRect();
         
         setSelectedText(selection.toString());
+        const anchorElement = range.commonAncestorContainer.nodeType === Node.ELEMENT_NODE
+          ? (range.commonAncestorContainer as Element).closest('[id^="para-"]')
+          : range.commonAncestorContainer.parentElement?.closest('[id^="para-"]');
+        setSelectionAnchorId(anchorElement?.id || undefined);
         setPosition({
           top: rect.top + window.scrollY - 60,
           left: rect.left + rect.width / 2
