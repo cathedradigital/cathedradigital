@@ -8,7 +8,7 @@
 
 import React from 'react';
 import { Link } from '@/lib/rr-compat';
-import { ArrowRight, ChevronRight, Sparkles } from 'lucide-react';
+import { ArrowRight, ChevronRight, Compass } from 'lucide-react';
 
 import type { NextPathRecommendation } from '@/core/knowledge/intelligence/nextPathEngine';
 
