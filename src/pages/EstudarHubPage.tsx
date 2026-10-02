@@ -1,5 +1,5 @@
 import React from 'react';
-import { BookOpen, BookMarked, Landmark, Network, Library, UsersRound, ArrowRight } from 'lucide-react';
+import { BookOpen, BookMarked, Landmark, Network, Library, UsersRound, ArrowRight, Flame } from 'lucide-react';
 import { Helmet } from '@/lib/helmet-compat';
 import { Link } from '@/lib/rr-compat';
 import { MODULE_NAVIGATION } from '@/config/moduleNavigation';
