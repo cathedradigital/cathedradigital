@@ -375,11 +375,10 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
                     redirectTo: `${window.location.origin}${AppRoute.LOGIN}${nextQuery}`,
                   },
                 });
-                const result = { error: oauthError };
-                if (result.error) {
-                  console.error('Apple Auth Error:', result.error);
+                if (oauthError) {
+                  console.error('Apple Auth Error:', oauthError);
                   setError('Não foi possível conectar com a Apple. Tente novamente em instantes.');
-                } else if (!result.redirected) {
+                } else {
                   handleSuccess();
                 }
                 setLoading(false);
