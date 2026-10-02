@@ -124,7 +124,7 @@ export const HighlightMenu: React.FC<HighlightMenuProps> = ({
                     onClick={onOpenNexus}
                     className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-primary/15 px-4 py-2 text-[10px] font-black uppercase tracking-[0.16em] text-primary/80 transition-colors hover:bg-primary/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                   >
-                    <Icons.Network className="h-4 w-4" />
+                    <Icons.Link className="h-4 w-4" />
                     Nexus
                   </button>
                 )}
