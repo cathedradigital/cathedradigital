@@ -10,7 +10,7 @@ import React, { useEffect, useRef } from 'react';
 import { Link } from '@/lib/rr-compat';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/lib/db';
-import { ArrowRight, Sparkles, ScrollText } from 'lucide-react';
+import { ArrowRight, CheckCircle2, ScrollText } from 'lucide-react';
 import type { Collection } from './types';
 import { trackCollectionEvent } from './collectionAnalytics';
 
@@ -92,7 +92,7 @@ export const CollectionCompletionCTA: React.FC<Props> = ({
         {/* Reflexão final */}
         <div className="space-y-spacing-md">
           <div className="inline-flex items-center gap-spacing-xs text-[10px] font-black uppercase tracking-[0.25em] text-primary">
-            <Sparkles className="w-4 h-4" aria-hidden />
+            <CheckCircle2 className="w-4 h-4" aria-hidden />
             Coleção concluída
           </div>
           <h2
