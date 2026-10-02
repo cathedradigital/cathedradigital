@@ -111,10 +111,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         newStreak = (currentProfile.streak || 0) + 1;
       }
 
-      await supabase
+      const { error: streakError } = await supabase
         .from('profiles')
         .update({ streak: newStreak, last_visit: now.toISOString() })
         .eq('id', currentUser.id);
+
+      if (streakError) throw streakError;
 
       // Check badges after streak update
       await checkAndAwardBadges(currentUser, currentProfile, newStreak);
@@ -148,10 +150,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const newBadgeIds = checkNewBadges(currentBadges, ctx);
       if (newBadgeIds.length > 0) {
         const updatedBadges = [...currentBadges, ...newBadgeIds];
-        await supabase
+        const { error: badgeError } = await supabase
           .from('profiles')
           .update({ badges: updatedBadges })
           .eq('id', currentUser.id);
+
+        if (badgeError) throw badgeError;
 
         // Celebrate!
         confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 }, colors: ['#FFD700', '#FF6B35', '#4ECDC4', '#8B5CF6'] });
