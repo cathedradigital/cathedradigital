@@ -570,15 +570,17 @@ const AppLayout: React.FC = () => {
     <MotionConfig reducedMotion={settings.reduceAnimations ? "always" : "never"}>
       <Suspense fallback={null}><PausedBanner /></Suspense>
       <div className="min-h-screen bg-background text-foreground transition-colors duration-500">
-        <button
-          type="button"
-          className="mobile-menu-fallback fixed left-3 z-[155] md:hidden inline-flex h-10 w-10 items-center justify-center rounded-full border border-primary/15 bg-background/90 text-foreground shadow-sm backdrop-blur-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-          style={{ top: 'calc(var(--stitch-mobile-safe-top, 0px) + 0.5rem)' }}
-          aria-label="Abrir menu de navegação"
-          onClick={handleOpenSidebar}
-        >
-          <Icons.Menu className="h-5 w-5" aria-hidden="true" />
-        </button>
+        {!isAccountArea && !location.pathname.startsWith('/prototype-2.0') && location.pathname !== '/auth' && location.pathname !== '/login' && (
+          <button
+            type="button"
+            className="mobile-menu-fallback fixed left-3 z-[155] md:hidden inline-flex h-10 w-10 items-center justify-center rounded-full border border-primary/15 bg-background/90 text-foreground shadow-sm backdrop-blur-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            style={{ top: 'calc(var(--stitch-mobile-safe-top, 0px) + 0.5rem)' }}
+            aria-label="Abrir menu de navegação"
+            onClick={handleOpenSidebar}
+          >
+            <Icons.Menu className="h-5 w-5" aria-hidden="true" />
+          </button>
+        )}
 
         <a 
           href="#main-content" 
