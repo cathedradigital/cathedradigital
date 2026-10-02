@@ -3,7 +3,7 @@ import { Helmet } from '@/lib/helmet-compat';
 import { Link, useNavigate } from '@/lib/rr-compat';
 import {
   ArrowRight, BookOpen, Compass, GraduationCap, HandHeart, Search,
-  Sparkles, Clock3, Flame, ChevronRight, Library, Brain
+  Clock3, Flame, ChevronRight, Library, Brain
 } from 'lucide-react';
 import { Icons } from '@/constants';
 import { EnvironmentRegistry, RouteRegistry } from '@/core/navigation';
