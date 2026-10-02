@@ -3,7 +3,6 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { Icons } from '@/constants';
 import { Button } from '@/components/ui/button';
 import { MobileTopBar } from '@/components/mobile/MobileTopBar';
-import { MobileBottomNav } from '@/components/mobile/MobileBottomNav';
 import SEOHead from '@/components/SEOHead';
 import { useNavigate } from '@/lib/rr-compat';
 import { cn } from '@/lib/utils';
@@ -337,7 +336,6 @@ const ContemplatioPage: React.FC = () => {
         </div>
       </section>
 
-      <MobileBottomNav />
     </>
   );
 };
