@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { Icons } from '@/constants';
 import { cn } from '@/lib/utils';
@@ -51,33 +51,7 @@ export const BibleReader: React.FC<BibleReaderProps> = ({
   connections,
   onConnectionClick,
 }) => {
-  const containerRef = useRef<HTMLDivElement>(null);
   const { t } = useLang();
-
-  const [visibleRange, setVisibleRange] = useState({ start: 0, end: 50 });
-
-  useEffect(() => {
-    const handleScroll = () => {
-      if (!containerRef.current) return;
-      const scrollPos = window.scrollY;
-      if (verses.length > 100) {
-        const index = Math.floor(scrollPos / 100);
-        setVisibleRange({
-          start: Math.max(0, index - 20),
-          end: Math.min(verses.length, index + 40),
-        });
-      }
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [verses.length]);
-
-  const displayedVerses = verses.length > 100
-    ? verses.slice(visibleRange.start, visibleRange.end)
-    : verses;
-
-  const paddingTop = verses.length > 100 ? visibleRange.start * 40 : 0;
-  const paddingBottom = verses.length > 100 ? (verses.length - visibleRange.end) * 40 : 0;
 
   const heroKicker = `${t('bible_reader_kicker')}${book.category ? ` · ${book.category}` : ''}`;
   const heroSubtitle = book.chapterTitles?.[chapter] || book.description;
@@ -93,7 +67,7 @@ export const BibleReader: React.FC<BibleReaderProps> = ({
       <div className="w-full min-w-0 overflow-x-hidden">
         <ReaderShell
           className="pb-32"
-          contentMaxWidth="max-w-6xl"
+          contentMaxWidth="max-w-3xl"
           ariaLabel={`${t('bible_reader_kicker')} — ${book.name} ${chapter}`}
           hero={
             <EditorialHero
@@ -163,14 +137,12 @@ export const BibleReader: React.FC<BibleReaderProps> = ({
       )}
 
       <div
-        ref={containerRef}
         className={cn(
           'space-y-2.5 md:space-y-3',
           'catedra-reading',
           settings.fontSize === 'small' ? 'text-base' : settings.fontSize === 'large' ? 'text-xl' : 'text-lg',
           settings.fontFamily === 'serif' ? 'font-serif' : 'font-sans',
         )}
-        style={{ paddingTop, paddingBottom }}
       >
         {isLoading ? (
           <div className="space-y-8 py-10">
@@ -182,7 +154,7 @@ export const BibleReader: React.FC<BibleReaderProps> = ({
             ))}
           </div>
         ) : (
-          displayedVerses.map((v) => {
+          verses.map((v) => {
             const verseKey = `${book.abbr}-${chapter}-${v.number}`;
             const highlightColor = highlights[verseKey];
             const verseConnections = connections[verseKey] || [];

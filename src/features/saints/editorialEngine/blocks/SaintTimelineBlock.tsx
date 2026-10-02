@@ -6,11 +6,11 @@ interface Props {
 }
 
 export const SaintTimelineBlock: React.FC<Props> = ({ events }) => (
-  <section aria-labelledby="saint-timeline" className="rounded-2xl border border-border/60 bg-card/40 p-spacing-lg">
-    <h2 id="saint-timeline" className="font-serif text-premium-lg text-foreground mb-spacing-sm">
+  <section aria-labelledby="saint-timeline" className="rounded-xl border border-border/50 bg-card/30 p-spacing-md">
+    <h2 id="saint-timeline" className="font-serif text-premium-lg text-foreground mb-spacing-xs">
       Linha do tempo
     </h2>
-    <ol className="relative border-l border-border/50 pl-spacing-md space-y-spacing-md">
+    <ol className="relative border-l border-border/50 pl-spacing-md space-y-spacing-sm">
       {events.map((e, i) => (
         <li key={`${e.year}-${i}`} className="relative">
           <span
