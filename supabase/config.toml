@@ -5,3 +5,6 @@ verify_jwt = true
 
 [functions.corpus-ingest]
 verify_jwt = true
+
+[functions.bible-text]
+verify_jwt = false
