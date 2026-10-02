@@ -21,7 +21,7 @@
  */
 import React, { useMemo } from 'react';
 import { Link, useSearchParams } from '@/lib/rr-compat';
-import { Clock, Sparkles, PlayCircle, RotateCcw, BookOpen, Church, Circle, type LucideIcon } from 'lucide-react';
+import { Clock, Heart, PlayCircle, RotateCcw, BookOpen, Church, Circle, type LucideIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { EditorialHero } from '@/components/editorial/harmony';
 import PrayerModeSelector, { type PrayerMode } from '@/components/prayer/PrayerModeSelector';
@@ -88,7 +88,7 @@ const OPENING_QUOTE: Record<string, { text: string; ref: string }> = {
 
 const ICON_MAP = {
   book: BookOpen,
-  sparkles: Sparkles,
+  sparkles: Heart,
   church: Church,
   clock: Clock,
 } as const;
@@ -113,7 +113,7 @@ const PrayerPortal: React.FC<Props> = ({
   theme = 'church',
   accentIcon,
 }) => {
-  const AccentIcon = accentIcon ?? Sparkles;
+  const AccentIcon = accentIcon ?? Heart;
 
   const [searchParams, setSearchParams] = useSearchParams();
   const session = usePrayerEngineSession(prayer.id);
