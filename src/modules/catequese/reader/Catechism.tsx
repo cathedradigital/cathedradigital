@@ -475,12 +475,21 @@ const Catechism: React.FC = memo(() => {
   const [searchQuery, setSearchQuery] = useState('');
   const [showLogosAI, setShowLogosAI] = useState(false);
   const { toggleFavorite, isFavorite } = useFavorites();
+  const { saveLastRead } = useReadingMarks();
   const { notes: chapterNotes, addNote, updateNote, deleteNote: deleteChapterNote } = useNotes('catechism');
   const [readingProgress, setReadingProgress] = useState(0);
   const [activeParagraphId, setActiveParagraphId] = useState<string | null>(null);
   const [activeHighlight, setActiveHighlight] = useState<UserNote | null>(null);
   const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
   const [noteParagraph, setNoteParagraph] = useState<number | null>(null);
+
+  // O parágrafo ativo é o ponto de continuidade do Catecismo.
+  useEffect(() => {
+    if (!activeParagraphId) return;
+    const paragraph = Number(activeParagraphId.replace(/^p/, ''));
+    if (!Number.isFinite(paragraph) || paragraph <= 0) return;
+    void saveLastRead({ content_type: 'catechism', content_id: String(paragraph), paragraph, label: 'Catecismo §' + paragraph, url: '/catechism?p=' + paragraph, is_last_read: true });
+  }, [activeParagraphId, saveLastRead]);
 
   useEffect(() => {
     if (initialParagraph === 'invalid') {
