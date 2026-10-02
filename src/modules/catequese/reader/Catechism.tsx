@@ -572,7 +572,7 @@ const Catechism: React.FC = memo(() => {
       const element = document.getElementById(`p${initialParagraph}`);
 
       if (element) {
-        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        element.scrollIntoView({ behavior: 'auto', block: 'center' });
         element.classList.add('bg-secondary/10');
         window.setTimeout(() => {
           if (!cancelled) element.classList.remove('bg-secondary/10');
@@ -738,7 +738,8 @@ const Catechism: React.FC = memo(() => {
               <EditorialHero
                 kicker={`Catecismo · ${selectedPart.part}`}
                 title={selectedSection.title}
-                subtitle={`${selectedPart.title} · §${startPara} — §${endPara}`}
+                subtitle={`§${currentParagraph} · ${selectedPart.title}`}
+                meta={`Seção ${selectedSection.id} · §${startPara} — §${endPara}`}
                 size="md"
                 parchment
                 align="left"
