@@ -13,7 +13,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import {
   UserCircle, Compass, BookmarkCheck, NotebookPen, Settings2, ShieldCheck,
-  Target, ClipboardList, Users, Library, Sparkles, Network, GraduationCap,
+  Target, ClipboardList, Users, Library, Layers, Network, GraduationCap,
 } from "lucide-react";
 import { useIsAdmin } from "@/hooks/useIsAdmin";
 import { useAccountCounters } from "@/hooks/useAccountCounters";
