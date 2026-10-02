@@ -311,8 +311,13 @@ const ReadingJournal: React.FC = () => {
                           url = `/catechism?p=${encodeURIComponent(String(note.paragraph))}`;
                         } else if (note.content_type === 'magisterium' && note.content_id) {
                           // Notes created from a Magisterium paragraph use docId:paragraphIndex.
-                          const docId = note.content_id.split(':')[0];
+                          // Preserve that exact paragraph when returning from the journal.
+                          const [docId, paragraphIndex] = note.content_id.split(':');
                           url = `/magisterium/${encodeURIComponent(docId)}`;
+                          if (paragraphIndex !== undefined && /^\\d+$/.test(paragraphIndex)) {
+                            params.set('p', paragraphIndex);
+                            url += `?${params.toString()}`;
+                          }
                         } else if (note.content_type === 'saint' && note.content_id) {
                           url = `/santos/${encodeURIComponent(note.content_id)}`;
                         }
