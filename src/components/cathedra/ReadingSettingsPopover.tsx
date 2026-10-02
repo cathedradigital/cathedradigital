@@ -165,7 +165,7 @@ const ReadingSettingsPopover: React.FC<ReadingSettingsPopoverProps> = ({
             {themes.map((t) => (
               <button
                 key={t.id}
-                onClick={() => updateSettings({ theme: t.id })}
+                aria-label={`Tema ${t.label ?? t.id}`} onClick={() => updateSettings({ theme: t.id })}
                 className={cn(
                   "group flex flex-col items-center gap-spacing-xs p-1 rounded-premium transition-all border-2",
                   settings.theme === t.id ? "border-primary/20 scale-105" : "border-transparent hover:border-primary/5"
@@ -256,7 +256,7 @@ const ReadingSettingsPopover: React.FC<ReadingSettingsPopoverProps> = ({
           
           <div className="pt-spacing-sm">
             <button 
-              onClick={() => updateSettings({ fontFamily: settings.fontFamily === 'serif' ? 'sans' : 'serif' })}
+              aria-label={`Alternar tipografia para ${settings.fontFamily === 'serif' ? 'sem serifa' : 'serifada'}`} onClick={() => updateSettings({ fontFamily: settings.fontFamily === 'serif' ? 'sans' : 'serif' })}
               className="w-full flex items-center justify-between p-spacing-md rounded-premium bg-primary/[0.02] border border-primary/5 hover:bg-primary/[0.04] transition-all group"
             >
               <div className="flex flex-col text-left">
