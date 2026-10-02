@@ -333,11 +333,10 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
                     queryParams: { prompt: 'select_account' },
                   },
                 });
-                const result = { error: oauthError };
-                if (result.error) {
+                if (oauthError) {
                   console.error('Google Auth Error:', result.error);
                   setError('Não foi possível conectar com o Google. Verifique sua conexão e tente novamente.');
-                } else if (!result.redirected) {
+                } else {
                   handleSuccess();
                 }
                 setLoading(false);
