@@ -1,9 +1,12 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { ArrowRight, BookMarked, BookOpen, Compass, Landmark, Sparkles } from 'lucide-react';
 import { Helmet } from '@/lib/helmet-compat';
 import { Link } from '@/lib/rr-compat';
 import { MODULE_NAVIGATION } from '@/config/moduleNavigation';
 import { MobileTopBar } from '@/components/mobile/MobileTopBar';
+import { JourneyService } from '@/core/journey/JourneyService';
+import type { Journey } from '@/core/journey/types';
+import { supabase } from '@/lib/db';
 
 const ICONS = {
   bible: BookOpen,
@@ -11,13 +14,27 @@ const ICONS = {
   documents: Landmark,
 } as const;
 
-const TOPICS = [
-  { id: 'esperanca', label: 'Esperança', description: 'Aprofundar uma fé que atravessa as provações.' },
-  { id: 'eucaristia', label: 'Eucaristia', description: 'Percorrer Escritura, ensinamento e vida sacramental.' },
-  { id: 'graca', label: 'Graça', description: 'Compreender o dom da graça e sua vida concreta.' },
-] as const;
-
 const EstudarHubPage: React.FC = () => {
+  const [journeys, setJourneys] = useState<Journey[]>([]);
+  const [nexusCount, setNexusCount] = useState<number | null>(null);
+  const [journeysLoading, setJourneysLoading] = useState(true);
+
+  useEffect(() => {
+    let active = true;
+    Promise.all([
+      JourneyService.list({ is_active: true, limit: 6 }),
+      supabase.from('nexus_relations').select('id', { count: 'exact', head: true }).eq('status', 'published'),
+    ]).then(([journeyResult, nexusResult]) => {
+      if (!active) return;
+      if (journeyResult.data) setJourneys(journeyResult.data);
+      if (!nexusResult.error) setNexusCount(nexusResult.count ?? 0);
+      setJourneysLoading(false);
+    }).catch(() => {
+      if (active) setJourneysLoading(false);
+    });
+    return () => { active = false; };
+  }, []);
+
   const environment = MODULE_NAVIGATION.find((item) => item.key === 'estudar');
   const items = environment?.items ?? [];
   const primaryIds = ['bible', 'catechism', 'documents'] as const;
@@ -54,43 +71,41 @@ const EstudarHubPage: React.FC = () => {
           </p>
         </header>
 
-        <section aria-labelledby="estudar-temas" className="pb-8 md:pb-10">
+        <section aria-labelledby="estudar-jornadas" className="pb-8 md:pb-10">
           <div className="mb-4 flex items-end justify-between gap-4 md:mb-6">
             <div>
-              <p className="font-stitch-body text-[10px] font-bold uppercase tracking-[0.16em] text-stitch-secondary md:text-[11px] md:tracking-[0.2em]">
-                Aprofundamentos
-              </p>
-              <h2 id="estudar-temas" className="mt-1 font-stitch-display text-[22px] leading-tight text-stitch-primary md:text-[28px]">
-                Escolha um tema
-              </h2>
+              <p className="font-stitch-body text-[10px] font-bold uppercase tracking-[0.16em] text-stitch-secondary md:text-[11px] md:tracking-[0.2em]">Caminhos reais</p>
+              <h2 id="estudar-jornadas" className="mt-1 font-stitch-display text-[22px] leading-tight text-stitch-primary md:text-[28px]">Continue por uma jornada</h2>
             </div>
-            <span className="hidden items-center gap-1.5 font-stitch-body text-[11px] text-stitch-on-surface-variant sm:flex">
-              <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
-              Conexões em contexto
-            </span>
+            <span className="hidden items-center gap-1.5 font-stitch-body text-[11px] text-stitch-on-surface-variant sm:flex"><Compass className="h-3.5 w-3.5" aria-hidden="true" />Conteúdo publicado</span>
           </div>
+          {journeysLoading ? (
+            <div className="rounded-2xl border border-stitch-outline-variant/20 bg-stitch-surface-container-low p-5 text-sm text-stitch-on-surface-variant">Carregando jornadas disponíveis…</div>
+          ) : journeys.length > 0 ? (
+            <div className="grid min-w-0 grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3 md:gap-4">
+              {journeys.map((journey) => (
+                <Link key={journey.id} to={`/jornadas/${journey.id}`} className="group flex min-h-[158px] flex-col justify-between rounded-2xl border border-stitch-secondary/25 bg-stitch-secondary-container/25 p-4 transition-all hover:-translate-y-0.5 hover:border-stitch-secondary hover:shadow-lg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-stitch-secondary md:p-5">
+                  <div className="flex items-start justify-between gap-4"><span className="flex h-9 w-9 items-center justify-center rounded-full bg-stitch-surface-container-lowest text-stitch-secondary"><Compass className="h-4 w-4" aria-hidden="true" /></span><ArrowRight className="h-4 w-4 text-stitch-on-surface-variant transition-transform group-hover:translate-x-1" aria-hidden="true" /></div>
+                  <div><h3 className="font-stitch-display text-[19px] leading-tight text-stitch-primary">{journey.title}</h3><p className="mt-1.5 line-clamp-2 font-stitch-body text-[12px] leading-5 text-stitch-on-surface-variant">{journey.description ?? 'Continue sua formação.'}</p></div>
+                </Link>
+              ))}
+            </div>
+          ) : (
+            <div className="rounded-2xl border border-stitch-outline-variant/20 bg-stitch-surface-container-low p-5 text-sm text-stitch-on-surface-variant">Nenhuma jornada publicada está disponível neste momento.</div>
+          )}
+        </section>
 
-          <div className="grid min-w-0 grid-cols-1 gap-3 sm:grid-cols-3 md:gap-4">
-            {TOPICS.map((topic) => (
-              <Link
-                key={topic.id}
-                to={`/estudo?topic=${encodeURIComponent(topic.label)}`}
-                className="group flex min-h-[158px] min-w-0 flex-col justify-between rounded-2xl border border-stitch-secondary/25 bg-stitch-secondary-container/25 p-4 transition-all hover:-translate-y-0.5 hover:border-stitch-secondary hover:shadow-lg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-stitch-secondary md:min-h-[178px] md:p-5"
-              >
-                <div className="flex items-start justify-between gap-4">
-                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-stitch-surface-container-lowest text-stitch-secondary">
-                    <Compass className="h-4 w-4" aria-hidden="true" />
-                  </span>
-                  <ArrowRight className="h-4 w-4 text-stitch-on-surface-variant transition-transform group-hover:translate-x-1 group-hover:text-stitch-secondary" aria-hidden="true" />
-                </div>
-                <div>
-                  <h3 className="font-stitch-display text-[19px] leading-tight text-stitch-primary md:text-[21px]">{topic.label}</h3>
-                  <p className="mt-1.5 font-stitch-body text-[12px] leading-5 text-stitch-on-surface-variant md:text-[13px]">
-                    {topic.description}
-                  </p>
-                </div>
-              </Link>
-            ))}
+        <section aria-labelledby="estudar-conexoes" className="pb-8 md:pb-10">
+          <div className="rounded-2xl border border-stitch-secondary/20 bg-stitch-surface-container-low p-4 md:p-5">
+            <div className="flex items-start gap-3">
+              <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-stitch-secondary" aria-hidden="true" />
+              <div>
+                <h2 id="estudar-conexoes" className="font-stitch-display text-[18px] text-stitch-primary md:text-[20px]">Conexões entre as fontes</h2>
+                <p className="mt-1.5 max-w-3xl font-stitch-body text-[12px] leading-5 text-stitch-on-surface-variant md:text-[13px]">
+                  {nexusCount === null ? 'Verificando as relações publicadas no Nexus…' : nexusCount > 0 ? `${nexusCount} relações publicadas estão disponíveis para conectar os conteúdos.` : 'O Nexus ainda não tem relações publicadas. O Cátedra não exibirá conexões inventadas enquanto a base oficial estiver sendo sincronizada.'}
+                </p>
+              </div>
+            </div>
           </div>
         </section>
 
