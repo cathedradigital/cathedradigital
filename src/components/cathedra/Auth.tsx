@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Helmet } from '@/lib/helmet-compat';
 import { Icons } from '../../constants';
 import { supabase } from '@/lib/db';
-import { lovable } from '@/integrations/lovable/index';
 import { useNavigate, useSearchParams } from '@/lib/rr-compat';
 import { AppRoute } from '@/types';
 import { ArrowLeft, Loader2 } from 'lucide-react';
@@ -327,10 +326,14 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
               onClick={async () => {
                 setLoading(true);
                 setError('');
-                const result = await lovable.auth.signInWithOAuth('google', {
-                  redirect_uri: `${window.location.origin}${AppRoute.LOGIN}${nextQuery}`,
-                  extraParams: { prompt: 'select_account' },
+                const { error: oauthError } = await supabase.auth.signInWithOAuth({
+                  provider: 'google',
+                  options: {
+                    redirectTo: `${window.location.origin}${AppRoute.LOGIN}${nextQuery}`,
+                    queryParams: { prompt: 'select_account' },
+                  },
                 });
+                const result = { error: oauthError };
                 if (result.error) {
                   console.error('Google Auth Error:', result.error);
                   setError('Não foi possível conectar com o Google. Verifique sua conexão e tente novamente.');
@@ -367,9 +370,13 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
               onClick={async () => {
                 setLoading(true);
                 setError('');
-                const result = await lovable.auth.signInWithOAuth('apple', {
-                  redirect_uri: `${window.location.origin}${AppRoute.LOGIN}${nextQuery}`,
+                const { error: oauthError } = await supabase.auth.signInWithOAuth({
+                  provider: 'apple',
+                  options: {
+                    redirectTo: `${window.location.origin}${AppRoute.LOGIN}${nextQuery}`,
+                  },
                 });
+                const result = { error: oauthError };
                 if (result.error) {
                   console.error('Apple Auth Error:', result.error);
                   setError('Não foi possível conectar com a Apple. Tente novamente em instantes.');
