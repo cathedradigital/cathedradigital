@@ -102,7 +102,6 @@ const ContactPage: React.FC = () => (
           { icon: <Icons.Instagram className="w-spacing-md h-spacing-md" />, label: 'Instagram', url: SOCIAL_LINKS.INSTAGRAM },
           { icon: <Icons.Youtube className="w-spacing-md h-spacing-md" />, label: 'YouTube', url: SOCIAL_LINKS.YOUTUBE },
           { icon: <Icons.Twitter className="w-spacing-md h-spacing-md" />, label: 'X', url: SOCIAL_LINKS.TWITTER },
-          { icon: <Icons.Whatsapp className="w-spacing-md h-spacing-md" />, label: 'WhatsApp', url: SOCIAL_LINKS.WHATSAPP },
         ].map((s) => (
           <a
             key={s.label}
