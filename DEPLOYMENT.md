@@ -72,11 +72,13 @@ O arquivo `wrangler.jsonc` deve permanecer na raiz e define:
 - domínios de produção;
 - observabilidade.
 
-A configuração atual usa o entrypoint oficial do TanStack Start:
+A configuração atual usa o entrypoint customizado do TanStack Start:
 
 ```json
-"main": "@tanstack/react-start/server-entry"
+"main": "src/server.ts"
 ```
+
+O `src/server.ts` delega ao entrypoint oficial do TanStack Start e acrescenta tratamento de erro para o Worker.
 
 ---
 
