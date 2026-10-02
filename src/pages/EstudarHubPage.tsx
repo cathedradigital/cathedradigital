@@ -1,5 +1,5 @@
 import React from 'react';
-import { BookOpen, BookMarked, Landmark, Network, Library, ArrowRight, Flame } from 'lucide-react';
+import { BookOpen, BookMarked, Landmark, ArrowRight } from 'lucide-react';
 import { Helmet } from '@/lib/helmet-compat';
 import { Link } from '@/lib/rr-compat';
 import { MODULE_NAVIGATION } from '@/config/moduleNavigation';
@@ -9,10 +9,7 @@ const ICONS = {
   bible: BookOpen,
   catechism: BookMarked,
   documents: Landmark,
-  nexus: Network,
-  library: Library,
-  saints: Flame,
-} as const;
+  } as const;
 
 const EstudarHubPage: React.FC = () => {
   const environment = MODULE_NAVIGATION.find((item) => item.key === 'estudar');
@@ -22,15 +19,9 @@ const EstudarHubPage: React.FC = () => {
   // Estudar landing page uses a deliberate hierarchy instead of treating every
   // module as an equal first-level source.
   const primaryIds = ['bible', 'catechism', 'documents'] as const;
-  const secondaryIds = ['library', 'saints'] as const;
-
   const primaryItems = primaryIds
     .map((id) => items.find((item) => item.id === id))
     .filter((item): item is NonNullable<typeof item> => Boolean(item));
-  const secondaryItems = secondaryIds
-    .map((id) => items.find((item) => item.id === id))
-    .filter((item): item is NonNullable<typeof item> => Boolean(item));
-  const nexusItem = items.find((item) => item.id === 'nexus');
 
   return (
     <div
@@ -98,67 +89,21 @@ const EstudarHubPage: React.FC = () => {
           </div>
         </section>
 
-        <section className="mt-8 border-t border-stitch-outline-variant/20 pt-7" aria-labelledby="estudar-explore">
-          <div className="mb-4 md:mb-5">
-            <p className="font-stitch-body text-[10px] font-bold uppercase tracking-[0.2em] text-stitch-secondary">
-              Explore também
-            </p>
-            <h2 id="estudar-explore" className="mt-1 font-stitch-display text-[20px] text-stitch-primary md:text-[24px]">
-              Descobertas que ampliam o estudo
-            </h2>
-          </div>
-
-          <div className="grid min-w-0 grid-cols-1 gap-2.5 sm:grid-cols-2 md:gap-3">
-            {secondaryItems.map((item) => {
-              const Icon = ICONS[item.id as keyof typeof ICONS] ?? BookOpen;
-              return (
-                <Link
-                  key={item.id}
-                  to={item.path}
-                  className="group flex min-h-[72px] min-w-0 items-center gap-3 rounded-xl border border-stitch-outline-variant/30 bg-stitch-surface-container-lowest px-3.5 py-3 transition-colors hover:border-stitch-secondary hover:bg-stitch-surface-container-low focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-stitch-secondary md:min-h-[80px] md:px-4"
-                >
-                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-stitch-secondary-container text-stitch-primary">
-                    <Icon className="h-3.5 w-3.5" aria-hidden="true" />
-                  </span>
-                  <span className="min-w-0 flex-1">
-                    <span className="block font-stitch-display text-[15px] leading-tight text-stitch-primary md:text-[17px]">
-                      {item.label}
-                    </span>
-                    <span className="mt-0.5 block truncate font-stitch-body text-[11px] leading-4 text-stitch-on-surface-variant md:text-[12px]">
-                      {item.description}
-                    </span>
-                  </span>
-                  <ArrowRight className="h-3.5 w-3.5 shrink-0 text-stitch-on-surface-variant transition-transform group-hover:translate-x-1 group-hover:text-stitch-secondary" aria-hidden="true" />
-                </Link>
-              );
-            })}
-          </div>
-        </section>
-
-        <section className="mt-8 border-t border-stitch-outline-variant/20 pt-7" aria-labelledby="estudar-conexoes">
+        <section className="mt-8 border-t border-stitch-outline-variant/20 pt-7" aria-labelledby="estudar-orientacao">
           <div className="rounded-2xl border border-stitch-secondary/25 bg-stitch-secondary-container/30 p-4 md:p-5">
-            <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-              <div className="max-w-2xl">
-                <p className="font-stitch-body text-[10px] font-bold uppercase tracking-[0.2em] text-stitch-secondary">
-                  Conectar fontes
-                </p>
-                <h2 id="estudar-conexoes" className="mt-1 font-stitch-display text-[21px] text-stitch-primary md:text-[25px]">
-                  Uma fonte leva à outra
-                </h2>
-                <p className="mt-2 font-stitch-body text-[12px] leading-5 text-stitch-on-surface-variant md:text-[13px]">
-                  Relacione Bíblia, Catecismo, Documentos, Santos e temas sem sair do fluxo de estudo.
-                  O Nexus é o ponto de encontro dessas relações.
-                </p>
-              </div>
-              <Link
-                to={nexusItem?.path ?? '/nexus'}
-                className="inline-flex min-h-[44px] shrink-0 items-center justify-center gap-2 rounded-full border border-stitch-secondary/40 bg-stitch-surface-container-lowest px-4 py-2 font-stitch-body text-[11px] font-bold uppercase tracking-[0.12em] text-stitch-secondary transition-colors hover:border-stitch-secondary hover:text-stitch-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-stitch-secondary"
-              >
-                Abrir Nexus <ArrowRight className="h-3.5 w-3.5" />
-              </Link>
-            </div>
+            <p className="font-stitch-body text-[10px] font-bold uppercase tracking-[0.2em] text-stitch-secondary">
+              Um caminho simples
+            </p>
+            <h2 id="estudar-orientacao" className="mt-1 font-stitch-display text-[21px] text-stitch-primary md:text-[25px]">
+              Três fontes para aprofundar
+            </h2>
+            <p className="mt-2 max-w-2xl font-stitch-body text-[12px] leading-5 text-stitch-on-surface-variant md:text-[13px]">
+              Comece pela Bíblia, aprofunde no Catecismo e consulte os Documentos do Magistério.
+              As relações com outros conteúdos continuam disponíveis pela navegação transversal.
+            </p>
           </div>
         </section>
+
       </main>
 
     </div>
