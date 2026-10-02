@@ -15,8 +15,8 @@ import {
   BookMarked,
   BookOpen,
   Gavel,
-  Sparkles,
   Network,
+  Flame,
   ArrowRight,
 } from 'lucide-react';
 import { AppRoute } from '@/types';
