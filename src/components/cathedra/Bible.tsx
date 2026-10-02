@@ -178,215 +178,38 @@ const Bible: React.FC = () => {
 
 
 
-  // Detecção e Correção Instantânea de Idioma (Auditoria em Tempo Real)
+  // Auditoria leve de cache: não varrer o DOM nem consultar o banco em loop.
+  // A correção de idioma deve acontecer na origem dos textos, não a cada 2s no navegador.
   useEffect(() => {
-    const scanAndFix = async () => {
-      // 1. Invalidar Caches Antigos se versão incompatível - Audit Hierarchy
-      const cacheKeys = Object.keys(localStorage).filter(k => k.startsWith('bible_cache_'));
-      cacheKeys.forEach(key => {
-        try {
-          const cachedValue = localStorage.getItem(key);
-          if (!cachedValue) return;
-          const cached = JSON.parse(cachedValue);
-          const isLegacyVersion = !cached.v || cached.v < cacheSyncVersion;
-          
-          if (isLegacyVersion) {
-            localStorage.removeItem(key);
-            console.log(`[Cache Invalidation] Removed legacy cache: ${key} (v:${cached.v || 'none'})`);
-            setInvalidationStats(prev => ({ ...prev, legacy: prev.legacy + 1 }));
-          }
-        } catch (e) {}
-      });
-
-      // Synchronize with remote cache version if user is logged in
-      if (user) {
-        const { data: meta } = await supabase
-          .from('bible_cache_metadata')
-          .select('client_version, last_purged_at')
-          .single();
-        
-        if (meta && meta.client_version > cacheSyncVersion) {
-          console.log(`[Cache Sync] Remote version higher (${meta.client_version}). Purging local cache.`);
-          cacheKeys.forEach(k => localStorage.removeItem(k));
-          setCacheSyncVersion(meta.client_version);
+    const cacheKeys = Object.keys(localStorage).filter(k => k.startsWith('bible_cache_'));
+    cacheKeys.forEach(key => {
+      try {
+        const cachedValue = localStorage.getItem(key);
+        if (!cachedValue) return;
+        const cached = JSON.parse(cachedValue);
+        if (!cached.v || cached.v < cacheSyncVersion) {
+          localStorage.removeItem(key);
+          setInvalidationStats(prev => ({ ...prev, legacy: prev.legacy + 1 }));
         }
+      } catch {
+        localStorage.removeItem(key);
       }
+    });
 
-      const { data: dynamicAllowlist } = await supabase.from('language_allowlist').select('term');
-      const allAllowed = [
-        ...LANGUAGE_ALLOWLIST, 
-        ...(dynamicAllowlist?.map(a => a.term) || [])
-      ];
-      
-      const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
-      let node: Node | null;
-      const forbiddenRegex = new RegExp(`\\b(${FORBIDDEN_ENGLISH_WORDS.join('|')})\\b`, 'i');
-      
-      const session = sessionStorage.getItem('cathedra_session_id') || `sess_${crypto.randomUUID()}`;
-      if (!sessionStorage.getItem('cathedra_session_id')) sessionStorage.setItem('cathedra_session_id', session);
+    if (!user) return;
+    let cancelled = false;
+    void (async () => {
+      const { data: meta } = await supabase
+        .from('bible_cache_metadata')
+        .select('client_version')
+        .maybeSingle();
+      if (cancelled || !meta?.client_version || meta.client_version <= cacheSyncVersion) return;
+      cacheKeys.forEach(key => localStorage.removeItem(key));
+      setCacheSyncVersion(meta.client_version);
+    })();
 
-      // 2. Invalidação agressiva de ETag
-      if (user) {
-        const etag = localStorage.getItem('cathedra_bible_etag');
-        const { data: remoteEtag } = await supabase.from('bible_cache_metadata').select('client_version').single();
-        if (remoteEtag && etag !== String(remoteEtag.client_version)) {
-            console.log('[Stability] Etag mismatch. Purging for recovery.');
-            cacheKeys.forEach(k => localStorage.removeItem(k));
-            localStorage.setItem('cathedra_bible_etag', String(remoteEtag.client_version));
-        }
-      }
-
-      // Map de correção em tempo real (Hard Patch)
-      const correctionMap: Record<string, string> = {
-        'Tobit': 'Tobias',
-        'Judith': 'Judite',
-        'Wisdom': 'Sabedoria',
-        'Sirach': 'Eclesiástico',
-        'Baruch': 'Baruc',
-        'Maccabees': 'Macabeus',
-        'Obadiah': 'Abdias',
-        'Psalms': 'Salmos',
-        'Genesis': 'Gênesis',
-        'Exodus': 'Êxodo',
-        'Leviticus': 'Levítico',
-        'Numbers': 'Números',
-        'Deuteronomy': 'Deuteronômio',
-        'Joshua': 'Josué',
-        'Judges': 'Juízes',
-        'Ruth': 'Rute',
-        '1 Samuel': '1 Samuel',
-        '2 Samuel': '2 Samuel',
-        '1 Kings': '1 Reis',
-        '2 Kings': '2 Reis',
-        '1 Chronicles': '1 Crônicas',
-        '2 Chronicles': '2 Crônicas',
-        'Ezra': 'Esdras',
-        'Nehemiah': 'Neemias',
-        'Esther': 'Ester',
-        'Job': 'Jó',
-        'Proverbs': 'Provérbios',
-        'Ecclesiastes': 'Eclesiastes',
-        'Song of Solomon': 'Cântico dos Cânticos',
-        'Isaiah': 'Isaías',
-        'Jeremiah': 'Jeremias',
-        'Lamentations': 'Lamentações',
-        'Ezekiel': 'Ezequiel',
-        'Daniel': 'Daniel',
-        'Hosea': 'Oseias',
-        'Joel': 'Joel',
-        'Amos': 'Amós',
-        'Jonah': 'Jonas',
-        'Micah': 'Miqueias',
-        'Nahum': 'Naum',
-        'Habakkuk': 'Habacuc',
-        'Zephaniah': 'Sofonias',
-        'Haggai': 'Ageu',
-        'Zechariah': 'Zacarias',
-        'Malachi': 'Malaquias',
-        'Matthew': 'Mateus',
-        'Mark': 'Marcos',
-        'Luke': 'Lucas',
-        'John': 'João',
-        'Acts': 'Atos',
-        'Romans': 'Romanos',
-        '1 Corinthians': '1 Coríntios',
-        '2 Corinthians': '2 Coríntios',
-        'Galatians': 'Gálatas',
-        'Ephesians': 'Efésios',
-        'Philippians': 'Filipenses',
-        'Colossians': 'Colossenses',
-        '1 Thessalonians': '1 Tessalonicenses',
-        '2 Thessalonians': '2 Tessalonicenses',
-        '1 Timothy': '1 Timóteo',
-        '2 Timothy': '2 Timóteo',
-        'Titus': 'Tito',
-        'Philemon': 'Filemon',
-        'Hebrews': 'Hebreus',
-        'James': 'Tiago',
-        '1 Peter': '1 Pedro',
-        '2 Peter': '2 Pedro',
-        '1 John': '1 João',
-        '2 John': '2 João',
-        '3 John': '3 João',
-        'Jude': 'Judas',
-        'Revelation': 'Apocalipse',
-        'Chapter': 'Capítulo',
-        'Verse': 'Versículo',
-        'Search': 'Pesquisar',
-        'Loading': 'Carregando',
-        'Settings': 'Configurações',
-        'Home': 'Início',
-        'Continue Reading': 'Continuar Lendo',
-        'Back': 'Voltar',
-        'Bible': 'Bíblia',
-        'Catechism': 'Catecismo',
-        'Magisterium': 'Magistério',
-        'Cancel': 'Cancelar',
-        'Save': 'Salvar',
-        'Summary': 'Resumo',
-        'Ecclesiasticus': 'Eclesiástico',
-        'Wisdom of Solomon': 'Sabedoria',
-        'Song of Songs': 'Cântico dos Cânticos',
-        'Apocalypse': 'Apocalipse'
-      };
-      
-      while ((node = walker.nextNode())) {
-        const text = node.textContent || '';
-        if (text.trim()) {
-          // Correção agressiva de termos mapeados
-          let newText = text;
-          let changed = false;
-          for (const [eng, pt] of Object.entries(correctionMap)) {
-            const regex = new RegExp(`\\b${eng}\\b`, 'g');
-            if (regex.test(newText)) {
-              newText = newText.replace(regex, pt);
-              changed = true;
-            }
-          }
-
-          if (changed) {
-            node.textContent = newText;
-          }
-
-          // Monitoramento de violações
-          if (forbiddenRegex.test(newText) && !allAllowed.some(allowed => newText.toLowerCase().includes(allowed.toLowerCase()))) {
-             const lastLog = sessionStorage.getItem(`last_lang_log_${newText}`);
-             if (!lastLog || Date.now() - parseInt(lastLog) > 60000) {
-                sessionStorage.setItem(`last_lang_log_${newText}`, Date.now().toString());
-                
-                setDiagnosticLogs(prev => [
-                  {
-                    id: crypto.randomUUID(),
-                    term: newText,
-                    url: window.location.href,
-                    session_id: session,
-                    timestamp: new Date().toISOString(),
-                    selector: getElementSelector(node.parentElement || document.body),
-                    source: 'DOM Scan (Runtime)'
-                  },
-                  ...prev.slice(0, 99)
-                ]);
-
-                await supabase.from('analytics_events').insert([{
-                  event_name: 'language_violation',
-                  properties: {
-                    term: newText,
-                    url: window.location.href,
-                    session_id: session,
-                    timestamp: new Date().toISOString(),
-                    selector: getElementSelector(node.parentElement || document.body)
-                  },
-                  url: window.location.href,
-                  session_id: session
-                }]);
-             }
-          }
-        }
-      }
-    };
-    const timer = setInterval(scanAndFix, 2000); // Frequência ajustada para 2s (performance)
-    return () => clearInterval(timer);
-  }, [location.pathname, user, cacheSyncVersion]);
+    return () => { cancelled = true; };
+  }, [user, cacheSyncVersion]);
 
   // R1.2.2 Onda 7 — viewMode/selectedBook/selectedChapter agora derivam da URL
   // (useBibleNavigation). O único side-effect residual aqui é disparar o
