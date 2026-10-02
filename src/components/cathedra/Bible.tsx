@@ -178,8 +178,8 @@ const Bible: React.FC = () => {
 
 
 
-  // Auditoria leve de cache: não varrer o DOM nem consultar o banco em loop.
-  // A correção de idioma deve acontecer na origem dos textos, não a cada 2s no navegador.
+  // Auditoria leve de cache: somente valida o cache local.
+  // Não consulta tabelas auxiliares inexistentes nem executa varredura recorrente no DOM.
   useEffect(() => {
     const cacheKeys = Object.keys(localStorage).filter(k => k.startsWith('bible_cache_'));
     cacheKeys.forEach(key => {
@@ -195,21 +195,7 @@ const Bible: React.FC = () => {
         localStorage.removeItem(key);
       }
     });
-
-    if (!user) return;
-    let cancelled = false;
-    void (async () => {
-      const { data: meta } = await supabase
-        .from('bible_cache_metadata')
-        .select('client_version')
-        .maybeSingle();
-      if (cancelled || !meta?.client_version || meta.client_version <= cacheSyncVersion) return;
-      cacheKeys.forEach(key => localStorage.removeItem(key));
-      setCacheSyncVersion(meta.client_version);
-    })();
-
-    return () => { cancelled = true; };
-  }, [user, cacheSyncVersion]);
+  }, [cacheSyncVersion]);
 
   // R1.2.2 Onda 7 — viewMode/selectedBook/selectedChapter agora derivam da URL
   // (useBibleNavigation). O único side-effect residual aqui é disparar o
@@ -2207,26 +2193,9 @@ const Bible: React.FC = () => {
 
               <div className="p-spacing-md bg-primary/[0.01] rounded-2xl border border-primary/5 max-h-40 overflow-y-auto">
                 <span className="text-[8px] font-black uppercase text-primary/20 block mb-spacing-sm">Histórico de Revisão</span>
-                <div className="space-y-spacing-sm">
-                  {[
-                    { ref: 'Jo 1:1 ↔ CIC 279', status: 'Validado', author: 'Dr. Silva', date: '04/06/2026', diff: 'v1.2 → v1.3' },
-                    { ref: 'Mt 5:3 ↔ CIC 1716', status: 'Pendente', author: 'Ana M.', date: '05/06/2026', diff: 'Novo' },
-                  ].map((entry, idx) => (
-                    <div key={idx} className="space-y-spacing-xs border-b border-primary/5 pb-2 last:border-0 last:pb-0">
-                      <div className="flex items-center justify-between text-[10px]">
-                        <span className="font-serif font-bold">{entry.ref}</span>
-                        <span className={cn(
-                          "font-bold uppercase tracking-tighter",
-                          entry.status === 'Validado' ? "text-green-500" : "text-stone-400"
-                        )}>{entry.status}</span>
-                      </div>
-                      <div className="flex justify-between text-[8px] text-primary/30 uppercase tracking-widest">
-                        <span>{entry.author} • {entry.date}</span>
-                        <span>{entry.diff}</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+                <p className="text-xs text-primary/50">
+                  Nenhuma revisão histórica foi carregada deste banco nesta sessão.
+                </p>
               </div>
 
               <Button 
@@ -2257,42 +2226,6 @@ const Bible: React.FC = () => {
         )}
       </AnimatePresence>
 
-      {/* Painel de Auditoria Global de Idioma (Invisível para o usuário final, mas ativo no DOM para automação) */}
-      <div id="language-audit-state" className="sr-only" data-audit-status="100%-portuguese" data-version="2.1"></div>
-      
-      {/* Recovery Table for User Verification */}
-      <div className="sr-only" id="bible-recovery-report">
-        <table>
-          <thead>
-            <tr>
-              <th>Livro</th>
-              <th>Capítulo testado</th>
-              <th>Idioma</th>
-              <th>Tempo de abertura</th>
-              <th>Resultado</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr><td>Gênesis</td><td>1</td><td>Português</td><td>&lt; 500ms</td><td>Estável</td></tr>
-            <tr><td>Êxodo</td><td>1</td><td>Português</td><td>&lt; 500ms</td><td>Estável</td></tr>
-            <tr><td>Salmos</td><td>23</td><td>Português</td><td>&lt; 500ms</td><td>Estável</td></tr>
-            <tr><td>Salmos</td><td>119</td><td>Português</td><td>&lt; 800ms</td><td>Estável</td></tr>
-            <tr><td>Salmos</td><td>151</td><td>Português</td><td>&lt; 500ms</td><td>Estável</td></tr>
-            <tr><td>Isaías</td><td>1</td><td>Português</td><td>&lt; 500ms</td><td>Estável</td></tr>
-            <tr><td>Mateus</td><td>1</td><td>Português</td><td>&lt; 500ms</td><td>Estável</td></tr>
-            <tr><td>João</td><td>1</td><td>Português</td><td>&lt; 500ms</td><td>Estável</td></tr>
-            <tr><td>Romanos</td><td>1</td><td>Português</td><td>&lt; 500ms</td><td>Estável</td></tr>
-            <tr><td>Apocalipse</td><td>1</td><td>Português</td><td>&lt; 500ms</td><td>Estável</td></tr>
-            <tr><td>Tobias</td><td>1</td><td>Português</td><td>&lt; 500ms</td><td>Estável</td></tr>
-            <tr><td>Judite</td><td>1</td><td>Português</td><td>&lt; 500ms</td><td>Estável</td></tr>
-            <tr><td>Sabedoria</td><td>1</td><td>Português</td><td>&lt; 500ms</td><td>Estável</td></tr>
-            <tr><td>Eclesiástico</td><td>1</td><td>Português</td><td>&lt; 500ms</td><td>Estável</td></tr>
-            <tr><td>Baruc</td><td>1</td><td>Português</td><td>&lt; 500ms</td><td>Estável</td></tr>
-            <tr><td>1 Macabeus</td><td>1</td><td>Português</td><td>&lt; 500ms</td><td>Estável</td></tr>
-            <tr><td>2 Macabeus</td><td>1</td><td>Português</td><td>&lt; 500ms</td><td>Estável</td></tr>
-          </tbody>
-        </table>
-      </div>
     </div>
   );
 };
