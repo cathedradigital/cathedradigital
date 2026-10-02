@@ -442,6 +442,18 @@ const Bible: React.FC = () => {
   }, []);
 
 
+  // Retoma o ponto visual exato do capítulo ao voltar de uma relação.
+  useEffect(() => {
+    if (viewMode !== 'reading' || !selectedBook) return;
+    const key = 'cathedra_bible_scroll_' + selectedBook.abbr + '_' + selectedChapter;
+    const raw = localStorage.getItem(key);
+    const saved = raw ? Number(raw) : NaN;
+    if (Number.isFinite(saved) && saved > 0) requestAnimationFrame(() => window.scrollTo({ top: saved, behavior: 'auto' }));
+    const onScroll = () => localStorage.setItem(key, String(window.scrollY));
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, [viewMode, selectedBook, selectedChapter]);
+
   const saveReadingProgress = useCallback((bookAbbr: string, chapter: number, verse?: number) => {
     // Cross-Navigation Validation: Detect if we are jumping between modules (e.g., from a connection)
     const currentPath = window.location.pathname;
