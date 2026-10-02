@@ -10,7 +10,7 @@
 import React from 'react';
 import { Link } from '@/lib/rr-compat';
 import { EditorialCard } from '@/components/editorial/harmony';
-import { BookOpen, BookMarked, Church, Users, Heart, Library, Compass, ScrollText, Feather, Clock3, ArrowRight } from 'lucide-react';
+import { BookOpen, BookMarked, Church, Users, Heart, Library, Compass, ScrollText, Feather, Clock3, ArrowRight, Network } from 'lucide-react';
 import IceBadge from './IceBadge';
 import type { LibraryItem, LibraryModule } from '../types';
 
@@ -91,7 +91,7 @@ export const LibraryCard: React.FC<LibraryCardProps> = ({ item, density, classNa
         {item.ice ? <IceBadge level={item.ice} /> : null}
         {typeof item.nexusCount === 'number' && item.nexusCount > 0 ? (
           <span className="inline-flex items-center gap-1 rounded-full border border-border/60 px-2 py-0.5 text-xs text-muted-foreground">
-            <Sparkles className="h-3 w-3" aria-hidden="true" />
+            <Network className="h-3 w-3" aria-hidden="true" />
             {item.nexusCount} nexus
           </span>
         ) : null}
