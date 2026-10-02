@@ -1,377 +1,238 @@
-# Digital Cathedral - Deployment & Operations Guide
+# Cátedra Digital — Deployment & Operations Guide
 
-## Overview
+## Cloudflare Workers — produção
 
-Digital Cathedral is now built and ready for deployment. This guide covers:
-- ✅ Development workflow
-- ✅ Production deployment  
-- ✅ Infrastructure checklist
-- ✅ Monitoring & troubleshooting
+A implantação atual usa **TanStack Start + Cloudflare Vite Plugin + Wrangler**. O fluxo de produção não usa Nitro nem `.output/server/`.
 
----
-
-## 1. Development Workflow
-
-### Start Development Server
-```bash
-npm run dev
-```
-- Hot reload enabled
-- Available at http://localhost:5173
-- API endpoints proxied to Supabase
-
-### Build for Production
-```bash
-npm run build
-```
-- Output in `.output/` directory
-- Split into client and server bundles
-- Ready for deployment
-
-### Preview Production Build
-```bash
-npm run preview
-```
-- Runs pre-built output
-- Available at http://localhost:4173
-- Test before deployment
-
-### Code Quality
-```bash
-npm run lint          # ESLint check
-npm run format        # Prettier format
-npm run lint --fix    # Fix ESLint issues
-```
-
----
-
-## 2. Deployment Options
-
-### Option A: Cloudflare Workers (Recommended)
-
-Supabase is already configured for Cloudflare deployment.
+### Build local
 
 ```bash
-# Deploy to Cloudflare
-npm run build
-npx nitro deploy --prebuilt
-
-# Or using Wrangler directly
-wrangler deploy .output/server/
-```
-
-**Benefits:**
-- Edge computing
-- Global CDN
-- Automatic scaling
-- Free tier available
-
-**Configuration:** `.output/server/wrangler.json`
-
-### Option B: Docker Container
-
-```bash
-# Build Docker image
-docker build -t digital-cathedral:latest .
-
-# Run container
-docker run -p 3000:3000 \
-  -e SUPABASE_URL="$SUPABASE_URL" \
-  -e SUPABASE_PUBLISHABLE_KEY="$SUPABASE_PUBLISHABLE_KEY" \
-  digital-cathedral:latest
-```
-
-### Option C: Traditional Node.js Server
-
-```bash
-# Install production dependencies
-npm ci --production
-
-# Start server
-node .output/server/index.mjs
-```
-
----
-
-## 3. Environment Configuration
-
-### Required Variables
-
-```bash
-# Supabase (required - already set)
-SUPABASE_URL=https://c--e3469c19-539b-4d3d-a625-5b72c0f10979-prod.lovable.cloud
-SUPABASE_PUBLISHABLE_KEY=sb_publishable_3oFZD0ZgK7xm7uDvR5Te7w_4IN2MVoo
-SUPABASE_PROJECT_ID=bpnosuwoljbmdjogcmnw
-
-# OAuth (configure in Supabase Dashboard first)
-VITE_GOOGLE_CLIENT_ID=your_google_client_id
-VITE_APPLE_CLIENT_ID=your_apple_client_id
-```
-
-### Optional Variables
-
-```bash
-# Analytics
-VITE_SENTRY_DSN=your_sentry_dsn
-
-# CDN
-VITE_CDN_URL=https://cdn.example.com
-
-# API Rate Limiting
-VITE_API_RATE_LIMIT=1000
-```
-
-### Cloudflare Environment
-
-```bash
-# wrangler.toml
-[env.production]
-vars = { 
-  SUPABASE_URL = "...",
-  SUPABASE_PUBLISHABLE_KEY = "..."
-}
-```
-
----
-
-## 4. Pre-Deployment Checklist
-
-### Infrastructure
-- [ ] Supabase project created and accessible
-- [ ] Storage buckets created (avatars, public-assets)
-- [ ] Database migrations applied
-- [ ] RLS policies verified
-
-### Authentication
-- [ ] Google OAuth configured
-- [ ] Apple OAuth configured
-- [ ] Redirect URIs correct in OAuth providers
-- [ ] Environment variables set
-
-### Security
-- [ ] HTTPS enabled
-- [ ] CORS configured
-- [ ] API keys rotated
-- [ ] Rate limiting enabled
-- [ ] Security headers set
-
-### Testing
-- [ ] Build passes without errors
-- [ ] Preview environment verified
-- [ ] Login flow tested
-- [ ] Storage upload tested
-- [ ] API endpoints responding
-
-### Monitoring
-- [ ] Error tracking enabled (Sentry)
-- [ ] Analytics configured
-- [ ] Health check endpoint available
-- [ ] Log aggregation configured
-
----
-
-## 5. Post-Deployment Verification
-
-```bash
-# Check health endpoint
-curl https://your-app.com/health
-
-# Verify OAuth endpoints
-curl -I https://your-app.com/auth/callback?provider=google
-
-# Test API connectivity
-curl https://your-app.com/api/health
-
-# Check storage availability
-curl https://your-app.com/storage/public-assets/
-```
-
----
-
-## 6. Monitoring & Observability
-
-### Sentry Error Tracking
-```typescript
-import * as Sentry from "@sentry/react";
-
-Sentry.init({
-  dsn: import.meta.env.VITE_SENTRY_DSN,
-  environment: import.meta.env.PROD ? "production" : "development",
-  tracesSampleRate: 1.0,
-});
-```
-
-### Health Checks
-```bash
-# Endpoint: /health
-GET /health
-
-Response:
-{
-  "status": "ok",
-  "version": "1.0.0",
-  "uptime": 3600,
-  "supabase": "connected"
-}
-```
-
-### Logs
-- Check Supabase Dashboard → Logs
-- Check Cloudflare Workers → Analytics
-- View application logs: `npm run dev` or Docker logs
-
----
-
-## 7. Scaling Considerations
-
-### Database Optimization
-- Indexes on frequently queried columns
-- Connection pooling via Supabase
-- Read replicas for high-traffic queries
-- Vacuum and analyze regularly
-
-### Caching Strategy
-- Browser cache: 1 hour for static assets
-- CDN cache: 24 hours for public content
-- Server cache: Redis for frequently accessed data
-- Service worker: Offline capabilities
-
-### Performance
-- Code splitting: Already configured
-- Lazy loading: Route-based
-- Image optimization: Use Supabase transformations
-- Compression: Brotli for text, WebP for images
-
----
-
-## 8. Troubleshooting
-
-### Build Fails
-```bash
-# Clear cache and rebuild
-rm -rf node_modules .output
-npm install --legacy-peer-deps
+npm install
 npm run build
 ```
 
-### OAuth Not Working
-1. Verify redirect URI matches exactly
-2. Check OAuth credentials in Supabase Dashboard
-3. Clear browser cache and try incognito mode
-4. Check browser console for CORS errors
+O build deve terminar sem erros antes da publicação.
 
-### Storage Upload Fails
-1. Verify bucket name is correct
-2. Check file size limits
-3. Ensure MIME type is allowed
-4. Verify bucket is public for public assets
-
-### Database Connection Errors
-1. Check SUPABASE_URL and keys
-2. Verify project is running in Supabase Dashboard
-3. Test connection: `curl $SUPABASE_URL`
-4. Check network connectivity
-
-### Performance Issues
-1. Check Cloudflare Analytics for slow requests
-2. Profile with Chrome DevTools
-3. Check Supabase query performance
-4. Review server logs for errors
-
----
-
-## 9. Rollback Procedure
-
-### If Deployment Fails
+### Deploy local/manual
 
 ```bash
-# Revert to previous version
-git revert HEAD
+npm run deploy:cloudflare
+```
 
-# Rebuild
+ou:
+
+```bash
 npm run build
-
-# Redeploy
-npx nitro deploy --prebuilt
+npx wrangler deploy
 ```
 
-### If Database Issue
+O `wrangler.jsonc` na raiz é a configuração de publicação do Worker.
+
+---
+
+## Cloudflare Workers Builds
+
+Para o Worker **cathedradigital**, a configuração do serviço deve apontar para:
+
+- **Repository:** `cathedradigital/cathedradigital`
+- **Production branch:** `main`
+- **Root directory:** raiz do repositório
+- **Build command:** `npm run build`
+- **Deploy command:** `npx wrangler deploy`
+
+O deploy command deve publicar o Worker usando o `wrangler.jsonc` da raiz.
+
+> Importante: não use `npx nitro deploy --prebuilt` nem `wrangler deploy .output/server/`. Esses comandos pertencem a uma configuração anterior e não correspondem à configuração atual do projeto.
+
+---
+
+## URLs de produção
+
+Após uma publicação válida, verificar:
+
+- Worker: `cathedradigital`
+- workers.dev: `https://cathedradigital.cathedradigital.workers.dev/`
+- domínio: `https://cathedradigital.com.br/`
+- www: `https://www.cathedradigital.com.br/`
+
+Se o workers.dev retornar 404 ou a página de erro da plataforma, primeiro verificar o **último deployment/build do Worker** no Cloudflare antes de investigar Supabase.
+
+---
+
+## Configuração do Worker
+
+O arquivo `wrangler.jsonc` deve permanecer na raiz e define:
+
+- nome do Worker;
+- compatibility date;
+- `nodejs_compat`;
+- entrypoint do TanStack Start;
+- workers.dev;
+- preview URLs;
+- domínios de produção;
+- observabilidade.
+
+A configuração atual usa o entrypoint oficial do TanStack Start:
+
+```json
+"main": "@tanstack/react-start/server-entry"
+```
+
+---
+
+## Variáveis de ambiente
+
+As variáveis necessárias ao runtime devem ser configuradas no Cloudflare conforme o ambiente.
+
+Nunca colocar chaves privadas, tokens de serviço ou segredos diretamente no código-fonte ou neste documento.
+
+Variáveis públicas do cliente devem ser tratadas como públicas. Segredos de servidor devem permanecer somente no ambiente do Worker.
+
+---
+
+## Checklist antes da publicação
+
+### Código
+- [ ] `npm install` concluído
+- [ ] `npm run build` concluído
+- [ ] TypeScript sem erros
+- [ ] validações internas sem erros
+- [ ] configuração `wrangler.jsonc` presente na raiz
+
+### Cloudflare
+- [ ] Worker conectado ao repositório correto
+- [ ] branch `main`
+- [ ] root directory na raiz
+- [ ] build command `npm run build`
+- [ ] deploy command `npx wrangler deploy`
+- [ ] último deployment concluído com sucesso
+- [ ] workers.dev respondendo
+- [ ] domínio personalizado respondendo
+
+### Runtime
+- [ ] aplicação inicia sem exceção no Worker
+- [ ] rotas principais carregam
+- [ ] assets estáticos carregam
+- [ ] autenticação é testável
+- [ ] conexão com Supabase é testável
+
+---
+
+## Verificação pós-deploy
+
+Primeiro teste o Worker:
 
 ```bash
-# Restore from backup (Supabase Dashboard)
-# 1. Go to Database → Backups
-# 2. Select restore point
-# 3. Confirm restore
-
-# Or via CLI
-supabase db pull --restore-from <backup_id>
+curl -I https://cathedradigital.cathedradigital.workers.dev/
 ```
 
----
+Depois teste o domínio:
 
-## 10. Support & Resources
-
-### Documentation
-- [TanStack Router](https://tanstack.com/router/latest)
-- [TanStack Start](https://tanstack.com/start/latest)
-- [Supabase Docs](https://supabase.com/docs)
-- [Tailwind CSS](https://tailwindcss.com)
-
-### Community
-- [GitHub Issues](https://github.com/cathedradigital/digital-cathedral/issues)
-- [Supabase Community](https://discord.supabase.com)
-- [TanStack Discord](https://tlinz.com/discord)
-
-### Support Channels
-- Email: support@cathedradigital.com
-- Discord: [Join Server](https://discord.gg/cathedradigital)
-- Slack: #digital-cathedral
-
----
-
-## 11. Continuous Deployment (Optional)
-
-### GitHub Actions Setup
-
-Create `.github/workflows/deploy.yml`:
-
-```yaml
-name: Deploy to Production
-
-on:
-  push:
-    branches: [main]
-
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      
-      - name: Install dependencies
-        run: npm ci --legacy-peer-deps
-      
-      - name: Build
-        run: npm run build
-      
-      - name: Deploy to Cloudflare
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-        run: npx wrangler deploy .output/server/
+```bash
+curl -I https://cathedradigital.com.br/
 ```
 
+Se houver erro:
+
+1. abrir o último build/deployment no Cloudflare;
+2. conferir o **Build log**;
+3. conferir o **Deploy log**;
+4. conferir os logs do Worker;
+5. só depois investigar dependências externas.
+
 ---
 
-## Summary
+## Troubleshooting
 
-✅ **Build:** Complete and tested
-✅ **Infrastructure:** Supabase configured
-✅ **Authentication:** OAuth ready
-✅ **Storage:** Buckets configured
-✅ **Deployment:** Multiple options available
-✅ **Monitoring:** Sentry and logging enabled
+### Build falhou
 
-**Next: Deploy to production environment**
+Executar localmente:
 
-Questions? Check the [Setup Guide](./SETUP.md) or troubleshooting section above.
+```bash
+rm -rf node_modules
+npm install
+npm run build
+```
+
+Se o build local passar e o Cloudflare falhar, comparar:
+
+- versão do Node;
+- diretório raiz;
+- comando de build;
+- comando de deploy;
+- variáveis de build;
+- versão do Wrangler.
+
+### Deploy terminou, mas workers.dev não abre
+
+Verificar:
+
+1. se existe um deployment publicado;
+2. se o deployment corresponde ao commit mais recente da `main`;
+3. se o Worker possui o nome `cathedradigital`;
+4. se o workers.dev está habilitado;
+5. se o log do Worker mostra exceção durante o startup;
+6. se o domínio está apontando para o Worker correto.
+
+### 404
+
+Um 404 no workers.dev não deve ser tratado automaticamente como problema do React. Primeiro confirmar no Cloudflare se o Worker está efetivamente publicado e se a requisição está chegando ao Worker.
+
+### Erro durante startup
+
+Verificar especialmente código executado durante SSR/startup que dependa de APIs exclusivas do navegador, como `window`, `document`, `localStorage`, `navigator` ou `sessionStorage`.
+
+Essas APIs só devem ser acessadas quando o código estiver rodando no navegador.
+
+---
+
+## Supabase
+
+Supabase é uma dependência da aplicação, mas a primeira etapa da recuperação do deploy é fazer o Worker abrir corretamente.
+
+Ordem de diagnóstico:
+
+**GitHub → Workers Build → Deploy → Worker runtime → workers.dev → domínio → Supabase**
+
+Não usar um erro do Supabase para mascarar uma falha de publicação do Worker.
+
+---
+
+## Rollback
+
+Para voltar a um commit conhecido e funcional, use o histórico do GitHub/Cloudflare e publique novamente o commit desejado.
+
+Não use comandos Nitro ou o diretório `.output/server/` para rollback deste projeto.
+
+---
+
+## Referências
+
+- Cloudflare Workers / Wrangler: https://developers.cloudflare.com/workers/
+- Cloudflare Vite Plugin: https://developers.cloudflare.com/workers/vite-plugin/
+- TanStack Start: https://tanstack.com/start
+- Supabase: https://supabase.com/docs
+
+---
+
+## Regra operacional
+
+Para este projeto, a publicação Cloudflare deve seguir uma única cadeia:
+
+```text
+GitHub main
+   ↓
+Cloudflare Workers Builds
+   ↓
+npm run build
+   ↓
+npx wrangler deploy
+   ↓
+Worker cathedradigital
+   ↓
+workers.dev
+   ↓
+cathedradigital.com.br
+```
+
+Se essa cadeia quebrar, corrigir o ponto exato da quebra antes de alterar módulos da aplicação.
