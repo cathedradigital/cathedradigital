@@ -128,17 +128,43 @@ export function useReadingMarks() {
   const saveLastRead = useCallback(async (mark: Partial<ReadingMark>) => {
     if (!user) return;
 
-    // Use upsert logic for last_read per content_type or just one global last_read
-    // Let's do one global last_read for now as requested "return to last saved point"
-    
-    // 1. Unset previous global last_read
-    await supabase
+    // Há uma única posição global de retomada por usuário. Atualize-a em vez
+    // de inserir uma linha nova a cada mudança de parágrafo/scroll.
+    const { data: current } = await supabase
       .from('reading_marks')
-      .update({ is_last_read: false })
+      .select('id')
       .eq('user_id', user.id)
-      .eq('is_last_read', true);
+      .eq('is_last_read', true)
+      .order('updated_at', { ascending: false })
+      .limit(1)
+      .maybeSingle();
 
-    // 2. Insert new one
+    if (current?.id) {
+      const { error } = await supabase
+        .from('reading_marks')
+        .update({
+          content_type: mark.content_type,
+          content_id: mark.content_id,
+          chapter: mark.chapter,
+          paragraph: mark.paragraph,
+          position: mark.position,
+          label: mark.label,
+          url: mark.url,
+          is_last_read: true,
+        })
+        .eq('id', current.id)
+        .eq('user_id', user.id);
+
+      if (!error) {
+        setMarks(prev => prev.map(m => m.id === current.id ? {
+          ...m,
+          ...mark,
+          is_last_read: true,
+        } : { ...m, is_last_read: false }));
+        return;
+      }
+    }
+
     await addMark({ ...mark, is_last_read: true });
   }, [user, addMark]);
 
