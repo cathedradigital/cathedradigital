@@ -55,7 +55,7 @@ const FeedbackWidget = () => {
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className="absolute bottom-spacing-3xl right-0 w-[320px] bg-card border border-border shadow-premium-hover rounded-premium-full p-spacing-lg overflow-hidden"
+            className="absolute bottom-spacing-3xl right-0 w-[320px] max-w-[calc(100vw-1.5rem)] bg-card border border-border shadow-premium-hover rounded-premium-full p-spacing-lg overflow-hidden"
           >
             {submitted ? (
               <div className="text-center py-spacing-xl space-y-spacing-md">
