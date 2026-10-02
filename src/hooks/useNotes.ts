@@ -29,9 +29,10 @@ export function useNotes(contentType: string, contentId?: string) {
       .from('user_notes')
       .select('*')
       .eq('user_id', user.id)
-      .eq('content_type', contentType)
       .order('created_at', { ascending: false });
 
+    // "all" is an aggregation mode used by the journal, not a persisted content type.
+    if (contentType !== 'all') query = query.eq('content_type', contentType);
     if (contentId) query = query.eq('content_id', contentId);
 
     const { data } = await query;
