@@ -132,7 +132,11 @@ const StudyJournal: React.FC = () => {
                     } else if (note.content_type === 'catechism' && note.paragraph) {
                       url = `/catechism?p=${encodeURIComponent(String(note.paragraph))}`;
                     } else if (note.content_type === 'magisterium' && note.content_id) {
-                      url = `/magisterium/${encodeURIComponent(note.content_id.split(':')[0])}`;
+                      const [docId, paragraphIndex] = note.content_id.split(':');
+                      url = `/magisterium/${encodeURIComponent(docId)}`;
+                      if (paragraphIndex && /^\\d+$/.test(paragraphIndex)) {
+                        url += `?p=${encodeURIComponent(paragraphIndex)}`;
+                      }
                     } else if (note.content_type === 'saint' && note.content_id) {
                       url = `/santos/${encodeURIComponent(note.content_id)}`;
                     }
