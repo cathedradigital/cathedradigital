@@ -284,7 +284,7 @@ const ReadingControlPanel: React.FC = memo(() => {
               <span className="text-[10px] font-black uppercase tracking-widest">Estética</span>
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-[400px] p-spacing-xl space-y-spacing-xl rounded-[3rem] shadow-premium-hover border-primary/5 bg-background/95 backdrop-blur-2xl" align="end">
+          <DropdownMenuContent className="w-[calc(100vw-1rem)] max-w-[400px] p-spacing-md sm:p-spacing-xl space-y-spacing-xl rounded-[3rem] shadow-premium-hover border-primary/5 bg-background/95 backdrop-blur-2xl" align="end">
             <ScrollArea className="max-h-[70vh] pr-spacing-md">
               <SettingsContent />
             </ScrollArea>
