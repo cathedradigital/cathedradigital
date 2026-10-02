@@ -15,14 +15,14 @@ interface Props {
  * Aceita texto puro ou HTML sanitizado a montante.
  */
 export const SaintBioBlock: React.FC<Props> = ({ text, html, title = 'Vida', id = 'saint-bio' }) => (
-  <section aria-labelledby={id} className="rounded-2xl border border-border/60 bg-card/40 p-spacing-lg">
-    <h2 id={id} className="font-serif text-premium-lg text-foreground mb-spacing-sm">
+  <section aria-labelledby={id} className="rounded-xl border border-border/50 bg-card/30 p-spacing-md">
+    <h2 id={id} className="font-serif text-premium-lg text-foreground mb-spacing-xs">
       {title}
     </h2>
     {html ? (
       <div className="prose prose-invert max-w-none" dangerouslySetInnerHTML={{ __html: html }} />
     ) : (
-      <p className="text-premium-sm text-foreground/90 leading-relaxed whitespace-pre-line">{text}</p>
+      <p className="text-premium-sm text-foreground/90 leading-[1.72] whitespace-pre-line">{text}</p>
     )}
   </section>
 );
