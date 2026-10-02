@@ -61,14 +61,24 @@ export const HighlightMenu: React.FC<HighlightMenuProps> = ({
             transition={{ duration: 0.18, ease: 'easeOut' }}
             className="fixed bottom-4 left-3 right-3 z-[160] mx-auto max-w-xl rounded-3xl border border-primary/10 bg-background/95 p-4 shadow-2xl backdrop-blur-xl md:bottom-6 md:p-5"
             role="dialog"
-            aria-label={`Ações da leitura: ${reference ?? sourceLabel}`}
+            aria-label={`Yá — ações da leitura: ${reference ?? sourceLabel}`}
           >
             <div className="space-y-4">
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
-                  <p className="text-[9px] font-black uppercase tracking-[0.25em] text-primary/45">
-                    Cátedra · {sourceLabel}
-                  </p>
+                  <div className="flex items-center gap-2">
+                    <span
+                      className="inline-flex items-center gap-1.5 rounded-full border border-primary/15 bg-primary/5 px-2 py-1 text-[9px] font-black uppercase tracking-[0.18em] text-primary/75"
+                      title="Yá"
+                      data-assistant="ya"
+                    >
+                      <Icons.Sparkles className="h-3 w-3" aria-hidden="true" />
+                      Yá
+                    </span>
+                    <span className="text-[9px] font-black uppercase tracking-[0.25em] text-primary/45">
+                      Cátedra · {sourceLabel}
+                    </span>
+                  </div>
                   {reference && (
                     <p className="mt-1 truncate text-sm font-medium text-foreground/80">
                       {reference}
