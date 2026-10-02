@@ -78,11 +78,16 @@ const CatechismContent: React.FC<{
   onHighlightClick?: (note: UserNote) => void;
   onCreateNote?: (paragraph: number) => void;
   highlights?: UserNote[];
+  onContentLoaded?: (text: string) => void;
 }> = ({ paragraph, onNavigateToBible, isVisible = true, onHighlightClick, onCreateNote, highlights = [] }) => {
   const { data, isLoading, isError, error, refetch, isFetching } = useCatechismParagraph(paragraph, isVisible);
   const prefetch = usePrefetchCatechismParagraph();
   const { settings } = useReadingSettings();
   const { markPending, clearPending } = useCatechismPending();
+
+  useEffect(() => {
+    if (data?.content) onContentLoaded?.(data.content);
+  }, [data?.content, onContentLoaded]);
 
   // Pré-carrega uma janela de §§ vizinhos (±5) em background para reduzir latência
   // ao navegar. `prefetch` é idempotente e reaproveita cache do React Query;
@@ -391,6 +396,7 @@ const LazyParagraph: React.FC<{
   const ref = React.useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
   const [isContextualOpen, setIsContextualOpen] = useState(false);
+  const [contextText, setContextText] = useState('');
 
   useEffect(() => {
     const el = ref.current;
@@ -452,7 +458,7 @@ const LazyParagraph: React.FC<{
         </div>
         <div className="h-[0.5px] flex-1 bg-gradient-to-r from-primary/[0.05] via-transparent to-transparent" />
       </div>
-      <CatechismContent paragraph={p} onNavigateToBible={handleNavigateToBible} isVisible={isVisible} onHighlightClick={onHighlightClick} onCreateNote={onCreateNote} highlights={highlights} />
+      <CatechismContent paragraph={p} onNavigateToBible={handleNavigateToBible} isVisible={isVisible} onHighlightClick={onHighlightClick} onCreateNote={onCreateNote} highlights={highlights} onContentLoaded={setContextText} />
       <HighlightMenu
         isOpen={isContextualOpen}
         onClose={() => setIsContextualOpen(false)}
@@ -460,7 +466,7 @@ const LazyParagraph: React.FC<{
           setIsContextualOpen(false);
           onCreateNote?.(p);
         }}
-        verseText={undefined}
+        verseText={contextText}
         reference={`CIC §${p}`}
         passage={{ kind: 'catechism', paragraph: p }}
       />
