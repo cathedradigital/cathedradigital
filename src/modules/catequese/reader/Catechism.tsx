@@ -315,7 +315,7 @@ const CatechismContent: React.FC<{
     <div className={cn(
       "reader-text text-foreground/90 font-size-", settings.fontSize,
       "font-family-", settings.fontFamily,
-      "prose prose-lg dark:prose-invert max-w-none transition-all",
+      "prose prose-base md:prose-lg dark:prose-invert max-w-none transition-all",
       settings.reduceAnimations ? "duration-0" : "duration-300"
     )}>
       {normalization && data?.content && (
@@ -352,14 +352,14 @@ const CatechismContent: React.FC<{
             <p
               key={pi}
               onClick={() => onHighlightClick?.(activeHighlight)}
-              className={`highlight-${activeHighlight.highlight_color} px-spacing-2xs py-spacing-2xs mb-spacing-md last:mb-0 rounded-premium-sm cursor-pointer hover:brightness-95 transition-all leading-relaxed`}
+              className={`highlight-${activeHighlight.highlight_color} px-spacing-2xs py-spacing-2xs mb-spacing-sm last:mb-0 rounded-premium-sm cursor-pointer hover:brightness-95 transition-all leading-[1.72]`}
             >
               {inline}
             </p>
           );
         }
         return (
-          <p key={pi} className="mb-spacing-md last:mb-0 leading-relaxed">
+          <p key={pi} className="mb-spacing-sm last:mb-0 leading-[1.72]">
             {inline}
           </p>
         );
@@ -410,13 +410,13 @@ const LazyParagraph: React.FC<{
       ref={ref} 
       id={`p${p}`} 
       className={cn(
-        "scroll-mt-spacing-4xl transition-all pb-spacing-lg md:pb-spacing-2xl border-b border-primary/[0.03] last:border-0 last:pb-spacing-0",
+        "scroll-mt-spacing-4xl transition-all pb-spacing-md md:pb-spacing-lg border-b border-primary/[0.03] last:border-0 last:pb-spacing-0",
         settings.reduceAnimations ? "duration-0" : "duration-700",
         currentParagraph === p ? 'relative' : 'opacity-70 hover:opacity-100'
       )}
       aria-labelledby={`heading-p${p}`}
     >
-      <div className="flex items-center gap-spacing-md mb-spacing-lg">
+      <div className="flex items-center gap-spacing-sm mb-spacing-md">
         <div className="flex items-center gap-spacing-sm">
           <h2 id={`heading-p${p}`} className="text-premium-base md:text-premium-lg font-display tracking-[0.18em] text-secondary/70 uppercase">§{p}</h2>
           <div className="flex items-center gap-spacing-3xs opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity">
@@ -708,7 +708,7 @@ const Catechism: React.FC = memo(() => {
 
           <ReaderShell
             ariaLabel={`Catecismo — ${selectedSection.title}`}
-            contentMaxWidth="max-w-6xl"
+            contentMaxWidth="max-w-3xl"
             hero={
               <EditorialHero
                 kicker={`Catecismo · ${selectedPart.part}`}
