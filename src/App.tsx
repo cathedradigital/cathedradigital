@@ -1026,7 +1026,7 @@ const AppLayout: React.FC = () => {
           </SwipeNavigation>
         </main>
 
-        {(!settings.immersiveMode || !location.pathname.startsWith('/bible')) && !location.pathname.startsWith('/prototype-2.0') && location.pathname !== '/' && location.pathname !== '/auth' && location.pathname !== '/login' && (
+        {(!settings.immersiveMode || !location.pathname.startsWith('/bible')) && !location.pathname.startsWith('/prototype-2.0') && location.pathname !== '/' && location.pathname !== '/auth' && location.pathname !== '/login' && !isAccountArea && (
           <Suspense fallback={null}>
             <BottomNav user={authUserAdapter} onOpenSidebar={handleOpenSidebar} />
           </Suspense>
