@@ -10,7 +10,7 @@
 import React from 'react';
 import { Link } from '@/lib/rr-compat';
 import { EditorialCard } from '@/components/editorial/harmony';
-import { BookOpen, BookMarked, Church, Users, Sparkles, Library, Compass, ScrollText, Feather, Clock3, ArrowRight } from 'lucide-react';
+import { BookOpen, BookMarked, Church, Users, Heart, Library, Compass, ScrollText, Feather, Clock3, ArrowRight } from 'lucide-react';
 import IceBadge from './IceBadge';
 import type { LibraryItem, LibraryModule } from '../types';
 
