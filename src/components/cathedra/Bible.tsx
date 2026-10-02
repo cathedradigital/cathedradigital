@@ -992,6 +992,30 @@ const Bible: React.FC = () => {
   };
 
   const dictionaryTerms = ['Deus', 'Jesus', 'Cristo', 'Senhor', 'Espírito', 'Jerusalém', 'Israel', 'Moisés', 'Abraão', 'Aliança', 'Graça', 'Pecado', 'Salvação', 'Reino', 'Evangelho'];
+
+  const [showKnowledgePanel, setShowKnowledgePanel] = useState(false);
+  const [activeThemeFilter, setActiveThemeFilter] = useState<string | null>(null);
+  const [dynamicConnections, setDynamicConnections] = useState<Record<string, any[]>>({});
+
+  // Fonte de verdade das conexões inline: somente dados carregados do índice/banco.
+  // O antigo mapa mock foi removido para não apresentar relações fictícias ao leitor.
+  const KNOWLEDGE_CONNECTIONS = dynamicConnections;
+
+  const THEOLOGICAL_THEMES = [
+    { id: 'creatio', label: 'Criação', parent: null, connections: 0, tags: ['Dogma', 'Ontologia'] },
+    { id: 'eucharistia', label: 'Eucaristia', parent: null, connections: 0, tags: ['Sacramento', 'Liturgia'] },
+    { id: 'gratia', label: 'Graça', parent: null, connections: 0, tags: ['Soteriologia'] },
+    { id: 'trinitas', label: 'Santíssima Trindade', parent: null, connections: 0, tags: ['Mistério', 'Dogma'] },
+    { id: 'mariologia', label: 'Mariologia', parent: null, connections: 0, tags: ['Santos', 'Dogma'] },
+  ];
+
+  const CROSS_REFERENCES: Record<string, string[]> = {
+    'Jo-1-1': ['Gn-1-1', '1Jo-1-1', 'Sl 33:6'],
+    'Jo-3-16': ['Rm-5-8', '1Jo-4-9', 'Ef 2:4'],
+    'Gn-1-1': ['Jo-1-1', 'Hb-11-3', 'Sl 102:25'],
+    'Mt-5-3': ['Lc-6-20', 'Is 57:15'],
+  };
+
   
   // Knowledge Connection System
   const wrapWithDictionary = (text: string) => {
