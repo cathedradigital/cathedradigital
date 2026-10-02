@@ -441,20 +441,37 @@ export const JourneyService = {
   async getNexusForStep(stepId: string): Promise<ServiceResult<JourneyNexusLink[]>> {
     try {
       const rawId = JourneyAdapter.fromLegacyId(stepId);
-      const { data, error } = await (supabase as SB)
-        .from('nexus_relations' as any)
-        .select('*')
-        .or(`source_id.eq.${rawId},target_id.eq.${rawId}`)
-        .limit(50);
-      if (error) throw error;
-      return ok(
-        (data ?? []).map((r: any) => ({
+      const [outgoing, incoming] = await Promise.all([
+        (supabase as SB)
+          .from('nexus_relations' as any)
+          .select('relation_type, target_kind, target_ref')
+          .filter('source_ref->>id', 'eq', rawId)
+          .eq('status', 'published')
+          .limit(50),
+        (supabase as SB)
+          .from('nexus_relations' as any)
+          .select('relation_type, source_kind, source_ref')
+          .filter('target_ref->>id', 'eq', rawId)
+          .eq('status', 'published')
+          .limit(50),
+      ]);
+      if (outgoing.error) throw outgoing.error;
+      if (incoming.error) throw incoming.error;
+      const links = [
+        ...((outgoing.data ?? []) as any[]).map((r) => ({
           step_id: stepId,
-          target_type: r.target_type ?? r.relation_type ?? 'unknown',
-          target_id: r.target_id ?? r.source_id,
-          label: r.label ?? undefined,
+          target_type: r.target_kind ?? r.relation_type ?? 'unknown',
+          target_id: String(r.target_ref?.id ?? r.target_ref?.slug ?? r.target_ref?.ref ?? ''),
+          label: r.target_ref?.title ?? undefined,
         })),
-      );
+        ...((incoming.data ?? []) as any[]).map((r) => ({
+          step_id: stepId,
+          target_type: r.source_kind ?? r.relation_type ?? 'unknown',
+          target_id: String(r.source_ref?.id ?? r.source_ref?.slug ?? r.source_ref?.ref ?? ''),
+          label: r.source_ref?.title ?? undefined,
+        })),
+      ].filter((r) => r.target_id);
+      return ok(links);
     } catch (e) {
       return fail(e);
     }
