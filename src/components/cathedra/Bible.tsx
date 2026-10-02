@@ -432,6 +432,55 @@ const Bible: React.FC = () => {
   }, [reloadKey]);
 
 
+  // R1.2.3 — restaura o versículo solicitado depois que o DOM estiver pronto.
+  // Isso também cobre retorno do Diário sem recarregar o capítulo (somente ?v muda)
+  // e cache local, que antes retornava de fetchVerses antes do scroll.
+  const requestedVerse = searchParams.get('v');
+
+  useEffect(() => {
+    if (viewMode !== 'reading' || isLoading || verses.length === 0) return;
+
+    let cancelled = false;
+    let attempts = 0;
+    const maxAttempts = 8;
+
+    const restoreVerse = () => {
+      if (cancelled) return;
+      const element = requestedVerse
+        ? document.getElementById(`verse-${requestedVerse}`)
+        : null;
+
+      if (element) {
+        const headerHeight = 56;
+        const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
+        const offsetPosition = elementPosition - headerHeight - 20;
+
+        window.scrollTo({ top: Math.max(0, offsetPosition), behavior: 'smooth' });
+        element.classList.add('bg-secondary/20', 'scale-[1.02]');
+        window.setTimeout(() => {
+          if (!cancelled) element.classList.remove('bg-secondary/20', 'scale-[1.02]');
+        }, 3000);
+        return;
+      }
+
+      if (requestedVerse && attempts < maxAttempts) {
+        attempts += 1;
+        window.setTimeout(restoreVerse, 100);
+        return;
+      }
+
+      if (!requestedVerse) {
+        window.scrollTo({ top: 0, behavior: 'auto' });
+      }
+    };
+
+    const frame = window.requestAnimationFrame(restoreVerse);
+    return () => {
+      cancelled = true;
+      window.cancelAnimationFrame(frame);
+    };
+  }, [requestedVerse, verses, isLoading, viewMode]);
+
   // Local Persistence Logic
   useEffect(() => {
     const savedLastRead = localStorage.getItem('cathedra_bible_last_read');
@@ -884,26 +933,7 @@ const Bible: React.FC = () => {
         toast.warning('Capítulo sem conteúdo no momento.');
       }
 
-      // Scroll to verse if specified
-      const verse = searchParams.get('v');
-      if (verse) {
-        setTimeout(() => {
-          const element = document.getElementById(`verse-${verse}`);
-          if (element) {
-            const headerHeight = 56;
-            const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
-            const offsetPosition = elementPosition - headerHeight - 20;
-
-            window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
-            element.classList.add('bg-secondary/20', 'scale-[1.02]');
-            setTimeout(() => element.classList.remove('bg-secondary/20', 'scale-[1.02]'), 3000);
-          }
-        }, 300);
-      } else {
-        window.scrollTo({ top: 0, behavior: 'instant' });
-      }
-
-      // Save progress — DEFERIDO para não bloquear interações pós-render
+          // Save progress — DEFERIDO para não bloquear interações pós-render
       const allBooks = Object.values(BIBLE_DATA).flat().flatMap((cat) => cat.books);
       const book = allBooks.find((b) => b.abbr === abbr);
       if (book) {
