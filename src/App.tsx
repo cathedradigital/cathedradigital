@@ -510,12 +510,6 @@ const AppLayout: React.FC = () => {
   }, [handleOpenA11y]);
 
   useEffect(() => {
-    const handleOpenA11yGlobal = () => setShowA11ySettings(true);
-    window.addEventListener('open-a11y-settings', handleOpenA11yGlobal);
-    return () => window.removeEventListener('open-a11y-settings', handleOpenA11yGlobal);
-  }, []);
-
-  useEffect(() => {
     const handleGlobalShortcuts = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         if (isSidebarOpen) handleCloseSidebar();
