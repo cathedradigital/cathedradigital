@@ -1,4 +1,5 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
+import { createClient } from "npm:@supabase/supabase-js@2";
 
 const ORDINARIUM_BASE = "https://api.ordinarium.com.br/api/v1/bible";
 
@@ -72,6 +73,83 @@ function errorPayload(reason: string, abbrev: string, chapter: number, correlati
 async function sha256Hex(value: string) {
   const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(value));
   return Array.from(new Uint8Array(digest)).map((b) => b.toString(16).padStart(2, "0")).join("");
+}
+
+
+
+async function persistBibleChapter(
+  abbrev: string,
+  chapter: number,
+  verses: Array<{ number: number; text: string }>,
+  sourceUrl: string,
+) {
+  const supabaseUrl = Deno.env.get("SUPABASE_URL");
+  const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+  if (!supabaseUrl || !serviceRoleKey) {
+    console.warn("[bible-text] persistence skipped: Supabase service configuration missing");
+    return;
+  }
+
+  const db = createClient(supabaseUrl, serviceRoleKey, {
+    auth: { persistSession: false, autoRefreshToken: false },
+  });
+  const retrievedAt = new Date().toISOString();
+
+  const { data: book, error: bookError } = await db
+    .from("bible_books")
+    .select("id")
+    .eq("abbrev", abbrev)
+    .maybeSingle();
+
+  if (bookError || !book?.id) {
+    console.warn("[bible-text] persistence skipped: book not found", {
+      abbrev,
+      error: bookError?.message ?? "book_not_found",
+    });
+    return;
+  }
+
+  const { data: chapterRow, error: chapterError } = await db
+    .from("bible_chapters")
+    .upsert({
+      book_id: book.id,
+      number: chapter,
+      source_name: "Ordinarium API",
+      source_url: sourceUrl,
+      source_retrieved_at: retrievedAt,
+    }, { onConflict: "book_id,number" })
+    .select("id")
+    .single();
+
+  if (chapterError || !chapterRow?.id) {
+    console.warn("[bible-text] persistence failed at chapter", {
+      abbrev,
+      chapter,
+      error: chapterError?.message ?? "chapter_not_persisted",
+    });
+    return;
+  }
+
+  const rows = verses.map((verse) => ({
+    chapter_id: chapterRow.id,
+    number: verse.number,
+    text: verse.text,
+    source_name: "Ordinarium API",
+    source_url: sourceUrl,
+    source_retrieved_at: retrievedAt,
+  }));
+
+  const { error: verseError } = await db
+    .from("bible_verses")
+    .upsert(rows, { onConflict: "chapter_id,number" });
+
+  if (verseError) {
+    console.warn("[bible-text] persistence failed at verses", {
+      abbrev,
+      chapter,
+      error: verseError.message,
+    });
+  }
 }
 
 async function fetchUpstream(url: string, correlation: string) {
@@ -168,6 +246,12 @@ Deno.serve(async (req: Request) => {
     if (!verses.length) return errorPayload(`O capítulo ${abbrev} ${chapter} não retornou versículos válidos.`, abbrev, chapter, correlation, 404);
 
     const contentHash = await sha256Hex(JSON.stringify({ book: bookName, chapter, verses }));
+    await persistBibleChapter(
+      abbrev,
+      chapter,
+      verses,
+      upstream.url || `${ORDINARIUM_BASE}/${encodeURIComponent(API_BOOK_MAP[abbrev] ?? bookName)}/${chapter}`,
+    );
     const etag = `"${contentHash}"`;
     if (req.headers.get("if-none-match") === etag) {
       return new Response(null, { status: 304, headers: { ...cors, ETag: etag, "Cache-Control": "public, max-age=3600, stale-while-revalidate=86400" } });
