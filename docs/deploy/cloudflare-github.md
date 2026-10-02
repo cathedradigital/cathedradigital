@@ -48,3 +48,26 @@ Não serão mantidas duas versões de código.
 ## Auditoria
 
 As correções funcionais continuam sendo feitas no GitHub. O Cloudflare só passa a publicar o estado consolidado quando a integração estiver autorizada e o primeiro build estiver validado.
+
+
+## Deploy automático pelo GitHub Actions
+
+O repositório agora possui o workflow `.github/workflows/cloudflare-deploy.yml`.
+
+- Pull requests continuam usando o workflow de qualidade para validar o código, sem publicar.
+- Cada push/merge em `main` executa as validações e, somente depois, publica o Worker no Cloudflare.
+- Execuções concorrentes de produção são canceladas para evitar builds/deploys duplicados.
+- O workflow não contém credenciais no código.
+
+### Credenciais necessárias uma única vez
+
+Em **GitHub → Settings → Secrets and variables → Actions**, cadastrar:
+
+- `CLOUDFLARE_API_TOKEN`
+- `CLOUDFLARE_ACCOUNT_ID`
+
+O token deve ter apenas as permissões necessárias para publicar Workers. Nunca colocar o token em arquivos, commits ou variáveis públicas.
+
+### Proteção de custo durante o desenvolvimento
+
+A publicação automática fica limitada a `main`; PRs não fazem deploy. Como o repositório é público, os runners padrão do GitHub Actions não consomem a franquia mensal de minutos da conta. No Cloudflare Workers Free, o limite atual é de 100.000 requisições por dia; ultrapassar o limite do plano Free faz as operações falharem, em vez de gerar cobrança por excesso. Antes de habilitar qualquer plano pago, manteremos o projeto no Free enquanto o Cátedra estiver em desenvolvimento.
