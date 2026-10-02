@@ -98,15 +98,6 @@ const TransparencyPage: React.FC = () => {
             </Button>
             <Button 
               variant="secondary"
-              onClick={() => {
-                trackEvent('social_link_click', { platform: 'WhatsApp', url: SOCIAL_LINKS.WHATSAPP });
-                window.open(SOCIAL_LINKS.WHATSAPP, '_blank');
-              }}
-              className="h-spacing-2xl px-spacing-xl border border-primary/20 w-full sm:w-auto shadow-premium-md gap-spacing-sm"
-            >
-              <Icons.MessageSquare className="w-spacing-md h-spacing-md" />
-              Suporte WhatsApp
-            </Button>
           </div>
         </section>
 
