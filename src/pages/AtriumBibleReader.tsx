@@ -253,14 +253,14 @@ const BibleLanding: React.FC = () => {
           <p className="mt-1 max-w-2xl font-stitch-body text-[13px] leading-relaxed text-stitch-on-surface-variant">
             Três testemunhos do mesmo mistério de Cristo. A Cátedra poderá ligar episódios paralelos, referências e diferenças de redação sem misturar o texto bíblico com comentários.
           </p>
-          <div className="mt-4 grid grid-cols-3 gap-2">
+          <div className="mt-4 grid grid-cols-3 gap-1.5">
             {[
               { abbr: 'Mt', name: 'Mateus', note: 'Evangelho segundo Mateus' },
               { abbr: 'Mc', name: 'Marcos', note: 'Evangelho segundo Marcos' },
               { abbr: 'Lc', name: 'Lucas', note: 'Evangelho segundo Lucas' },
             ].map((gospel) => (
               <Link key={gospel.abbr} to={buildBibleUrl({ abbr: gospel.abbr, chapter: 1 })}
-                className="group rounded-xl border border-stitch-outline-variant/30 bg-stitch-surface p-3 transition-colors hover:border-stitch-secondary">
+                className="group rounded-lg border border-stitch-outline-variant/30 bg-stitch-surface p-2 transition-colors hover:border-stitch-secondary">
                 <span className="font-stitch-display text-[22px] text-stitch-secondary">{gospel.abbr}</span>
                 <span className="mt-1 block font-stitch-body text-[13px] font-semibold text-stitch-primary">{gospel.name}</span>
                 <span className="mt-0.5 block text-[10px] leading-snug text-stitch-on-surface-variant">{gospel.note}</span>
@@ -290,12 +290,12 @@ const BibleLanding: React.FC = () => {
                 </span>
               </div>
 
-              <div className="estudar-bible-book-grid grid grid-cols-2 gap-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8">
+              <div className="estudar-bible-book-grid grid grid-cols-2 gap-1.5 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8">
                 {cat.books.map((book: BibleBook, i: number) => (
                   <Link
                     key={book.abbr}
                     to={buildBibleUrl({ abbr: book.abbr, chapter: 1 })}
-                    className="estudar-bible-book-card group relative flex min-h-[78px] sm:min-h-[92px] flex-col justify-between overflow-hidden rounded-xl border border-stitch-outline-variant/20 bg-stitch-surface-container-lowest p-2.5 transition-all hover:border-stitch-secondary hover:shadow-lg hover:shadow-black/[0.05] md:min-h-[104px] md:p-3"
+                    className="estudar-bible-book-card group relative flex min-h-[62px] sm:min-h-[72px] flex-col justify-between overflow-hidden rounded-lg border border-stitch-outline-variant/20 bg-stitch-surface-container-lowest p-2 transition-all hover:border-stitch-secondary hover:shadow-lg hover:shadow-black/[0.05] md:min-h-[82px] md:p-2.5"
                   >
                     <div className="absolute inset-0 bg-gradient-to-br from-stitch-primary/[0.03] to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
                     <div className="relative">
