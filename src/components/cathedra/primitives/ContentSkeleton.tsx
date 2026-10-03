@@ -87,7 +87,7 @@ export const SkeletonCard: React.FC<{ className?: string; withMedia?: boolean }>
 }) => (
   <div
     className={cn(
-      'premium-card p-spacing-lg space-y-spacing-md',
+      'premium-card rounded-premium p-spacing-lg space-y-spacing-md',
       className,
     )}
     aria-hidden="true"
