@@ -126,6 +126,16 @@ export const JourneyService = {
 
   async getStepById(stepId: string): Promise<ServiceResult<JourneyStep>> {
     try {
+      if (JourneyAdapter.isLegacyId(stepId)) {
+        const raw = JourneyAdapter.fromLegacyId(stepId);
+        const { data, error } = await (supabase as SB)
+          .from('itineraria_steps' as any)
+          .select('*')
+          .eq('id', raw)
+          .maybeSingle();
+        if (error) throw error;
+        return ok(data ? JourneyAdapter.fromItinerariaStep(data as any) : (null as any));
+      }
       const { data, error } = await supabase
         .from('journey_steps')
         .select('*')
@@ -303,6 +313,87 @@ export const JourneyService = {
       const { data: js, error: e2 } = await supabase.from('journeys').select('*').in('id', ids);
       if (e2) throw e2;
       return ok((js ?? []).map((r) => JourneyAdapter.fromJourneyRow(r as any)));
+    } catch (e) {
+      return fail(e);
+    }
+  },
+
+  async listUserJourneyProgress(userId: string): Promise<ServiceResult<JourneyProgress[]>> {
+    try {
+      const { data, error } = await supabase
+        .from('journey_progress')
+        .select('*')
+        .eq('user_id', userId)
+        .order('completed_at', { ascending: false });
+      if (error) throw error;
+      return ok((data ?? []) as JourneyProgress[]);
+    } catch (e) {
+      return fail(e);
+    }
+  },
+
+  async getLatestUserJourneyProgress(userId: string): Promise<ServiceResult<JourneyProgress>> {
+    try {
+      const { data, error } = await supabase
+        .from('journey_progress')
+        .select('*')
+        .eq('user_id', userId)
+        .order('completed_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      if (error) throw error;
+      return ok(data as JourneyProgress);
+    } catch (e) {
+      return fail(e);
+    }
+  },
+
+  async getUserProgressCount(userId: string, since?: string): Promise<ServiceResult<number>> {
+    try {
+      let q = supabase
+        .from('journey_progress')
+        .select('id', { count: 'exact', head: true })
+        .eq('user_id', userId);
+      if (since) q = q.gte('completed_at', since);
+      const { count, error } = await q;
+      if (error) throw error;
+      return ok(count ?? 0);
+    } catch (e) {
+      return fail(e);
+    }
+  },
+
+  async getCompletedJourneyCount(userId: string): Promise<ServiceResult<number>> {
+    try {
+      const [journeysRes, stepsRes, progressRes] = await Promise.all([
+        supabase.from('journeys').select('id').eq('is_active', true),
+        supabase.from('journey_steps').select('id, journey_id'),
+        supabase.from('journey_progress').select('journey_id, step_id').eq('user_id', userId),
+      ]);
+      if (journeysRes.error) throw journeysRes.error;
+      if (stepsRes.error) throw stepsRes.error;
+      if (progressRes.error) throw progressRes.error;
+
+      const totalByJourney = new Map<string, number>();
+      for (const step of stepsRes.data ?? []) {
+        totalByJourney.set(step.journey_id, (totalByJourney.get(step.journey_id) ?? 0) + 1);
+      }
+
+      const doneByJourney = new Map<string, Set<string>>();
+      for (const progress of progressRes.data ?? []) {
+        if (!progress.step_id) continue;
+        const set = doneByJourney.get(progress.journey_id) ?? new Set<string>();
+        set.add(progress.step_id);
+        doneByJourney.set(progress.journey_id, set);
+      }
+
+      let completed = 0;
+      for (const journey of journeysRes.data ?? []) {
+        const total = totalByJourney.get(journey.id) ?? 0;
+        const done = doneByJourney.get(journey.id)?.size ?? 0;
+        if (total > 0 && done >= total) completed += 1;
+      }
+      return ok(completed);
     } catch (e) {
       return fail(e);
     }

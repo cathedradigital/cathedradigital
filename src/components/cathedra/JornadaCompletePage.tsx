@@ -34,6 +34,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import { JourneyService } from '@/core/journey';
 import { supabase } from '@/lib/db';
 import { useAuth } from '@/hooks/useAuth';
 import { AppRoute } from '@/types';
@@ -104,48 +105,39 @@ const JornadaCompletePage: React.FC = () => {
   const loadData = async () => {
     setLoading(true);
     try {
-      const [journeyRes, progressRes, totalRes] = await Promise.all([
-        supabase.from('journeys').select('*').eq('id', id!).single(),
-        supabase
-          .from('journey_progress')
-          .select('reflection, completed_at, step_id')
-          .eq('user_id', user!.id)
-          .eq('journey_id', id!)
-          .order('completed_at', { ascending: true }),
-        supabase
-          .from('journey_steps')
-          .select('*', { count: 'exact', head: true })
-          .eq('journey_id', id!),
+      const [journeyRes, progressRes, stepsRes] = await Promise.all([
+        JourneyService.getById(id!),
+        JourneyService.getProgress(user!.id, id!),
+        JourneyService.listSteps(id!),
       ]);
+      if (journeyRes.error) throw journeyRes.error;
+      if (progressRes.error) throw progressRes.error;
+      if (stepsRes.error) throw stepsRes.error;
+
+      const allSteps = (stepsRes.data ?? []).map((step) => ({
+        id: step.id,
+        title: step.title,
+        step_order: step.step_order,
+      }));
+      const progress = progressRes.data ?? [];
 
       if (journeyRes.data) setJourney(journeyRes.data);
-      setTotalSteps(totalRes.count || 0);
-      setCompletedSteps(progressRes.data?.length || 0);
+      setTotalSteps(allSteps.length);
+      setCompletedSteps(new Set(progress.map((p) => p.step_id).filter(Boolean)).size);
 
-      // Buscar TODAS as etapas para calcular pendentes + títulos das reflexões
-      const { data: allSteps } = await supabase
-        .from('journey_steps')
-        .select('id, title, step_order')
-        .eq('journey_id', id!)
-        .order('step_order', { ascending: true });
+      const doneIds = new Set(progress.map((p) => p.step_id).filter(Boolean));
+      setPendingSteps(allSteps.filter((s) => !doneIds.has(s.id)));
 
-      const doneIds = new Set(progressRes.data?.map((p) => p.step_id) || []);
-      if (allSteps) {
-        setPendingSteps(allSteps.filter((s) => !doneIds.has(s.id)));
-      }
-
-      if (progressRes.data) {
-        const stepMap = new Map(allSteps?.map((s) => [s.id, s.title]) || []);
-        setReflections(
-          progressRes.data
-            .filter((p) => p.reflection)
-            .map((p) => ({
-              title: stepMap.get(p.step_id) || 'Etapa',
-              reflection: p.reflection!,
-              completed_at: p.completed_at,
-            })),
-        );
-      }
+      const stepMap = new Map(allSteps.map((s) => [s.id, s.title]));
+      setReflections(
+        progress
+          .filter((p) => p.reflection)
+          .map((p) => ({
+            title: stepMap.get(p.step_id ?? '') || 'Etapa',
+            reflection: p.reflection!,
+            completed_at: p.completed_at,
+          })),
+      );
 
     } catch (err) {
       console.error(err);
@@ -172,25 +164,9 @@ const JornadaCompletePage: React.FC = () => {
         .single();
       if (!profile) return;
 
-      const { data: allJourneys } = await supabase.from('journeys').select('id').eq('is_active', true);
-
-      let completedJourneyCount = 0;
-      if (allJourneys) {
-        for (const j of allJourneys) {
-          const { count: totalSteps } = await supabase
-            .from('journey_steps')
-            .select('*', { count: 'exact', head: true })
-            .eq('journey_id', j.id);
-          const { count: doneSteps } = await supabase
-            .from('journey_progress')
-            .select('*', { count: 'exact', head: true })
-            .eq('user_id', user.id)
-            .eq('journey_id', j.id);
-          if (totalSteps && doneSteps && doneSteps >= totalSteps) {
-            completedJourneyCount++;
-          }
-        }
-      }
+      const completedCountRes = await JourneyService.getCompletedJourneyCount(user.id);
+      if (completedCountRes.error) throw completedCountRes.error;
+      const completedJourneyCount = completedCountRes.data ?? 0;
 
       const xpGain = 100;
       const newXp = (profile.xp || 0) + xpGain;

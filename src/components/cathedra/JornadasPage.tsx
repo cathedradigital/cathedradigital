@@ -17,6 +17,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { supabase } from '@/lib/db';
+import { JourneyService } from '@/core/journey';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
 import { AppRoute } from '@/types';
@@ -195,18 +196,13 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
       setStepsCountMap(counts);
 
       if (user) {
-        const { data: progress } = await supabase
-          .from('journey_progress')
-          .select('journey_id')
-          .eq('user_id', user.id);
-
-        if (progress) {
-          const map: Record<string, number> = {};
-          progress.forEach(p => {
-            map[p.journey_id] = (map[p.journey_id] || 0) + 1;
-          });
-          setProgressMap(map);
-        }
+        const progressRes = await JourneyService.listUserJourneyProgress(user.id);
+        if (progressRes.error) throw progressRes.error;
+        const map: Record<string, number> = {};
+        (progressRes.data ?? []).forEach((p) => {
+          map[p.journey_id] = (map[p.journey_id] || 0) + 1;
+        });
+        setProgressMap(map);
       }
     } catch (err) {
       console.error('Error loading journeys:', err);
