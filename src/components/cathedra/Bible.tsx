@@ -1438,7 +1438,7 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
                 >
                   Limpar Cache
                 </Button>
-                <Button onClick={() => setIsDiagnosticOpen(false)} className="flex-1 uppercase text-[10px] font-bold">Fechar Painel</Button>
+                <Button onClick={() => setIsDiagnosticOpen(false)} className="flex-1 min-h-11 uppercase text-xs font-bold focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:ring-offset-2">Fechar Painel</Button>
               </div>
             </motion.div>
           </div>
@@ -2095,7 +2095,7 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
                                                   if (parts.length >= 2) navigate(`/bible?book=${parts[0]}&ch=${parts[1]}${parts[2] ? `&v=${parts[2]}` : ''}`);
                                                 }
                                               }}
-                                              className="w-full h-9 rounded-xl text-[10px] font-black uppercase tracking-widest"
+                                              className="w-full min-h-11 rounded-xl text-xs font-bold uppercase tracking-widest focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:ring-offset-2"
                                             >
                                               <Icons.BookOpen className="w-3.5 h-3.5 mr-spacing-xs text-secondary" />
                                               Abrir referência
@@ -2405,7 +2405,7 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
             >
               <div className="flex items-center justify-between">
                 <h3 className="text-lg font-display font-bold text-primary uppercase">Editor Bíblia ↔ CIC</h3>
-                <Button variant="ghost" size="icon" onClick={() => setIsConnectionEditorOpen(false)} className="rounded-full opacity-40">
+                <Button variant="ghost" size="icon" onClick={() => setIsConnectionEditorOpen(false)} aria-label="Fechar editor de relação Bíblia e CIC" className="min-h-11 min-w-11 rounded-full opacity-60 focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:ring-offset-2">
                   <Icons.X className="w-6 h-6" />
                 </Button>
               </div>
