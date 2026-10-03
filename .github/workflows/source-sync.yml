@@ -1,6 +1,11 @@
 name: Sync official sources
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/source-sync.yml"
+      - "scripts/sync-official-sources.mjs"
   schedule:
     - cron: "*/15 * * * *"
   workflow_dispatch:
@@ -18,19 +23,20 @@ jobs:
       id-token: write
 
     steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
       - name: Request GitHub OIDC token
         id: oidc
         shell: bash
         run: |
           set -euo pipefail
-          RESPONSE="$(curl -sSf             -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN"             -H "Accept: application/json; api-version=2.0"             "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=https%3A%2F%2Fcathedradigital.com.br%2Fsource-sync")"
+          RESPONSE="$(curl -sSf -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" -H "Accept: application/json; api-version=2.0" "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=https%3A%2F%2Fcathedradigital.com.br%2Fsource-sync")"
           TOKEN="$(printf '%s' "$RESPONSE" | jq -r '.value')"
           test -n "$TOKEN" && test "$TOKEN" != "null"
           printf 'token=%s\n' "$TOKEN" >> "$GITHUB_OUTPUT"
 
-      - name: Process next official-source batch
+      - name: Import next official-source batch
         env:
           OIDC_TOKEN: ${{ steps.oidc.outputs.token }}
-        run: |
-          set -euo pipefail
-          curl -sSf             -X POST             -H "Authorization: Bearer $OIDC_TOKEN"             -H "Content-Type: application/json"             --data '{"max_bible_chapters":8,"max_catechism_pages":1}'             "https://isojguvcnfncokoxoauk.supabase.co/functions/v1/source-sync"
+        run: node scripts/sync-official-sources.mjs
