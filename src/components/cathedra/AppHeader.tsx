@@ -91,8 +91,7 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
           {/* Logo Section — assinatura editorial Playfair (Sprint Visual 3.0) */}
           <button
             type="button"
-            className="flex items-baseline gap-spacing-sm cursor-pointer group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20 focus-visible:ring-offset-2 rounded-premium-full" 
-            type="button"
+            className="flex items-baseline gap-spacing-sm cursor-pointer group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20 focus-visible:ring-offset-2 rounded-premium-full"
             aria-label="Ir para a página inicial" 
             onClick={(e) => {
               if (!isLegitimateClick(e)) return;
