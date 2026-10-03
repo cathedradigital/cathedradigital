@@ -139,6 +139,27 @@ test('Bíblia: os quatro controles principais da barra funcionam', async ({ page
   expect(errors, 'Bible toolbar: console errors').toEqual([]);
 });
 
+test('Bíblia: picker único no mobile e navegação livro → capítulo preserva URL canônica', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/bible?book=Gn&ch=1');
+
+  const mobilePicker = page.getByRole('button', { name: 'Escolher livro e capítulo' });
+  await expect(mobilePicker).toHaveCount(1);
+  await expect(mobilePicker).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Escolher livro' })).toHaveCount(1);
+  await expect(page.getByRole('button', { name: 'Escolher livro' })).toBeHidden();
+  await expect(page.getByText('Gênesis 1', { exact: true }).first()).toBeVisible();
+
+  await mobilePicker.click();
+  await expect(page.getByText('Escolher passagem', { exact: true })).toBeVisible();
+  await page.getByRole('button', { name: 'Antigo Testamento', exact: true }).click();
+  await page.getByRole('button', { name: 'Gênesis', exact: true }).click();
+  await page.getByRole('button', { name: '2', exact: true }).click();
+
+  await expect(page).toHaveURL(/\/bible\?book=Gn&ch=2$/);
+  await expect(page.locator('body')).toContainText(/Gênesis|Genesis/i);
+});
+
 test('Bíblia: leitura mantém espaçamento compacto e Nexus sem bolhas excessivas', async ({ page }) => {
   await page.goto('/bible?book=Gn&ch=1&v=1');
   const verse1 = page.getByTestId('verse-text-1');
