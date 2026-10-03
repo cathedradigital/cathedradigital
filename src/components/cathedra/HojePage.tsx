@@ -3,6 +3,7 @@ import { useNavigate } from '@/lib/rr-compat';
 import { motion } from 'framer-motion';
 import { Icons } from '@/constants';
 import { supabase } from '@/lib/db';
+import { JourneyService } from '@/core/journey';
 import { useAuth } from '@/hooks/useAuth';
 import { AppRoute } from '@/types';
 import { LangContext } from '@/contexts/LangContext';
@@ -32,23 +33,24 @@ function useActiveJourney(userId: string | undefined) {
     queryKey: ['active-journey', userId],
     queryFn: async () => {
       if (!userId) return null;
-      const { data: progress } = await supabase
-        .from('journey_progress')
-        .select('journey_id')
-        .eq('user_id', userId)
-        .order('completed_at', { ascending: false })
-        .limit(1);
-      if (!progress?.length) return null;
-      const lastJourneyId = progress[0].journey_id;
-      const [journeyRes, completedRes, stepsRes] = await Promise.all([
-        supabase.from('journeys').select('*').eq('id', lastJourneyId).maybeSingle(),
-        supabase.from('journey_progress').select('step_id').eq('user_id', userId).eq('journey_id', lastJourneyId),
-        supabase.from('journey_steps').select('id, step_order, title, subtitle, content').eq('journey_id', lastJourneyId).order('step_order', { ascending: true }),
+      const latestRes = await JourneyService.getLatestUserJourneyProgress(userId);
+      if (latestRes.error) throw latestRes.error;
+      const latest = latestRes.data;
+      if (!latest) return null;
+
+      const [journeyRes, progressRes, stepsRes] = await Promise.all([
+        JourneyService.getById(latest.journey_id),
+        JourneyService.getProgress(userId, latest.journey_id),
+        JourneyService.listSteps(latest.journey_id),
       ]);
+      if (journeyRes.error) throw journeyRes.error;
+      if (progressRes.error) throw progressRes.error;
+      if (stepsRes.error) throw stepsRes.error;
       if (!journeyRes.data) return null;
-      const completedIds = (completedRes.data || []).map(s => s.step_id);
-      const allSteps = stepsRes.data || [];
-      const nextStep = allSteps.find(s => !completedIds.includes(s.id)) || null;
+
+      const completedIds = (progressRes.data ?? []).map((p) => p.step_id).filter(Boolean);
+      const allSteps = stepsRes.data ?? [];
+      const nextStep = allSteps.find((s) => !completedIds.includes(s.id)) || null;
       return {
         journey: journeyRes.data,
         progress: { completed: completedIds.length, total: allSteps.length },
