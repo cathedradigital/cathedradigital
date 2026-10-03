@@ -83,19 +83,22 @@ const BibleSearch: React.FC<BibleSearchProps> = ({ onSelectResult, onClose, init
   return (
     <div className="fixed inset-0 z-[100] bg-[#FAF9F6] flex flex-col">
       <header className="px-6 h-16 flex items-center gap-4 border-b border-primary/5">
-        <button onClick={onClose} aria-label="Fechar busca" className="p-2 -ml-2 min-h-11 min-w-11 flex items-center justify-center text-primary/40 active:text-secondary">
+        <button type="button" onClick={onClose} aria-label="Fechar busca" data-testid="bible-search-close" className="p-2 -ml-2 min-h-11 min-w-11 flex items-center justify-center text-primary/40 active:text-secondary">
           <Icons.X className="w-6 h-6" aria-hidden="true" />
         </button>
-        <form onSubmit={handleSearch} className="flex-1">
+        <form id="bible-search-form" onSubmit={handleSearch} className="flex-1" data-testid="bible-search-form">
           <input 
             autoFocus
             type="text" 
-            placeholder="Pesquisar nas Escrituras..."
+            placeholder="Pesquisar nas Escrituras..." aria-label="Pesquisar nas Escrituras" data-testid="bible-search-input"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             className="w-full h-10 bg-transparent text-lg font-serif outline-none placeholder:text-primary/20"
           />
         </form>
+        <button type="submit" form="bible-search-form" aria-label="Executar busca" data-testid="bible-search-submit" className="p-2 min-h-11 min-w-11 flex items-center justify-center text-secondary/70 hover:text-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary rounded-md" disabled={isLoading || query.trim().length < 2}>
+          <Icons.Search className="w-5 h-5" aria-hidden="true" />
+        </button>
         {isLoading && <Icons.Loader className="w-4 h-4 text-secondary animate-spin" />}
       </header>
 
