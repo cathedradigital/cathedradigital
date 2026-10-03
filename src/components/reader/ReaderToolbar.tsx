@@ -28,6 +28,8 @@ export interface ReaderToolbarProps {
   subtitle?: string;
   backHref?: string;
   shareUrl?: string;
+  /** Ações específicas do módulo, renderizadas no mesmo chrome do leitor. */
+  actions?: React.ReactNode;
   className?: string;
 }
 
@@ -37,6 +39,7 @@ export const ReaderToolbar: React.FC<ReaderToolbarProps> = ({
   subtitle,
   backHref,
   shareUrl,
+  actions,
   className,
 }) => {
   const { settings, updateSettings } = useReadingSettings();
@@ -104,6 +107,7 @@ export const ReaderToolbar: React.FC<ReaderToolbarProps> = ({
         </div>
 
         <div className="flex shrink-0 items-center gap-1">
+          {actions}
           <ToolbarButton
             label={`Tamanho da fonte (${settings.fontSize})`}
             onClick={cycleFont}

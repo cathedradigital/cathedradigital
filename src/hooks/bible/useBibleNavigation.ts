@@ -16,9 +16,10 @@
  * re-renderiza. Não há useEffect state ↔ URL (evita loops).
  */
 
-import { useCallback, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { useSearchParams } from '@/lib/rr-compat';
 import { BIBLE_DATA, BibleBook } from '@/data/bible-books';
+import { findBookByAbbr } from '@/lib/bibleCanon';
 
 export type BibleViewMode =
   | 'home'
@@ -76,8 +77,32 @@ export function useBibleNavigation(): UseBibleNavigation {
   // Setters continue writing `ch` so the URL converges to one canonical form.
   const chapterParam = searchParams.get('ch') ?? searchParams.get('chapter');
   const searchQuery = searchParams.get('q') ?? '';
+  const legacyChapterParam = searchParams.get('chapter');
+  const legacyVerseParam = searchParams.get('verse');
 
-  const selectedBook = useMemo(() => findBook(bookParam), [bookParam]);
+  const selectedBook = useMemo(() => {
+    const direct = findBook(bookParam);
+    if (direct || !bookParam) return direct;
+    const canonical = findBookByAbbr(bookParam);
+    if (!canonical) return null;
+    return ALL_BOOKS.find((book) => book.name === canonical.name) ?? null;
+  }, [bookParam]);
+
+  // Canonicalize legacy Bible URLs immediately: ?chapter → ?ch and ?verse → ?v.
+  // This preserves old deep-links while ensuring copied/history URLs converge to one form.
+  useEffect(() => {
+    const needsBookNormalization = Boolean(selectedBook && bookParam !== selectedBook.abbr);
+    if (!needsBookNormalization && !legacyChapterParam && !legacyVerseParam) return;
+    setSearchParams((prev) => {
+      const next = new URLSearchParams(prev);
+      if (selectedBook) next.set('book', selectedBook.abbr);
+      if (!next.get('ch') && legacyChapterParam) next.set('ch', legacyChapterParam);
+      if (!next.get('v') && legacyVerseParam) next.set('v', legacyVerseParam);
+      next.delete('chapter');
+      next.delete('verse');
+      return next;
+    }, { replace: true });
+  }, [bookParam, legacyChapterParam, legacyVerseParam, selectedBook, setSearchParams]);
 
   const selectedChapter = useMemo(() => {
     if (!chapterParam) return 1;
@@ -141,10 +166,10 @@ export function useBibleNavigation(): UseBibleNavigation {
     (mode: BibleViewMode) => {
       mutate((p) => {
         if (mode === 'home') {
+          // Fechar uma view especial (busca/notas/marcadores) deve retornar ao
+          // mesmo capítulo, não apagar o contexto de leitura. A rota /bible
+          // sem livro continua representando a home quando já não há contexto.
           p.delete('view');
-          p.delete('book');
-          p.delete('ch');
-          p.delete('v');
           p.delete('q');
         } else if (mode === 'chapters') {
           // Requer book já presente na URL (callsites atuais garantem isso).

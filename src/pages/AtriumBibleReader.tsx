@@ -10,7 +10,7 @@
 import React, { lazy, Suspense, useEffect, useMemo, useState } from 'react';
 import { Helmet } from '@/lib/helmet-compat';
 import { Link, useSearchParams } from '@/lib/rr-compat';
-import { BookOpen, Search as SearchIcon, ArrowRight, LayoutGrid } from 'lucide-react';
+import { BookOpen, Search as SearchIcon, ArrowRight, LayoutGrid, Bookmark, MoreHorizontal, List } from 'lucide-react';
 import { BIBLE_DATA, type BibleBook } from '@/data/bible-books';
 import { buildBibleUrl } from '@/lib/bibleUrl';
 import { AppRoute } from '@/types';
@@ -24,6 +24,7 @@ import {
   setBibleLastRead,
 } from '@/components/mobile/BiblePickerSheet';
 import { EditorialHero } from '@/components/editorial/harmony';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 
 const Bible = lazy(() => import('@/components/cathedra/Bible'));
 
@@ -70,7 +71,7 @@ const AtriumBibleReader: React.FC = () => {
   const [pickerOpen, setPickerOpen] = useState(false);
 
   const abbr = sp.get('book');
-  const chapterStr = sp.get('chapter') ?? sp.get('c');
+  const chapterStr = sp.get('ch') ?? sp.get('chapter') ?? sp.get('c');
 
   // Persistência: sempre que abrir com book+chapter, salvar como "último lido".
   useEffect(() => {
@@ -91,22 +92,82 @@ const AtriumBibleReader: React.FC = () => {
           kicker="Cathedra · Bíblia"
           title={book ? `${book.name} ${chapterStr ?? ''}`.trim() : 'Bíblia'}
           showBack
+          onBack={() => navigate(AppRoute.BIBLE)}
           actions={
-            <button
-              type="button"
-              onClick={() => setPickerOpen(true)}
-              aria-label="Escolher livro e capítulo"
-              className="inline-flex h-12 w-12 items-center justify-center rounded-full text-stitch-on-surface hover:bg-stitch-surface-container"
-            >
-              <LayoutGrid className="h-5 w-5" />
-            </button>
+            <>
+              <Link
+                to={buildBibleUrl({ abbr: abbr ?? '', chapter: chapterStr ?? '1', extra: { view: 'search' } })}
+                aria-label="Pesquisar na Bíblia"
+                data-testid="bible-toolbar-search-mobile"
+                className="inline-flex h-12 w-12 items-center justify-center rounded-full text-stitch-on-surface hover:bg-stitch-surface-container"
+                title="Pesquisar na Bíblia"
+              >
+                <SearchIcon className="h-5 w-5" aria-hidden="true" />
+              </Link>
+              <button
+                type="button"
+                onClick={() => setPickerOpen(true)}
+                aria-label="Escolher livro e capítulo"
+                className="inline-flex h-12 w-12 items-center justify-center rounded-full text-stitch-on-surface hover:bg-stitch-surface-container"
+              >
+                <LayoutGrid className="h-5 w-5" />
+              </button>
+            </>
           }
         />
         <ReaderToolbar
+          className="hidden md:block"
           kicker="Cathedra · Lectio Divina"
           title={title}
           subtitle={subtitle}
           backHref={AppRoute.BIBLE}
+          actions={
+            <>
+              <Link
+                to={buildBibleUrl({ abbr: abbr ?? '', chapter: chapterStr ?? '1', extra: { view: 'search' } })}
+                aria-label="Pesquisar na Bíblia"
+                data-testid="bible-toolbar-search"
+                className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-transparent text-stitch-on-surface-variant hover:border-stitch-outline-variant/40 hover:text-stitch-primary"
+                title="Pesquisar na Bíblia"
+              >
+                <SearchIcon className="h-4 w-4" aria-hidden="true" />
+              </Link>
+              <Link
+                to={buildBibleUrl({ abbr: abbr ?? '', chapter: chapterStr ?? '1', extra: { view: 'bookmarks' } })}
+                aria-label="Abrir marcadores"
+                data-testid="bible-toolbar-bookmarks"
+                className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-transparent text-stitch-on-surface-variant hover:border-stitch-outline-variant/40 hover:text-stitch-primary"
+                title="Marcadores"
+              >
+                <Bookmark className="h-4 w-4" aria-hidden="true" />
+              </Link>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button
+                    type="button"
+                    aria-label="Mais opções da Bíblia"
+                    data-testid="bible-toolbar-more"
+                    className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-transparent text-stitch-on-surface-variant hover:border-stitch-outline-variant/40 hover:text-stitch-primary"
+                    title="Mais opções"
+                  >
+                    <MoreHorizontal className="h-4 w-4" aria-hidden="true" />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem onSelect={() => setPickerOpen(true)}>
+                    <LayoutGrid className="mr-2 h-4 w-4" />
+                    Escolher livro e capítulo
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to={buildBibleUrl({ abbr: abbr ?? '', chapter: chapterStr ?? '1', extra: { view: 'notes' } })}>
+                      <List className="mr-2 h-4 w-4" />
+                      Anotações
+                    </Link>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </>
+          }
         />
         <BibleReadGate>
           <Bible />
@@ -157,14 +218,25 @@ const BibleLanding: React.FC = () => {
         title="Bíblia"
         transparent
         actions={
-          <button
-            type="button"
-            onClick={() => setPickerOpen(true)}
-            aria-label="Escolher livro e capítulo"
-            className="inline-flex h-12 w-12 items-center justify-center rounded-full text-stitch-on-surface hover:bg-stitch-surface-container"
-          >
-            <LayoutGrid className="h-5 w-5" />
-          </button>
+          <>
+            <Link
+              to="/bible?view=search"
+              aria-label="Pesquisar na Bíblia"
+              data-testid="bible-toolbar-search-mobile"
+              className="inline-flex h-12 w-12 items-center justify-center rounded-full text-stitch-on-surface hover:bg-stitch-surface-container"
+              title="Pesquisar na Bíblia"
+            >
+              <SearchIcon className="h-5 w-5" aria-hidden="true" />
+            </Link>
+            <button
+              type="button"
+              onClick={() => setPickerOpen(true)}
+              aria-label="Escolher livro e capítulo"
+              className="inline-flex h-12 w-12 items-center justify-center rounded-full text-stitch-on-surface hover:bg-stitch-surface-container"
+            >
+              <LayoutGrid className="h-5 w-5" />
+            </button>
+          </>
         }
       />
 

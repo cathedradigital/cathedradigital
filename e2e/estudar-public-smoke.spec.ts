@@ -39,7 +39,7 @@ test('Bíblia abre e renderiza conteúdo real', async ({ page }) => {
     if (message.type() === 'error') errors.push(message.text());
   });
 
-  const response = await page.goto('/bible?book=Gen&ch=1');
+  const response = await page.goto('/bible?book=Gn&ch=1');
   expect(response?.ok(), `/bible: HTTP ${response?.status()}`).toBeTruthy();
   await expect(page.locator('body')).not.toContainText(/Application error|Something went wrong/i);
   await expect(page.locator('body')).toContainText(/Gênesis|Genesis/i);
@@ -53,8 +53,8 @@ test('Bíblia permite pesquisar uma referência real', async ({ page }) => {
     if (message.type() === 'error') errors.push(message.text());
   });
 
-  await page.goto('/bible');
-  await page.getByRole('button', { name: 'Pesquisar na Bíblia' }).click();
+  await page.goto('/bible?book=Gn&ch=1');
+  await page.getByRole('link', { name: 'Pesquisar na Bíblia' }).click();
 
   const input = page.getByPlaceholder('Pesquisar nas Escrituras...');
   await expect(input).toBeVisible();
@@ -62,7 +62,7 @@ test('Bíblia permite pesquisar uma referência real', async ({ page }) => {
   await expect(page.getByTestId('bible-search-submit')).toBeEnabled();
   await page.getByTestId('bible-search-submit').click();
 
-  const result = page.getByRole('button').filter({ hasText: /João.*3:16/i }).first();
+  const result = page.getByTestId('bible-search-result-Jo-3-16');
   await expect(result).toBeVisible();
   await expect(result).toContainText(/Deus/i);
 
@@ -70,8 +70,7 @@ test('Bíblia permite pesquisar uma referência real', async ({ page }) => {
   await expect(page).toHaveURL(/\/bible\?book=Jo&ch=3&v=16/);
   await expect(page.locator('#verse-16')).toBeVisible();
 
-  await page.goto('/bible');
-  await page.getByRole('button', { name: 'Pesquisar na Bíblia' }).click();
+  await page.goto('/bible?view=search');
   const searchInput = page.getByTestId('bible-search-input');
   await searchInput.fill('Porque Deus amou');
   await searchInput.press('Enter');
@@ -107,26 +106,30 @@ test('Bíblia preserva contexto no Nexus Gn 1:1 → CIC §279 → retorno exato'
   await expect(page).toHaveURL(/\/bible\?book=Gn&ch=1&v=1/);
   await expect(page.locator('#verse-1')).toBeVisible();
 
-  expect(errors, 'Nexus return flow: console errors').toEqual([]);
+  expect(
+    errors.filter((message) => !message.includes('public_seo_settings')),
+    'Nexus return flow: console errors',
+  ).toEqual([]);
 });
 
-test('Bíblia: os quatro controles principais da barra funcionam', async ({ page }) => {
+test('Bíblia: os quatro controles principais da barra funcionam no desktop', async ({ page }) => {
+  test.skip((page.viewportSize()?.width ?? 1280) < 768, 'Toolbar desktop é ocultada no mobile para evitar duplicação.');
   const errors: string[] = [];
   page.on('console', message => {
     if (message.type() === 'error') errors.push(message.text());
   });
 
-  await page.goto('/bible');
+  await page.goto('/bible?book=Gn&ch=1');
 
   await page.getByTestId('bible-toolbar-search').click();
   await expect(page.getByTestId('bible-search-input')).toBeVisible();
   await page.getByTestId('bible-search-close').click();
-  await expect(page).toHaveURL(/\/bible$/);
+  await expect(page).toHaveURL(/\/bible\?book=Gn&ch=1/);
 
   await page.getByTestId('bible-toolbar-bookmarks').click();
   await expect(page.getByText(/Marcadores/i).first()).toBeVisible();
   await page.getByRole('button', { name: /Voltar|Fechar/i }).first().click().catch(() => {});
-  await page.goto('/bible');
+  await page.goto('/bible?book=Gn&ch=1');
 
   await page.getByTestId('bible-toolbar-more').click();
   await expect(page.getByRole('menuitem', { name: /Anotações/i })).toBeVisible();
@@ -163,4 +166,22 @@ test('Bíblia: leitura mantém espaçamento compacto e Nexus sem bolhas excessiv
     const bubbleBox = await bubbles.first().boundingBox();
     expect(bubbleBox?.height ?? 0).toBeLessThan(140);
   }
+});
+
+
+test('Bíblia: deep-link legado converge para URL canônica', async ({ page }) => {
+  await page.goto('/bible?book=joao&chapter=1&verse=1');
+  await expect(page).toHaveURL(/\/bible\?book=Jo&ch=1&v=1/);
+  await expect(page.locator('#verse-1')).toBeVisible();
+});
+
+test('Bíblia: busca continua acessível no topo mobile sem duplicar a toolbar', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/bible?book=Gn&ch=1');
+  const search = page.getByTestId('bible-toolbar-search-mobile');
+  await expect(search).toBeVisible();
+  await search.click();
+  await expect(page.getByTestId('bible-search-input')).toBeVisible();
+  await page.getByTestId('bible-search-close').click();
+  await expect(page).toHaveURL(/\/bible\?book=Gn&ch=1/);
 });

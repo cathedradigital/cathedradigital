@@ -849,25 +849,10 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
       }
 
       // RENDER do texto imediatamente — conexões hidratam depois sem bloquear
-      const renderStartedAt = performance.now();
       setVerses(loadedVerses.map((v: any) => ({ ...v, chapter })));
       biblePerf.mark(runId, 'render');
       const sourceLabel = `API de Produção (${data.source || 'Edge'}) - Vernáculo PT Garantido`;
       setSourceInfo(sourceLabel);
-
-      // Telemetria: envia render_ms para a edge correlacionando pelo correlationId.
-      // Mede até o segundo rAF para capturar o paint real (não só o setState).
-      const corrId: string | undefined = data?.metadata?.correlationId;
-      if (corrId) {
-        requestAnimationFrame(() => requestAnimationFrame(() => {
-          const renderMs = Math.round(performance.now() - renderStartedAt);
-          if (renderMs >= 0 && renderMs < 30000) {
-            supabase.functions
-              .invoke('bible-perf-render', { body: { correlation_id: corrId, render_ms: renderMs } })
-              .catch(() => { /* best-effort */ });
-          }
-        }));
-      }
 
       // Update Diagnostic Logs
       setDiagnosticLogs((prev) => [
@@ -1911,7 +1896,7 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
                             setIsHighlightMenuOpen(true);
                           }}
                           className={cn(
-                            "w-full flex items-start gap-2 sm:gap-3 group relative transition-all duration-200 cursor-pointer active:bg-primary/[0.05] px-2 py-1 sm:px-3 sm:py-1.5 rounded-lg border border-transparent hover:border-primary/5",
+                            "w-full flex items-start gap-2 sm:gap-3 group relative transition-all duration-200 cursor-pointer active:bg-primary/[0.05] px-2 py-0.5 sm:px-3 sm:py-1 rounded-lg border border-transparent hover:border-primary/5",
                             highlights[`${selectedBook.abbr}-${selectedChapter}-${v.number}`] === 'yellow' && "bg-yellow-200/40",
                             highlights[`${selectedBook.abbr}-${selectedChapter}-${v.number}`] === 'green' && "bg-green-200/40",
                             highlights[`${selectedBook.abbr}-${selectedChapter}-${v.number}`] === 'blue' && "bg-blue-200/40",
@@ -1950,7 +1935,7 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
                             <p 
                               data-testid={`verse-text-${v.number}`}
                               className={cn(
-                                "leading-[1.65] font-serif text-primary/85 tracking-tight relative flex-1 min-w-0",
+                                "leading-[1.55] font-serif text-primary/85 tracking-tight relative flex-1 min-w-0",
                                 settings.fontSize === 'small' && "text-[16px]",
                                 settings.fontSize === 'medium' && "text-[19px]",
                                 settings.fontSize === 'large' && "text-[22px]",
@@ -2144,32 +2129,43 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
                   )}
                 </div>
 
-                  {/* Nexus — Empty state por capítulo + botão de contribuição */}
+                  {/* Nexus — estado vazio do capítulo, separado visualmente da leitura */}
                   {!isLoading && verses.length > 0 && !chapterHasConnections && (
                     <section
                       data-testid="nexus-empty-state"
                       aria-labelledby="nexus-empty-title"
-                      className="mt-8 rounded-2xl border border-dashed border-primary/15 bg-primary/[0.02] p-6 text-center"
+                      className="mt-6 rounded-xl border border-primary/10 bg-primary/[0.025] p-4 sm:p-5"
                     >
-                      <div className="mx-auto w-10 h-10 rounded-full bg-secondary/10 flex items-center justify-center mb-3">
-                        <Icons.Sparkles className="w-5 h-5 text-secondary" aria-hidden="true" />
+                      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                        <div className="flex min-w-0 items-start gap-3">
+                          <div className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-secondary/10">
+                            <Icons.Sparkles className="h-4 w-4 text-secondary" aria-hidden="true" />
+                          </div>
+                          <div className="min-w-0">
+                            <div className="flex flex-wrap items-center gap-2">
+                              <h3 id="nexus-empty-title" className="font-display text-[15px] text-primary">
+                                Nexus do capítulo
+                              </h3>
+                              <span className="rounded-full border border-primary/10 px-2 py-0.5 text-[9px] font-black uppercase tracking-[0.14em] text-primary/45">
+                                Ainda não catalogado
+                              </span>
+                            </div>
+                            <p className="mt-1 max-w-2xl text-[13px] leading-relaxed text-primary/60">
+                              {selectedBook.name} {selectedChapter} ainda não possui conexões catalogadas com o Catecismo, Magistério ou outras referências da Escritura.
+                            </p>
+                          </div>
+                        </div>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => setIsNexusContribOpen(true)}
+                          data-testid="nexus-contribute-btn"
+                          className="shrink-0 rounded-lg text-[10px] font-black uppercase tracking-widest"
+                        >
+                          <Icons.Plus className="mr-2 h-4 w-4 text-secondary" aria-hidden="true" />
+                          Sugerir conexão
+                        </Button>
                       </div>
-                      <h3 id="nexus-empty-title" className="font-display text-base text-primary mb-1">
-                        Nexus deste capítulo ainda não catalogado
-                      </h3>
-                      <p className="text-sm text-primary/60 max-w-md mx-auto mb-4 leading-relaxed">
-                        Ainda não há conexões teológicas cadastradas para {selectedBook.name} {selectedChapter}. Contribua com uma referência do Catecismo, Magistério ou Escritura — sua sugestão será revisada pelos editores.
-                      </p>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => setIsNexusContribOpen(true)}
-                        data-testid="nexus-contribute-btn"
-                        className="rounded-xl text-[11px] font-black uppercase tracking-widest"
-                      >
-                        <Icons.Plus className="w-4 h-4 mr-2 text-secondary" aria-hidden="true" />
-                        Contribuir com uma conexão
-                      </Button>
                     </section>
                   )}
 

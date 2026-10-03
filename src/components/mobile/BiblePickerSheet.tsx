@@ -100,6 +100,13 @@ export function BiblePickerSheet({
       title={book ? book.name : "Escolher passagem"}
       description={book ? `Selecione um capítulo (${book.chapters})` : "Livro e capítulo"}
       size="full"
+      className="!bg-[hsl(var(--stitch-surface))] !opacity-100 shadow-2xl"
+      style={{
+        backgroundColor: "hsl(var(--stitch-surface))",
+        color: "hsl(var(--stitch-on-surface))",
+        opacity: 1,
+        paddingBottom: "var(--stitch-mobile-safe-bottom)",
+      }}
     >
       {!book ? (
         <div className="space-y-6 rounded-2xl bg-stitch-surface p-1">
