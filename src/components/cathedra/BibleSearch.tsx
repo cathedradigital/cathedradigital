@@ -38,10 +38,18 @@ function parseBibleReference(input: string) {
   if (!match) return null;
   const [, rawBook, chapterRaw, verseRaw] = match;
   const normalizedBook = normalizeReference(rawBook);
+  const compactBook = normalizedBook.replace(/\\s+/g, '');
   const books = Object.values(BIBLE_DATA).flat().flatMap((category) => category.books);
-  const book = books.find((candidate) => {
-    const aliases = [candidate.abbr, candidate.name].map(normalizeReference);
-    return aliases.some((alias) => alias === normalizedBook || alias.replace(/\\s+/g, '') === normalizedBook.replace(/\\s+/g, ''));
+
+  // Primeiro tenta a abreviação canônica; só depois o nome completo.
+  // Isso evita que "Jo" seja resolvido como "Jó" em vez de "João".
+  const exactAbbrev = books.find((candidate) => {
+    const abbrev = normalizeReference(candidate.abbr);
+    return abbrev === normalizedBook || abbrev.replace(/\\s+/g, '') === compactBook;
+  });
+  const book = exactAbbrev ?? books.find((candidate) => {
+    const name = normalizeReference(candidate.name);
+    return name === normalizedBook || name.replace(/\\s+/g, '') === compactBook;
   });
   return book ? { book, chapter: Number(chapterRaw), verse: Number(verseRaw) } : null;
 }
