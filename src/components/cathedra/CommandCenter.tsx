@@ -6,6 +6,7 @@ import { AppRoute } from '../../types';
 import { supabase } from '@/lib/db';
 import { useSearchSaints } from '@/hooks/useSaints';
 import { CATECHISM_LOCAL_DATA } from '@/data/catechism';
+import { JourneyService } from '@/core/journey';
 
 interface CommandItem {
   label: string;
@@ -210,14 +211,9 @@ const CommandCenter: React.FC = () => {
         }
       })().catch(() => {}),
 
-      // Journeys search
-      Promise.resolve(
-        supabase.from('journeys')
-          .select('id, title, description, category')
-          .or(`title.ilike.%${q}%,description.ilike.%${q}%`)
-          .eq('is_active', true)
-          .limit(4)
-      ).then(({ data }) => {
+      // Journeys search — canonical Journey domain.
+      JourneyService.list({ search: q, is_active: true, limit: 4 }).then(({ data, error }) => {
+          if (error) return;
           data?.forEach(j => {
             results.push({
               type: 'journey',

@@ -7,6 +7,7 @@ import { AppRoute } from '@/types';
 import { Icons } from '@/constants';
 import { supabase } from '@/lib/db';
 import { useAuth } from '@/hooks/useAuth';
+import { JourneyService } from '@/core/journey';
 import { BrandConceptOnboarding } from '../onboarding/BrandConceptOnboarding';
 import onboardingBible from '@/assets/onboarding-bible.webp';
 import onboardingPrayer from '@/assets/onboarding-prayer.webp';
@@ -222,17 +223,12 @@ const OnboardingPage = React.forwardRef<HTMLDivElement>((_, ref) => {
 
   const handleGoToJourney = async () => {
     try {
-      const { data } = await supabase
-        .from('journeys')
-        .select('id')
-        .eq('category', recommendedCategory)
-        .eq('is_active', true)
-        .order('sort_order', { ascending: true })
-        .limit(1)
-        .maybeSingle();
+      const result = await JourneyService.list({ category: recommendedCategory, is_active: true, limit: 1 });
+      if (result.error) throw result.error;
+      const journey = result.data?.[0];
 
-      if (data) {
-        navigate(`/jornadas/${data.id}`, { replace: true });
+      if (journey) {
+        navigate(`/jornadas/${journey.id}`, { replace: true });
       } else {
         navigate(AppRoute.JORNADAS, { replace: true });
       }

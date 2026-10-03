@@ -68,22 +68,16 @@ function useRecommendedJourney(userId: string | undefined, profile: any, userLev
     queryKey: ['recommended-journey', userId, userLevel],
     queryFn: async () => {
       if (!userId) return null;
-      const result = profile?._sensitive?.diagnosis_result as Record<string, string> | undefined;
-      const { moment, prayer, knowledge, goal } = result || {};
+      const diagnosis = profile?._sensitive?.diagnosis_result as Record<string, string> | undefined;
+      const { moment, prayer, knowledge, goal } = diagnosis || {};
       let category = 'fundamentos';
       if (userLevel === 'iniciante' || moment === 'beginning' || knowledge === 'basic') category = 'fundamentos';
       else if (userLevel === 'avançado' || prayer === 'contemplative' || goal === 'transformation') category = 'formacao';
       else if (moment === 'struggling' || goal === 'peace') category = 'mistico';
       else if (goal === 'routine' || prayer === 'rarely' || prayer === 'sometimes') category = 'rotina';
-      const { data } = await supabase
-        .from('journeys')
-        .select('*')
-        .eq('category', category)
-        .eq('is_active', true)
-        .order('sort_order', { ascending: true })
-        .limit(1)
-        .maybeSingle();
-      return data;
+      const journeyResult = await JourneyService.list({ category, is_active: true, limit: 1 });
+      if (journeyResult.error) throw journeyResult.error;
+      return journeyResult.data?.[0] ?? null;
     },
     enabled: !!userId && !hasActiveJourney,
     staleTime: 1000 * 60 * 30,
