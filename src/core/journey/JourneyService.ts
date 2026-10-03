@@ -338,6 +338,42 @@ export const JourneyService = {
     }
   },
 
+  async getCompletedJourneyCount(userId: string): Promise<ServiceResult<number>> {
+    try {
+      const [journeysRes, stepsRes, progressRes] = await Promise.all([
+        supabase.from('journeys').select('id').eq('is_active', true),
+        supabase.from('journey_steps').select('id, journey_id'),
+        supabase.from('journey_progress').select('journey_id, step_id').eq('user_id', userId),
+      ]);
+      if (journeysRes.error) throw journeysRes.error;
+      if (stepsRes.error) throw stepsRes.error;
+      if (progressRes.error) throw progressRes.error;
+
+      const totalByJourney = new Map<string, number>();
+      for (const step of stepsRes.data ?? []) {
+        totalByJourney.set(step.journey_id, (totalByJourney.get(step.journey_id) ?? 0) + 1);
+      }
+
+      const doneByJourney = new Map<string, Set<string>>();
+      for (const progress of progressRes.data ?? []) {
+        if (!progress.step_id) continue;
+        const set = doneByJourney.get(progress.journey_id) ?? new Set<string>();
+        set.add(progress.step_id);
+        doneByJourney.set(progress.journey_id, set);
+      }
+
+      let completed = 0;
+      for (const journey of journeysRes.data ?? []) {
+        const total = totalByJourney.get(journey.id) ?? 0;
+        const done = doneByJourney.get(journey.id)?.size ?? 0;
+        if (total > 0 && done >= total) completed += 1;
+      }
+      return ok(completed);
+    } catch (e) {
+      return fail(e);
+    }
+  },
+
   async resetProgress(userId: string, journeyId: string): Promise<ServiceResult<true>> {
     try {
       if (JourneyAdapter.isLegacyId(journeyId)) return fail(LEGACY_WRITE_ERROR);
