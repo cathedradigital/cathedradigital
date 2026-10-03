@@ -308,6 +308,36 @@ export const JourneyService = {
     }
   },
 
+  async listUserJourneyProgress(userId: string): Promise<ServiceResult<JourneyProgress[]>> {
+    try {
+      const { data, error } = await supabase
+        .from('journey_progress')
+        .select('*')
+        .eq('user_id', userId)
+        .order('completed_at', { ascending: false });
+      if (error) throw error;
+      return ok((data ?? []) as JourneyProgress[]);
+    } catch (e) {
+      return fail(e);
+    }
+  },
+
+  async getLatestUserJourneyProgress(userId: string): Promise<ServiceResult<JourneyProgress>> {
+    try {
+      const { data, error } = await supabase
+        .from('journey_progress')
+        .select('*')
+        .eq('user_id', userId)
+        .order('completed_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      if (error) throw error;
+      return ok(data as JourneyProgress);
+    } catch (e) {
+      return fail(e);
+    }
+  },
+
   async resetProgress(userId: string, journeyId: string): Promise<ServiceResult<true>> {
     try {
       if (JourneyAdapter.isLegacyId(journeyId)) return fail(LEGACY_WRITE_ERROR);
