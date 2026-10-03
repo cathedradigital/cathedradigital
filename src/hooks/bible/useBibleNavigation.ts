@@ -19,6 +19,7 @@
 import { useCallback, useMemo } from 'react';
 import { useSearchParams } from '@/lib/rr-compat';
 import { BIBLE_DATA, BibleBook } from '@/data/bible-books';
+import { findBookByAbbr } from '@/lib/bibleCanon';
 
 export type BibleViewMode =
   | 'home'
@@ -76,8 +77,30 @@ export function useBibleNavigation(): UseBibleNavigation {
   // Setters continue writing `ch` so the URL converges to one canonical form.
   const chapterParam = searchParams.get('ch') ?? searchParams.get('chapter');
   const searchQuery = searchParams.get('q') ?? '';
+  const legacyChapterParam = searchParams.get('chapter');
+  const legacyVerseParam = searchParams.get('verse');
 
-  const selectedBook = useMemo(() => findBook(bookParam), [bookParam]);
+  const selectedBook = useMemo(() => {
+    const direct = findBook(bookParam);
+    if (direct || !bookParam) return direct;
+    const canonical = findBookByAbbr(bookParam);
+    if (!canonical) return null;
+    return ALL_BOOKS.find((book) => book.name === canonical.name) ?? null;
+  }, [bookParam]);
+
+  // Canonicalize legacy Bible URLs immediately: ?chapter → ?ch and ?verse → ?v.
+  // This preserves old deep-links while ensuring copied/history URLs converge to one form.
+  useMemo(() => {
+    if (!legacyChapterParam && !legacyVerseParam) return;
+    setSearchParams((prev) => {
+      const next = new URLSearchParams(prev);
+      if (!next.get('ch') && legacyChapterParam) next.set('ch', legacyChapterParam);
+      if (!next.get('v') && legacyVerseParam) next.set('v', legacyVerseParam);
+      next.delete('chapter');
+      next.delete('verse');
+      return next;
+    }, { replace: true });
+  }, [legacyChapterParam, legacyVerseParam, setSearchParams]);
 
   const selectedChapter = useMemo(() => {
     if (!chapterParam) return 1;
