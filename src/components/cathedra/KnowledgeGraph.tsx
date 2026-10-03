@@ -53,7 +53,7 @@ export const KnowledgeGraph: React.FC<KnowledgeGraphProps> = ({ onClose, initial
   return (
     <div className="fixed inset-0 z-[250] bg-[#0A0B0D] text-stone-300 flex flex-col">
       <header className="px-6 h-16 flex items-center justify-between border-b border-white/5">
-        <button onClick={onClose} className="p-2 -ml-2 text-stone-500 active:text-secondary">
+        <button onClick={onClose} aria-label="Fechar grafo de conhecimento" className="min-h-11 min-w-11 p-2 -ml-2 text-stone-500 active:text-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2">
           <Icons.X className="w-6 h-6" />
         </button>
         <div className="text-center">
