@@ -86,17 +86,20 @@ const SpiritualProfile: React.FC = () => {
       if (journeyResult.error) throw journeyResult.error;
       const journeyData = journeyResult.data ?? [];
 
-        // Group by journey_id and get last completed_at
-        const uniqueJourneys = Array.from(new Set(((journeyData || []) as any[]).map((j) => j.journey_id as string)));
-        const journeyList: JourneyProgress[] = uniqueJourneys.slice(0, 3).map(id => {
-          const matching = (journeyData as any[])?.filter(j => j.journey_id === id) || [];
-          return {
+        // Group by journey_id; titles come back through the domain service.
+        const uniqueJourneys = Array.from(new Set(journeyData.map((j) => j.journey_id).filter(Boolean)));
+        const journeyList: JourneyProgress[] = [];
+        for (const id of uniqueJourneys.slice(0, 3)) {
+          const matching = journeyData.filter((j) => j.journey_id === id);
+          const journeyResult = await JourneyService.getById(id);
+          if (journeyResult.error) throw journeyResult.error;
+          journeyList.push({
             id,
-            title: matching[0]?.journeys?.title || 'Jornada',
+            title: journeyResult.data?.title || 'Jornada',
             progress: Math.min(Math.round((matching.length / 10) * 100), 100),
-            last_visited: matching[0]?.completed_at || new Date().toISOString()
-          };
-        });
+            last_visited: matching[0]?.completed_at || new Date().toISOString(),
+          });
+        }
 
         // Fetch favorite reflections
         const { data: reflectionsData } = await supabase
