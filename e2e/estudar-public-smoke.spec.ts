@@ -59,10 +59,27 @@ test('Bíblia permite pesquisar uma referência real', async ({ page }) => {
   const input = page.getByPlaceholder('Pesquisar nas Escrituras...');
   await expect(input).toBeVisible();
   await input.fill('Jo 3:16');
-  await input.press('Enter');
+  await expect(page.getByTestId('bible-search-submit')).toBeEnabled();
+  await page.getByTestId('bible-search-submit').click();
 
+  const result = page.getByRole('button').filter({ hasText: /João.*3:16/i }).first();
+  await expect(result).toBeVisible();
+  await expect(result).toContainText(/Deus/i);
+
+  await result.click();
+  await expect(page).toHaveURL(/\/bible\?book=Jo&ch=3&v=16/);
+  await expect(page.locator('#verse-16')).toBeVisible();
+
+  await page.goto('/bible');
+  await page.getByRole('button', { name: 'Pesquisar na Bíblia' }).click();
+  const searchInput = page.getByTestId('bible-search-input');
+  await searchInput.fill('Porque Deus amou');
+  await searchInput.press('Enter');
   await expect(page.locator('body')).toContainText(/João.*3:16/i);
-  await expect(page.locator('body')).toContainText(/Deus/i);
+  await expect(page.getByTestId('bible-search-close')).toBeVisible();
+  await page.getByTestId('bible-search-close').click();
+  await expect(page).toHaveURL(/\/bible$/);
+
   expect(errors, '/bible search: console errors').toEqual([]);
 });\n
 test('Bíblia preserva contexto no Nexus Gn 1:1 → CIC §279 → retorno exato', async ({ page }) => {
