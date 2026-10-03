@@ -109,7 +109,7 @@ export function useBibleNavigation(): UseBibleNavigation {
     (book: BibleBook | null) => {
       mutate((p) => {
         if (book) {
-          p.set('book', encodeURIComponent(book.abbr));
+          p.set('book', book.abbr);
           // Trocar de livro reseta o capítulo (comportamento atual).
           p.delete('ch');
           p.delete('v');
