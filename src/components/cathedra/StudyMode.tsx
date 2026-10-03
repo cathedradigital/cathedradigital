@@ -42,7 +42,7 @@ const SUGGESTIONS = [
 // ── Theological-aware text renderer ──
 const TheologicalAwareText: React.FC<{
   text: string;
-  onNavigateBible: (abbr: string, chapter: number) => void;
+  onNavigateBible: (abbr: string, chapter: number, verse?: number) => void;
   onNavigateCatechism: (paragraph: number) => void;
 }> = ({ text, onNavigateBible, onNavigateCatechism }) => {
   const segments = useMemo(() => parseTheologicalReferences(text), [text]);
@@ -170,8 +170,10 @@ const StudyMode: React.FC = () => {
     loadMessages();
   }, [activeConversationId]);
 
-  const handleNavigateToBible = useCallback((abbr: string, chapter: number) => {
-    navigate(`/bible?book=${abbr}&ch=${chapter}`);
+  const handleNavigateToBible = useCallback((abbr: string, chapter: number, verse?: number) => {
+    const params = new URLSearchParams({ book: abbr, ch: String(chapter) });
+    if (verse) params.set('v', String(verse));
+    navigate(`/bible?${params.toString()}`);
   }, [navigate]);
 
   const handleNavigateToCatechism = useCallback((paragraph: number) => {
