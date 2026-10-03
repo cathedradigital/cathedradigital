@@ -696,7 +696,7 @@ const AppLayout: React.FC = () => {
               <Route path="/atlas" element={<Suspense fallback={<LoadingFallback />}><AcervoAtlas /></Suspense>} />
 
               {/* Hoje & Diário */}
-              <Route path="/hoje" element={<Suspense fallback={<LoadingFallback />}><HojePage /></Suspense>} />
+              <Route path="/hoje" element={<Suspense fallback={<LoadingFallback />}><AuthGuard><HojePage /></AuthGuard></Suspense>} />
               <Route path="/dashboard" element={<Navigate to="/hoje" replace />} />
               <Route path="/diario" element={<Suspense fallback={<LoadingFallback />}><AuthGuard><SpiritualJournalPage /></AuthGuard></Suspense>} />
               <Route path="/diagnostico" element={<Suspense fallback={<LoadingFallback />}><DiagnosticoPage /></Suspense>} />
@@ -803,12 +803,12 @@ const AppLayout: React.FC = () => {
 
 
               {/* Jornadas */}
-              <Route path="/jornadas" element={<Suspense fallback={<LoadingFallback />}><AtriumJornadasPage /></Suspense>} />
-              <Route path="/jornadas-legacy" element={<Suspense fallback={<LoadingFallback />}><JornadasPage /></Suspense>} />
-              <Route path="/jornadas/:id" element={<Suspense fallback={<LoadingFallback />}><JornadaDetailPage /></Suspense>} />
-              <Route path="/jornadas/:id/step" element={<Suspense fallback={<LoadingFallback />}><JornadaStepPage /></Suspense>} />
-              <Route path="/jornadas/:id/complete" element={<Suspense fallback={<LoadingFallback />}><JornadaCompletePage /></Suspense>} />
-              <Route path="/jornadas/:id/conclusao" element={<Suspense fallback={<LoadingFallback />}><JornadaCompletePage /></Suspense>} />
+              <Route path="/jornadas" element={<Suspense fallback={<LoadingFallback />}><AuthGuard><AtriumJornadasPage /></AuthGuard></Suspense>} />
+              <Route path="/jornadas-legacy" element={<Suspense fallback={<LoadingFallback />}><AuthGuard><JornadasPage /></AuthGuard></Suspense>} />
+              <Route path="/jornadas/:id" element={<Suspense fallback={<LoadingFallback />}><AuthGuard><JornadaDetailPage /></AuthGuard></Suspense>} />
+              <Route path="/jornadas/:id/step" element={<Suspense fallback={<LoadingFallback />}><AuthGuard><JornadaStepPage /></AuthGuard></Suspense>} />
+              <Route path="/jornadas/:id/complete" element={<Suspense fallback={<LoadingFallback />}><AuthGuard><JornadaCompletePage /></AuthGuard></Suspense>} />
+              <Route path="/jornadas/:id/conclusao" element={<Suspense fallback={<LoadingFallback />}><AuthGuard><JornadaCompletePage /></AuthGuard></Suspense>} />
 
               {/* Comunidade */}
               <Route path="/community" element={<Suspense fallback={<LoadingFallback />}><AtriumCommunityPage /></Suspense>} />
