@@ -117,8 +117,8 @@ export const SavedFiltersManager: React.FC<SavedFiltersManagerProps> = ({ projec
                     )}
                   </div>
                   
-                  <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => onApply(filter)} title="Aplicar">
+                  <div className="flex items-center gap-1 opacity-100 md:opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity">
+                    <Button variant="ghost" size="icon" className="min-h-11 min-w-11" onClick={() => onApply(filter)} title="Aplicar">
                       <ExternalLink className="h-4 w-4" />
                     </Button>
                     <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleStartEdit(filter)} title="Editar">
