@@ -117,7 +117,7 @@ test('Bíblia: os quatro controles principais da barra funcionam no desktop', as
     if (message.type() === 'error') errors.push(message.text());
   });
 
-  await page.goto('/bible');
+  await page.goto('/bible?book=Gn&ch=1');
 
   await page.getByTestId('bible-toolbar-search').click();
   await expect(page.getByTestId('bible-search-input')).toBeVisible();
