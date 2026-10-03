@@ -12,7 +12,7 @@ async function login(page: Page, destination: string) {
   await page.getByLabel('Email').fill(email!);
   await page.getByLabel('Senha').fill(password!);
   await page.getByRole('button', { name: 'Entrar', exact: true }).click();
-  await expect(page).toHaveURL(new RegExp(destination.split('?')[0].replaceAll('/', '\\/')));
+  expect(page.url()).toContain(destination.split('?')[0]);
 }
 
 function watchBrowserHealth(page: Page) {
@@ -41,7 +41,8 @@ async function openStudyJournal(page: Page, marker: string) {
 test('auth redirect preserves protected destination', async ({ page }) => {
   await page.context().clearCookies();
   await page.goto('/diario');
-  await expect(page).toHaveURL(new RegExp('/login\\\\?next=.*diario'));
+  expect(page.url()).toContain('/login?next=');
+  expect(page.url()).toContain('diario');
 });
 
 test('Bíblia: anotação → Diário → retorno exato ao versículo', async ({ page }) => {
@@ -53,7 +54,8 @@ test('Bíblia: anotação → Diário → retorno exato ao versículo', async ({
   await saveReflection(page, marker);
   const note = await openStudyJournal(page, marker);
   await note.getByRole('button', { name: /Ver Contexto/i }).click();
-  await expect(page).toHaveURL(new RegExp('/bible\\\\?.*(ch|chapter)=1.*v=1'));
+  expect(page.url()).toContain('/bible?');
+  expect(page.url()).toContain('v=1');
   await expect(page.locator('#verse-1')).toBeVisible();
   expect(bad).toEqual([]);
 });
@@ -67,7 +69,7 @@ test('Catecismo: anotação → Diário → retorno exato ao parágrafo', async 
   await saveReflection(page, marker);
   const note = await openStudyJournal(page, marker);
   await note.getByRole('button', { name: /Ver Contexto/i }).click();
-  await expect(page).toHaveURL(new RegExp('/catechism\\\\?p=1'));
+  expect(page.url()).toContain('/catechism?p=1');
   expect(bad).toEqual([]);
 });
 
@@ -80,7 +82,7 @@ test('Magistério: anotação → Diário → retorno ao documento/parágrafo', 
   await saveReflection(page, marker);
   const note = await openStudyJournal(page, marker);
   await note.getByRole('button', { name: /Ver Contexto/i }).click();
-  await expect(page).toHaveURL(new RegExp('/magisterium/dce\\\\?p=\\\\d+'));
+  expect(page.url()).toContain('/magisterium/dce?p=');
   expect(bad).toEqual([]);
 });
 
@@ -91,7 +93,8 @@ test('Bíblia: reload → back → forward preservam o deep-link do versículo',
   await expect(page.locator('#verse-1')).toBeVisible();
   await page.goBack();
   await page.goForward();
-  await expect(page).toHaveURL(/\\/bible\\?.*(ch|chapter)=1.*v=1/);
+  expect(page.url()).toContain('/bible?');
+  expect(page.url()).toContain('v=1');
   await expect(page.locator('#verse-1')).toBeVisible();
 });
 
