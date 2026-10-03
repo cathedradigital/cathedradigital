@@ -1829,7 +1829,7 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
               onDragEnd={handleDragEnd}
             >
               {isLoading ? <BibleSkeleton /> : (
-                <article className="space-y-spacing-2xl">
+                <article className="space-y-spacing-lg">
                   <header className="flex flex-col items-center mb-spacing-2xl opacity-30">
                     <Icons.Logo className="w-10 h-10 mb-spacing-lg" />
                     <h3 className="text-2xl font-display font-light uppercase tracking-[0.4em] italic">{selectedBook.name} {selectedChapter}</h3>
@@ -1839,7 +1839,7 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
                   <motion.div 
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="p-spacing-md bg-secondary/5 rounded-2xl border border-secondary/10 mb-spacing-xl"
+                    className="p-spacing-sm sm:p-spacing-md bg-secondary/5 rounded-2xl border border-secondary/10 mb-spacing-lg"
                   >
                     <div className="flex items-center gap-spacing-sm mb-spacing-xs">
                       <Icons.Info className="w-4 h-4 text-secondary/40" />
@@ -1863,7 +1863,7 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
                     </div>
                   )}
 
-                  <div className="space-y-spacing-xl editorial-column">
+                  <div className="space-y-spacing-md editorial-column">
                     {verses.length === 0 && !isLoading ? (
                       <div className="py-spacing-2xl text-center space-y-spacing-lg bg-primary/[0.02] rounded-3xl border border-primary/5 p-spacing-xl">
                         <Icons.AlertCircle className="w-12 h-12 text-secondary/40 mx-auto" />
@@ -1891,7 +1891,7 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
                         </div>
                       </div>
                     ) : (
-                      <div className="space-y-1 sm:space-y-1.5">
+                      <div className="space-y-0">
                         {verses.map((v, index) => {
 
 
@@ -1911,7 +1911,7 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
                             setIsHighlightMenuOpen(true);
                           }}
                           className={cn(
-                            "w-full flex items-start gap-2 sm:gap-3 group relative transition-all duration-300 cursor-pointer active:bg-primary/[0.05] px-2 py-2 sm:px-3 sm:py-2.5 rounded-xl border border-transparent hover:border-primary/5",
+                            "w-full flex items-start gap-2 sm:gap-3 group relative transition-all duration-200 cursor-pointer active:bg-primary/[0.05] px-2 py-1 sm:px-3 sm:py-1.5 rounded-lg border border-transparent hover:border-primary/5",
                             highlights[`${selectedBook.abbr}-${selectedChapter}-${v.number}`] === 'yellow' && "bg-yellow-200/40",
                             highlights[`${selectedBook.abbr}-${selectedChapter}-${v.number}`] === 'green' && "bg-green-200/40",
                             highlights[`${selectedBook.abbr}-${selectedChapter}-${v.number}`] === 'blue' && "bg-blue-200/40",
@@ -1939,7 +1939,7 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
 
 
                           
-                          <div className="flex-1 space-y-spacing-xs">
+                          <div className="flex-1 space-y-0">
                             {(() => {
                               const connectionKey = `${selectedBook.abbr}-${selectedChapter}-${v.number}`;
                               const verseConnections = KNOWLEDGE_CONNECTIONS[connectionKey] || [];
@@ -1978,7 +1978,7 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
 
                             {/* Knowledge Connection Cards — Nexus (squared, structured) */}
                             {verseConnections.length > 0 && (
-                              <div data-testid={`nexus-bubbles-${v.number}`} className="grid grid-cols-2 sm:grid-cols-3 gap-spacing-xs pt-2">
+                              <div data-testid={`nexus-bubbles-${v.number}`} className="grid grid-cols-2 sm:grid-cols-3 gap-spacing-xs pt-1">
                                 {verseConnections.slice(0, 6).map((conn, idx) => {
                                   const typeMeta: Record<string, { icon: React.ReactNode; tone: string; stripe: string; kicker: string }> = {
                                     catechism: { icon: <Icons.BookMarked className="w-3 h-3" />, tone: 'text-blue-800', stripe: 'bg-blue-600', kicker: 'Catecismo' },
@@ -2039,9 +2039,9 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
                                         data-testid="nexus-connection-popover"
                                         aria-labelledby={`nexus-popover-title-${v.number}-${idx}`}
                                         aria-describedby={`nexus-popover-desc-${v.number}-${idx}`}
-                                        className="w-[min(22rem,calc(100vw-24px))] z-[200] p-spacing-md rounded-2xl border border-primary/10 bg-card shadow-premium"
+                                        className="w-[min(22rem,calc(100vw-24px))] z-[200] p-spacing-sm rounded-xl border border-primary/10 bg-card shadow-premium"
                                       >
-                                        <div className="space-y-spacing-sm">
+                                        <div className="space-y-spacing-xs">
                                           <div className="flex items-start gap-spacing-xs">
                                             <span className={cn("mt-0.5 shrink-0", meta.tone)}>{meta.icon}</span>
                                             <div className="min-w-0">
