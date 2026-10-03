@@ -89,12 +89,11 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
         <div className={cn("flex items-center justify-between py-0 px-spacing-sm md:px-[var(--layout-padding)] max-w-spacing-4xl mx-auto", !isLanding || user ? "h-full" : "")}>
 
           {/* Logo Section — assinatura editorial Playfair (Sprint Visual 3.0) */}
-          <div 
-            className="flex items-baseline gap-spacing-sm cursor-pointer group focus-visible:ring-1 focus-visible:ring-primary/20 outline-none rounded-premium-full" 
-            role="link" 
-            aria-label="Ir para a página inicial"
-            tabIndex={0} 
-            onKeyDown={(e) => e.key === 'Enter' && isLegitimateClick(e) && navigate('/')} 
+          <button
+            type="button"
+            className="flex items-baseline gap-spacing-sm cursor-pointer group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20 focus-visible:ring-offset-2 rounded-premium-full" 
+            type="button"
+            aria-label="Ir para a página inicial" 
             onClick={(e) => {
               if (!isLegitimateClick(e)) return;
               navigate('/');
@@ -120,7 +119,7 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
                 </span>
               </div>
             </div>
-          </div>
+          </button>
 
 
           {/* Breadcrumbs for desktop */}
@@ -129,7 +128,7 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
               {breadcrumbs.map((crumb, idx) => (
                 <React.Fragment key={crumb.path}>
                   <span className={cn(
-                    "hover:text-primary transition-colors cursor-pointer",
+                    "min-h-[44px] px-2 inline-flex items-center hover:text-primary transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20 focus-visible:ring-offset-2 rounded-premium-full",
                     idx === breadcrumbs.length - 1 && "text-primary/60 font-bold"
                   )} onClick={() => navigate(crumb.path)}>
                     {crumb.label}
@@ -228,7 +227,7 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
                       navigate(item.path);
                       window.scrollTo({ top: 0, behavior: 'instant' });
                     }}
-                    className={`px-spacing-md py-spacing-xs h-auto text-[10px] font-bold uppercase tracking-[0.3em] transition-all relative group ${
+                    className={`min-h-[44px] px-spacing-md py-spacing-xs h-auto text-[10px] font-bold uppercase tracking-[0.3em] transition-all relative group ${
                       pathname === item.path ? 'text-primary font-medium' : 'text-muted-foreground/60 hover:text-primary'
                     }`}
                   >
@@ -253,7 +252,7 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
                     key={group.key}
                     type="button"
                     onClick={() => setOpenEnvironment(expanded ? null : group.key)}
-                    className={cn("relative flex shrink-0 items-center gap-1 px-4 py-2.5 text-[9px] font-semibold uppercase tracking-[0.18em] transition-colors", active ? "font-bold" : "text-muted-foreground hover:text-foreground")}
+                    className={cn("relative flex min-h-[44px] shrink-0 items-center gap-1 px-4 py-2.5 text-[9px] font-semibold uppercase tracking-[0.18em] transition-colors", active ? "font-bold" : "text-muted-foreground hover:text-foreground")}
                     style={active ? { color: group.accent } : undefined}
                     aria-expanded={expanded}
                     aria-haspopup="true"
@@ -278,7 +277,7 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
                           key={item.id}
                           type="button"
                           onClick={() => { setOpenEnvironment(group.key); navigate(item.path); window.scrollTo({ top: 0, behavior: 'instant' }); }}
-                          className={cn("shrink-0 rounded-full px-3 py-1.5 text-[9px] font-semibold tracking-[0.08em] transition-colors", selected ? "bg-background shadow-sm" : "text-muted-foreground hover:bg-background/70 hover:text-foreground")}
+                          className={cn("min-h-[44px] shrink-0 rounded-full px-3 py-1.5 text-[9px] font-semibold tracking-[0.08em] transition-colors", selected ? "bg-background shadow-sm" : "text-muted-foreground hover:bg-background/70 hover:text-foreground")}
                           style={selected ? { color: group.accent } : undefined}
                           title={item.description}
                           aria-current={selected ? "page" : undefined}
