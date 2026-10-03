@@ -74,11 +74,15 @@ export const BibleReadGate: React.FC<{ children: React.ReactNode }> = ({ childre
     );
   }
 
-  // P0.2.0 — Contenção: banner de reconstrução sempre presente para
-  // não-admins até que a importação do cânon completo seja certificada.
+  // Só mostramos aviso quando a diagnose canônica realmente bloqueia a
+  // cobertura. Com o cânon completo e gate saudável, a leitura fica limpa.
+  const showCoverageBanner =
+    !!gate?.blocked &&
+    (gate.status === 'missing_book' || gate.status === 'missing_chapter');
+
   return (
     <>
-      <BiblePartialCoverageBanner />
+      {showCoverageBanner && <BiblePartialCoverageBanner />}
       {children}
     </>
   );
