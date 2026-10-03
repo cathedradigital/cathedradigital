@@ -475,6 +475,29 @@ export const JourneyService = {
     }
   },
 
+  async deleteStep(id: string): Promise<ServiceResult<true>> {
+    try {
+      const { error } = await supabase.from('journey_steps').delete().eq('id', id);
+      if (error) throw error;
+      return ok(true);
+    } catch (e) {
+      return fail(e);
+    }
+  },
+
+  async countSteps(journeyId: string): Promise<ServiceResult<number>> {
+    try {
+      const { count, error } = await supabase
+        .from('journey_steps')
+        .select('id', { count: 'exact', head: true })
+        .eq('journey_id', journeyId);
+      if (error) throw error;
+      return ok(count ?? 0);
+    } catch (e) {
+      return fail(e);
+    }
+  },
+
   async deleteJourney(id: string): Promise<ServiceResult<true>> {
     try {
       if (JourneyAdapter.isLegacyId(id)) return fail(LEGACY_WRITE_ERROR);
