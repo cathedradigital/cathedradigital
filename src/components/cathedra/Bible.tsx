@@ -29,6 +29,7 @@ import { NoteEditModal } from './NoteEditModal';
 import BibleSearch from './BibleSearch';
 import { BibleHome } from './BibleHome';
 import BibleFullNotesList from './BibleFullNotesList';
+import BibleBookmarksList from './BibleBookmarksList';
 import { BibleReader } from './BibleReader';
 import { VerseNoteSup } from './VerseNoteSup';
 import { FORBIDDEN_ENGLISH_WORDS, LANGUAGE_ALLOWLIST } from '@/constants/language-config';
@@ -242,7 +243,7 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
   const [highlights, setHighlights] = useState<Record<string, string>>({});
   
   const { notes, addNote, deleteNote, updateNote, refetch: fetchNotes } = useNotes('bible');
-  const { saveLastRead: syncRemoteLastRead } = useReadingMarks();
+  const { marks: readingMarks, saveLastRead: syncRemoteLastRead, addMark, deleteMark } = useReadingMarks();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
 
@@ -405,7 +406,7 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
         content_id: bookAbbr,
         chapter,
         label: `${book.name} ${chapter}`,
-        url: `/bible?book=${encodeURIComponent(bookAbbr)}&ch=${chapter}`,
+        url: `/bible?book=${encodeURIComponent(bookAbbr)}&ch=${chapter}${verse ? `&v=${verse}` : ''}`,
         is_last_read: true
       });
       
@@ -459,6 +460,37 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
     setIsNoteModalOpen(false);
     toast.success('Nota salva');
   };
+
+  const isVerseBookmarked = useCallback((verseNumber: number) => {
+    if (!selectedBook) return false;
+    const contentId = selectedBook.abbr + ':' + selectedChapter + ':' + verseNumber;
+    return readingMarks.some((mark) => mark.content_type === 'bible_bookmark' && mark.content_id === contentId);
+  }, [readingMarks, selectedBook, selectedChapter]);
+
+  const toggleBookmark = useCallback(async (verseNumber: number) => {
+    if (!selectedBook || !user) {
+      toast.info('Entre na sua conta para usar marcadores.');
+      return;
+    }
+    const contentId = selectedBook.abbr + ':' + selectedChapter + ':' + verseNumber;
+    const existing = readingMarks.find((mark) => mark.content_type === 'bible_bookmark' && mark.content_id === contentId);
+    if (existing) {
+      await deleteMark(existing.id);
+      toast.success('Marcador removido');
+      return;
+    }
+    const bookName = selectedBook.name;
+    const created = await addMark({
+      content_type: 'bible_bookmark',
+      content_id: contentId,
+      chapter: selectedChapter,
+      label: bookName + ' ' + selectedChapter + ':' + verseNumber,
+      url: '/bible?book=' + encodeURIComponent(selectedBook.abbr) + '&ch=' + selectedChapter + '&v=' + verseNumber,
+      is_last_read: false,
+    });
+    if (created) toast.success('Versículo marcado');
+    else toast.error('Não foi possível salvar o marcador.');
+  }, [selectedBook, selectedChapter, user, readingMarks, addMark, deleteMark]);
 
   const toggleHighlight = async (verseNumber: number, color: string) => {
     if (!selectedBook) return;
@@ -1468,8 +1500,17 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
                 <button 
                   onClick={() => setViewMode('notes')}
                   className="p-spacing-xs text-secondary/80 active:scale-95 transition-transform"
+                  title="Anotações"
                 >
                   <Icons.List className="w-6 h-6" />
+                </button>
+                <button
+                  onClick={() => setViewMode('bookmarks')}
+                  className="p-spacing-xs text-secondary/80 active:scale-95 transition-transform"
+                  title="Marcadores"
+                  aria-label="Marcadores"
+                >
+                  <Icons.BookMarked className="w-6 h-6" />
                 </button>
               </div>
 
@@ -2165,6 +2206,16 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
           />
         )}
 
+        {viewMode === 'bookmarks' && (
+          <BibleBookmarksList
+            onClose={() => setViewMode('home')}
+            onSelectReference={(book, chapter, verse) => {
+              navigate('/bible?book=' + book + '&ch=' + chapter + '&v=' + verse);
+              setViewMode('reading');
+            }}
+          />
+        )}
+
         {viewMode === 'monthly_recap' && (
           <MonthlyRecap 
             onClose={() => setViewMode('home')}
@@ -2210,6 +2261,10 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
         onAddNote={() => {
           setIsHighlightMenuOpen(false);
           setIsNoteModalOpen(true);
+        }}
+        isBookmarked={activeVerse ? isVerseBookmarked(activeVerse.number) : false}
+        onToggleBookmark={() => {
+          if (activeVerse) void toggleBookmark(activeVerse.number);
         }}
         verseText={activeVerse?.text}
         reference={
