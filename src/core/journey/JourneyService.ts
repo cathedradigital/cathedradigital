@@ -556,6 +556,20 @@ export const JourneyService = {
     }
   },
 
+  async getGlobalProgressCounts(): Promise<ServiceResult<{ started: number; completed: number }>> {
+    try {
+      const [startedRes, completedRes] = await Promise.all([
+        supabase.from('journey_progress').select('id', { count: 'exact', head: true }),
+        supabase.from('journey_progress').select('id', { count: 'exact', head: true }).not('completed_at', 'is', null),
+      ]);
+      if (startedRes.error) throw startedRes.error;
+      if (completedRes.error) throw completedRes.error;
+      return ok({ started: startedRes.count ?? 0, completed: completedRes.count ?? 0 });
+    } catch (e) {
+      return fail(e);
+    }
+  },
+
   async getGlobalStats(): Promise<ServiceResult<JourneyGlobalStats>> {
     try {
       const [j, p] = await Promise.all([
