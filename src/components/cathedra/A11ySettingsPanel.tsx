@@ -315,7 +315,7 @@ const A11ySettingsPanel: React.FC<A11ySettingsPanelProps> = ({
                 <div className="space-y-spacing-md">
                   <Button 
                     variant="outline" 
-                    className="w-full h-spacing-2xl rounded-premium text-[9px] font-bold uppercase tracking-[0.2em] border-primary/10 hover:border-primary/20 bg-primary/[0.02]"
+                    className="w-full min-h-11 h-spacing-2xl rounded-premium text-xs font-bold uppercase tracking-[0.2em] border-primary/10 hover:border-primary/20 bg-primary/[0.02]"
                     onClick={runAudit}
                     disabled={isAuditing}
                   >
@@ -325,7 +325,7 @@ const A11ySettingsPanel: React.FC<A11ySettingsPanelProps> = ({
                   <div className="grid grid-cols-2 gap-spacing-sm">
                     <Button 
                       variant="ghost" 
-                      className="h-spacing-2xl rounded-premium text-[9px] font-bold uppercase tracking-[0.2em] text-primary/60 border border-primary/5 hover:border-primary/10"
+                      className="min-h-11 h-spacing-2xl rounded-premium text-xs font-bold uppercase tracking-[0.2em] text-primary/60 border border-primary/5 hover:border-primary/10"
                       onClick={() => handleExport('json')}
                     >
                       <Icons.Database className="w-spacing-sm h-spacing-sm mr-spacing-xs" />
@@ -333,7 +333,7 @@ const A11ySettingsPanel: React.FC<A11ySettingsPanelProps> = ({
                     </Button>
                     <Button 
                       variant="ghost" 
-                      className="h-spacing-2xl rounded-premium text-[9px] font-bold uppercase tracking-[0.2em] text-primary/60 border border-primary/5 hover:border-primary/10"
+                      className="min-h-11 h-spacing-2xl rounded-premium text-xs font-bold uppercase tracking-[0.2em] text-primary/60 border border-primary/5 hover:border-primary/10"
                       onClick={() => handleExport('pdf')}
                     >
                       <Icons.FileText className="w-spacing-sm h-spacing-sm mr-spacing-xs" />
@@ -349,24 +349,24 @@ const A11ySettingsPanel: React.FC<A11ySettingsPanelProps> = ({
                       </div>
                       <ul className="space-y-spacing-xs">
                         {auditResult.contrastIssues.slice(0, 5).map((issue, idx) => (
-                          <li key={idx} className="text-[9px] text-amber-600/70 leading-relaxed italic border-b border-amber-500/5 pb-spacing-xs last:border-0">
+                          <li key={idx} className="text-premium-sm text-amber-600/80 leading-relaxed italic border-b border-amber-500/5 pb-spacing-xs last:border-0">
                             <div className="flex justify-between items-start gap-spacing-xs">
                               <span>Elemento: <span className="font-bold">{issue.element}</span></span>
-                              <span className="font-black text-[8px] bg-amber-500/10 px-spacing-2xs rounded">Ratio: {issue.ratio}</span>
+                              <span className="font-bold text-premium-xs bg-amber-500/10 px-spacing-2xs rounded">Ratio: {issue.ratio}</span>
                             </div>
-                            <div className="text-[8px] text-amber-700/60 mt-spacing-3xs">
+                            <div className="text-premium-xs text-amber-700/70 mt-spacing-3xs">
                               {issue.suggestion}
                             </div>
-                            <a href={`/design-system?search=contrast`} className="text-[7px] uppercase tracking-tighter underline text-amber-700/40 hover:text-amber-700 block mt-spacing-2xs">Ver Token</a>
+                            <a href={`/design-system?search=contrast`} className="text-premium-xs uppercase tracking-tight underline text-amber-700/40 hover:text-amber-700 block mt-spacing-2xs">Ver Token</a>
                           </li>
                         ))}
                         {auditResult.contrastIssues.length > 5 && (
-                          <li className="text-[8px] text-amber-600/40 uppercase font-bold tracking-widest pt-spacing-xs text-center">
+                          <li className="text-premium-xs text-amber-600/60 uppercase font-bold tracking-widest pt-spacing-xs text-center">
                             + {auditResult.contrastIssues.length - 5} problemas adicionais (veja relatório completo)
                           </li>
                         )}
                       </ul>
-                      <p className="text-[8px] text-primary/40 leading-relaxed pt-spacing-xs">
+                      <p className="text-premium-xs text-primary/50 leading-relaxed pt-spacing-xs">
                         Consulte o <a href="/design-system" className="underline hover:text-primary">Design System</a> para tokens oficiais.
                       </p>
                     </div>
