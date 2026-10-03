@@ -58,7 +58,7 @@ export const KnowledgeGraph: React.FC<KnowledgeGraphProps> = ({ onClose, initial
         </button>
         <div className="text-center">
           <h1 className="text-[10px] font-black uppercase tracking-[0.4em] text-secondary/60">Knowledge Graph</h1>
-          <span className="text-[8px] font-medium uppercase text-stone-600">Cathedra Phase 3</span>
+          <span className="text-premium-xs font-medium uppercase text-stone-600">Cathedra Phase 3</span>
         </div>
         <div className="w-10" />
       </header>
@@ -69,7 +69,7 @@ export const KnowledgeGraph: React.FC<KnowledgeGraphProps> = ({ onClose, initial
             key={f}
             onClick={() => setFilter(f)}
             className={cn(
-              "whitespace-nowrap px-4 py-2 rounded-full text-[9px] font-black uppercase tracking-widest transition-all",
+              "whitespace-nowrap min-h-11 px-4 py-2 rounded-full text-xs font-bold uppercase tracking-widest transition-all",
               filter === f 
                 ? "bg-secondary text-black shadow-sm" 
                 : "bg-white/5 text-stone-500"
@@ -103,7 +103,7 @@ export const KnowledgeGraph: React.FC<KnowledgeGraphProps> = ({ onClose, initial
                 animate={{ scale: 1, opacity: 1 }}
                 className="relative z-10 p-6 rounded-full bg-secondary/10 border border-secondary/30 shadow-[0_0_50px_rgba(212,175,55,0.1)] text-center w-40 h-40 flex flex-col items-center justify-center"
               >
-                <span className="text-[8px] font-black uppercase tracking-widest text-secondary mb-1">{currentNode.type}</span>
+                <span className="text-premium-xs font-bold uppercase tracking-widest text-secondary mb-1">{currentNode.type}</span>
                 <span className="font-display font-bold text-white uppercase tracking-tight">{currentNode.label}</span>
               </motion.div>
             )}
@@ -130,7 +130,7 @@ export const KnowledgeGraph: React.FC<KnowledgeGraphProps> = ({ onClose, initial
                      node.type === 'document' && "bg-purple-500",
                      node.type === 'theme' && "bg-orange-500",
                    )} />
-                   <span className="text-[7px] font-black text-stone-500 uppercase tracking-tighter group-hover:text-white transition-colors">{node.label}</span>
+                   <span className="text-premium-xs font-bold text-stone-500 uppercase tracking-tight group-hover:text-white transition-colors">{node.label}</span>
                 </div>
               </motion.button>
             );
@@ -158,11 +158,11 @@ export const KnowledgeGraph: React.FC<KnowledgeGraphProps> = ({ onClose, initial
                       onNavigateToContent(b, parseInt(c), parseInt(v));
                     }
                   }}
-                  className="flex-1 h-10 rounded-xl bg-secondary text-black text-[9px] font-black uppercase tracking-widest"
+                  className="flex-1 min-h-11 rounded-xl bg-secondary text-black text-xs font-bold uppercase tracking-widest"
                 >
                   Ver Texto Completo
                 </button>
-                <button className="flex-1 h-10 rounded-xl bg-white/10 text-white text-[9px] font-black uppercase tracking-widest">
+                <button className="flex-1 min-h-11 rounded-xl bg-white/10 text-white text-xs font-bold uppercase tracking-widest">
                   Ir para Origem
                 </button>
 
@@ -174,20 +174,20 @@ export const KnowledgeGraph: React.FC<KnowledgeGraphProps> = ({ onClose, initial
 
       <footer className="p-8 border-t border-white/5 space-y-4">
         <div className="flex flex-col items-center gap-3">
-          <span className="text-[8px] font-black uppercase text-stone-600 tracking-[0.2em]">Caminhos Sugeridos</span>
+          <span className="text-premium-xs font-bold uppercase text-stone-600 tracking-[0.2em]">Caminhos Sugeridos</span>
           <div className="flex gap-2">
             {PATH_SUGGESTIONS.map((path, i) => (
               <button 
                 key={i}
                 onClick={() => setSelectedNode(path.nodes[0])}
-                className="px-3 py-1.5 rounded-lg bg-secondary/5 border border-secondary/10 text-[9px] font-bold text-secondary hover:bg-secondary/10 transition-all"
+                className="min-h-11 px-3 py-1.5 rounded-lg bg-secondary/5 border border-secondary/10 text-xs font-semibold text-secondary hover:bg-secondary/10 transition-all"
               >
                 {path.label}
               </button>
             ))}
           </div>
         </div>
-        <p className="text-[9px] font-medium text-stone-700 uppercase tracking-widest text-center">
+        <p className="text-premium-xs font-medium text-stone-700 uppercase tracking-widest text-center">
           Aperte em um nó para explorar a rede de conhecimento.
         </p>
       </footer>
