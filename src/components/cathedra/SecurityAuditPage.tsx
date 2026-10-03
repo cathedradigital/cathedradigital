@@ -82,7 +82,7 @@ const SecurityAuditPage = () => {
                       </div>
                       <p className="text-premium-xs text-muted-foreground leading-relaxed">{item.detail}</p>
                     </div>
-                    <Button variant="ghost" size="sm" asChild className="opacity-0 group-hover:opacity-100 rounded-premium-full">
+                    <Button variant="ghost" size="sm" asChild className="opacity-100 md:opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 rounded-premium-full">
                       <Link to={item.link} className="flex items-center gap-spacing-2xs text-premium-xs font-black uppercase tracking-widest">
                         Detalhes <Icons.ExternalLink className="w-spacing-sm h-spacing-sm" />
                       </Link>
