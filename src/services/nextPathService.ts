@@ -7,6 +7,7 @@
  */
 
 import { supabase } from '@/lib/db';
+import { JourneyService } from '@/core/journey';
 import type {
   JourneyCandidate,
   JourneyNexusNode,
@@ -112,43 +113,31 @@ async function loadNexusByJourney(): Promise<Map<string, JourneyNexusNode[]>> {
 }
 
 async function loadCompletedJourneyIds(userId: string): Promise<Set<string>> {
-  const [stepsRes, progressRes] = await Promise.all([
-    supabase.from('journey_steps').select('id, journey_id').limit(5000),
-    supabase.from('journey_progress').select('journey_id, step_id').eq('user_id', userId).limit(5000),
-  ]);
-
-  const totalByJourney = new Map<string, number>();
-  for (const s of (stepsRes.data ?? []) as Array<{ id: string; journey_id: string }>) {
-    totalByJourney.set(s.journey_id, (totalByJourney.get(s.journey_id) ?? 0) + 1);
-  }
-
-  const doneByJourney = new Map<string, Set<string>>();
-  for (const p of (progressRes.data ?? []) as Array<{ journey_id: string; step_id: string }>) {
-    const set = doneByJourney.get(p.journey_id) ?? new Set<string>();
-    set.add(p.step_id);
-    doneByJourney.set(p.journey_id, set);
-  }
-
+  const journeysResult = await JourneyService.list({ is_active: true, limit: 200 });
+  if (journeysResult.error) throw journeysResult.error;
   const completed = new Set<string>();
-  for (const [journeyId, total] of totalByJourney) {
-    if (total > 0 && (doneByJourney.get(journeyId)?.size ?? 0) >= total) {
-      completed.add(journeyId);
-    }
+  for (const journey of journeysResult.data ?? []) {
+    const [progressResult, stepsResult] = await Promise.all([
+      JourneyService.getProgress(userId, journey.id),
+      JourneyService.listSteps(journey.id),
+    ]);
+    if (progressResult.error) throw progressResult.error;
+    if (stepsResult.error) throw stepsResult.error;
+    const steps = stepsResult.data ?? [];
+    const doneIds = new Set((progressResult.data ?? []).map((progress) => progress.step_id).filter(Boolean));
+    if (steps.length > 0 && steps.every((step) => doneIds.has(step.id))) completed.add(journey.id);
   }
   return completed;
 }
 
 export async function getNextPathData(userId?: string | null): Promise<NextPathData> {
   const [journeysRes, nexusByJourney, completedJourneyIds] = await Promise.all([
-    supabase
-      .from('journeys')
-      .select('id, slug, title, subtitle, category, tags, difficulty, sort_order')
-      .eq('is_active', true)
-      .order('sort_order', { ascending: true })
-      .limit(200),
+    JourneyService.list({ is_active: true, limit: 200 }),
     loadNexusByJourney(),
     userId ? loadCompletedJourneyIds(userId) : Promise.resolve(new Set<string>()),
   ]);
+
+  if (journeysRes.error) throw journeysRes.error;
 
   return {
     candidates: (journeysRes.data ?? []) as JourneyCandidate[],
