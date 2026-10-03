@@ -6,6 +6,7 @@ on:
     paths:
       - ".github/workflows/source-sync.yml"
       - "scripts/sync-official-sources.mjs"
+      - "supabase/functions/source-import/**"
   schedule:
     - cron: "*/15 * * * *"
   workflow_dispatch:
