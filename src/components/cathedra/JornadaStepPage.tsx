@@ -45,6 +45,7 @@ import { EditorialHero } from '@/components/editorial/harmony/EditorialHero';
 import { ReaderContinuation } from '@/components/shared/ReaderContinuation';
 import { NexusPanel } from '@/components/nexus/NexusPanel';
 import { useJourneyNexus } from '@/hooks/useJourneyNexus';
+import { JourneyService } from '@/core/journey';
 
 /**
  * Cache em memória para prefetch de etapas vizinhas (prev/next).
@@ -55,11 +56,7 @@ import { useJourneyNexus } from '@/hooks/useJourneyNexus';
 const STEP_PREFETCH_CACHE = new Map<string, any>();
 const prefetchStep = async (stepId: string): Promise<void> => {
   if (!stepId || STEP_PREFETCH_CACHE.has(stepId)) return;
-  const { data } = await supabase
-    .from('journey_steps')
-    .select('*')
-    .eq('id', stepId)
-    .single();
+  const { data } = await JourneyService.getStepById(stepId);
   if (data) STEP_PREFETCH_CACHE.set(stepId, data);
 };
 const scheduleIdle = (fn: () => void) => {
@@ -184,25 +181,14 @@ const JornadaStepPage: React.FC = () => {
       setLoading(true);
     }
     try {
-      // Uma única leva paralela: step atual, título da jornada, todos os passos e progresso.
+      // Uma única leva paralela via JourneyService: etapa, jornada, etapas vizinhas e progresso.
       const [stepRes, journeyRes, allStepsRes, progressRes] = await Promise.all([
         cachedStep
           ? Promise.resolve({ data: cachedStep } as any)
-          : supabase.from('journey_steps').select('*').eq('id', stepId!).single(),
-        supabase.from('journeys').select('title').eq('id', journeyId!).single(),
-        supabase
-          .from('journey_steps')
-          .select('id, step_order, title, subtitle, step_type, duration_minutes, is_free, journey_id')
-          .eq('journey_id', journeyId!)
-          .order('step_order', { ascending: true }),
-        user
-          ? supabase
-              .from('journey_progress')
-              .select('id, reflection')
-              .eq('user_id', user.id)
-              .eq('step_id', stepId!)
-              .maybeSingle()
-          : Promise.resolve({ data: null } as any),
+          : JourneyService.getStepById(stepId!),
+        JourneyService.getById(journeyId!),
+        JourneyService.listSteps(journeyId!),
+        user ? JourneyService.getProgress(user.id, journeyId!) : Promise.resolve({ data: [], error: null }),
       ]);
 
       if (stepRes.data) {
@@ -217,7 +203,7 @@ const JornadaStepPage: React.FC = () => {
       }
       if (journeyRes.data) setJourneyTitle(journeyRes.data.title);
 
-      const allSteps = allStepsRes.data ?? [];
+      const allSteps = (allStepsRes.data ?? []).map((s: any) => s as any);
       setTotalSteps(allSteps.length);
       let prev: any = null;
       let next: any = null;
@@ -240,7 +226,7 @@ const JornadaStepPage: React.FC = () => {
       }
 
       if (user && stepRes.data) {
-        const progress = (progressRes as any)?.data;
+        const progress = ((progressRes as any)?.data ?? []).find((p: any) => p.step_id === stepId);
         if (progress) {
           setCompleted(true);
           setReflection(progress.reflection || '');
@@ -281,14 +267,11 @@ const JornadaStepPage: React.FC = () => {
     setCompleting(true);
     setStatusMessage('Concluindo etapa…');
     try {
-      const { error } = await supabase.from('journey_progress').upsert(
-        {
-          user_id: user.id,
-          journey_id: journeyId,
-          step_id: stepId,
-          reflection: reflection.trim() || null,
-        },
-        { onConflict: 'user_id,step_id' },
+      const { error } = await JourneyService.completeStep(
+        user.id,
+        journeyId,
+        step.step_order,
+        reflection.trim() || undefined,
       );
       if (error) throw error;
 
