@@ -91,16 +91,18 @@ export function useBibleNavigation(): UseBibleNavigation {
   // Canonicalize legacy Bible URLs immediately: ?chapter → ?ch and ?verse → ?v.
   // This preserves old deep-links while ensuring copied/history URLs converge to one form.
   useEffect(() => {
-    if (!legacyChapterParam && !legacyVerseParam) return;
+    const needsBookNormalization = Boolean(selectedBook && bookParam !== selectedBook.abbr);
+    if (!needsBookNormalization && !legacyChapterParam && !legacyVerseParam) return;
     setSearchParams((prev) => {
       const next = new URLSearchParams(prev);
+      if (selectedBook) next.set('book', selectedBook.abbr);
       if (!next.get('ch') && legacyChapterParam) next.set('ch', legacyChapterParam);
       if (!next.get('v') && legacyVerseParam) next.set('v', legacyVerseParam);
       next.delete('chapter');
       next.delete('verse');
       return next;
     }, { replace: true });
-  }, [legacyChapterParam, legacyVerseParam, setSearchParams]);
+  }, [bookParam, legacyChapterParam, legacyVerseParam, selectedBook, setSearchParams]);
 
   const selectedChapter = useMemo(() => {
     if (!chapterParam) return 1;
