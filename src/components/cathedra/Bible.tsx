@@ -12,6 +12,13 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Icons } from '@/constants';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
 import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
 import { cn, getElementSelector } from '@/lib/utils';
@@ -1463,57 +1470,72 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
                 <Icons.BookOpen className="w-8 h-8 text-secondary/40 mb-spacing-sm" />
                 <h1 className="font-display text-2xl tracking-[0.2em] uppercase text-primary/80">Bíblia Sagrada</h1>
               </div>
-              <div className="flex items-center gap-spacing-xs">
-                <button 
-                  onClick={() => setIsConnectionEditorOpen(true)}
-                  className="p-spacing-xs text-secondary/40 active:scale-95 transition-transform"
-                  title="Editor Bíblia ↔ CIC"
-                >
-                  <Icons.Edit3 className="w-5 h-5" />
-                </button>
-                <button 
-                  onClick={() => setIsFeedbackOpen(true)}
-                  className="p-spacing-xs text-secondary/40 active:scale-95 transition-transform"
-                  title="Suporte & Feedback"
-                >
-                  <Icons.HelpCircle className="w-5 h-5" />
-                </button>
+              <div className="flex items-center gap-spacing-xs" data-testid="bible-toolbar">
                 <button
+                  type="button"
                   onClick={() => setViewMode('search')}
                   aria-label="Pesquisar na Bíblia"
+                  data-testid="bible-toolbar-search"
                   className="p-spacing-xs text-secondary/80 active:scale-95 transition-transform"
                   title="Pesquisar na Bíblia"
                 >
                   <Icons.Search className="w-5 h-5" aria-hidden="true" />
                 </button>
-                <button 
-                  onClick={() => setShowKnowledgePanel(true)}
+                <button
+                  type="button"
+                  onClick={() => setViewMode('bookmarks')}
+                  aria-label="Abrir marcadores"
+                  data-testid="bible-toolbar-bookmarks"
                   className="p-spacing-xs text-secondary/80 active:scale-95 transition-transform"
-                  title="Auditoria Estratégica"
+                  title="Marcadores"
                 >
-                  <Icons.Activity className="w-6 h-6" />
+                  <Icons.BookMarked className="w-6 h-6" aria-hidden="true" />
                 </button>
-                <button 
-                  onClick={() => navigate('/bible-recovery')}
-                  className="p-spacing-xs text-secondary/80 active:scale-95 transition-transform"
-                  title="Recovery Bíblia"
-                >
-                  <Icons.Stethoscope className="w-6 h-6" />
-                </button>
-                <button 
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button
+                      type="button"
+                      aria-label="Mais opções da Bíblia"
+                      data-testid="bible-toolbar-more"
+                      className="p-spacing-xs text-secondary/80 active:scale-95 transition-transform"
+                      title="Mais opções"
+                    >
+                      <Icons.MoreHorizontal className="w-6 h-6" aria-hidden="true" />
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="min-w-52">
+                    <DropdownMenuItem onClick={() => setViewMode('notes')}>
+                      <Icons.List className="w-4 h-4 mr-2" />
+                      Anotações
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setIsConnectionEditorOpen(true)}>
+                      <Icons.Edit3 className="w-4 h-4 mr-2" />
+                      Editor Bíblia ↔ CIC
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setIsFeedbackOpen(true)}>
+                      <Icons.HelpCircle className="w-4 h-4 mr-2" />
+                      Suporte & Feedback
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={() => setShowKnowledgePanel(true)}>
+                      <Icons.Activity className="w-4 h-4 mr-2" />
+                      Auditoria Estratégica
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => navigate('/bible-recovery')}>
+                      <Icons.Stethoscope className="w-4 h-4 mr-2" />
+                      Recovery Bíblia
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+                <button
+                  type="button"
                   onClick={() => setViewMode('notes')}
+                  aria-label="Abrir anotações"
+                  data-testid="bible-toolbar-notes"
                   className="p-spacing-xs text-secondary/80 active:scale-95 transition-transform"
                   title="Anotações"
                 >
-                  <Icons.List className="w-6 h-6" />
-                </button>
-                <button
-                  onClick={() => setViewMode('bookmarks')}
-                  className="p-spacing-xs text-secondary/80 active:scale-95 transition-transform"
-                  title="Marcadores"
-                  aria-label="Marcadores"
-                >
-                  <Icons.BookMarked className="w-6 h-6" />
+                  <Icons.List className="w-6 h-6" aria-hidden="true" />
                 </button>
               </div>
 
