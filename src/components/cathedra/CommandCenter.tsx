@@ -183,7 +183,7 @@ const CommandCenter: React.FC = () => {
           .from('user_notes')
           .select('id, note_text, content_type, content_id, book_abbr, chapter, verse, paragraph, updated_at')
           .eq('user_id', user.id)
-          .ilike('note_text', `%\${q}%`)
+          .ilike('note_text', \`%${q}%\`)
           .order('updated_at', { ascending: false })
           .limit(6);
         if (error) return;
@@ -196,6 +196,7 @@ const CommandCenter: React.FC = () => {
               : n.content_type === 'magisterium' && n.content_id
                 ? \`/magisterium?doc=\${encodeURIComponent(n.content_id)}\`
                 : '/diario';
+
           results.push({
             type: 'note',
             label: n.book_abbr && n.chapter
