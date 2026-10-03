@@ -818,22 +818,12 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
         });
       }
     } catch (error: any) {
-      // Local fallback for Abdias or connection issues
-      if (abbr === 'Ab' || abbr === 'Abd') {
-        const obadiahText = [
-          { number: 1, text: "Visão de Abdias. Assim diz o Senhor Deus a respeito de Edom: Ouvimos um anúncio do Senhor, e um mensageiro foi enviado às nações: Levantai-vos! Levantemo-nos para a guerra contra ele!" },
-          { number: 2, text: "Eis que te fiz pequeno entre as nações; tu és muito desprezado." },
-          { number: 3, text: "A soberba do teu coração enganou-te, a ti que habitas nas fendas das rochas, na tua alta morada, que dizes no teu coração: Quem me derrubará por terra?" },
-        ];
-        setVerses(obadiahText.map((v) => ({ ...v, chapter: 1 })));
-        setIsLoading(false);
-        setSourceInfo('Fallback Local (Abdias)');
-        biblePerf.mark(runId, 'render');
-        biblePerf.end(runId, { status: 'ok', source: 'fallback:Ab', versesCount: 3 });
-        return;
-      }
+      setVerses([]);
       setSourceInfo('Erro no Carregamento');
-      toast.error('Erro ao carregar texto sagrado');
+      toast.error('Erro ao carregar texto sagrado', {
+        description: 'O capítulo não pôde ser recuperado da fonte oficial nem do banco local. Nenhum texto parcial foi exibido.',
+        id: `bible-text-error-${abbr}-${chapter}`,
+      });
       biblePerf.end(runId, { status: 'error', source: 'error' });
     } finally {
       setIsLoading(false);
