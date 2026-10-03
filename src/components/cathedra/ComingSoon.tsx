@@ -108,8 +108,8 @@ export const ComingSoonSection: React.FC<{ className?: string }> = ({ className 
               <item.icon className="w-spacing-lg h-spacing-lg" strokeWidth={0.5} />
             </div>
             <div className="space-y-spacing-sm">
-              <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/60 group-hover:text-primary/50 transition-colors duration-700">{item.label}</h3>
-              <p className="text-[11px] text-muted-foreground/60 leading-relaxed font-serif italic tracking-wide group-hover:text-muted-foreground/50 transition-colors duration-700 max-w-[200px]">{item.description}</p>
+              <h3 className="text-premium-xs font-bold uppercase tracking-[0.28em] text-primary/60 group-hover:text-primary/50 transition-colors duration-700">{item.label}</h3>
+              <p className="text-premium-sm text-muted-foreground/70 leading-relaxed font-serif italic tracking-wide group-hover:text-muted-foreground/50 transition-colors duration-700 max-w-[200px]">{item.description}</p>
             </div>
           </div>
         ))}
@@ -131,7 +131,7 @@ export const ComingSoonSection: React.FC<{ className?: string }> = ({ className 
               <button 
                 type="submit" 
                 disabled={loading}
-                className="absolute right-spacing-2xs top-spacing-2xs/2 -translate-y-1/2 h-spacing-xl px-spacing-lg rounded-premium-full bg-primary/10 text-primary text-[9px] font-black uppercase tracking-widest hover:bg-primary hover:text-primary-foreground transition-all duration-700 focus:ring-2 focus:ring-primary focus:ring-offset-2 outline-none"
+                className="absolute right-spacing-2xs top-spacing-2xs/2 -translate-y-1/2 min-h-11 h-spacing-xl px-spacing-lg rounded-premium-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-widest hover:bg-primary hover:text-primary-foreground transition-all duration-700 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:outline-none"
               >
                 {loading ? "..." : "Notificar"}
               </button>
@@ -140,7 +140,7 @@ export const ComingSoonSection: React.FC<{ className?: string }> = ({ className 
         ) : (
           <div className="flex items-center justify-center gap-spacing-sm text-primary/60 py-spacing-md px-spacing-xl rounded-premium-full bg-primary/[0.02] border border-primary/5 mx-auto w-fit transition-all duration-1000 animate-in fade-in zoom-in-95">
             <Icons.CheckCircle2 className="w-spacing-md h-spacing-md" />
-            <span className="text-[9px] font-black uppercase tracking-widest">Inscrito no Santuário</span>
+            <span className="text-premium-xs font-bold uppercase tracking-widest">Inscrito no Santuário</span>
           </div>
         )}
       </div>
