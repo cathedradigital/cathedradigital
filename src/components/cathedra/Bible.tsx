@@ -460,21 +460,88 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
     toast.success('Nota salva');
   };
 
-  const toggleHighlight = (verseNumber: number, color: string) => {
+  const toggleHighlight = async (verseNumber: number, color: string) => {
     if (!selectedBook) return;
     const key = `${selectedBook.abbr}-${selectedChapter}-${verseNumber}`;
-    const newHighlights = { ...highlights };
-    
-    if (newHighlights[key] === color) {
-      delete newHighlights[key];
-    } else {
-      newHighlights[key] = color;
+    const currentColor = highlights[key];
+    const next = { ...highlights };
+
+    if (currentColor === color) delete next[key];
+    else next[key] = color;
+
+    setHighlights(next);
+    localStorage.setItem('cathedra_bible_highlights', JSON.stringify(next));
+
+    if (!user) return;
+
+    try {
+      const contentId = `${selectedBook.abbr}:${selectedChapter}:${verseNumber}`;
+      if (currentColor === color) {
+        const { error } = await supabase
+          .from('user_notes')
+          .delete()
+          .eq('user_id', user.id)
+          .eq('content_type', 'bible')
+          .eq('content_id', contentId)
+          .eq('note_text', '');
+
+        if (error) throw error;
+      } else {
+        const { data: existing, error: existingError } = await supabase
+          .from('user_notes')
+          .select('id')
+          .eq('user_id', user.id)
+          .eq('content_type', 'bible')
+          .eq('content_id', contentId)
+          .eq('note_text', '')
+          .maybeSingle();
+
+        if (existingError) throw existingError;
+
+        if (existing?.id) {
+          const { error } = await supabase
+            .from('user_notes')
+            .update({ highlight_color: color })
+            .eq('id', existing.id)
+            .eq('user_id', user.id);
+          if (error) throw error;
+        } else {
+          const { error } = await supabase
+            .from('user_notes')
+            .insert({
+              user_id: user.id,
+              content_type: 'bible',
+              content_id: contentId,
+              note_text: '',
+              highlight_color: color,
+              book_abbr: selectedBook.abbr,
+              chapter: selectedChapter,
+              verse: verseNumber,
+            });
+          if (error) throw error;
+        }
+      }
+      await fetchNotes();
+    } catch (error) {
+      console.error('[Bible] highlight persistence failed', error);
+      setHighlights(prev => currentColor === color
+        ? { ...prev, [key]: color }
+        : (() => { const rollback = { ...prev }; delete rollback[key]; return rollback; })());
+      toast.error('Não foi possível salvar o destaque na conta.');
     }
-    
-    setHighlights(newHighlights);
-    localStorage.setItem('cathedra_bible_highlights', JSON.stringify(newHighlights));
   };
 
+
+  useEffect(() => {
+    const remoteHighlights: Record<string, string> = {};
+    for (const note of notes) {
+      if (note.content_type !== 'bible' || note.note_text !== '' || !note.book_abbr || !note.chapter || !note.verse) continue;
+      remoteHighlights[`${note.book_abbr}-${note.chapter}-${note.verse}`] = note.highlight_color || 'yellow';
+    }
+    if (Object.keys(remoteHighlights).length > 0) {
+      setHighlights(prev => ({ ...prev, ...remoteHighlights }));
+    }
+  }, [notes]);
 
   const handleExportData = () => {
     const data = {
