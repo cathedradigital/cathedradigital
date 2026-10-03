@@ -45,6 +45,7 @@ import { useHighContrast } from '@/hooks/useHighContrast';
 import biblePerf from '@/lib/biblePerf';
 import { isChapterMissing, MISSING_CHAPTER_REASON } from '@/lib/bibleMissingChapters';
 import NexusContributionDialog from './NexusContributionDialog';
+import { saveBibleReturnContext } from '@/lib/bibleReturnContext';
 
 const CatechismParagraphPreview: React.FC<{ paragraphId: string }> = ({ paragraphId }) => {
   const pNum = Number.parseInt(String(paragraphId).replace(/^§/, '').trim(), 10);
@@ -2057,6 +2058,12 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
                                               data-testid="nexus-popover-nav-link"
                                               onClick={() => {
                                                 console.info('[Nexus] navigate', { from: 'bible', to: conn.type, id: conn.id });
+                                                saveBibleReturnContext({
+                                                  book: selectedBook.abbr,
+                                                  chapter: selectedChapter,
+                                                  verse: v.number,
+                                                  label: `${selectedBook.name} ${selectedChapter}:${v.number}`,
+                                                });
                                                 if (conn.type === 'catechism') navigate(`/catechism?p=${conn.id}`);
                                                 else if (conn.type === 'document') navigate(`/magisterium?doc=${conn.id}`);
                                                 else if (conn.type === 'bible' || conn.type === 'cross_ref') {
