@@ -20,19 +20,25 @@ export function useReadingMarks() {
   const { user } = useAuth();
   const [marks, setMarks] = useState<ReadingMark[]>([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
 
   const fetchMarks = useCallback(async () => {
-    if (!user) { setMarks([]); return; }
+    if (!user) { setMarks([]); setError(null); return; }
     setLoading(true);
+    setError(null);
     const { data, error } = await supabase
       .from('reading_marks')
       .select('*')
       .eq('user_id', user.id)
       .order('updated_at', { ascending: false });
 
-    if (!error && data) {
-      setMarks(data as ReadingMark[]);
+    if (error) {
+      console.error('Error fetching reading marks:', error);
+      setError(error);
+      setLoading(false);
+      return;
     }
+    setMarks((data as ReadingMark[]) || []);
     setLoading(false);
   }, [user]);
 
@@ -106,7 +112,8 @@ export function useReadingMarks() {
     const { error } = await supabase
       .from('reading_marks')
       .update(updates)
-      .eq('id', id);
+      .eq('id', id)
+      .eq('user_id', user.id);
 
     if (!error) {
       setMarks(prev => prev.map(m => m.id === id ? { ...m, ...updates } : m));
@@ -118,7 +125,8 @@ export function useReadingMarks() {
     const { error } = await supabase
       .from('reading_marks')
       .delete()
-      .eq('id', id);
+      .eq('id', id)
+      .eq('user_id', user.id);
 
     if (!error) {
       setMarks(prev => prev.filter(m => m.id !== id));
