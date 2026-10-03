@@ -93,14 +93,25 @@ const AtriumBibleReader: React.FC = () => {
           title={book ? `${book.name} ${chapterStr ?? ''}`.trim() : 'Bíblia'}
           showBack
           actions={
-            <button
-              type="button"
-              onClick={() => setPickerOpen(true)}
-              aria-label="Escolher livro e capítulo"
-              className="inline-flex h-12 w-12 items-center justify-center rounded-full text-stitch-on-surface hover:bg-stitch-surface-container"
-            >
-              <LayoutGrid className="h-5 w-5" />
-            </button>
+            <>
+              <Link
+                to={buildBibleUrl({ abbr: abbr ?? '', chapter: chapterStr ?? '1', extra: { view: 'search' } })}
+                aria-label="Pesquisar na Bíblia"
+                data-testid="bible-toolbar-search-mobile"
+                className="inline-flex h-12 w-12 items-center justify-center rounded-full text-stitch-on-surface hover:bg-stitch-surface-container"
+                title="Pesquisar na Bíblia"
+              >
+                <SearchIcon className="h-5 w-5" aria-hidden="true" />
+              </Link>
+              <button
+                type="button"
+                onClick={() => setPickerOpen(true)}
+                aria-label="Escolher livro e capítulo"
+                className="inline-flex h-12 w-12 items-center justify-center rounded-full text-stitch-on-surface hover:bg-stitch-surface-container"
+              >
+                <LayoutGrid className="h-5 w-5" />
+              </button>
+            </>
           }
         />
         <ReaderToolbar
@@ -206,14 +217,25 @@ const BibleLanding: React.FC = () => {
         title="Bíblia"
         transparent
         actions={
-          <button
-            type="button"
-            onClick={() => setPickerOpen(true)}
-            aria-label="Escolher livro e capítulo"
-            className="inline-flex h-12 w-12 items-center justify-center rounded-full text-stitch-on-surface hover:bg-stitch-surface-container"
-          >
-            <LayoutGrid className="h-5 w-5" />
-          </button>
+          <>
+            <Link
+              to="/bible?view=search"
+              aria-label="Pesquisar na Bíblia"
+              data-testid="bible-toolbar-search-mobile"
+              className="inline-flex h-12 w-12 items-center justify-center rounded-full text-stitch-on-surface hover:bg-stitch-surface-container"
+              title="Pesquisar na Bíblia"
+            >
+              <SearchIcon className="h-5 w-5" aria-hidden="true" />
+            </Link>
+            <button
+              type="button"
+              onClick={() => setPickerOpen(true)}
+              aria-label="Escolher livro e capítulo"
+              className="inline-flex h-12 w-12 items-center justify-center rounded-full text-stitch-on-surface hover:bg-stitch-surface-container"
+            >
+              <LayoutGrid className="h-5 w-5" />
+            </button>
+          </>
         }
       />
 
