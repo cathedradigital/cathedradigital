@@ -20,11 +20,11 @@ const NotFound = () => {
         </div>
 
         <div className="space-y-2">
-          <p className="text-[11px] font-black uppercase tracking-[0.4em] text-secondary/70">
+          <p className="text-premium-xs font-bold uppercase tracking-[0.28em] text-secondary/80">
             Página não encontrada
           </p>
           <h1 className="font-display text-5xl text-primary tracking-tight">404</h1>
-          <p className="text-sm font-serif text-muted-foreground leading-relaxed">
+          <p className="text-premium-sm font-serif text-muted-foreground leading-relaxed">
             A rota{" "}
             <code className="px-1.5 py-0.5 rounded bg-muted text-primary/80 text-xs">
               {location.pathname}
@@ -51,7 +51,7 @@ const NotFound = () => {
         </div>
 
         <nav aria-label="Atalhos" className="pt-6 border-t border-primary/5">
-          <p className="text-[10px] uppercase tracking-widest text-muted-foreground mb-3">
+          <p className="text-premium-xs uppercase tracking-[0.2em] text-muted-foreground mb-3">
             Talvez você procure
           </p>
           <ul className="flex flex-wrap gap-2 justify-center text-xs">
