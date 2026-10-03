@@ -15,26 +15,8 @@ const StudyJournal: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'notes' | 'marks'>('notes');
   const [searchQuery, setSearchQuery] = useState('');
   
-  // Fetching all notes (passing empty contentId but valid contentType logic needs to be checked)
-  // useNotes expects contentType and optionally contentId. 
-  // To fetch ALL notes for a user, we might need a modified hook or call fetch with different params.
-  // Actually, let's look at useNotes.ts again.
-  // It takes contentType and contentId. If contentId is null, it filters by user and contentType.
-  // We want ALL notes across all contentTypes.
+  const { notes: allNotes, updateNote, deleteNote } = useNotes('all');
   
-  const { notes: bibleNotes, updateNote: updateBibleNote, deleteNote: deleteBibleNote } = useNotes('bible');
-  const { notes: catechismNotes, updateNote: updateCatechismNote, deleteNote: deleteCatechismNote } = useNotes('catechism');
-  const { notes: magisteriumNotes, updateNote: updateMagisteriumNote, deleteNote: deleteMagisteriumNote } = useNotes('magisterium');
-  const { notes: saintNotes, updateNote: updateSaintNote, deleteNote: deleteSaintNote } = useNotes('saint');
-  
-  const allNotes = useMemo(() => [
-    ...bibleNotes,
-    ...catechismNotes,
-    ...magisteriumNotes,
-    ...saintNotes
-  ].sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()), 
-  [bibleNotes, catechismNotes, magisteriumNotes]);
-
   const { marks, deleteMark, updateMark } = useReadingMarks();
   
   const filteredNotes = useMemo(() => {
@@ -58,19 +40,15 @@ const StudyJournal: React.FC = () => {
   }, [marks, searchQuery]);
 
   const handleUpdateNote = async (note: UserNote, newText: string) => {
-    if (note.content_type === 'bible') await updateBibleNote(note.id, newText);
-    else if (note.content_type === 'catechism') await updateCatechismNote(note.id, newText);
-    else if (note.content_type === 'magisterium') await updateMagisteriumNote(note.id, newText);
-    else if (note.content_type === 'saint') await updateSaintNote(note.id, newText);
-    toast.success('Anotação atualizada');
+    const ok = await updateNote(note.id, newText);
+    if (ok) toast.success('Anotação atualizada');
+    else toast.error('Não foi possível atualizar a anotação.');
   };
 
   const handleDeleteNote = async (note: UserNote) => {
-    if (note.content_type === 'bible') await deleteBibleNote(note.id);
-    else if (note.content_type === 'catechism') await deleteCatechismNote(note.id);
-    else if (note.content_type === 'magisterium') await deleteMagisteriumNote(note.id);
-    else if (note.content_type === 'saint') await deleteSaintNote(note.id);
-    toast.info('Anotação removida');
+    const ok = await deleteNote(note.id);
+    if (ok) toast.info('Anotação removida');
+    else toast.error('Não foi possível remover a anotação.');
   };
 
   return (
@@ -134,7 +112,7 @@ const StudyJournal: React.FC = () => {
                     } else if (note.content_type === 'magisterium' && note.content_id) {
                       const [docId, paragraphIndex] = note.content_id.split(':');
                       url = `/magisterium/${encodeURIComponent(docId)}`;
-                      if (paragraphIndex && /^\\d+$/.test(paragraphIndex)) {
+                      if (paragraphIndex && /^\d+$/.test(paragraphIndex)) {
                         url += `?p=${encodeURIComponent(paragraphIndex)}`;
                       }
                     } else if (note.content_type === 'saint' && note.content_id) {
