@@ -101,6 +101,29 @@ const CatechismParagraphPreview: React.FC<{ paragraphId: string }> = ({ paragrap
 
 
 
+const readBibleRef = (ref: unknown) => {
+  if (!ref || typeof ref !== 'object') return null;
+  const value = ref as Record<string, unknown>;
+  const abbr = String(value.abbr ?? value.abbrev ?? value.book ?? value.book_abbr ?? '').trim();
+  const chapter = Number(value.chapter ?? value.ch ?? value.chapter_number);
+  const verse = Number(value.verse ?? value.v ?? value.verse_number);
+  if (!abbr || !Number.isFinite(chapter)) return null;
+  return { abbr, chapter, verse: Number.isFinite(verse) ? verse : undefined };
+};
+
+const nexusConnectionFromRow = (row: any, currentVerseId?: string) => {
+  const sourceBible = row.source_kind === 'bible_verse' ? readBibleRef(row.source_ref) : null;
+  const targetBible = row.target_kind === 'bible_verse' ? readBibleRef(row.target_ref) : null;
+  const sourceId = sourceBible?.verse ? `${sourceBible.abbr}-${sourceBible.chapter}-${sourceBible.verse}` : '';
+  const isSource = Boolean(sourceBible && sourceId === currentVerseId);
+  const otherKind = isSource ? row.target_kind : row.source_kind;
+  const otherRef = isSource ? row.target_ref : row.source_ref;
+  const otherBible = isSource ? targetBible : sourceBible;
+  const id = otherBible ? `${otherBible.abbr}-${otherBible.chapter}${otherBible.verse ? `-${otherBible.verse}` : ''}` : String((otherRef as any)?.id ?? (otherRef as any)?.paragraph ?? (otherRef as any)?.slug ?? row.id);
+  const labels: Record<string, string> = { catechism_paragraph: 'Catecismo', magisterium_doc: 'Magistério', patristic: 'Patrística', saint: 'Santo', saint_work: 'Obra de santo', glossary: 'Glossário', prayer: 'Oração', journey: 'Jornada', liturgy: 'Liturgia', bible_verse: 'Bíblia', other: 'Referência' };
+  return { type: otherKind === 'catechism_paragraph' ? 'catechism' : otherKind === 'magisterium_doc' ? 'document' : otherKind === 'bible_verse' ? 'cross_ref' : 'reference', label: labels[otherKind] ?? 'Referência', color: otherKind === 'catechism_paragraph' ? 'bg-blue-500' : 'bg-amber-500', id, summary: row.note || '', theological_theme: undefined, relevance_level: row.confidence };
+};
+
 const Bible: React.FC = () => {
   const [isConnectionEditorOpen, setIsConnectionEditorOpen] = useState(false);
   const [navHistory, setNavHistory] = useState<{book: string, chapter: number, verse?: number}[]>([]);
@@ -537,9 +560,9 @@ const Bible: React.FC = () => {
 
     const connectionsPromise = Promise.resolve(
       supabase
-        .from('bible_connections')
-        .select('*')
-        .like('verse_id', `${abbr}-${chapter}-%`)
+        .from('nexus_relations')
+        .select('id, relation_type, source_kind, source_ref, target_kind, target_ref, note, confidence, status')
+        .eq('status', 'published')
     ).then((res) => {
       biblePerf.mark(runId, 'connections:end');
       return res;
@@ -552,19 +575,14 @@ const Bible: React.FC = () => {
           setDynamicConnections((prev) => {
             const newConns: Record<string, any[]> = { ...prev };
             dbConnections.forEach((conn: any) => {
-              const key = conn.verse_id;
+              const source = conn.source_kind === 'bible_verse' ? readBibleRef(conn.source_ref) : null;
+              const target = conn.target_kind === 'bible_verse' ? readBibleRef(conn.target_ref) : null;
+              const bible = source ?? target;
+              if (!bible?.verse) return;
+              const key = `${bible.abbr}-${bible.chapter}-${bible.verse}`;
+              const mapped = nexusConnectionFromRow(conn, key);
               if (!newConns[key]) newConns[key] = [];
-              if (!newConns[key].some((c) => c.id === conn.reference_id)) {
-                newConns[key].push({
-                  type: conn.category as any,
-                  label: conn.reference_title,
-                  color: conn.category === 'catechism' ? 'bg-blue-500' : 'bg-amber-500',
-                  id: conn.reference_id || conn.id,
-                  summary: conn.summary || '',
-                  theological_theme: conn.theological_theme,
-                  relevance_level: conn.relevance_level,
-                });
-              }
+              if (!newConns[key].some((item) => item.id === mapped.id && item.type === mapped.type)) newConns[key].push(mapped);
             });
             return newConns;
           });
@@ -929,13 +947,13 @@ const Bible: React.FC = () => {
     (async () => {
       try {
         const { data, error } = await supabase
-          .from('bible_connections')
-          .select('verse_id, category, reference_id, reference_title, summary')
-          .like('verse_id', `${selectedBook.abbr}-%`);
+          .from('nexus_relations')
+          .select('id, relation_type, source_kind, source_ref, target_kind, target_ref, note, confidence, status')
+          .eq('status', 'published');
         if (cancelled) return;
         if (error) {
           const is406 = (error as any)?.code === 'PGRST406' || /406/.test(error.message || '');
-          console.warn('[Nexus] bible_connections fetch failed — usando fallback local', {
+          console.warn('[Nexus] nexus_relations fetch failed — usando fallback local', {
             code: (error as any)?.code,
             message: error.message,
             book: selectedBook.abbr,
@@ -954,17 +972,14 @@ const Bible: React.FC = () => {
         setDynamicConnections(prev => {
           const next = { ...prev };
           data.forEach((conn: any) => {
-            const key = conn.verse_id;
+            const source = conn.source_kind === 'bible_verse' ? readBibleRef(conn.source_ref) : null;
+            const target = conn.target_kind === 'bible_verse' ? readBibleRef(conn.target_ref) : null;
+            const bible = source ?? target;
+            if (!bible?.verse) return;
+            const key = `${bible.abbr}-${bible.chapter}-${bible.verse}`;
+            const mapped = nexusConnectionFromRow(conn, key);
             if (!next[key]) next[key] = [];
-            if (!next[key].some((c: any) => c.id === (conn.reference_id || conn.id))) {
-              next[key].push({
-                type: conn.category,
-                label: conn.reference_title,
-                color: conn.category === 'catechism' ? 'bg-blue-500' : 'bg-amber-500',
-                id: conn.reference_id,
-                summary: conn.summary || '',
-              });
-            }
+            if (!next[key].some((item: any) => item.id === mapped.id && item.type === mapped.type)) next[key].push(mapped);
           });
           return next;
         });
@@ -1695,7 +1710,7 @@ const Bible: React.FC = () => {
                         </div>
                       </div>
                     ) : (
-                      <div className="space-y-2 sm:space-y-3">
+                      <div className="space-y-1 sm:space-y-1.5">
                         {verses.map((v, index) => {
 
 
@@ -1743,7 +1758,7 @@ const Bible: React.FC = () => {
 
 
                           
-                          <div className="flex-1 space-y-spacing-md">
+                          <div className="flex-1 space-y-spacing-xs">
                             {(() => {
                               const connectionKey = `${selectedBook.abbr}-${selectedChapter}-${v.number}`;
                               const verseConnections = KNOWLEDGE_CONNECTIONS[connectionKey] || [];
@@ -1754,14 +1769,14 @@ const Bible: React.FC = () => {
                             <p 
                               data-testid={`verse-text-${v.number}`}
                               className={cn(
-                                "leading-[1.8] font-serif text-primary/85 tracking-tight relative flex-1 min-w-0",
+                                "leading-[1.65] font-serif text-primary/85 tracking-tight relative flex-1 min-w-0",
                                 settings.fontSize === 'small' && "text-[16px]",
                                 settings.fontSize === 'medium' && "text-[19px]",
                                 settings.fontSize === 'large' && "text-[22px]",
                                 settings.fontSize === 'extra-large' && "text-[26px]",
-                                settings.lineSpacing === 'tight' && "leading-[1.6]",
-                                settings.lineSpacing === 'normal' && "leading-[1.85]",
-                                settings.lineSpacing === 'wide' && "leading-[2.1]",
+                                settings.lineSpacing === 'tight' && "leading-[1.55]",
+                                settings.lineSpacing === 'normal' && "leading-[1.7]",
+                                settings.lineSpacing === 'wide' && "leading-[1.8]",
                                 settings.contrast === 'soft' && "opacity-70",
                                 settings.contrast === 'high' && "text-primary font-bold"
                               )}
