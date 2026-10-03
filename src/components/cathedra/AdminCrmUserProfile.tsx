@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { supabase } from '@/lib/db';
+import { JourneyService } from '@/core/journey';
 import { toast } from 'sonner';
 
 interface UserProfile {
@@ -47,8 +48,8 @@ const AdminCrmUserProfile: React.FC<Props> = ({ user, onBack }) => {
   useEffect(() => {
     const fetchUserData = async () => {
       setLoading(true);
-      const [jpRes, sjRes, bcRes, unRes, cpRes, sdRes] = await Promise.all([
-        supabase.from('journey_progress').select('*, journeys(title)').eq('user_id', user.id).order('completed_at', { ascending: false }),
+      const [journeyResult, sjRes, bcRes, unRes, cpRes, sdRes] = await Promise.all([
+        JourneyService.listUserJourneyProgress(user.id),
         supabase.from('spiritual_journal').select('id, mood, entry_date, content').eq('user_id', user.id).order('entry_date', { ascending: false }).limit(5),
         supabase.from('bible_chapters_read').select('id', { count: 'exact' }).eq('user_id', user.id),
         supabase.from('user_notes').select('id', { count: 'exact' }).eq('user_id', user.id),
@@ -56,7 +57,16 @@ const AdminCrmUserProfile: React.FC<Props> = ({ user, onBack }) => {
         (supabase as any).from('user_sensitive_data').select('diagnosis_result').eq('user_id', user.id).maybeSingle(),
       ]);
 
-      setJourneyProgress(jpRes.data || []);
+      if (journeyResult.error) throw journeyResult.error;
+      const journeyRows = journeyResult.data || [];
+      const journeyWithTitles = await Promise.all(
+        journeyRows.map(async (row) => {
+          const result = await JourneyService.getById(row.journey_id);
+          if (result.error) throw result.error;
+          return { ...row, journeys: result.data ? { title: result.data.title } : null };
+        }),
+      );
+      setJourneyProgress(journeyWithTitles);
       setJournalEntries(sjRes.data || []);
       setChaptersRead(bcRes.count ?? bcRes.data?.length ?? 0);
       setNotesCount(unRes.count ?? unRes.data?.length ?? 0);
