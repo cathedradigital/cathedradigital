@@ -854,13 +854,6 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
       const sourceLabel = `API de Produção (${data.source || 'Edge'}) - Vernáculo PT Garantido`;
       setSourceInfo(sourceLabel);
 
-      // Telemetria: envia render_ms para a edge correlacionando pelo correlationId.
-      // Mede até o segundo rAF para capturar o paint real (não só o setState).
-      const corrId: string | undefined = data?.metadata?.correlationId;
-      if (corrId) {
-
-      }
-
       // Update Diagnostic Logs
       setDiagnosticLogs((prev) => [
         {
