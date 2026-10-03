@@ -5,6 +5,7 @@ import confetti from 'canvas-confetti';
 import { toast } from 'sonner';
 import type { User as SupabaseUser } from '@supabase/supabase-js';
 import { setSentryUser } from '@/lib/sentry';
+import { JourneyService } from '@/core/journey';
 
 
 export type UserLevelClass = 'iniciante' | 'intermediário' | 'avançado';
@@ -129,9 +130,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       // 1. Fetch all necessary stats for badge conditions
       const [journeyRes, notesRes] = await Promise.all([
-        supabase.from('journey_progress').select('journey_id', { count: 'exact', head: true }).eq('user_id', currentUser.id),
+        JourneyService.getCompletedJourneyCount(currentUser.id),
         supabase.from('user_notes').select('id', { count: 'exact', head: true }).eq('user_id', currentUser.id),
       ]);
+      if (journeyRes.error) throw journeyRes.error;
 
       const currentBadges = currentProfile.badges || [];
       const ctx: BadgeContext = {
@@ -139,7 +141,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         chaptersRead: {},
         totalMinutesRead: currentProfile.total_minutes_read || 0,
         streak,
-        completedJourneys: journeyRes.count || 0,
+        completedJourneys: journeyRes.data || 0,
         // Community tables are not part of the current production schema.
         // Keep their badge inputs at zero rather than issuing failing queries.
         posts: 0,
