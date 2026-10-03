@@ -1,3 +1,4 @@
+import { JourneyService } from '@/core/journey';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/lib/db';
 
@@ -62,14 +63,14 @@ export const useAdminDashboardData = (page = 0, pageSize = 20) => {
         supabase.from('app_metrics').select('metric_type, created_at').gte('created_at', iso30).limit(5000), // Cap para evitar estouro
         supabase.from('transactions').select('amount, status, created_at, profiles(name)').order('created_at', { ascending: false }).limit(100),
         supabase.from('spiritual_journal').select('user_id', { count: 'exact', head: true }),
-        supabase.from('journey_progress').select('user_id', { count: 'exact', head: true }),
-        supabase.from('journey_progress').select('user_id', { count: 'exact', head: true }).not('completed_at', 'is', null),
+        JourneyService.getGlobalProgressCounts(),
         supabase.from('user_management_stats').select('id, email, classification, reflections_count, current_journey, last_activity').range(from, to),
       ]);
 
       if (profilesRes.error) throw profilesRes.error;
       if (metricsRes.error) throw metricsRes.error;
       if (transactionsRes.error) throw transactionsRes.error;
+      if (journeysStartedRes.error) throw journeysStartedRes.error;
 
       const profiles = profilesRes.data || [];
       const metrics = metricsRes.data || [];
@@ -158,10 +159,10 @@ export const useAdminDashboardData = (page = 0, pageSize = 20) => {
         activeToday,
         activeLast30Days,
         inactiveUsers,
-        journeysInProgress: journeysStartedRes.count || 0,
+        journeysInProgress: journeysStartedRes.data?.started || 0,
         totalReflections: journalRes.count || 0,
-        totalJourneysStarted: journeysStartedRes.count || 0,
-        totalJourneysCompleted: journeysCompletedRes.count || 0,
+        totalJourneysStarted: journeysStartedRes.data?.started || 0,
+        totalJourneysCompleted: journeysStartedRes.data?.completed || 0,
         returnRate,
         totalRevenue,
         pendingRevenue,
