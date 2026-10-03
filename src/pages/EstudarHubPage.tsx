@@ -134,7 +134,7 @@ const EstudarHubPage: React.FC = () => {
                         <p className="mb-2 font-stitch-body text-[10px] font-bold uppercase tracking-[0.16em] text-stitch-secondary">Fontes encontradas</p>
                         <div className="grid gap-2 sm:grid-cols-2">
                           {studyContext.sources.slice(0, 6).map((source) => (
-                            {(() => {
+                            (() => {
                               const href = sourceHref(source);
                               const content = (
                                 <div className="rounded-xl border border-stitch-outline-variant/20 bg-stitch-surface-container-lowest p-3 transition-colors hover:border-stitch-secondary/50 focus-within:border-stitch-secondary">
@@ -144,7 +144,7 @@ const EstudarHubPage: React.FC = () => {
                                 </div>
                               );
                               return href ? (href.startsWith('/') ? <Link to={href} aria-label={'Abrir ' + source.title}>{content}</Link> : <a href={href} target="_blank" rel="noreferrer" aria-label={'Abrir fonte externa: ' + source.title}>{content}</a>) : content;
-                            })()}
+                            })()
                           ))}
                         </div>
                       </div>
