@@ -1057,7 +1057,8 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
     const chapters = new Set<number>();
     const verses = new Set<string>();
     if (!selectedBook) return { chapters, verses };
-    Object.entries(KNOWLEDGE_CONNECTIONS).forEach(([key, conns]) => {
+    const mergedConnections = { ...KNOWLEDGE_CONNECTIONS, ...dynamicConnections };
+    Object.entries(mergedConnections).forEach(([key, conns]) => {
       if (key === 'all') return;
       const [abbr, ch, v] = key.split('-');
       if (abbr !== selectedBook.abbr) return;
@@ -1076,7 +1077,8 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
   const chapterHasConnections = useMemo(() => {
     if (!selectedBook || !selectedChapter) return false;
     const prefix = `${selectedBook.abbr}-${selectedChapter}-`;
-    return Object.entries(KNOWLEDGE_CONNECTIONS).some(([key, arr]) => key.startsWith(prefix) && Array.isArray(arr) && arr.length > 0);
+    const mergedConnections = { ...KNOWLEDGE_CONNECTIONS, ...dynamicConnections };
+    return Object.entries(mergedConnections).some(([key, arr]) => key.startsWith(prefix) && Array.isArray(arr) && arr.length > 0);
   }, [KNOWLEDGE_CONNECTIONS, selectedBook, selectedChapter]);
 
   // Pre-fetch all connections for the selected book (powers gold-dot indicators on the chapter grid)
