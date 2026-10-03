@@ -1,6 +1,73 @@
-const endpoint="https://isojguvcnfncokoxoauk.supabase.co/functions/v1/source-import";const token=process.env.OIDC_TOKEN;if(!token)throw new Error("OIDC_TOKEN ausente");
-async function post(body){const r=await fetch(endpoint,{method:"POST",headers:{Authorization:`Bearer ${token}`,"Content-Type":"application/json"},body:JSON.stringify(body)});const t=await r.text();if(!r.ok)throw new Error(`source-import HTTP ${r.status}: ${t}`);return JSON.parse(t);}
-async function get(url,accept){const r=await fetch(url,{headers:{Accept:accept,"User-Agent":"CathedraDigital/1.0"}});if(!r.ok)throw new Error(`upstream HTTP ${r.status}: ${url}`);return r;}
-function strip(h){return h.replace(/<script[\\s\\S]*?<\\/script>/gi," ").replace(/<style[\\s\\S]*?<\\/style>/gi," ").replace(/<br\\s*\\/?>/gi," ").replace(/<\\/p>/gi," ").replace(/<\\/div>/gi," ").replace(/<\\/li>/gi," ").replace(/<[^>]+>/g," ").replace(/&nbsp;/gi," ").replace(/&quot;/gi,'"').replace(/&#39;/gi,"'").replace(/&amp;/gi,"&").replace(/\\s+/g," ").trim();}
-function parse(t,from,to){const m=[...t.matchAll(/(?:^|\\s)(\\d{1,4})(?:\\.)?\\s+/g)],o=[];for(let i=0;i<m.length;i++){const n=Number(m[i][1]);if(n<from||n>to)continue;const s=(m[i].index??0)+(m[i][0].startsWith(" ")?1:0),e=i+1<m.length?(m[i+1].index??t.length):t.length,c=t.slice(s,e).replace(/^\\d{1,4}\\.\\s+/,"").trim();if(c.length>=5)o.push({paragraph:n,content:c});}return o;}
-const plan=await post({mode:"plan",max_bible_chapters:12,max_catechism_pages:1});const bible=[];for(const x of plan.bible){const raw=await(await get(x.url,"application/json")).json(),v=Array.isArray(raw)?raw:raw?.verses,verses=Array.isArray(v)?v.map(z=>({number:Number(z.number??z.verse),text:typeof z.text==="string"?z.text.trim():""})).filter(z=>Number.isInteger(z.number)&&z.number>0&&z.text.length):[];if(!verses.length)throw new Error(`Bíblia sem versículos: ${x.abbrev} ${x.chapter}`);bible.push({...x,verses});}const catechism=[];for(const x of plan.catechism){const paragraphs=parse(strip(await(await get(x.url,"text/html")).text()),x.from,x.to);if(!paragraphs.length)throw new Error(`Catecismo sem parágrafos: ${x.from}-${x.to}`);catechism.push({...x,paragraphs});}console.log(JSON.stringify(await post({mode:"import",bible,catechism}),null,2));
+const endpoint = "https://isojguvcnfncokoxoauk.supabase.co/functions/v1/source-import";
+const token = process.env.OIDC_TOKEN;
+if (!token) throw new Error("OIDC_TOKEN ausente");
+
+async function post(body) {
+  const r = await fetch(endpoint, {
+    method: "POST",
+    headers: { Authorization: "Bearer " + token, "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+  const t = await r.text();
+  if (!r.ok) throw new Error("source-import HTTP " + r.status + ": " + t);
+  return JSON.parse(t);
+}
+
+async function get(url, accept) {
+  const r = await fetch(url, { headers: { Accept: accept, "User-Agent": "CathedraDigital/1.0" } });
+  if (!r.ok) throw new Error("upstream HTTP " + r.status + ": " + url);
+  return r;
+}
+
+function strip(html) {
+  return html
+    .replace(new RegExp("<script[\\s\\S]*?</script>", "gi"), " ")
+    .replace(new RegExp("<style[\\s\\S]*?</style>", "gi"), " ")
+    .replace(new RegExp("<br\\s*/?>", "gi"), " ")
+    .replace(new RegExp("</p>|</div>|</li>", "gi"), " ")
+    .replace(new RegExp("<[^>]+>", "g"), " ")
+    .replace(/&nbsp;/gi, " ")
+    .replace(/&quot;/gi, '"')
+    .replace(/&#39;/gi, "'")
+    .replace(/&amp;/gi, "&")
+    .replace(/\\s+/g, " ")
+    .trim();
+}
+
+function parse(text, from, to) {
+  const marker = new RegExp("(?:^|\\s)(\\d{1,4})(?:\\.)?\\s+", "g");
+  const matches = [...text.matchAll(marker)];
+  const out = [];
+  for (let i = 0; i < matches.length; i++) {
+    const n = Number(matches[i][1]);
+    if (n < from || n > to) continue;
+    const start = (matches[i].index ?? 0) + (matches[i][0].startsWith(" ") ? 1 : 0);
+    const end = i + 1 < matches.length ? (matches[i + 1].index ?? text.length) : text.length;
+    const content = text.slice(start, end).replace(new RegExp("^\\d{1,4}\\.\\s+"), "").trim();
+    if (content.length >= 5) out.push({ paragraph: n, content });
+  }
+  return out;
+}
+
+const plan = await post({ mode: "plan", max_bible_chapters: 12, max_catechism_pages: 1 });
+const bible = [];
+for (const target of plan.bible) {
+  const raw = await (await get(target.url, "application/json")).json();
+  const values = Array.isArray(raw) ? raw : raw?.verses;
+  const verses = Array.isArray(values)
+    ? values.map(v => ({ number: Number(v.number ?? v.verse), text: typeof v.text === "string" ? v.text.trim() : "" }))
+      .filter(v => Number.isInteger(v.number) && v.number > 0 && v.text.length > 0)
+    : [];
+  if (!verses.length) throw new Error("Bíblia sem versículos: " + target.abbrev + " " + target.chapter);
+  bible.push({ ...target, verses });
+}
+
+const catechism = [];
+for (const target of plan.catechism) {
+  const html = await (await get(target.url, "text/html")).text();
+  const paragraphs = parse(strip(html), target.from, target.to);
+  if (!paragraphs.length) throw new Error("Catecismo sem parágrafos: " + target.from + "-" + target.to);
+  catechism.push({ ...target, paragraphs });
+}
+
+console.log(JSON.stringify(await post({ mode: "import", bible, catechism }), null, 2));
