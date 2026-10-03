@@ -50,7 +50,7 @@ export function useAccountCounters() {
         safe(supabase.from("spiritual_journal").select("id", head).eq("user_id", uid) as any),
         JourneyService.getUserProgressCount(uid).then((result) => {
           if (result.error) throw result.error;
-          return { count: result.data ?? 0 };
+          return result.data ?? 0;
         }),
         safe(supabase.from("collection_progress").select("id", head).eq("user_id", uid) as any),
         safe(supabase.from("prayer_sessions").select("id", head).eq("user_id", uid) as any),
