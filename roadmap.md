@@ -16,3 +16,10 @@
 - [ ] Testar preview no navegador (/) e corrigir erros de runtime
 - [ ] Edge functions (76): bloqueadas para escrita via shell — avaliar alternativas
 - [ ] Configurar Google sign-in (configure_social_auth) se app usar
+
+## Auditoria completa do front-end
+- [ ] Consolidar home/landing ativa, navegação e chamadas principais sem redesign
+- [ ] Padronizar componentes e tokens visuais compartilhados com mudanças seguras
+- [ ] Corrigir acessibilidade, ícones, responsividade e estados principais
+- [ ] Validar rotas e fluxos principais em 390, 768, 1024 e desktop largo
+- [ ] Rodar typecheck, lint, testes relevantes e build; fazer segunda revisão visual
