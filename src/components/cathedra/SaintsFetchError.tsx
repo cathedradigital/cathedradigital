@@ -24,7 +24,7 @@ export const SaintsFetchError: React.FC<Props> = ({
       aria-live="assertive"
       aria-atomic="true"
       data-testid="saints-fetch-error"
-      className="text-center py-spacing-3xl bg-destructive/5 rounded-[2.5rem] border border-dashed border-destructive/40 space-y-spacing-md"
+      className="mx-auto max-w-2xl text-center py-spacing-2xl px-spacing-md bg-destructive/5 rounded-premium border border-dashed border-destructive/30 space-y-spacing-md"
     >
       <Icons.AlertCircle
         className="w-spacing-2xl h-spacing-2xl text-destructive mx-auto"
@@ -34,7 +34,7 @@ export const SaintsFetchError: React.FC<Props> = ({
         <p className="text-premium-lg font-serif italic text-foreground">
           Não foi possível carregar os santos do dia.
         </p>
-        <p className="text-premium-xs text-muted-foreground max-w-md mx-auto">
+        <p className="text-premium-sm text-muted-foreground max-w-md mx-auto leading-relaxed">
           {message || 'Verifique sua conexão e tente novamente em instantes.'}
         </p>
       </div>
