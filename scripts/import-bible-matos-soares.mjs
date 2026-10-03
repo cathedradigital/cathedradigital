@@ -22,6 +22,18 @@ if (corpus.totalBooks !== 73 || corpus.totalChapters !== 1334 || corpus.totalVer
 
 const normalizeAbbrev = (abbrev) => ({
   Ab: 'Abd',
+  '1Sm': '1 Sm',
+  '2Sm': '2 Sm',
+  '1Rs': '1 Rs',
+  '2Rs': '2 Rs',
+  '1Cr': '1 Cr',
+  '2Cr': '2 Cr',
+  '1Mc': '1 Mc',
+  '2Mc': '2 Mc',
+  '1Ts': '1 Ts',
+  '2Ts': '2 Ts',
+  '1Tm': '1 Tm',
+  '2Tm': '2 Tm',
   Jt: 'Jdt',
   '1Cor': '1 Cor',
   '2Cor': '2 Cor',
