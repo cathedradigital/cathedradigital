@@ -1,3 +1,4 @@
+import { JourneyService } from '@/core/journey';
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Icons } from '@/constants';
@@ -81,11 +82,9 @@ const SpiritualProfile: React.FC = () => {
           .limit(6);
 
         // Fetch active journeys (completed steps)
-        const { data: journeyData } = await supabase
-          .from('journey_progress')
-          .select('journey_id, journeys(title), completed_at')
-          .eq('user_id', user.id)
-          .order('completed_at', { ascending: false });
+        const journeyResult = await JourneyService.listUserJourneyProgress(user.id);
+      if (journeyResult.error) throw journeyResult.error;
+      const journeyData = journeyResult.data ?? [];
 
         // Group by journey_id and get last completed_at
         const uniqueJourneys = Array.from(new Set(((journeyData || []) as any[]).map((j) => j.journey_id as string)));
