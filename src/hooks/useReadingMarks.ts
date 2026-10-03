@@ -191,5 +191,5 @@ export function useReadingMarks() {
     return null;
   }, [user]);
 
-  return { marks, loading, addMark, updateMark, deleteMark, saveLastRead, getLastRead, refetch: fetchMarks };
+  return { marks, loading, error, addMark, updateMark, deleteMark, saveLastRead, getLastRead, refetch: fetchMarks };
 }
