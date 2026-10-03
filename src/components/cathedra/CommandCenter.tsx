@@ -50,7 +50,7 @@ const PAGE_COMMANDS: CommandItem[] = [
 ];
 
 interface UnifiedResult {
-  type: 'page' | 'bible' | 'community' | 'saint' | 'catechism' | 'journey' | 'glossary' | 'theme';
+  type: 'page' | 'bible' | 'community' | 'saint' | 'catechism' | 'journey' | 'glossary' | 'theme' | 'note';
   label: string;
   description: string;
   path?: string;
