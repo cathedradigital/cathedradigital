@@ -1376,6 +1376,14 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
                 >
                   <Icons.HelpCircle className="w-5 h-5" />
                 </button>
+                <button
+                  onClick={() => setViewMode('search')}
+                  aria-label="Pesquisar na Bíblia"
+                  className="p-spacing-xs text-secondary/80 active:scale-95 transition-transform"
+                  title="Pesquisar na Bíblia"
+                >
+                  <Icons.Search className="w-5 h-5" aria-hidden="true" />
+                </button>
                 <button 
                   onClick={() => setShowKnowledgePanel(true)}
                   className="p-spacing-xs text-secondary/80 active:scale-95 transition-transform"
