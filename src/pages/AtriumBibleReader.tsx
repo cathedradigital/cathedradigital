@@ -92,6 +92,7 @@ const AtriumBibleReader: React.FC = () => {
           kicker="Cathedra · Bíblia"
           title={book ? `${book.name} ${chapterStr ?? ''}`.trim() : 'Bíblia'}
           showBack
+          onBack={() => navigate(AppRoute.BIBLE)}
           actions={
             <>
               <Link
