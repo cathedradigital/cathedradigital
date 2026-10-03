@@ -26,35 +26,6 @@ function findBook(dataset, abbrev) {
   return books.find(b => String(b.abbrev ?? "").trim().toLowerCase() === normalized);
 }
 
-const MAX_BATCHES_PER_RUN = 16;
-let importedBatches = 0;
-let lastResult = null;
-
-for (let batch = 0; batch < MAX_BATCHES_PER_RUN; batch++) {
-  const plan = await post({ mode: "plan", max_bible_chapters: 12, max_catechism_pages: 2 });
-  if (!plan.bible?.length && !plan.catechism?.length) break;
-
-  const bible = [];
-  if (plan.bible?.length) {
-    const dataset = await getJson(bibleDatasetUrl);
-    for (const target of plan.bible) {
-      const book = findBook(dataset, target.abbrev);
-      if (!book) throw new Error("Livro não encontrado no dataset: " + target.abbrev);
-      const chapters = book.chapters ?? {};
-      const values = chapters[String(target.chapter)];
-      if (!Array.isArray(values) || !values.length) {
-        throw new Error("Capítulo não encontrado no dataset: " + target.abbrev + " " + target.chapter);
-      }
-      const verses = values
-        .map(v => ({ number: Number(v.number ?? v.v), text: typeof v.text === "string" ? v.text.trim() : (typeof v.t === "string" ? v.t.trim() : "") }))
-        .filter(v => Number.isInteger(v.number) && v.number > 0 && v.text.length > 0);
-      if (!verses.length) throw new Error("Capítulo sem versículos: " + target.abbrev + " " + target.chapter);
-      bible.push({ ...target, source_url: bibleDatasetUrl, verses });
-    }
-  }
-
-  const catechism = [];
-
 async function getText(url) {
   const r = await fetch(url, { headers: { Accept: "text/html", "User-Agent": "CathedraDigital/1.0" } });
   if (!r.ok) throw new Error("upstream HTTP " + r.status + ": " + url);
@@ -90,6 +61,36 @@ function parse(text, from, to) {
   for (const item of out) unique.set(item.paragraph, item);
   return [...unique.values()].sort((a, b) => a.paragraph - b.paragraph);
 }
+
+const MAX_BATCHES_PER_RUN = 16;
+let importedBatches = 0;
+let lastResult = null;
+
+for (let batch = 0; batch < MAX_BATCHES_PER_RUN; batch++) {
+  const plan = await post({ mode: "plan", max_bible_chapters: 12, max_catechism_pages: 2 });
+  if (!plan.bible?.length && !plan.catechism?.length) break;
+
+  const bible = [];
+  if (plan.bible?.length) {
+    const dataset = await getJson(bibleDatasetUrl);
+    for (const target of plan.bible) {
+      const book = findBook(dataset, target.abbrev);
+      if (!book) throw new Error("Livro não encontrado no dataset: " + target.abbrev);
+      const chapters = book.chapters ?? {};
+      const values = chapters[String(target.chapter)];
+      if (!Array.isArray(values) || !values.length) {
+        throw new Error("Capítulo não encontrado no dataset: " + target.abbrev + " " + target.chapter);
+      }
+      const verses = values
+        .map(v => ({ number: Number(v.number ?? v.v), text: typeof v.text === "string" ? v.text.trim() : (typeof v.t === "string" ? v.t.trim() : "") }))
+        .filter(v => Number.isInteger(v.number) && v.number > 0 && v.text.length > 0);
+      if (!verses.length) throw new Error("Capítulo sem versículos: " + target.abbrev + " " + target.chapter);
+      bible.push({ ...target, source_url: bibleDatasetUrl, verses });
+    }
+  }
+
+  const catechism = [];
+
 
 for (const target of plan.catechism) {
   const paragraphs = parse(strip(await getText(target.url)), target.from, target.to);
