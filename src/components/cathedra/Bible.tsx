@@ -1175,7 +1175,7 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
       <button 
         onClick={() => setIsDiagnosticOpen(true)}
         aria-label="Abrir diagnóstico cirúrgico da Bíblia"
-        className="fixed top-20 right-4 z-[999] min-h-11 min-w-11 p-spacing-xs bg-primary/5 rounded-full opacity-0 hover:opacity-100 focus-visible:opacity-100 transition-opacity flex items-center justify-center"
+        className="fixed top-20 right-4 z-[999] min-h-11 min-w-11 p-spacing-xs bg-primary/5 rounded-full opacity-100 sm:opacity-0 hover:opacity-100 focus-visible:opacity-100 transition-opacity flex items-center justify-center"
       >
         <Icons.Activity className="w-4 h-4 text-primary/20" aria-hidden="true" />
       </button>
@@ -1410,7 +1410,7 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
                                     `);
                                   }}>
                                     <img src={res.screenshot} className="w-full h-24 object-cover rounded-lg border border-primary/10" alt={`Captura da página original: ${res.title ?? 'documento litúrgico'}`} />
-                                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity rounded-lg">
+                                    <div className="absolute inset-0 bg-black/40 opacity-100 sm:opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 flex items-center justify-center transition-opacity rounded-lg">
                                       <span className="text-premium-xs text-white font-bold uppercase">Ver captura original</span>
                                     </div>
                                   </div>
@@ -1970,7 +1970,7 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
                                   handleOpenAnnotation(v);
                                 }}
                                 aria-label={`Anotar versículo ${v.number}`}
-                                className="absolute right-0 top-0 p-1.5 min-h-11 min-w-11 flex items-center justify-center text-primary/20 hover:text-secondary opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-1"
+                                className="absolute right-0 top-0 p-1.5 min-h-11 min-w-11 flex items-center justify-center text-primary/20 hover:text-secondary opacity-100 sm:opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-1"
                               >
                                 <Icons.PenLine className="w-3.5 h-3.5" aria-hidden="true" />
                               </button>
