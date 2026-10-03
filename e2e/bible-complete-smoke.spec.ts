@@ -54,7 +54,12 @@ test.describe('Bíblia — catálogo completo', () => {
 
   test('Escolher livro: painel é opaco e legível', async ({ page }) => {
     await page.goto('/bible?book=Gn&ch=1');
-    await page.getByRole('button', { name: 'Escolher livro e capítulo' }).first().click();
+    if ((page.viewportSize()?.width ?? 1280) < 768) {
+      await page.getByRole('button', { name: 'Escolher livro e capítulo' }).click();
+    } else {
+      await page.getByRole('button', { name: 'Mais opções da Bíblia' }).click();
+      await page.getByRole('menuitem', { name: 'Escolher livro e capítulo' }).click();
+    }
 
     const title = page.getByRole('heading', { name: 'Gênesis' }).first();
     await expect(title).toBeVisible();
