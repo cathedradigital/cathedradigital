@@ -32,7 +32,7 @@ const ChapterNotesList: React.FC<ChapterNotesListProps> = ({
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-spacing-md">
           {notes.map((note) => (
-            <button 
+            <div 
               key={note.id} 
               className="group p-spacing-md bg-card border border-border/40 rounded-premium hover:border-primary/20 transition-all text-left relative focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:ring-offset-2"
               onClick={() => onNoteClick?.(note)}
@@ -76,7 +76,7 @@ const ChapterNotesList: React.FC<ChapterNotesListProps> = ({
                   <Icons.X className="w-spacing-sm h-spacing-sm" />
                 </Button>
               )}
-            </button>
+            </div>
           ))}
         </div>
       </div>
