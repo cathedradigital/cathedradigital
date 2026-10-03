@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo, memo } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useRef, memo } from 'react';
 import SacredImage from '@/components/cathedra/SacredImage';
 import { useRenderPerf } from '@/hooks/useRenderPerf';
 import { Button } from '@/components/ui/button';
@@ -507,6 +507,9 @@ const Catechism: React.FC = memo(() => {
   const [activeHighlight, setActiveHighlight] = useState<UserNote | null>(null);
   const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
   const [noteParagraph, setNoteParagraph] = useState<number | null>(null);
+  // Explicit ?p=N deep-links temporarily outrank the generic IntersectionObserver.
+  // This prevents restoration from being overwritten by the first visible paragraph.
+  const deepLinkRestorePendingRef = useRef(false);
 
   // O parágrafo ativo é o ponto de continuidade do Catecismo.
   useEffect(() => {
@@ -561,8 +564,12 @@ const Catechism: React.FC = memo(() => {
   // R1.2.3 — restaura o parágrafo exato do deep-link depois que a seção foi renderizada.
   // Isso fecha o retorno do Diário mesmo quando o Catecismo já está montado.
   useEffect(() => {
-    if (typeof initialParagraph !== 'number' || viewMode !== 'reading' || !selectedSection) return;
+    if (typeof initialParagraph !== 'number' || viewMode !== 'reading' || !selectedSection) {
+      deepLinkRestorePendingRef.current = false;
+      return;
+    }
 
+    deepLinkRestorePendingRef.current = true;
     let cancelled = false;
     let attempts = 0;
     const maxAttempts = 8;
@@ -574,6 +581,7 @@ const Catechism: React.FC = memo(() => {
       if (element) {
         element.scrollIntoView({ behavior: 'auto', block: 'center' });
         element.classList.add('bg-secondary/10');
+        deepLinkRestorePendingRef.current = false;
         window.setTimeout(() => {
           if (!cancelled) element.classList.remove('bg-secondary/10');
         }, 3000);
@@ -583,12 +591,18 @@ const Catechism: React.FC = memo(() => {
       if (attempts < maxAttempts) {
         attempts += 1;
         window.setTimeout(restoreParagraph, 100);
+        return;
       }
+
+      // If the requested paragraph could not be rendered, allow normal
+      // scroll-based continuity to resume rather than freezing the observer.
+      deepLinkRestorePendingRef.current = false;
     };
 
     const frame = window.requestAnimationFrame(restoreParagraph);
     return () => {
       cancelled = true;
+      deepLinkRestorePendingRef.current = false;
       window.cancelAnimationFrame(frame);
     };
   }, [initialParagraph, selectedSection, viewMode]);
@@ -625,6 +639,7 @@ const Catechism: React.FC = memo(() => {
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
+            if (deepLinkRestorePendingRef.current) return;
             setActiveParagraphId(entry.target.id);
             const pNum = parseInt(entry.target.id.replace('p', ''));
             if (!isNaN(pNum)) setCurrentParagraph(pNum);
