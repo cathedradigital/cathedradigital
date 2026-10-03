@@ -57,7 +57,7 @@ export const useAdminDashboardData = (page = 0, pageSize = 20) => {
       const to = from + pageSize - 1;
 
       // Executamos queries em paralelo, mas limitamos a listagem de usuários
-      const [statsRes, profilesRes, metricsRes, transactionsRes, journalRes, journeysStartedRes, journeysCompletedRes, crmRes] = await Promise.all([
+      const [statsRes, profilesRes, metricsRes, transactionsRes, journalRes, journeysStartedRes, crmRes] = await Promise.all([
         supabase.from('profiles').select('*', { count: 'exact', head: true }),
         supabase.from('profiles').select('id, is_premium, created_at, last_visit, diocese, estado, movimento_pastoral, name, role, xp, level, streak').range(from, to),
         supabase.from('app_metrics').select('metric_type, created_at').gte('created_at', iso30).limit(5000), // Cap para evitar estouro
