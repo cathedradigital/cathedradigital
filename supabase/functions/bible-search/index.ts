@@ -32,9 +32,17 @@ function parseReference(input: string, books: Array<{ id: string; name: string; 
   if (!match) return null;
   const [, rawBook, chapterRaw, verseRaw] = match;
   const normalizedBook = normalize(rawBook);
-  const book = books.find((candidate) => {
-    const names = [candidate.abbrev, candidate.name].map(normalize);
-    return names.some((name) => name === normalizedBook || name.replace(/\s+/g, "") === normalizedBook.replace(/\s+/g, ""));
+  const compactBook = normalizedBook.replace(/\s+/g, "");
+
+  // Abreviações são mais específicas que nomes normalizados. Sem essa
+  // prioridade, "Jo 3:16" pode colidir com "Jó" antes de "João".
+  const exactAbbrev = books.find((candidate) => {
+    const abbrev = normalize(candidate.abbrev);
+    return abbrev === normalizedBook || abbrev.replace(/\s+/g, "") === compactBook;
+  });
+  const book = exactAbbrev ?? books.find((candidate) => {
+    const name = normalize(candidate.name);
+    return name === normalizedBook || name.replace(/\s+/g, "") === compactBook;
   });
   if (!book) return null;
   return { book, chapter: Number(chapterRaw), verse: Number(verseRaw) };
