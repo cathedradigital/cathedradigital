@@ -130,6 +130,40 @@ const Bible: React.FC = () => {
 
   useRenderPerf('Sacra Biblia Mobile-First', 15);
 
+const fetchReferenceVerse = useCallback(async (connection: { type: string; id: string }) => {
+    if (connection.type !== 'cross_ref' && connection.type !== 'bible') {
+      setReferenceVerse(null);
+      return;
+    }
+    const parts = String(connection.id).split('-');
+    if (parts.length < 3) {
+      setReferenceVerse(null);
+      return;
+    }
+    const [abbr, chapterRaw, verseRaw] = parts;
+    const chapter = Number(chapterRaw);
+    const verse = Number(verseRaw);
+    if (!abbr || !Number.isInteger(chapter) || !Number.isInteger(verse)) {
+      setReferenceVerse(null);
+      return;
+    }
+    setReferenceVerseLoading(true);
+    try {
+      const { data: book } = await supabase.from('bible_books').select('id,name,abbrev').eq('abbrev', abbr).maybeSingle();
+      if (!book) throw new Error('reference_book_not_found');
+      const { data: chapterRow } = await supabase.from('bible_chapters').select('id').eq('book_id', book.id).eq('number', chapter).maybeSingle();
+      if (!chapterRow) throw new Error('reference_chapter_not_found');
+      const { data: verseRow } = await supabase.from('bible_verses').select('number,text').eq('chapter_id', chapterRow.id).eq('number', verse).maybeSingle();
+      if (!verseRow?.text) throw new Error('reference_verse_not_found');
+      setReferenceVerse({ reference: `${book.name} ${chapter}:${verse}`, text: verseRow.text });
+    } catch (error) {
+      console.warn('[Nexus] reference verse unavailable', { connection, error });
+      setReferenceVerse(null);
+    } finally {
+      setReferenceVerseLoading(false);
+    }
+  }, []);
+
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { settings } = useReadingSettings();
@@ -167,6 +201,8 @@ const Bible: React.FC = () => {
   const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
   const [activeVerse, setActiveVerse] = useState<{ number: number; text: string } | null>(null);
   const [expandedConnection, setExpandedConnection] = useState<{ label: string, summary: string, type: string, id: string, color?: string, theological_theme?: string } | null>(null);
+  const [referenceVerse, setReferenceVerse] = useState<{ reference: string; text: string } | null>(null);
+  const [referenceVerseLoading, setReferenceVerseLoading] = useState(false);
   const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
   const [isGraphOpen, setIsGraphOpen] = useState(false);
   const [isScanning, setIsScanning] = useState(false);
@@ -1832,6 +1868,7 @@ const Bible: React.FC = () => {
                                               }));
                                             } catch {}
                                             setExpandedConnection(conn);
+                                            void fetchReferenceVerse(conn);
                                           }}
                                           className="group relative overflow-hidden rounded-md border border-primary/20 bg-white hover:border-secondary/50 hover:bg-secondary/[0.04] shadow-sm hover:shadow-md transition-all text-left active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2 dark:bg-primary/5 dark:border-primary/30"
                                         >
@@ -1870,6 +1907,23 @@ const Bible: React.FC = () => {
                                           <p id={`nexus-popover-desc-${v.number}-${idx}`} className="text-xs font-serif italic text-primary/70 leading-relaxed">
                                             {conn.summary}
                                           </p>
+                                          {(conn.type === 'cross_ref' || conn.type === 'bible') && (
+                                            <div className="rounded-xl border border-secondary/20 bg-secondary/[0.04] p-spacing-sm">
+                                              <p className="text-[9px] font-black uppercase tracking-[0.16em] text-secondary">
+                                                Texto bíblico da referência
+                                              </p>
+                                              {referenceVerseLoading ? (
+                                                <p className="mt-1 text-xs text-primary/50">Carregando versículo…</p>
+                                              ) : referenceVerse ? (
+                                                <>
+                                                  <p className="mt-1 text-xs font-bold text-primary">{referenceVerse.reference}</p>
+                                                  <p className="mt-1 text-sm font-serif leading-relaxed text-primary/80">{referenceVerse.text}</p>
+                                                </>
+                                              ) : (
+                                                <p className="mt-1 text-xs text-primary/50">Texto da referência indisponível.</p>
+                                              )}
+                                            </div>
+                                          )}
 
                                           {conn.type === 'catechism' && (
                                             <div className="pt-spacing-sm border-t border-primary/5">
