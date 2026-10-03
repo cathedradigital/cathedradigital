@@ -15,13 +15,6 @@ const StudyJournal: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'notes' | 'marks'>('notes');
   const [searchQuery, setSearchQuery] = useState('');
   
-  // Fetching all notes (passing empty contentId but valid contentType logic needs to be checked)
-  // useNotes expects contentType and optionally contentId. 
-  // To fetch ALL notes for a user, we might need a modified hook or call fetch with different params.
-  // Actually, let's look at useNotes.ts again.
-  // It takes contentType and contentId. If contentId is null, it filters by user and contentType.
-  // We want ALL notes across all contentTypes.
-  
   const { notes: allNotes, updateNote, deleteNote } = useNotes('all');
   
   const { marks, deleteMark, updateMark } = useReadingMarks();
@@ -119,7 +112,7 @@ const StudyJournal: React.FC = () => {
                     } else if (note.content_type === 'magisterium' && note.content_id) {
                       const [docId, paragraphIndex] = note.content_id.split(':');
                       url = `/magisterium/${encodeURIComponent(docId)}`;
-                      if (paragraphIndex && /^\\d+$/.test(paragraphIndex)) {
+                      if (paragraphIndex && /^\d+$/.test(paragraphIndex)) {
                         url += `?p=${encodeURIComponent(paragraphIndex)}`;
                       }
                     } else if (note.content_type === 'saint' && note.content_id) {
