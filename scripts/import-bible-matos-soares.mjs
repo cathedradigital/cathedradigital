@@ -52,6 +52,24 @@ if (booksError) throw booksError;
 
 const byAbbrev = new Map(books.map((book) => [book.abbrev, book]));
 
+const abbreviationMigrations = [
+  ['1Sm', '1 Sm'], ['2Sm', '2 Sm'], ['1Rs', '1 Rs'], ['2Rs', '2 Rs'],
+  ['1Cr', '1 Cr'], ['2Cr', '2 Cr'], ['1Mc', '1 Mc'], ['2Mc', '2 Mc'],
+  ['1Ts', '1 Ts'], ['2Ts', '2 Ts'], ['1Tm', '1 Tm'], ['2Tm', '2 Tm'],
+  ['1Cor', '1 Cor'], ['2Cor', '2 Cor'], ['1Pd', '1 Pd'], ['2Pd', '2 Pd'],
+  ['1Jo', '1 Jo'], ['2Jo', '2 Jo'], ['3Jo', '3 Jo'], ['Jt', 'Jdt'], ['Ob', 'Abd'],
+  ['Ed', 'Esd'], ['Et', 'Est'], ['Fp', 'Fl'],
+];
+for (const [from, to] of abbreviationMigrations) {
+  const { error } = await supabase.from('bible_books').update({ abbrev: to }).eq('abbrev', from);
+  if (error) throw error;
+}
+
+const { data: refreshedBooks, error: refreshedBooksError } = await supabase.from('bible_books').select('id,abbrev');
+if (refreshedBooksError) throw refreshedBooksError;
+byAbbrev.clear();
+for (const book of refreshedBooks) byAbbrev.set(book.abbrev, book);
+
 await supabase.from('bible_verses').delete().not('id', 'is', null);
 await supabase.from('bible_chapters').delete().not('id', 'is', null);
 
