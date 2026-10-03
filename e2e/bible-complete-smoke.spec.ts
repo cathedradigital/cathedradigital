@@ -56,8 +56,9 @@ test.describe('Bíblia — catálogo completo', () => {
     await page.goto('/bible?book=Gn&ch=1');
     await page.getByRole('button', { name: 'Escolher livro e capítulo' }).first().click();
 
-    const title = page.getByRole('heading', { name: 'Gênesis 1' }).first();
+    const title = page.getByRole('heading', { name: 'Gênesis' }).first();
     await expect(title).toBeVisible();
+    await expect(page.getByRole('button', { name: '1', exact: true }).first()).toBeVisible();
 
     const sheet = page.locator('[data-radix-dialog-content]').last();
     await expect(sheet).toBeVisible();
