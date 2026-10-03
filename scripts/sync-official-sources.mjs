@@ -26,7 +26,7 @@ function findBook(dataset, abbrev) {
   return books.find(b => String(b.abbrev ?? "").trim().toLowerCase() === normalized);
 }
 
-const plan = await post({ mode: "plan", max_bible_chapters: 12, max_catechism_pages: 1 });
+const plan = await post({ mode: "plan", max_bible_chapters: 12, max_catechism_pages: 2 });
 const dataset = await getJson(bibleDatasetUrl);
 const bible = [];
 
