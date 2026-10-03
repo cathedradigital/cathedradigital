@@ -1,3 +1,4 @@
+import { JourneyService } from '@/core/journey';
 import { useEffect, useRef, useState } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
@@ -87,8 +88,14 @@ const StatsSection = () => {
     queryFn: async () => {
       const [reflections, started, completed, saints] = await Promise.all([
         supabase.from("spiritual_journal").select("*", { count: "exact", head: true }),
-        supabase.from("journey_progress").select("*", { count: "exact", head: true }),
-        supabase.from("journey_progress").select("*", { count: "exact", head: true }).not("completed_at", "is", null),
+        JourneyService.getGlobalProgressCounts().then((result) => {
+          if (result.error) throw result.error;
+          return { count: result.data?.started ?? 0 };
+        }),
+        JourneyService.getGlobalProgressCounts().then((result) => {
+          if (result.error) throw result.error;
+          return { count: result.data?.completed ?? 0 };
+        }),
         supabase.from("saints").select("*", { count: "exact", head: true }),
       ]);
       
