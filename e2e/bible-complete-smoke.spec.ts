@@ -44,14 +44,13 @@ test.describe('Bíblia — catálogo completo', () => {
       { book: 'Gn', chapter: 1, marker: /No princípio|No principio/i },
       { book: 'Ap', chapter: 22, marker: /vida|Deus|Apocalipse/i },
     ]) {
-      await page.goto(`/bible?book=${encodeURIComponent(target.book)}&chapter=${target.chapter}`);
+      await page.goto(`/bible?book=${encodeURIComponent(target.book)}&ch=${target.chapter}`);
       await expect(page.locator('[data-testid="verse-text-1"]')).toBeVisible({ timeout: 30_000 });
       await expect(page.locator('[data-testid="verse-text-1"]')).not.toHaveText(/^\s*$/);
       await expect(page.locator('body')).toContainText(target.marker);
     }
   });
 });
-
 
   test('Escolher livro: painel é opaco e legível', async ({ page }) => {
     await page.goto('/bible?book=Gn&ch=1');
@@ -70,4 +69,24 @@ test.describe('Bíblia — catálogo completo', () => {
 
     expect(bg.opacity).toBe('1');
     expect(bg.backgroundColor).not.toBe('rgba(0, 0, 0, 0)');
+  });
+
+  test('leitor mobile não duplica a barra de ícones e não mostra aviso de sincronização', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto('/bible?book=Gn&ch=1');
+
+    await expect(page.locator('[data-reader-toolbar]')).not.toBeVisible();
+    await expect(page.getByText('Índice bíblico em sincronização')).toHaveCount(0);
+    await expect(page.locator('[data-testid="verse-text-1"]')).toBeVisible();
+  });
+
+  test('Nexus vazio é apresentado como estado do capítulo, não como erro', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto('/bible?book=Gn&ch=2');
+
+    const nexus = page.getByTestId('nexus-empty-state');
+    await expect(nexus).toBeVisible();
+    await expect(nexus.getByRole('heading', { name: 'Nexus do capítulo' })).toBeVisible();
+    await expect(nexus).toContainText('Ainda não catalogado');
+    await expect(nexus).toContainText('Gênesis 2');
   });
