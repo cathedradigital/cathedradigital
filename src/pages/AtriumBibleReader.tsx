@@ -70,7 +70,7 @@ const AtriumBibleReader: React.FC = () => {
   const [pickerOpen, setPickerOpen] = useState(false);
 
   const abbr = sp.get('book');
-  const chapterStr = sp.get('chapter') ?? sp.get('c');
+  const chapterStr = sp.get('ch') ?? sp.get('chapter') ?? sp.get('c');
 
   // Persistência: sempre que abrir com book+chapter, salvar como "último lido".
   useEffect(() => {
