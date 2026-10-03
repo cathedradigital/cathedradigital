@@ -358,7 +358,7 @@ const Relatio: React.FC<RelatioProps> = ({
                               </div>
                             </div>
                             
-                            <div className="flex items-center gap-spacing-2xs opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                            <div className="flex items-center gap-spacing-2xs opacity-100 md:opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity duration-500">
                               {onSelectLogosQuery && (
                                 <Button
                                   variant="ghost"
@@ -415,7 +415,7 @@ const Relatio: React.FC<RelatioProps> = ({
                           </div>
 
                           
-                          <div className="mt-spacing-md pt-spacing-md border-t border-primary/[0.02] flex items-center justify-between opacity-0 group-hover:opacity-100 transition-all duration-700 translate-y-1 group-hover:translate-y-0">
+                          <div className="mt-spacing-md pt-spacing-md border-t border-primary/[0.02] flex items-center justify-between opacity-100 md:opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-all duration-700 translate-y-1 group-hover:translate-y-0 group-focus-within:translate-y-0">
                             <span className="text-[8px] font-black uppercase tracking-[0.3em] text-primary/60">Explorar Conexão</span>
                             <Icons.ArrowRight className="w-spacing-sm h-spacing-sm text-primary/60" strokeWidth={1.5} />
                           </div>
