@@ -1735,7 +1735,7 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
                   aria-current={selectedChapter === ch ? 'page' : undefined}
                   title={missing ? MISSING_CHAPTER_REASON : undefined}
                   className={cn(
-                    "min-h-10 sm:min-h-11 flex flex-col items-center justify-center rounded-lg border transition-all group shadow-sm",
+                    "min-h-11 flex flex-col items-center justify-center rounded-lg border transition-all group shadow-sm",
                     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary/60 focus-visible:ring-offset-1",
                     missing
                       ? "bg-muted/40 border-dashed border-primary/10 opacity-60 cursor-not-allowed"
@@ -1970,7 +1970,7 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
                                   handleOpenAnnotation(v);
                                 }}
                                 aria-label={`Anotar versículo ${v.number}`}
-                                className="absolute right-0 top-0 p-1.5 min-h-10 min-w-10 flex items-center justify-center text-primary/20 hover:text-secondary opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-all"
+                                className="absolute right-0 top-0 p-1.5 min-h-11 min-w-11 flex items-center justify-center text-primary/20 hover:text-secondary opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-1"
                               >
                                 <Icons.PenLine className="w-3.5 h-3.5" aria-hidden="true" />
                               </button>
