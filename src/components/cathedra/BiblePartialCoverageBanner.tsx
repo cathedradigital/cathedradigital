@@ -29,11 +29,11 @@ export const BiblePartialCoverageBanner: React.FC = () => {
       <div className="container mx-auto flex items-start gap-3 px-4 py-2 text-sm text-amber-900 dark:text-amber-100">
         <ShieldAlert className="mt-0.5 h-4 w-4 shrink-0" aria-hidden />
         <div className="flex-1">
-          <h2 className="font-medium">Índice bíblico em sincronização</h2>
+          <h2 className="font-medium">Índice bíblico com cobertura parcial</h2>
           <p className="text-xs opacity-90">
-            O índice local ainda está sendo reconstruído. A leitura dos capítulos
-            consulta a fonte bíblica de produção; alguns recursos, como a busca
-            indexada, podem permanecer indisponíveis até a sincronização terminar.
+            Alguns capítulos ainda não foram indexados localmente. A leitura dos
+            capítulos disponíveis continua normal; recursos que dependem do índice
+            podem ficar indisponíveis até a cobertura ser completada.
           </p>
         </div>
         <Link
