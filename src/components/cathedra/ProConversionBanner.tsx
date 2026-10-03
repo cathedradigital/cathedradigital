@@ -43,7 +43,7 @@ const ProConversionBanner: React.FC<ProConversionBannerProps> = ({ context, forc
           .from('spiritual_journal')
           .select('id', { count: 'exact', head: true })
           .eq('user_id', user.id),
-        JourneyService.getUserProgressCount(user.id).then(async (result) => {
+        JourneyService.getUserReflectionCount(user.id).then(async (result) => {
           if (result.error) throw result.error;
           // The service count covers journey progress; this banner only uses it
           // as a personal activity signal, never as an authorization decision.
