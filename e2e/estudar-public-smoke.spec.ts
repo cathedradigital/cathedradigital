@@ -137,3 +137,29 @@ test('Bíblia: os quatro controles principais da barra funcionam', async ({ page
 
   expect(errors, 'Bible toolbar: console errors').toEqual([]);
 });
+
+test('Bíblia: leitura mantém espaçamento compacto e Nexus sem bolhas excessivas', async ({ page }) => {
+  await page.goto('/bible?book=Gn&ch=1&v=1');
+  const verse1 = page.getByTestId('verse-text-1');
+  const verse2 = page.getByTestId('verse-text-2');
+  await expect(verse1).toBeVisible();
+  await expect(verse2).toBeVisible();
+
+  const spacing = await page.evaluate(() => {
+    const a = document.querySelector('[data-testid="verse-text-1"]')?.closest('[id^="verse-"]');
+    const b = document.querySelector('[data-testid="verse-text-2"]')?.closest('[id^="verse-"]');
+    if (!a || !b) return null;
+    const ar = a.getBoundingClientRect();
+    const br = b.getBoundingClientRect();
+    return { gap: br.top - ar.bottom };
+  });
+  expect(spacing).not.toBeNull();
+  expect(spacing!.gap).toBeLessThan(16);
+
+  const bubbles = page.locator('[data-testid="nexus-bubbles-1"]');
+  if (await bubbles.count()) {
+    await expect(bubbles.first()).toBeVisible();
+    const bubbleBox = await bubbles.first().boundingBox();
+    expect(bubbleBox?.height ?? 0).toBeLessThan(140);
+  }
+});
