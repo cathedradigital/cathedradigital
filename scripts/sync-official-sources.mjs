@@ -1,5 +1,6 @@
 const endpoint = "https://isojguvcnfncokoxoauk.supabase.co/functions/v1/source-import";
 const token = process.env.OIDC_TOKEN;
+const bibleDatasetUrl = "https://raw.githubusercontent.com/bibliacatolica/biblia/main/biblia-matos-soares-completa.json";
 if (!token) throw new Error("OIDC_TOKEN ausente");
 
 async function post(body) {
@@ -13,12 +14,43 @@ async function post(body) {
   return JSON.parse(t);
 }
 
-async function get(url, accept) {
-  const r = await fetch(url, { headers: { Accept: accept, "User-Agent": "CathedraDigital/1.0" } });
+async function getJson(url) {
+  const r = await fetch(url, { headers: { Accept: "application/json", "User-Agent": "CathedraDigital/1.0" } });
   if (!r.ok) throw new Error("upstream HTTP " + r.status + ": " + url);
-  return r;
+  return r.json();
 }
 
+function findBook(dataset, abbrev) {
+  const books = Array.isArray(dataset?.books) ? dataset.books : [];
+  const normalized = String(abbrev).trim().toLowerCase();
+  return books.find(b => String(b.abbrev ?? "").trim().toLowerCase() === normalized);
+}
+
+const plan = await post({ mode: "plan", max_bible_chapters: 12, max_catechism_pages: 1 });
+const dataset = await getJson(bibleDatasetUrl);
+const bible = [];
+
+for (const target of plan.bible) {
+  const book = findBook(dataset, target.abbrev);
+  if (!book) throw new Error("Livro não encontrado no dataset: " + target.abbrev);
+  const chapters = book.chapters ?? {};
+  const values = chapters[String(target.chapter)];
+  if (!Array.isArray(values) || !values.length) {
+    throw new Error("Capítulo não encontrado no dataset: " + target.abbrev + " " + target.chapter);
+  }
+  const verses = values
+    .map(v => ({ number: Number(v.number ?? v.v), text: typeof v.text === "string" ? v.text.trim() : (typeof v.t === "string" ? v.t.trim() : "") }))
+    .filter(v => Number.isInteger(v.number) && v.number > 0 && v.text.length > 0);
+  if (!verses.length) throw new Error("Capítulo sem versículos: " + target.abbrev + " " + target.chapter);
+  bible.push({ ...target, source_url: bibleDatasetUrl, verses });
+}
+
+const catechism = [];
+async function getText(url) {
+  const r = await fetch(url, { headers: { Accept: "text/html", "User-Agent": "CathedraDigital/1.0" } });
+  if (!r.ok) throw new Error("upstream HTTP " + r.status + ": " + url);
+  return r.text();
+}
 function strip(html) {
   return html
     .replace(new RegExp("<script[\\s\\S]*?</script>", "gi"), " ")
@@ -33,7 +65,6 @@ function strip(html) {
     .replace(/\\s+/g, " ")
     .trim();
 }
-
 function parse(text, from, to) {
   const marker = new RegExp("(?:^|\\s)(\\d{1,4})(?:\\.)?\\s+", "g");
   const matches = [...text.matchAll(marker)];
@@ -49,23 +80,8 @@ function parse(text, from, to) {
   return out;
 }
 
-const plan = await post({ mode: "plan", max_bible_chapters: 12, max_catechism_pages: 1 });
-const bible = [];
-for (const target of plan.bible) {
-  const raw = await (await get(target.url, "application/json")).json();
-  const values = Array.isArray(raw) ? raw : raw?.verses;
-  const verses = Array.isArray(values)
-    ? values.map(v => ({ number: Number(v.number ?? v.verse), text: typeof v.text === "string" ? v.text.trim() : "" }))
-      .filter(v => Number.isInteger(v.number) && v.number > 0 && v.text.length > 0)
-    : [];
-  if (!verses.length) throw new Error("Bíblia sem versículos: " + target.abbrev + " " + target.chapter);
-  bible.push({ ...target, verses });
-}
-
-const catechism = [];
 for (const target of plan.catechism) {
-  const html = await (await get(target.url, "text/html")).text();
-  const paragraphs = parse(strip(html), target.from, target.to);
+  const paragraphs = parse(strip(await getText(target.url)), target.from, target.to);
   if (!paragraphs.length) throw new Error("Catecismo sem parágrafos: " + target.from + "-" + target.to);
   catechism.push({ ...target, paragraphs });
 }
