@@ -65,3 +65,29 @@ test('Bíblia permite pesquisar uma referência real', async ({ page }) => {
   await expect(page.locator('body')).toContainText(/Deus/i);
   expect(errors, '/bible search: console errors').toEqual([]);
 });\n
+test('Bíblia preserva contexto no Nexus Gn 1:1 → CIC §279 → retorno exato', async ({ page }) => {
+  const errors: string[] = [];
+  page.on('console', message => {
+    if (message.type() === 'error') errors.push(message.text());
+  });
+
+  await page.goto('/bible?book=Gn&ch=1&v=1');
+
+  const nexusCard = page.getByTestId('nexus-connection-card').filter({ hasText: 'Catecismo' }).first();
+  await expect(nexusCard).toBeVisible();
+  await nexusCard.click();
+
+  await expect(page.getByTestId('catechism-preview')).toBeVisible();
+  await expect(page.getByTestId('catechism-preview')).toContainText('§279');
+
+  await page.getByTestId('nexus-popover-nav-link').click();
+  await expect(page).toHaveURL(/\/catechism\?p=279/);
+  await expect(page.getByText(/Retorno de estudo/i)).toBeVisible();
+  await expect(page.getByText(/Gênesis 1:1/i)).toBeVisible();
+
+  await page.getByRole('button', { name: /Voltar à passagem/i }).click();
+  await expect(page).toHaveURL(/\/bible\?book=Gn&ch=1&v=1/);
+  await expect(page.locator('#verse-1')).toBeVisible();
+
+  expect(errors, 'Nexus return flow: console errors').toEqual([]);
+});
