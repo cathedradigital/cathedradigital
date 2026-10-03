@@ -360,7 +360,7 @@ const Magisterium: React.FC = () => {
   // ---------------------------------------------------------------------------
   // STAB-004.1 · Agrupamento visual opcional (sem alterar filtros/paginação).
   // `?group=category` agrupa por categoria; `?group=pope` agrupa por autor.
-  // Ausente = grid plana (comportamento atual). Nada é gravado em outro state.
+  // Ausente = agrupamento por categoria, deixando a hierarquia editorial visível. Nada é gravado em outro state.
   // ---------------------------------------------------------------------------
   const groupBy: 'category' | 'pope' | null = (() => {
     const g = searchParams.get('group');
