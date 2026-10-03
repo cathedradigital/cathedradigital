@@ -181,7 +181,7 @@ const NoteCard = ({ note, onUpdate, onDelete, onNavigate }: {
           </div>
           <span className="text-premium-xs font-bold text-muted-foreground">{note.content_id}</span>
         </div>
-        <div className="flex gap-spacing-2xs opacity-0 group-hover:opacity-100 transition-opacity">
+        <div className="flex gap-spacing-2xs md:opacity-0 md:group-hover:opacity-100 focus-within:opacity-100 transition-opacity">
           <Button variant="ghost" size="icon" className="h-spacing-xl w-spacing-xl rounded-premium-full" onClick={() => setIsEditing(!isEditing)}>
             <Icons.PenLine className="w-spacing-sm h-spacing-sm" />
           </Button>
