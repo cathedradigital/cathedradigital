@@ -110,7 +110,8 @@ test('Bíblia preserva contexto no Nexus Gn 1:1 → CIC §279 → retorno exato'
   expect(errors, 'Nexus return flow: console errors').toEqual([]);
 });
 
-test('Bíblia: os quatro controles principais da barra funcionam', async ({ page }) => {
+test('Bíblia: os quatro controles principais da barra funcionam no desktop', async ({ page }) => {
+  test.skip((page.viewportSize()?.width ?? 1280) < 768, 'Toolbar desktop é ocultada no mobile para evitar duplicação.');
   const errors: string[] = [];
   page.on('console', message => {
     if (message.type() === 'error') errors.push(message.text());
@@ -170,4 +171,15 @@ test('Bíblia: deep-link legado converge para URL canônica', async ({ page }) =
   await page.goto('/bible?book=joao&chapter=1&verse=1');
   await expect(page).toHaveURL(/\/bible\?book=Jo&ch=1&v=1/);
   await expect(page.locator('#verse-1')).toBeVisible();
+});
+
+test('Bíblia: busca continua acessível no topo mobile sem duplicar a toolbar', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/bible?book=Gn&ch=1');
+  const search = page.getByTestId('bible-toolbar-search-mobile');
+  await expect(search).toBeVisible();
+  await search.click();
+  await expect(page.getByTestId('bible-search-input')).toBeVisible();
+  await page.getByTestId('bible-search-close').click();
+  await expect(page).toHaveURL(/\/bible\?book=Gn&ch=1/);
 });
