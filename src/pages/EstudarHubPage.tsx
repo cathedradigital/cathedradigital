@@ -15,6 +15,17 @@ const ICONS = {
   documents: Landmark,
 } as const;
 
+const sourceHref = (source: StudyContext['sources'][number]): string | null => {
+  if (source.kind === 'bible') {
+    const match = source.ref.match(/^(.+?)\\s+(\\d+),(\\d+)$/);
+    if (!match) return null;
+    const [, book, chapter, verse] = match;
+    return '/bible?book=' + encodeURIComponent(book) + '&ch=' + chapter + '&v=' + verse;
+  }
+  if (source.kind === 'catechism') return '/catechism?p=' + encodeURIComponent(source.ref);
+  return source.canonicalUrl ?? null;
+};
+
 const EstudarHubPage: React.FC = () => {
   const [journeys, setJourneys] = useState<Journey[]>([]);
   const [nexusCount, setNexusCount] = useState<number | null>(null);
@@ -128,11 +139,17 @@ const EstudarHubPage: React.FC = () => {
                         <p className="mb-2 font-stitch-body text-[10px] font-bold uppercase tracking-[0.16em] text-stitch-secondary">Fontes encontradas</p>
                         <div className="grid gap-2 sm:grid-cols-2">
                           {studyContext.sources.slice(0, 6).map((source) => (
-                            <div key={source.kind + ':' + source.ref} className="rounded-xl border border-stitch-outline-variant/20 bg-stitch-surface-container-lowest p-3">
-                              <p className="font-stitch-display text-[15px] text-stitch-primary">{source.title}</p>
-                              {source.author && <p className="mt-0.5 text-[11px] text-stitch-on-surface-variant">{source.author}</p>}
-                              {source.excerpt && <p className="mt-1 line-clamp-2 text-[11px] leading-4 text-stitch-on-surface-variant">{source.excerpt}</p>}
-                            </div>
+                            (() => {
+                              const href = sourceHref(source);
+                              const content = (
+                                <div className="rounded-xl border border-stitch-outline-variant/20 bg-stitch-surface-container-lowest p-3 transition-colors hover:border-stitch-secondary/50 focus-within:border-stitch-secondary">
+                                  <p className="font-stitch-display text-[15px] text-stitch-primary">{source.title}</p>
+                                  {source.author && <p className="mt-0.5 text-[11px] text-stitch-on-surface-variant">{source.author}</p>}
+                                  {source.excerpt && <p className="mt-1 line-clamp-2 text-[11px] leading-4 text-stitch-on-surface-variant">{source.excerpt}</p>}
+                                </div>
+                              );
+                              return href ? (href.startsWith('/') ? <Link to={href} aria-label={'Abrir ' + source.title}>{content}</Link> : <a href={href} target="_blank" rel="noreferrer" aria-label={'Abrir fonte externa: ' + source.title}>{content}</a>) : content;
+                            })()
                           ))}
                         </div>
                       </div>

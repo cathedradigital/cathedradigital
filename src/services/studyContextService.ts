@@ -16,23 +16,28 @@ export async function getStudyContext(query: string, limit = 12): Promise<StudyC
   const normalized = query.trim();
   if (!normalized) return { query: '', sources: [], journeys: [], nexus: [] };
   const like = '%' + normalized.replace(/[%_]/g, '\\$&') + '%';
-  const [bible, catechism, authority, corpus, journeys, nexus] = await Promise.all([
-    supabase.from('bible_verses').select('book_abbr, chapter, verse, text').ilike('text', like).limit(limit),
-    supabase.from('catechism_official').select('paragraph, texto_base, content').or('texto_base.ilike.' + like + ',content.ilike.' + like).eq('status', 'published').limit(limit),
+  const [bible, catechism, authority, corpus, journeys] = await Promise.all([
+    supabase.from('bible_verses').select('number, text, source_url, bible_chapters!inner(number, bible_books!inner(abbrev))').ilike('text', like).limit(limit),
+    supabase.from('catechism_official').select('paragraph, content, source_name, source_url').or('content.ilike.' + like + ',source_name.ilike.' + like).limit(limit),
     supabase.from('authority_sources').select('id, slug, title, author, citation, description, canonical_url').eq('status', 'published').or('title.ilike.' + like + ',author.ilike.' + like + ',citation.ilike.' + like + ',description.ilike.' + like).limit(limit),
     supabase.from('corpus_documents').select('id, slug, title, author_name, excerpt, canonical_url').eq('status', 'published').or('title.ilike.' + like + ',author_name.ilike.' + like + ',slug.ilike.' + like + ',excerpt.ilike.' + like).limit(limit),
     supabase.from('journeys').select('id, title, description, category, tags').eq('is_active', true).or('title.ilike.' + like + ',description.ilike.' + like + ',category.ilike.' + like).limit(6),
-    supabase.from('nexus_relations').select('relation_type, source_kind, source_ref, target_kind, target_ref, note, confidence, attributed_to').eq('status', 'published').limit(2000),
   ]);
+  const queryResults = [bible, catechism, authority, corpus, journeys] as Array<{ error?: unknown }>;
+  const failedQuery = queryResults.find((result) => result.error);
+  if (failedQuery?.error) throw failedQuery.error;
+
   const sources: StudySource[] = [];
   for (const row of (bible.data ?? []) as Array<Record<string, unknown>>) {
-    const book = String(row.book_abbr ?? ''); const chapter = Number(row.chapter ?? 0); const verse = Number(row.verse ?? 0);
+    const chapterRow = (row.bible_chapters ?? {}) as Record<string, unknown>;
+    const bookRow = (chapterRow.bible_books ?? {}) as Record<string, unknown>;
+    const book = String(bookRow.abbrev ?? ''); const chapter = Number(chapterRow.number ?? 0); const verse = Number(row.number ?? 0);
     if (!book || !chapter || !verse) continue;
-    sources.push({ kind: 'bible', ref: book + ' ' + chapter + ',' + verse, title: book + ' ' + chapter + ',' + verse, excerpt: typeof row.text === 'string' ? row.text : null });
+    sources.push({ kind: 'bible', ref: book + ' ' + chapter + ',' + verse, title: book + ' ' + chapter + ',' + verse, excerpt: typeof row.text === 'string' ? row.text : null, canonicalUrl: typeof row.source_url === 'string' ? row.source_url : null });
   }
   for (const row of (catechism.data ?? []) as Array<Record<string, unknown>>) {
     const paragraph = Number(row.paragraph ?? 0); if (!paragraph) continue;
-    sources.push({ kind: 'catechism', ref: String(paragraph), title: 'CIC §' + paragraph, excerpt: typeof row.texto_base === 'string' ? row.texto_base : typeof row.content === 'string' ? row.content : null });
+    sources.push({ kind: 'catechism', ref: String(paragraph), title: 'CIC §' + paragraph, excerpt: typeof row.content === 'string' ? row.content : null, canonicalUrl: typeof row.source_url === 'string' ? row.source_url : null });
   }
   for (const row of (authority.data ?? []) as Array<Record<string, unknown>>) {
     sources.push({ kind: 'authority', ref: String(row.slug ?? row.id ?? ''), title: String(row.title ?? row.slug ?? 'Fonte de autoridade'), author: typeof row.author === 'string' ? row.author : null, excerpt: typeof row.description === 'string' ? row.description : null, canonicalUrl: typeof row.canonical_url === 'string' ? row.canonical_url : null });
@@ -40,6 +45,11 @@ export async function getStudyContext(query: string, limit = 12): Promise<StudyC
   for (const row of (corpus.data ?? []) as Array<Record<string, unknown>>) {
     sources.push({ kind: 'corpus', ref: String(row.slug ?? row.id ?? ''), title: String(row.title ?? row.slug ?? 'Documento'), author: typeof row.author_name === 'string' ? row.author_name : null, excerpt: typeof row.excerpt === 'string' ? row.excerpt : null, canonicalUrl: typeof row.canonical_url === 'string' ? row.canonical_url : null });
   }
+  const nexus = sources.length > 0
+    ? await supabase.from('nexus_relations').select('relation_type, source_kind, source_ref, target_kind, target_ref, note, confidence, attributed_to').eq('status', 'published').limit(100)
+    : { data: [], error: null } as any;
+  if (nexus.error) throw nexus.error;
+
   const sourceKeys = new Set(sources.map((source) => source.kind + '#' + source.ref));
   const relatedNexus = ((nexus.data ?? []) as Array<Record<string, unknown>>).filter((row) => {
     const key = (kind: unknown, ref: Record<string, unknown>) => { const value = ref.slug ?? ref.id ?? ref.ref; return typeof value === 'string' || typeof value === 'number' ? String(kind) + '#' + String(value) : null; };
