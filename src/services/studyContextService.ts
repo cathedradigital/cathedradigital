@@ -17,7 +17,7 @@ export async function getStudyContext(query: string, limit = 12): Promise<StudyC
   if (!normalized) return { query: '', sources: [], journeys: [], nexus: [] };
   const like = '%' + normalized.replace(/[%_]/g, '\\$&') + '%';
   const [bible, catechism, authority, corpus, journeys] = await Promise.all([
-    supabase.from('bible_verses').select('book_abbr, chapter, verse, text, source_url').ilike('text', like).limit(limit),
+    supabase.from('bible_verses').select('number, text, source_url, bible_chapters!inner(number, bible_books!inner(abbrev))').ilike('text', like).limit(limit),
     supabase.from('catechism_official').select('paragraph, content, source_name, source_url').or('content.ilike.' + like + ',source_name.ilike.' + like).limit(limit),
     supabase.from('authority_sources').select('id, slug, title, author, citation, description, canonical_url').eq('status', 'published').or('title.ilike.' + like + ',author.ilike.' + like + ',citation.ilike.' + like + ',description.ilike.' + like).limit(limit),
     supabase.from('corpus_documents').select('id, slug, title, author_name, excerpt, canonical_url').eq('status', 'published').or('title.ilike.' + like + ',author_name.ilike.' + like + ',slug.ilike.' + like + ',excerpt.ilike.' + like).limit(limit),
@@ -29,7 +29,9 @@ export async function getStudyContext(query: string, limit = 12): Promise<StudyC
 
   const sources: StudySource[] = [];
   for (const row of (bible.data ?? []) as Array<Record<string, unknown>>) {
-    const book = String(row.book_abbr ?? ''); const chapter = Number(row.chapter ?? 0); const verse = Number(row.verse ?? 0);
+    const chapterRow = (row.bible_chapters ?? {}) as Record<string, unknown>;
+    const bookRow = (chapterRow.bible_books ?? {}) as Record<string, unknown>;
+    const book = String(bookRow.abbrev ?? ''); const chapter = Number(chapterRow.number ?? 0); const verse = Number(row.number ?? 0);
     if (!book || !chapter || !verse) continue;
     sources.push({ kind: 'bible', ref: book + ' ' + chapter + ',' + verse, title: book + ' ' + chapter + ',' + verse, excerpt: typeof row.text === 'string' ? row.text : null, canonicalUrl: typeof row.source_url === 'string' ? row.source_url : null });
   }
