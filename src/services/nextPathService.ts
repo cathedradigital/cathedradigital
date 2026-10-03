@@ -139,8 +139,19 @@ export async function getNextPathData(userId?: string | null): Promise<NextPathD
 
   if (journeysRes.error) throw journeysRes.error;
 
+  const candidates: JourneyCandidate[] = (journeysRes.data ?? []).map((journey) => ({
+    id: journey.id,
+    slug: null,
+    title: journey.title,
+    subtitle: journey.subtitle,
+    category: journey.category,
+    tags: journey.tags,
+    difficulty: journey.difficulty,
+    sort_order: journey.sort_order,
+  }));
+
   return {
-    candidates: (journeysRes.data ?? []) as JourneyCandidate[],
+    candidates,
     nexusByJourney,
     completedJourneyIds,
   };
