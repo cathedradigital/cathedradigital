@@ -46,3 +46,22 @@ test('Bíblia abre e renderiza conteúdo real', async ({ page }) => {
   await expect(page.locator('body')).toContainText(/No princípio|No principio/i);
   expect(errors, '/bible: console errors').toEqual([]);
 });
+
+test('Bíblia permite pesquisar uma referência real', async ({ page }) => {
+  const errors: string[] = [];
+  page.on('console', message => {
+    if (message.type() === 'error') errors.push(message.text());
+  });
+
+  await page.goto('/bible');
+  await page.getByRole('button', { name: 'Pesquisar na Bíblia' }).click();
+
+  const input = page.getByPlaceholder('Pesquisar nas Escrituras...');
+  await expect(input).toBeVisible();
+  await input.fill('Jo 3:16');
+  await input.press('Enter');
+
+  await expect(page.locator('body')).toContainText(/João.*3:16/i);
+  await expect(page.locator('body')).toContainText(/Deus/i);
+  expect(errors, '/bible search: console errors').toEqual([]);
+});\n
