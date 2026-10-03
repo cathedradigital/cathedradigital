@@ -35,6 +35,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { JourneyService } from '@/core/journey';
+import { supabase } from '@/lib/db';
 import { useAuth } from '@/hooks/useAuth';
 import { AppRoute } from '@/types';
 import { checkNewBadges, getBadgeById, BadgeContext } from '@/lib/badges';
