@@ -120,6 +120,10 @@ const StudyJournal: React.FC = () => {
                       url = `/magisterium/${encodeURIComponent(docId)}`;
                       if (paragraphIndex && /^\d+$/.test(paragraphIndex)) {
                         url += `?p=${encodeURIComponent(paragraphIndex)}`;
+                      } else if (note.paragraph && Number.isInteger(Number(note.paragraph)) && Number(note.paragraph) > 0) {
+                        // Compatibilidade com anotações antigas: content_id pode ser apenas docId.
+                        // A coluna paragraph é 1-based; o reader usa índice 0-based no ?p.
+                        url += `?p=${encodeURIComponent(String(Number(note.paragraph) - 1))}`;
                       }
                     } else if (note.content_type === 'saint' && note.content_id) {
                       url = `/santos/${encodeURIComponent(note.content_id)}`;
