@@ -348,6 +348,20 @@ export const JourneyService = {
     }
   },
 
+  async getUserReflectionCount(userId: string): Promise<ServiceResult<number>> {
+    try {
+      const { count, error } = await supabase
+        .from('journey_progress')
+        .select('id', { count: 'exact', head: true })
+        .eq('user_id', userId)
+        .not('reflection', 'is', null);
+      if (error) throw error;
+      return ok(count ?? 0);
+    } catch (e) {
+      return fail(e);
+    }
+  },
+
   async getUserProgressCount(userId: string, since?: string): Promise<ServiceResult<number>> {
     try {
       let q = supabase
