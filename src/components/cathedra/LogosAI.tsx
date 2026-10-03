@@ -477,7 +477,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
                     aria-label="Enviar pergunta"
                     disabled={isLoading || isTyping || !query.trim() || settings.totalSilence}
 
-                    className="absolute right-0 text-primary/60 hover:text-primary transition-all disabled:opacity-0 p-spacing-xs"
+                    className="absolute right-0 text-primary/60 hover:text-primary transition-all disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:ring-offset-2 p-spacing-xs"
                   >
                     <Icons.ArrowRight className="w-spacing-md h-spacing-md stroke-[1]" />
                   </button>
