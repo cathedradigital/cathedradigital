@@ -104,6 +104,7 @@ const AtriumBibleReader: React.FC = () => {
           }
         />
         <ReaderToolbar
+          className="hidden md:block"
           kicker="Cathedra · Lectio Divina"
           title={title}
           subtitle={subtitle}
