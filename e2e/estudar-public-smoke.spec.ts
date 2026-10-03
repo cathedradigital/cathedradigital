@@ -70,8 +70,7 @@ test('Bíblia permite pesquisar uma referência real', async ({ page }) => {
   await expect(page).toHaveURL(/\/bible\?book=Jo&ch=3&v=16/);
   await expect(page.locator('#verse-16')).toBeVisible();
 
-  await page.goto('/bible');
-  await page.getByRole('button', { name: 'Pesquisar na Bíblia' }).click();
+  await page.goto('/bible?view=search');
   const searchInput = page.getByTestId('bible-search-input');
   await searchInput.fill('Porque Deus amou');
   await searchInput.press('Enter');
