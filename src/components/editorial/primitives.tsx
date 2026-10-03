@@ -452,7 +452,7 @@ export const EditorialPanel: React.FC<EditorialPanelProps> = ({
             type="button"
             onClick={onClose}
             aria-label={closeLabel}
-            className="shrink-0 h-8 w-8 flex items-center justify-center rounded-full text-stitch-on-surface-variant hover:text-stitch-secondary hover:bg-stitch-surface-container transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-stitch-secondary"
+            className="shrink-0 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-full text-stitch-on-surface-variant hover:text-stitch-secondary hover:bg-stitch-surface-container transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stitch-secondary/40 focus-visible:ring-offset-2"
           >
             ×
           </button>
@@ -630,7 +630,7 @@ export const EditorialChapterCard: React.FC<EditorialChapterCardProps> = ({
         </p>
       )}
       {meta && (
-        <p className="font-stitch-label text-stitch-label-sm uppercase tracking-[0.24em] text-stitch-on-surface-variant/80">
+        <p className="font-stitch-label text-stitch-label-md uppercase tracking-[0.24em] text-stitch-on-surface-variant/80">
           {meta}
         </p>
       )}
