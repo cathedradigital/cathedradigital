@@ -36,7 +36,7 @@ const CathedraInput = React.forwardRef<HTMLInputElement, CathedraInputProps>(
           />
         </div>
         {error && (
-          <p className="text-[10px] font-bold uppercase tracking-widest text-destructive/80 px-spacing-md animate-in fade-in slide-in-from-top-spacing-2xs">
+          <p className="text-premium-sm font-semibold text-destructive/90 leading-relaxed px-spacing-md animate-in fade-in slide-in-from-top-spacing-2xs">
             {error}
           </p>
         )}
