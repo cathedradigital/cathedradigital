@@ -332,7 +332,7 @@ const Bible: React.FC = () => {
         content_id: bookAbbr,
         chapter,
         label: `${book.name} ${chapter}`,
-        url: `/bible?book=${encodeURIComponent(bookAbbr)}&ch=${chapter}`,
+        url: `/bible?book=${encodeURIComponent(bookAbbr)}&ch=${chapter}${verse ? `&v=${verse}` : ''}`,
         is_last_read: true
       });
       
