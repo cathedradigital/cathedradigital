@@ -122,7 +122,18 @@ const MagisteriumViewer: React.FC = () => {
     }
   }, [id]);
 
-  // Restaura a posição exata deste documento depois de voltar do Nexus.\n  useEffect(() => {\n    if (!id || loading || !content) return;\n    const key = 'cathedra_last_magisterium_scroll_' + id;\n    const raw = localStorage.getItem(key);\n    const saved = raw ? Number(raw) : NaN;\n    const dbPosition = lastReadMark?.content_id === id && typeof lastReadMark.position === 'number' ? lastReadMark.position : NaN;\n    const position = Number.isFinite(saved) && saved > 0 ? saved : dbPosition;\n    if (!Number.isFinite(position) || position <= 0) return;\n    requestAnimationFrame(() => window.scrollTo({ top: position, left: 0, behavior: 'auto' }));\n  }, [id, loading, content, lastReadMark]);\n\n  // Guard contra StrictMode double-invoke: cada (id, retryNonce) executa 1x
+  // Restaura a posição genérica somente quando não existe um deep-link explícito.
+  // ?p=N é a fonte de verdade e deve sempre vencer o scroll salvo.
+  useEffect(() => {
+    if (!id || loading || !content || requestedParagraph !== null) return;
+    const key = 'cathedra_last_magisterium_scroll_' + id;
+    const raw = localStorage.getItem(key);
+    const saved = raw ? Number(raw) : NaN;
+    const dbPosition = lastReadMark?.content_id === id && typeof lastReadMark.position === 'number' ? lastReadMark.position : NaN;
+    const position = Number.isFinite(saved) && saved > 0 ? saved : dbPosition;
+    if (!Number.isFinite(position) || position <= 0) return;
+    requestAnimationFrame(() => window.scrollTo({ top: position, left: 0, behavior: 'auto' }));
+  }, [id, loading, content, lastReadMark, requestedParagraph]);\n\n  // Guard contra StrictMode double-invoke: cada (id, retryNonce) executa 1x
   const lastFetchKey = useRef<string | null>(null);
   useEffect(() => {
     const fetchDoc = async () => {
@@ -327,6 +338,7 @@ const MagisteriumViewer: React.FC = () => {
     // Save to DB on unmount or every few seconds
     const interval = setInterval(() => {
       if (id && content) {
+        if (new URLSearchParams(window.location.search).has('p')) return;
         saveLastRead({
           content_type: 'magisterium',
           content_id: id,
