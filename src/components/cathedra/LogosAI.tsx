@@ -306,7 +306,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
                     <Icons.Sparkles className="w-spacing-sm h-spacing-sm" strokeWidth={0.5} />
                   </div>
                   <div>
-                    <h4 className="text-[8px] font-black uppercase tracking-[0.6em] text-primary/40">Cáter</h4>
+                    <h4 className="text-premium-xs font-bold uppercase tracking-[0.4em] text-primary/40">Cáter</h4>
                   </div>
                 </div>
                 
@@ -327,7 +327,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
                       variant="ghost" 
                       size="sm" 
                       onClick={() => setVisibleMessages(prev => prev + 10)}
-                      className="text-[8px] font-black uppercase tracking-widest text-primary/60 hover:text-primary"
+                      className="text-premium-xs font-bold uppercase tracking-widest text-primary/60 hover:text-primary"
                     >
                       Ver registros anteriores
                     </Button>
@@ -349,7 +349,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
                       {msg.role === 'assistant' && (
                         <div className="flex items-center gap-spacing-xs mb-spacing-sm md:mb-spacing-md opacity-20">
                           <div className="w-spacing-md h-px bg-primary" />
-                          <span className="text-[7px] font-black uppercase tracking-[0.4em]">Logos</span>
+                          <span className="text-premium-xs font-bold uppercase tracking-[0.28em]">Logos</span>
                         </div>
                       )}
                       {msg.role === 'assistant' ? <TheologicalText text={msg.content} /> : msg.content}
@@ -360,7 +360,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
                 {retrievedSources.length > 0 && !isLoading && !isTyping && (
                   <div className="pt-spacing-lg border-t border-primary/5 space-y-spacing-sm">
                     <div>
-                      <p className="text-[9px] font-black uppercase tracking-[0.2em] text-secondary/70">Fontes que sustentam esta consulta</p>
+                      <p className="text-premium-xs font-bold uppercase tracking-[0.2em] text-secondary/70">Fontes que sustentam esta consulta</p>
                       <p className="mt-1 text-[10px] text-muted-foreground/70 leading-relaxed">
                         A natureza da fonte aparece explicitamente para não confundir Escritura, Magistério, testemunho patrístico ou teologia.
                       </p>
@@ -372,13 +372,13 @@ const LogosAI: React.FC<LogosAIProps> = ({
                             <div>
                               <p className="text-[10px] font-semibold text-primary/80 leading-relaxed">{source.title}</p>
                               {source.authority?.authority_label && (
-                                <p className="mt-1 text-[8px] font-black uppercase tracking-widest text-secondary/80">
+                                <p className="mt-1 text-premium-xs font-bold uppercase tracking-widest text-secondary/80">
                                   {source.authority.authority_label}
                                 </p>
                               )}
                             </div>
                             {source.authority?.canonical_url && (
-                              <a href={source.authority.canonical_url} target="_blank" rel="noreferrer" className="shrink-0 text-[8px] font-black uppercase tracking-widest text-primary/60 hover:text-primary underline underline-offset-2">
+                              <a href={source.authority.canonical_url} target="_blank" rel="noreferrer" className="shrink-0 text-premium-xs font-bold uppercase tracking-widest text-primary/60 hover:text-primary underline underline-offset-2">
                                 Fonte
                               </a>
                             )}
@@ -391,7 +391,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
                     </div>
                     {authorityNexus.length > 0 && (
                       <div className="pt-spacing-sm">
-                        <p className="text-[9px] font-black uppercase tracking-[0.2em] text-secondary/60 mb-spacing-xs">Nexus de autoridade</p>
+                        <p className="text-premium-xs font-bold uppercase tracking-[0.2em] text-secondary/60 mb-spacing-xs">Nexus de autoridade</p>
                         <div className="space-y-1.5">
                           {authorityNexus.map((edge, index) => (
                             <p key={edge.relation + ':' + index} className="text-[9px] text-muted-foreground/75 leading-relaxed">
@@ -414,7 +414,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
                     className="mt-spacing-xl grid grid-cols-1 md:grid-cols-2 gap-spacing-sm pt-spacing-xl border-t border-primary/5"
                   >
                     <div className="md:col-span-2">
-                      <p className="text-[9px] font-black uppercase tracking-[0.2em] text-gold/40 mb-spacing-md">Conexões Orientadas</p>
+                      <p className="text-premium-xs font-bold uppercase tracking-[0.2em] text-gold/40 mb-spacing-md">Conexões Orientadas</p>
                     </div>
                     {[
                       { label: 'Bíblia Relacionada', icon: Icons.Bible, href: '/bible' },
@@ -452,7 +452,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
                           <div className="w-spacing-xs h-spacing-xs rounded-premium-full bg-primary animate-bounce [animation-delay:-0.3s]" />
                           <div className="w-spacing-xs h-spacing-xs rounded-premium-full bg-primary animate-bounce [animation-delay:-0.15s]" />
                           <div className="w-spacing-xs h-spacing-xs rounded-premium-full bg-primary animate-bounce" />
-                          <span className="text-[8px] font-black uppercase tracking-widest ml-spacing-xs text-primary/40">Cáter está consultando...</span>
+                          <span className="text-premium-xs font-bold uppercase tracking-widest ml-spacing-xs text-primary/40">Cáter está consultando...</span>
                         </div>
                       )}
                     </div>
@@ -484,7 +484,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
                 </form>
                 <div className="flex flex-col items-center gap-spacing-xs mt-spacing-lg">
                   <div className="w-spacing-3xs h-spacing-3xs bg-primary/10 rounded-premium-full" />
-                  <p className="text-[7px] text-center text-primary/40 uppercase tracking-[0.5em] font-black">
+                  <p className="text-premium-xs text-center text-primary/40 uppercase tracking-[0.5em] font-black">
                     {settings.totalSilence ? "O silêncio é a oração perfeita" : "Silêncio é entendimento"}
                   </p>
                 </div>
@@ -526,7 +526,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
                 </div>
                 <div>
                   <h3 id="logos-ai-title" className="text-premium-sm font-bold uppercase tracking-[0.4em] text-primary">Cáter</h3>
-                  <p className="text-[9px] text-muted-foreground/60 uppercase font-black tracking-widest mt-spacing-2xs">Mentor Espiritual</p>
+                  <p className="text-premium-xs text-muted-foreground/70 uppercase font-bold tracking-widest mt-spacing-2xs">Mentor Espiritual</p>
                 </div>
               </div>
               <div className="flex items-center gap-spacing-xs">
@@ -605,7 +605,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
                   }`}>
                     {msg.role === 'assistant' ? <TheologicalText text={msg.content} /> : msg.content}
                   </div>
-                  <span className="text-[8px] font-bold uppercase tracking-widest text-primary/60 px-spacing-md">
+                  <span className="text-premium-xs font-semibold uppercase tracking-widest text-primary/60 px-spacing-md">
                     {msg.role === 'user' ? 'Peregrino' : 'Logos'}
                   </span>
                 </div>
