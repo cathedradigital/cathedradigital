@@ -92,7 +92,7 @@ const StudyJournal: React.FC = () => {
           />
         </div>
         <div className="flex flex-wrap items-center gap-spacing-xs">
-          <select value={contentFilter} onChange={(e) => setContentFilter(e.target.value)} className="h-10 rounded-premium-full border border-border/20 bg-muted/10 px-3 text-xs">
+          <select value={contentFilter} onChange={(e) => setContentFilter(e.target.value)} className="min-h-11 rounded-premium-full border border-border/20 bg-muted/10 px-3 text-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:ring-offset-2">
             <option value="all">Todos os conteúdos</option>
             <option value="bible">Bíblia</option>
             <option value="catechism">Catecismo</option>
@@ -217,11 +217,11 @@ const NoteCard = ({ note, onUpdate, onDelete, onNavigate }: {
           </div>
           <span className="text-premium-xs font-bold text-muted-foreground">{note.content_id}</span>
         </div>
-        <div className="flex gap-spacing-2xs opacity-0 group-hover:opacity-100 transition-opacity">
-          <Button variant="ghost" size="icon" className="h-spacing-xl w-spacing-xl rounded-premium-full" onClick={() => setIsEditing(!isEditing)}>
+        <div className="flex gap-spacing-2xs opacity-100 md:opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity">
+          <Button variant="ghost" size="icon" className="min-h-11 min-w-11 rounded-premium-full focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:ring-offset-2" aria-label="Editar anotação" title="Editar anotação" onClick={() => setIsEditing(!isEditing)}>
             <Icons.PenLine className="w-spacing-sm h-spacing-sm" />
           </Button>
-          <Button variant="ghost" size="icon" className="h-spacing-xl w-spacing-xl rounded-premium-full text-destructive" onClick={() => onDelete(note)}>
+          <Button variant="ghost" size="icon" className="min-h-11 min-w-11 rounded-premium-full text-destructive focus-visible:ring-2 focus-visible:ring-destructive/30 focus-visible:ring-offset-2" aria-label="Excluir anotação" title="Excluir anotação" onClick={() => onDelete(note)}>
             <Icons.Trash className="w-spacing-sm h-spacing-sm" />
           </Button>
         </div>
