@@ -51,3 +51,23 @@ test.describe('Bíblia — catálogo completo', () => {
     }
   });
 });
+
+
+  test('Escolher livro: painel é opaco e legível', async ({ page }) => {
+    await page.goto('/bible?book=Gn&ch=1');
+    await page.getByRole('button', { name: 'Escolher livro e capítulo' }).first().click();
+
+    const title = page.getByRole('heading', { name: 'Gênesis 1' }).first();
+    await expect(title).toBeVisible();
+
+    const sheet = page.locator('[data-radix-dialog-content]').last();
+    await expect(sheet).toBeVisible();
+
+    const bg = await sheet.evaluate((el) => {
+      const style = getComputedStyle(el);
+      return { backgroundColor: style.backgroundColor, opacity: style.opacity };
+    });
+
+    expect(bg.opacity).toBe('1');
+    expect(bg.backgroundColor).not.toBe('rgba(0, 0, 0, 0)');
+  });
