@@ -41,7 +41,7 @@ async function openStudyJournal(page: Page, marker: string) {
 test('auth redirect preserves protected destination', async ({ page }) => {
   await page.context().clearCookies();
   await page.goto('/diario');
-  await expect(page).toHaveURL(/\\/login\\?next=.*diario/);
+  await expect(page).toHaveURL(new RegExp('/login\\\\?next=.*diario'));
 });
 
 test('Bíblia: anotação → Diário → retorno exato ao versículo', async ({ page }) => {
@@ -53,7 +53,7 @@ test('Bíblia: anotação → Diário → retorno exato ao versículo', async ({
   await saveReflection(page, marker);
   const note = await openStudyJournal(page, marker);
   await note.getByRole('button', { name: /Ver Contexto/i }).click();
-  await expect(page).toHaveURL(/\\/bible\\?.*(ch|chapter)=1.*v=1/);
+  await expect(page).toHaveURL(new RegExp('/bible\\\\?.*(ch|chapter)=1.*v=1'));
   await expect(page.locator('#verse-1')).toBeVisible();
   expect(bad).toEqual([]);
 });
@@ -67,7 +67,7 @@ test('Catecismo: anotação → Diário → retorno exato ao parágrafo', async 
   await saveReflection(page, marker);
   const note = await openStudyJournal(page, marker);
   await note.getByRole('button', { name: /Ver Contexto/i }).click();
-  await expect(page).toHaveURL(/\\/catechism\\?p=1/);
+  await expect(page).toHaveURL(new RegExp('/catechism\\\\?p=1'));
   expect(bad).toEqual([]);
 });
 
@@ -80,7 +80,7 @@ test('Magistério: anotação → Diário → retorno ao documento/parágrafo', 
   await saveReflection(page, marker);
   const note = await openStudyJournal(page, marker);
   await note.getByRole('button', { name: /Ver Contexto/i }).click();
-  await expect(page).toHaveURL(/\\/magisterium\\/dce\\?p=\\d+/);
+  await expect(page).toHaveURL(new RegExp('/magisterium/dce\\\\?p=\\\\d+'));
   expect(bad).toEqual([]);
 });
 
