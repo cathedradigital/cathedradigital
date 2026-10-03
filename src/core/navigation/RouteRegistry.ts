@@ -28,7 +28,7 @@ const ROUTES: Record<RouteKey, RouteEntry> = {
   // Rotas de estudo — alinhadas às rotas reais registradas em src/App.tsx.
   // Antes usavam prefixo /estudar/* que não existe e causava 404 no Nexus.
   'study.composed':       { template: '/temas/:slug',                     requires: ['slug'] },
-  'study.bible':          { template: '/bible?book=:book&chapter=:chapter', requires: ['book', 'chapter'] },
+  'study.bible':          { template: '/bible?book=:book&ch=:chapter', requires: ['book', 'chapter'] },
   'study.catechism':      { template: '/catechism?p=:paragraph',           requires: ['paragraph'] },
   'study.magisterium':    { template: '/magisterium/:doc',                 requires: ['doc'] },
   // Rota canônica dos Padres/Doutores. Redireciona internamente para /santos/:slug
