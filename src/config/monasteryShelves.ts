@@ -55,5 +55,3 @@ export const MONASTERY_SHELVES: LibraryShelf[] = [
     ]
   }
 ];
-
-import { GraduationCap } from 'lucide-react';
