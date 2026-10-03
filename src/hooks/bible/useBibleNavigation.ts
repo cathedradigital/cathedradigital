@@ -166,10 +166,10 @@ export function useBibleNavigation(): UseBibleNavigation {
     (mode: BibleViewMode) => {
       mutate((p) => {
         if (mode === 'home') {
+          // Fechar uma view especial (busca/notas/marcadores) deve retornar ao
+          // mesmo capítulo, não apagar o contexto de leitura. A rota /bible
+          // sem livro continua representando a home quando já não há contexto.
           p.delete('view');
-          p.delete('book');
-          p.delete('ch');
-          p.delete('v');
           p.delete('q');
         } else if (mode === 'chapters') {
           // Requer book já presente na URL (callsites atuais garantem isso).
