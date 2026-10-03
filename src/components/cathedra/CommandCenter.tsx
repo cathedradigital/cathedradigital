@@ -183,24 +183,24 @@ const CommandCenter: React.FC = () => {
           .from('user_notes')
           .select('id, note_text, content_type, content_id, book_abbr, chapter, verse, paragraph, updated_at')
           .eq('user_id', user.id)
-          .ilike('note_text', \`%${q}%\`)
+          .ilike('note_text', `%${q}%`)
           .order('updated_at', { ascending: false })
           .limit(6);
         if (error) return;
 
         data?.forEach((n: any) => {
           const biblePath = n.content_type === 'bible' && n.book_abbr && n.chapter
-            ? \`/bible?book=\${encodeURIComponent(n.book_abbr)}&ch=\${n.chapter}\${n.verse ? \`&v=\${n.verse}\` : ''}\`
+            ? `/bible?book=${encodeURIComponent(n.book_abbr)}&ch=${n.chapter}${n.verse ? `&v=${n.verse}` : ''}`
             : n.content_type === 'catechism' && n.paragraph
-              ? \`/catechism?p=\${n.paragraph}\`
+              ? `/catechism?p=${n.paragraph}`
               : n.content_type === 'magisterium' && n.content_id
-                ? \`/magisterium?doc=\${encodeURIComponent(n.content_id)}\`
+                ? `/magisterium?doc=${encodeURIComponent(n.content_id)}`
                 : '/diario';
 
           results.push({
             type: 'note',
             label: n.book_abbr && n.chapter
-              ? \`Minha nota • \${n.book_abbr} \${n.chapter}\${n.verse ? \`:\${n.verse}\` : ''}\`
+              ? `Minha nota • ${n.book_abbr} ${n.chapter}${n.verse ? `:${n.verse}` : ''}`
               : 'Minha nota',
             description: n.note_text.length > 110 ? n.note_text.substring(0, 110) + '…' : n.note_text,
             path: biblePath,
