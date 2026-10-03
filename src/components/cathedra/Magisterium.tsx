@@ -364,7 +364,7 @@ const Magisterium: React.FC = () => {
   // ---------------------------------------------------------------------------
   const groupBy: 'category' | 'pope' | null = (() => {
     const g = searchParams.get('group');
-    return g === 'category' || g === 'pope' ? g : null;
+    return g === 'category' || g === 'pope' ? g : 'category';
   })();
 
   const setGroupBy = useCallback(
