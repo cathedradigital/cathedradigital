@@ -16,7 +16,12 @@ const ICONS = {
 } as const;
 
 const sourceHref = (source: StudyContext['sources'][number]): string | null => {
-  if (source.kind === 'bible') return '/bible?ref=' + encodeURIComponent(source.ref);
+  if (source.kind === 'bible') {
+    const match = source.ref.match(/^(.+?)\\s+(\\d+),(\\d+)$/);
+    if (!match) return null;
+    const [, book, chapter, verse] = match;
+    return '/bible?book=' + encodeURIComponent(book) + '&ch=' + chapter + '&v=' + verse;
+  }
   if (source.kind === 'catechism') return '/catechism?p=' + encodeURIComponent(source.ref);
   return source.canonicalUrl ?? null;
 };
