@@ -6,6 +6,7 @@
  */
 import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/db';
+import { JourneyService } from '@/core/journey';
 
 export interface SpiritualMemory {
   streakDays: number;
@@ -50,11 +51,11 @@ export function useSpiritualMemory(
           .from('prayer_sessions')
           .select('id', { count: 'exact', head: true })
           .eq('user_id', userId),
-        supabase
-          .from('journey_progress')
-          .select('journey_id', { count: 'exact', head: true })
-          .eq('user_id', userId),
+        JourneyService.listUserJourneyProgress(userId),
       ]);
+
+      if (journeysRes.error) throw journeysRes.error;
+      const journeyIds = new Set((journeysRes.data ?? []).map((p) => p.journey_id).filter(Boolean));
 
       if (!active) return;
       setState({
@@ -62,7 +63,7 @@ export function useSpiritualMemory(
         maxStreak: Math.max(maxStreak, streakDays),
         readings: readingsRes.count ?? 0,
         prayers: prayersRes.count ?? 0,
-        journeys: journeysRes.count ?? 0,
+        journeys: journeyIds.size,
         loading: false,
       });
     })().catch(() => {
