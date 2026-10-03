@@ -1,4 +1,4 @@
-import { ArrowLeft, Search, Menu } from "lucide-react";
+import { ArrowLeft, Search, Menu, MoreVertical } from "lucide-react";
 import { useNavigate, Link } from '@/lib/rr-compat';
 import { cn } from "@/lib/utils";
 import { EnvironmentModuleNav } from "@/components/mobile/EnvironmentModuleNav";
@@ -119,7 +119,15 @@ export function MobileTopBar({
         {actions && <div className="flex items-center">{actions}</div>}
         <button
           type="button"
-          aria-label="Menu"
+          aria-label="Configurações de leitura"
+          onClick={() => window.dispatchEvent(new CustomEvent("open-reading-preferences"))}
+          className="inline-flex h-10 w-10 items-center justify-center rounded-full text-stitch-on-surface hover:bg-stitch-surface-container focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stitch-secondary"
+        >
+          <MoreVertical className="h-5 w-5" />
+        </button>
+        <button
+          type="button"
+          aria-label="Abrir menu lateral"
           onClick={handleMenu}
           className="inline-flex h-10 w-10 items-center justify-center rounded-full text-stitch-on-surface hover:bg-stitch-surface-container disabled:opacity-40"
           disabled={false}
