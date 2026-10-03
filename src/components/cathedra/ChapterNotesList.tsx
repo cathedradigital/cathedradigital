@@ -34,8 +34,17 @@ const ChapterNotesList: React.FC<ChapterNotesListProps> = ({
           {notes.map((note) => (
             <button 
               key={note.id} 
-              className="group p-spacing-md bg-card border border-border/40 rounded-premium hover:border-primary/20 transition-all text-left relative focus:outline-none focus:ring-2 focus:ring-primary/20"
+              className="group p-spacing-md bg-card border border-border/40 rounded-premium hover:border-primary/20 transition-all text-left relative focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:ring-offset-2"
               onClick={() => onNoteClick?.(note)}
+              onKeyDown={(e) => {
+                if (!onNoteClick) return;
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  onNoteClick(note);
+                }
+              }}
+              tabIndex={onNoteClick ? 0 : undefined}
+              role={onNoteClick ? 'button' : undefined}
             >
               <div className="flex items-start gap-spacing-sm">
                 <div className={`w-spacing-2xs h-spacing-2xl rounded-premium-full flex-shrink-0 bg-primary/10`} />
@@ -58,7 +67,7 @@ const ChapterNotesList: React.FC<ChapterNotesListProps> = ({
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="absolute top-spacing-xs right-spacing-xs h-spacing-lg w-spacing-lg rounded-premium-full opacity-0 group-hover:opacity-100 transition-opacity text-destructive hover:bg-destructive/5"
+                  className="absolute top-spacing-xs right-spacing-xs min-h-11 min-w-11 rounded-premium-full opacity-100 md:opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 focus-visible:opacity-100 transition-opacity text-destructive hover:bg-destructive/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-destructive/30 focus-visible:ring-offset-2" aria-label="Excluir reflexão"
                   onClick={(e) => {
                     e.stopPropagation();
                     onDeleteNote(note.id);
