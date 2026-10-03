@@ -10,4 +10,17 @@ test('public browser smoke: landing and login render', async ({ page }) => {
   await expect(page.getByLabel('Email')).toBeVisible();
   await expect(page.getByLabel('Senha')).toBeVisible();
   expect(bad).toEqual([]);
+  test('Documentos e Catecismo abrem sem erro de navegação', async ({ page }) => {
+    for (const route of ['/magisterium', '/catechism']) {
+      const errors: string[] = [];
+      page.on('console', (message) => {
+        if (message.type() === 'error') errors.push(message.text());
+      });
+      const response = await page.goto(route);
+      expect(response?.ok(), `${route}: HTTP ${response?.status()}`).toBeTruthy();
+      await expect(page.locator('body')).not.toContainText(/Application error|Something went wrong/i);
+      expect(errors, `${route}: console errors`).toEqual([]);
+    }
+  });
+
 });
