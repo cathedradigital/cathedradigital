@@ -77,7 +77,9 @@ function parse(text, from, to) {
     const content = text.slice(start, end).replace(new RegExp("^\\d{1,4}\\.\\s+"), "").trim();
     if (content.length >= 5) out.push({ paragraph: n, content });
   }
-  return out;
+  const unique = new Map();
+  for (const item of out) unique.set(item.paragraph, item);
+  return [...unique.values()].sort((a, b) => a.paragraph - b.paragraph);
 }
 
 for (const target of plan.catechism) {
