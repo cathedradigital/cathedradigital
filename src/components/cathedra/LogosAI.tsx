@@ -383,7 +383,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
                               </a>
                             )}
                           </div>
-                          <p className="mt-1 text-[9px] text-muted-foreground/70">
+                          <p className="mt-1 text-premium-sm text-muted-foreground/75 leading-relaxed">
                             {source.authority?.citation || (source.kind + ':' + source.ref)}
                           </p>
                         </div>
@@ -394,7 +394,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
                         <p className="text-premium-xs font-bold uppercase tracking-[0.2em] text-secondary/60 mb-spacing-xs">Nexus de autoridade</p>
                         <div className="space-y-1.5">
                           {authorityNexus.map((edge, index) => (
-                            <p key={edge.relation + ':' + index} className="text-[9px] text-muted-foreground/75 leading-relaxed">
+                            <p key={edge.relation + ':' + index} className="text-premium-sm text-muted-foreground/75 leading-relaxed">
                               <span className="font-semibold text-primary/70">{edge.from?.authority_label || edge.from?.title}</span>
                               <span className="mx-1 opacity-50">→ {edge.relation} →</span>
                               <span className="font-semibold text-primary/70">{edge.to?.authority_label || edge.to?.title}</span>
@@ -559,11 +559,11 @@ const LogosAI: React.FC<LogosAIProps> = ({
                 <div className={`w-spacing-2xs h-spacing-2xs rounded-premium-full ${
                   settings.totalSilence ? 'bg-red-400' : (history.length > 0 ? 'bg-secondary animate-pulse' : 'bg-primary/20')
                 }`} />
-                <span className="text-[7px] font-black uppercase tracking-widest text-primary/60">
+                <span className="text-premium-xs font-bold uppercase tracking-widest text-primary/60">
                   {settings.totalSilence ? 'Modo Silêncio Total' : (history.length > 0 ? 'Registro de Alma Ativo' : 'Estado de Escuta')}
                 </span>
               </div>
-              <p className="text-[7px] text-muted-foreground/60 uppercase font-black tracking-widest italic">
+              <p className="text-premium-xs text-muted-foreground/70 uppercase font-bold tracking-widest italic">
                 {context || 'Santuário Universal'}
               </p>
             </div>
@@ -590,7 +590,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
                     variant="ghost" 
                     size="sm" 
                     onClick={() => setVisibleMessages(prev => prev + 10)}
-                    className="text-[9px] font-black uppercase tracking-widest text-primary/60 hover:text-primary h-auto py-spacing-xs"
+                    className="min-h-11 text-premium-xs font-bold uppercase tracking-widest text-primary/60 hover:text-primary h-auto py-spacing-xs"
                   >
                     Ver histórico anterior
                   </CathedraButton>
@@ -642,7 +642,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
                 </button>
               </form>
               <div className="mt-spacing-xl">
-                <p className="text-[8px] text-muted-foreground/60 uppercase tracking-[0.4em] text-center font-bold">
+                <p className="text-premium-xs text-muted-foreground/70 uppercase tracking-[0.28em] text-center font-semibold">
                   {settings.totalSilence ? "Silêncio em Adoração" : "Sempre em comunhão com o Magistério"}
                 </p>
               </div>
