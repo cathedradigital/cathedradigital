@@ -70,13 +70,13 @@ export const BibleHome: React.FC<BibleHomeProps> = ({ onSelectBook, searchQuery,
                 navigateToReading(book.abbr, Number(lastRead.chapter) || 1, Number(lastRead.verse) || 1);
               }
             }}
-            className="p-4 rounded-3xl border border-primary/5 bg-card hover:bg-primary/[0.01] transition-all text-left group shadow-premium-sm"
+            className="min-h-11 p-4 rounded-3xl border border-primary/5 bg-card hover:bg-primary/[0.01] transition-all text-left group shadow-premium-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary/50 focus-visible:ring-offset-2"
           >
             <div className="flex items-center justify-between mb-1">
-              <h2 className="text-[9px] font-black uppercase tracking-widest text-secondary/80">Bíblia • Continuar Lendo</h2>
+              <h2 className="text-premium-xs font-bold uppercase tracking-[0.2em] text-secondary/80">Bíblia • Continuar Lendo</h2>
               <div className="flex items-center gap-1.5">
                  {lastRead.timestamp && (
-                   <span className="text-[8px] text-primary/30 font-bold uppercase">{new Date(lastRead.timestamp).toLocaleDateString()}</span>
+                   <span className="text-premium-xs text-primary/45 font-semibold uppercase">{new Date(lastRead.timestamp).toLocaleDateString()}</span>
                  )}
                  <Icons.ChevronRight className="w-3 h-3 text-primary/20 group-hover:text-secondary transition-colors" />
               </div>
@@ -86,7 +86,7 @@ export const BibleHome: React.FC<BibleHomeProps> = ({ onSelectBook, searchQuery,
                 <span className="text-lg font-display text-primary/80 leading-tight">
                   {lastRead.bookName}
                 </span>
-                <span className="text-[10px] text-primary/40 font-serif">
+                <span className="text-premium-sm text-primary/50 font-serif">
                   Capítulo {lastRead.chapter}
                 </span>
               </div>
@@ -102,7 +102,7 @@ export const BibleHome: React.FC<BibleHomeProps> = ({ onSelectBook, searchQuery,
       <div className="space-y-4">
         <div className="flex items-center gap-4 px-2">
           <div className="h-px flex-1 bg-primary/5" />
-          <h2 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/30">Cânone Sagrado</h2>
+          <h2 className="text-premium-xs font-bold uppercase tracking-[0.24em] text-primary/50">Cânone Sagrado</h2>
           <div className="h-px flex-1 bg-primary/5" />
         </div>
         
