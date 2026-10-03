@@ -1,6 +1,7 @@
 import { Icons } from '@/constants';
 import React, { useState, useEffect } from 'react';
 import { supabase } from '@/lib/db';
+import { JourneyService } from '@/core/journey';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -82,13 +83,9 @@ const AdminJourneysTab: React.FC = () => {
   const fetchJourneys = async () => {
     try {
       setLoading(true);
-      const { data, error } = await supabase
-        .from('journeys')
-        .select('*')
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
-      setJourneys(data || []);
+      const result = await JourneyService.list({ limit: 500 });
+      if (result.error) throw result.error;
+      setJourneys((result.data || []) as Journey[]);
     } catch (error: any) {
       toast.error('Erro ao buscar jornadas: ' + error.message);
     } finally {
@@ -99,14 +96,9 @@ const AdminJourneysTab: React.FC = () => {
   const fetchSteps = async (journeyId: string) => {
     try {
       setStepsLoading(true);
-      const { data, error } = await supabase
-        .from('journey_steps')
-        .select('*')
-        .eq('journey_id', journeyId)
-        .order('step_order', { ascending: true });
-
-      if (error) throw error;
-      setSteps(data || []);
+      const result = await JourneyService.listSteps(journeyId);
+      if (result.error) throw result.error;
+      setSteps((result.data || []) as Step[]);
     } catch (error: any) {
       toast.error('Erro ao buscar passos: ' + error.message);
     } finally {
@@ -144,21 +136,20 @@ const AdminJourneysTab: React.FC = () => {
         return;
       }
       
-      const { error } = await supabase
-        .from('journey_steps')
-        .update({
-          title: editingStep.title,
-          subtitle: editingStep.subtitle,
-          step_order: editingStep.step_order,
-          step_type: editingStep.step_type,
-          content: parsedContent
-        })
-        .eq('id', editingStep.id);
-        
-      if (error) {
-        console.error('Error saving step:', error);
-        toast.error(`Falha ao salvar o passo: ${error.message}`);
-        throw error;
+      const result = await JourneyService.upsertStep(editingStep.journey_id, {
+        id: editingStep.id,
+        title: editingStep.title,
+        subtitle: editingStep.subtitle,
+        step_order: editingStep.step_order,
+        step_type: editingStep.step_type,
+        content: parsedContent,
+        duration_minutes: null,
+        is_free: true,
+      } as any);
+      if (result.error) {
+        console.error('Error saving step:', result.error);
+        toast.error(`Falha ao salvar o passo: ${result.error.message}`);
+        throw result.error;
       }
       
       setSteps(prev => prev.map(s => s.id === editingStep.id ? { ...editingStep, content: parsedContent } : s));
@@ -176,14 +167,10 @@ const AdminJourneysTab: React.FC = () => {
     
     try {
       console.log(`Deleting step: ${stepId}`);
-      const { error } = await supabase
-        .from('journey_steps')
-        .delete()
-        .eq('id', stepId);
-        
-      if (error) {
-        console.error('Error deleting step:', error);
-        throw error;
+      const result = await JourneyService.deleteStep(stepId);
+      if (result.error) {
+        console.error('Error deleting step:', result.error);
+        throw result.error;
       }
       
       setSteps(prev => prev.filter(s => s.id !== stepId));
@@ -200,23 +187,19 @@ const AdminJourneysTab: React.FC = () => {
 
     try {
       console.log(`Updating journey: ${editingJourney.title} (${editingJourney.id})`);
-      const { error } = await supabase
-        .from('journeys')
-        .update({
-          title: editingJourney.title,
-          subtitle: editingJourney.subtitle,
-          description: editingJourney.description,
-          category: editingJourney.category,
-          difficulty: editingJourney.difficulty,
-          is_active: editingJourney.is_active,
-          is_premium: editingJourney.is_premium,
-          estimated_days: editingJourney.estimated_days
-        })
-        .eq('id', editingJourney.id);
-
-      if (error) {
-        console.error('Error updating journey:', error);
-        throw error;
+      const result = await JourneyService.updateJourney(editingJourney.id, {
+        title: editingJourney.title,
+        subtitle: editingJourney.subtitle,
+        description: editingJourney.description,
+        category: editingJourney.category,
+        difficulty: editingJourney.difficulty,
+        is_active: editingJourney.is_active,
+        is_premium: editingJourney.is_premium,
+        estimated_days: editingJourney.estimated_days,
+      });
+      if (result.error) {
+        console.error('Error updating journey:', result.error);
+        throw result.error;
       }
 
       setJourneys(prev => prev.map(j => j.id === editingJourney.id ? editingJourney : j));
@@ -231,14 +214,9 @@ const AdminJourneysTab: React.FC = () => {
   const initiateDeleteJourney = async (journey: Journey) => {
     try {
       // Fetch step count for confirmation modal
-      const { count, error } = await supabase
-        .from('journey_steps')
-        .select('*', { count: 'exact', head: true })
-        .eq('journey_id', journey.id);
-      
-      if (error) throw error;
-      
-      setStepsToDeleteCount(count || 0);
+      const result = await JourneyService.countSteps(journey.id);
+      if (result.error) throw result.error;
+      setStepsToDeleteCount(result.data || 0);
       setJourneyToDelete(journey);
       setIsDeleteDialogOpen(true);
     } catch (error: any) {
@@ -254,14 +232,10 @@ const AdminJourneysTab: React.FC = () => {
     try {
       console.log(`Attempting to delete journey: ${journeyToDelete.title} (${journeyToDelete.id})`);
       
-      const { error } = await supabase
-        .from('journeys')
-        .delete()
-        .eq('id', journeyToDelete.id);
-
-      if (error) {
-        console.error('Database error during journey deletion:', error);
-        throw error;
+      const result = await JourneyService.deleteJourney(journeyToDelete.id);
+      if (result.error) {
+        console.error('Database error during journey deletion:', result.error);
+        throw result.error;
       }
 
       setJourneys(prev => prev.filter(j => j.id !== journeyToDelete.id));
