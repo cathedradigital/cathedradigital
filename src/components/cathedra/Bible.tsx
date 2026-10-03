@@ -1374,7 +1374,7 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
                         runDeepScan();
                       }}
                       disabled={isScanning}
-                      className="flex-1 text-[9px] uppercase font-bold text-secondary"
+                      className="flex-1 text-xs uppercase font-bold text-secondary"
                     >
                       {isScanning ? 'Varrendo...' : 'Nova Auditoria'}
                     </Button>
@@ -1756,7 +1756,7 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
 
                   <div className="flex items-center gap-spacing-xs mt-spacing-xs">
                     {missing && (
-                      <span className="text-[9px] uppercase tracking-wider text-primary/40">
+                      <span className="text-premium-xs uppercase tracking-wider text-primary/50">
                         sem fonte
                       </span>
                     )}
@@ -2413,17 +2413,17 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
               <div className="space-y-spacing-md">
                 <div className="grid grid-cols-2 gap-spacing-md">
                   <div className="space-y-spacing-xs">
-                    <span className="text-[9px] font-black uppercase text-primary/30">Versículo</span>
+                    <span className="text-premium-xs font-bold uppercase text-primary/45">Versículo</span>
                     <input className="w-full bg-primary/[0.02] border border-primary/5 rounded-xl p-spacing-sm text-sm font-serif" placeholder="Ex: João 6,35" />
                   </div>
                   <div className="space-y-spacing-xs">
-                    <span className="text-[9px] font-black uppercase text-primary/30">Parágrafo CIC</span>
+                    <span className="text-premium-xs font-bold uppercase text-primary/45">Parágrafo CIC</span>
                     <input className="w-full bg-primary/[0.02] border border-primary/5 rounded-xl p-spacing-sm text-sm font-serif" placeholder="Ex: 1324" />
                   </div>
                 </div>
 
                 <div className="space-y-spacing-xs">
-                  <span className="text-[9px] font-black uppercase text-primary/30">Nota de Relacionamento</span>
+                  <span className="text-premium-xs font-bold uppercase text-primary/45">Nota de Relacionamento</span>
                   <textarea className="w-full bg-primary/[0.02] border border-primary/5 rounded-xl p-spacing-sm text-sm font-serif" rows={2} placeholder="Descreva o motivo desta conexão..." />
                 </div>
               </div>
