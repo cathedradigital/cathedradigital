@@ -108,3 +108,32 @@ test('Bíblia preserva contexto no Nexus Gn 1:1 → CIC §279 → retorno exato'
 
   expect(errors, 'Nexus return flow: console errors').toEqual([]);
 });
+
+test('Bíblia: os quatro controles principais da barra funcionam', async ({ page }) => {
+  const errors: string[] = [];
+  page.on('console', message => {
+    if (message.type() === 'error') errors.push(message.text());
+  });
+
+  await page.goto('/bible');
+
+  await page.getByTestId('bible-toolbar-search').click();
+  await expect(page.getByTestId('bible-search-input')).toBeVisible();
+  await page.getByTestId('bible-search-close').click();
+  await expect(page).toHaveURL(/\/bible$/);
+
+  await page.getByTestId('bible-toolbar-bookmarks').click();
+  await expect(page.getByText(/Marcadores/i).first()).toBeVisible();
+  await page.getByRole('button', { name: /Voltar|Fechar/i }).first().click().catch(() => {});
+  await page.goto('/bible');
+
+  await page.getByTestId('bible-toolbar-more').click();
+  await expect(page.getByRole('menuitem', { name: /Anotações/i })).toBeVisible();
+  await expect(page.getByRole('menuitem', { name: /Editor Bíblia/i })).toBeVisible();
+  await page.keyboard.press('Escape');
+
+  await page.getByTestId('bible-toolbar-notes').click();
+  await expect(page.getByText(/Anotações/i).first()).toBeVisible();
+
+  expect(errors, 'Bible toolbar: console errors').toEqual([]);
+});
