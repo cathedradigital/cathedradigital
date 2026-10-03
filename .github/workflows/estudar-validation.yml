@@ -26,5 +26,8 @@ jobs:
       - name: Lint
         run: npm run lint
 
+      - name: Internal route validation
+        run: npm run validate:links
+
       - name: Build and typecheck
         run: npm run build
