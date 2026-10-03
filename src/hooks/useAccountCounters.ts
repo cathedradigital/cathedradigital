@@ -6,6 +6,7 @@
  */
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from '@/lib/db';
+import { JourneyService } from '@/core/journey';
 import { useAuth } from "@/hooks/useAuth";
 
 export interface AccountCounters {
@@ -35,9 +36,12 @@ export function useAccountCounters() {
       const uid = user.id;
       const head = { count: "exact" as const, head: true };
 
-      // Cada count é independente; falhas silenciosas viram 0 (não bloqueiam a UI).
+      // Counts pessoais mantêm falhas explícitas no cache; não transformamos
+      // uma falha de banco em um estado aparentemente vazio.
       const safe = async (p: PromiseLike<{ count: number | null }>) => {
-        try { const r = await p; return r.count ?? 0; } catch { return 0; }
+        const r = await p;
+        if ('error' in r && r.error) throw r.error;
+        return r.count ?? 0;
       };
 
       const [notes, favorites, journal, journeys, collections, prayers, readings] = await Promise.all([
