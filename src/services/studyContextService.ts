@@ -17,17 +17,21 @@ export async function getStudyContext(query: string, limit = 12): Promise<StudyC
   if (!normalized) return { query: '', sources: [], journeys: [], nexus: [] };
   const like = '%' + normalized.replace(/[%_]/g, '\\$&') + '%';
   const [bible, catechism, authority, corpus, journeys] = await Promise.all([
-    supabase.from('bible_verses').select('book_abbr, chapter, verse, text').ilike('text', like).limit(limit),
+    supabase.from('bible_verses').select('book_abbr, chapter, verse, text, source_url').ilike('text', like).limit(limit),
     supabase.from('catechism_official').select('paragraph, content, source_name, source_url').or('content.ilike.' + like + ',source_name.ilike.' + like).limit(limit),
     supabase.from('authority_sources').select('id, slug, title, author, citation, description, canonical_url').eq('status', 'published').or('title.ilike.' + like + ',author.ilike.' + like + ',citation.ilike.' + like + ',description.ilike.' + like).limit(limit),
     supabase.from('corpus_documents').select('id, slug, title, author_name, excerpt, canonical_url').eq('status', 'published').or('title.ilike.' + like + ',author_name.ilike.' + like + ',slug.ilike.' + like + ',excerpt.ilike.' + like).limit(limit),
     supabase.from('journeys').select('id, title, description, category, tags').eq('is_active', true).or('title.ilike.' + like + ',description.ilike.' + like + ',category.ilike.' + like).limit(6),
   ]);
+  const queryResults = [bible, catechism, authority, corpus, journeys] as Array<{ error?: unknown }>;
+  const failedQuery = queryResults.find((result) => result.error);
+  if (failedQuery?.error) throw failedQuery.error;
+
   const sources: StudySource[] = [];
   for (const row of (bible.data ?? []) as Array<Record<string, unknown>>) {
     const book = String(row.book_abbr ?? ''); const chapter = Number(row.chapter ?? 0); const verse = Number(row.verse ?? 0);
     if (!book || !chapter || !verse) continue;
-    sources.push({ kind: 'bible', ref: book + ' ' + chapter + ',' + verse, title: book + ' ' + chapter + ',' + verse, excerpt: typeof row.text === 'string' ? row.text : null });
+    sources.push({ kind: 'bible', ref: book + ' ' + chapter + ',' + verse, title: book + ' ' + chapter + ',' + verse, excerpt: typeof row.text === 'string' ? row.text : null, canonicalUrl: typeof row.source_url === 'string' ? row.source_url : null });
   }
   for (const row of (catechism.data ?? []) as Array<Record<string, unknown>>) {
     const paragraph = Number(row.paragraph ?? 0); if (!paragraph) continue;
