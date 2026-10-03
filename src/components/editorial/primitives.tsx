@@ -311,7 +311,7 @@ export const EditorialBreadcrumb: React.FC<EditorialBreadcrumbProps> = ({
               onClick={item.onClick}
               aria-current={item.current || isLast ? 'page' : undefined}
               className={cn(
-                'transition-colors focus-visible:outline-none focus-visible:text-stitch-secondary',
+                'min-h-[44px] inline-flex items-center transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stitch-secondary/40 focus-visible:ring-offset-2 rounded-sm focus-visible:text-stitch-secondary',
                 item.current || isLast
                   ? 'text-stitch-secondary'
                   : 'hover:text-stitch-secondary',
@@ -371,7 +371,7 @@ export const EditorialCTA = React.forwardRef<
       ref={ref as never}
       type={as === 'button' ? 'button' : undefined}
       className={cn(
-        'group inline-flex items-center gap-3 font-stitch-label uppercase tracking-[0.28em] text-stitch-label-md',
+        'group inline-flex min-h-[44px] items-center gap-3 font-stitch-label uppercase tracking-[0.28em] text-stitch-label-md',
         'text-stitch-on-background',
         'pb-1 border-b border-stitch-secondary',
         'transition-[letter-spacing,color] duration-300',
