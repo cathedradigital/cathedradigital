@@ -164,3 +164,10 @@ test('Bíblia: leitura mantém espaçamento compacto e Nexus sem bolhas excessiv
     expect(bubbleBox?.height ?? 0).toBeLessThan(140);
   }
 });
+
+
+test('Bíblia: deep-link legado converge para URL canônica', async ({ page }) => {
+  await page.goto('/bible?book=joao&chapter=1&verse=1');
+  await expect(page).toHaveURL(/\/bible\?book=Jo&ch=1&v=1/);
+  await expect(page.locator('#verse-1')).toBeVisible();
+});
