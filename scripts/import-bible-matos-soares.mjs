@@ -2,7 +2,7 @@ import { createClient } from '@supabase/supabase-js';
 
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
-const DATA_URL = 'https://raw.githubusercontent.com/bibliacatolica/biblia/cf1545c87d61a0c246985cf8c8ee16979f4fbd1/biblia-matos-soares-completa.json';
+const DATA_URL = 'https://raw.githubusercontent.com/bibliacatolica/biblia/cf1545c87d61a0c246985cf8c8ee1699fd74f1bd/biblia-matos-soares-completa.json';
 
 if (!SUPABASE_URL || !SERVICE_ROLE_KEY) {
   throw new Error('SUPABASE_URL e SUPABASE_SERVICE_ROLE_KEY são obrigatórios.');
