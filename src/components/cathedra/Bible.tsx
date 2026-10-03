@@ -46,7 +46,7 @@ import { isChapterMissing, MISSING_CHAPTER_REASON } from '@/lib/bibleMissingChap
 import NexusContributionDialog from './NexusContributionDialog';
 
 const CatechismParagraphPreview: React.FC<{ paragraphId: string }> = ({ paragraphId }) => {
-  const pNum = parseInt(paragraphId);
+  const pNum = Number.parseInt(String(paragraphId).replace(/^§/, '').trim(), 10);
   const { data, isLoading } = useCatechismParagraph(pNum, !isNaN(pNum));
 
   if (isNaN(pNum)) return null;
@@ -90,8 +90,17 @@ const CatechismParagraphPreview: React.FC<{ paragraphId: string }> = ({ paragrap
 
 
   return (
-    <div className="text-sm font-serif text-primary/70 leading-relaxed max-h-32 overflow-y-auto pr-2 scrollbar-thin">
-      {data.content}
+    <div
+      className="rounded-xl border border-blue-500/15 bg-blue-500/[0.03] p-spacing-sm"
+      data-testid="catechism-preview"
+      data-cic-paragraph={pNum}
+    >
+      <p className="text-[9px] font-black uppercase tracking-[0.16em] text-blue-600 dark:text-blue-300">
+        Texto do Catecismo · §{pNum}
+      </p>
+      <p className="mt-1 text-sm font-serif text-primary/80 leading-relaxed max-h-40 overflow-y-auto pr-2 scrollbar-thin">
+        {data.content}
+      </p>
     </div>
   );
 };
@@ -119,7 +128,12 @@ const nexusConnectionFromRow = (row: any, currentVerseId?: string) => {
   const otherKind = isSource ? row.target_kind : row.source_kind;
   const otherRef = isSource ? row.target_ref : row.source_ref;
   const otherBible = isSource ? targetBible : sourceBible;
-  const id = otherBible ? `${otherBible.abbr}-${otherBible.chapter}${otherBible.verse ? `-${otherBible.verse}` : ''}` : String((otherRef as any)?.id ?? (otherRef as any)?.paragraph ?? (otherRef as any)?.slug ?? row.id);
+  const otherParagraph = otherKind === 'catechism_paragraph'
+    ? String((otherRef as any)?.paragraph ?? (otherRef as any)?.paragraph_id ?? (otherRef as any)?.paragraphNumber ?? (otherRef as any)?.p ?? '').trim()
+    : '';
+  const id = otherBible
+    ? otherBible.abbr + '-' + otherBible.chapter + (otherBible.verse ? '-' + otherBible.verse : '')
+    : otherParagraph || String((otherRef as any)?.id ?? (otherRef as any)?.slug ?? row.id);
   const labels: Record<string, string> = { catechism_paragraph: 'Catecismo', magisterium_doc: 'Magistério', patristic: 'Patrística', saint: 'Santo', saint_work: 'Obra de santo', glossary: 'Glossário', prayer: 'Oração', journey: 'Jornada', liturgy: 'Liturgia', bible_verse: 'Bíblia', other: 'Referência' };
   return { type: otherKind === 'catechism_paragraph' ? 'catechism' : otherKind === 'magisterium_doc' ? 'document' : otherKind === 'bible_verse' ? 'cross_ref' : 'reference', label: labels[otherKind] ?? 'Referência', color: otherKind === 'catechism_paragraph' ? 'bg-blue-500' : 'bg-amber-500', id, summary: row.note || '', theological_theme: undefined, relevance_level: row.confidence };
 };
