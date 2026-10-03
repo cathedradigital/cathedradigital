@@ -256,7 +256,7 @@ const ReadingJournal: React.FC = () => {
                     <Button 
                       variant="ghost" 
                       size="icon" 
-                      className="rounded-premium-full text-muted-foreground hover:text-destructive transition-colors opacity-0 group-hover:opacity-100"
+                      className="rounded-premium-full text-muted-foreground hover:text-destructive transition-colors opacity-100 md:opacity-0 group-hover:opacity-100 group-focus-within:opacity-100"
                       onClick={() => deleteMark(mark.id)}
                     >
                       <Icons.Trash2 className="w-spacing-md h-spacing-md" />
