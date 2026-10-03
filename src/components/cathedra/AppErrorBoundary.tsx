@@ -120,14 +120,14 @@ class AppErrorBoundary extends Component<Props, State> {
 
             {this.state.errorMessage && (
               <details className="text-left mt-spacing-md rounded border border-border/30 bg-background/60 p-3">
-                <summary className="cursor-pointer text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                <summary className="cursor-pointer text-premium-xs font-bold uppercase tracking-widest text-muted-foreground">
                   Detalhes técnicos
                 </summary>
                 <p className="mt-2 text-xs font-mono text-destructive break-words">
                   {this.state.errorMessage}
                 </p>
                 {this.state.errorStack && (
-                  <pre className="mt-2 max-h-40 overflow-auto text-[10px] font-mono text-muted-foreground whitespace-pre-wrap">
+                  <pre className="mt-2 max-h-40 overflow-auto text-xs font-mono text-muted-foreground whitespace-pre-wrap">
                     {this.state.errorStack}
                   </pre>
                 )}
@@ -136,12 +136,12 @@ class AppErrorBoundary extends Component<Props, State> {
 
             {this.state.errorId && (
               <div className="mt-spacing-md space-y-1">
-                <p className="text-[9px] font-mono opacity-40 uppercase tracking-widest">
+                <p className="text-premium-xs font-mono opacity-60 uppercase tracking-widest">
                   Ref ID: {this.state.errorId}
                 </p>
                 <a
                   href={`/admin/client-errors?ref=${encodeURIComponent(this.state.errorId)}`}
-                  className="text-[9px] font-mono text-primary/60 hover:text-primary underline uppercase tracking-widest"
+                  className="text-premium-xs font-mono text-primary/70 hover:text-primary underline uppercase tracking-widest"
                 >
                   Investigar no admin
                 </a>
@@ -156,7 +156,7 @@ class AppErrorBoundary extends Component<Props, State> {
                 this.setState({ hasError: false });
                 window.location.reload();
               }}
-              className="rounded-premium-full bg-primary/90 hover:bg-primary text-white h-spacing-xl text-[9px] font-bold uppercase tracking-[0.2em] shadow-premium hover:shadow-premium-hover transition-all"
+              className="rounded-premium-full bg-primary/90 hover:bg-primary text-white min-h-11 h-spacing-xl text-xs font-bold uppercase tracking-[0.2em] shadow-premium hover:shadow-premium-hover transition-all"
             >
               Tentar Novamente
             </Button>
@@ -164,7 +164,7 @@ class AppErrorBoundary extends Component<Props, State> {
             <Button
               variant="outline"
               onClick={this.copyDetails}
-              className="text-[9px] font-bold uppercase tracking-widest"
+              className="min-h-11 text-xs font-bold uppercase tracking-widest"
             >
               Copiar detalhes do erro
             </Button>
@@ -184,7 +184,7 @@ class AppErrorBoundary extends Component<Props, State> {
                 }
                 window.location.href = '/';
               }}
-              className="text-[8px] font-bold text-muted-foreground/40 hover:text-primary uppercase tracking-widest"
+              className="min-h-11 text-xs font-bold text-muted-foreground/60 hover:text-primary uppercase tracking-widest"
             >
               Limpar Dados e Reiniciar
             </Button>
