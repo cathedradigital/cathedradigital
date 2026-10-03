@@ -23,8 +23,6 @@ jobs:
     permissions:
       contents: read
     env:
-      VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
-      VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY }}
       E2E_TEST_EMAIL: ${{ secrets.E2E_TEST_EMAIL }}
       E2E_TEST_PASSWORD: ${{ secrets.E2E_TEST_PASSWORD }}
     steps:
@@ -38,13 +36,6 @@ jobs:
         with:
           node-version: "22.x"
 
-      - name: Verify E2E credentials/config exist
-        run: |
-          test -n "$VITE_SUPABASE_URL" || { echo "::error::Missing VITE_SUPABASE_URL"; exit 1; }
-          test -n "$VITE_SUPABASE_PUBLISHABLE_KEY" || { echo "::error::Missing VITE_SUPABASE_PUBLISHABLE_KEY"; exit 1; }
-          test -n "$E2E_TEST_EMAIL" || { echo "::error::Missing E2E_TEST_EMAIL"; exit 1; }
-          test -n "$E2E_TEST_PASSWORD" || { echo "::error::Missing E2E_TEST_PASSWORD"; exit 1; }
-
       - name: Install application dependencies
         run: npm install
 
@@ -55,6 +46,14 @@ jobs:
 
       - name: Build PR HEAD
         run: npm run build
+
+      - name: Run public browser smoke
+        run: npx playwright test e2e/estudar-public-smoke.spec.ts
+
+      - name: Verify authenticated E2E account exists
+        run: |
+          test -n "$E2E_TEST_EMAIL" || { echo "::error::Missing E2E_TEST_EMAIL — authenticated E2E is blocked"; exit 1; }
+          test -n "$E2E_TEST_PASSWORD" || { echo "::error::Missing E2E_TEST_PASSWORD — authenticated E2E is blocked"; exit 1; }
 
       - name: Run critical Estudar E2E
         run: npx playwright test e2e/estudar-critical.spec.ts
