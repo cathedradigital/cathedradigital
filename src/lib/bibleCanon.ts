@@ -150,6 +150,12 @@ export function findBookByAbbr(abbr: string): BibleBook | undefined {
   for (const [k, v] of Object.entries(BY_ABBR)) {
     if (k.toLowerCase() === compact) return v;
   }
+  // Também aceita o nome completo do livro em URLs antigas/importações
+  // (ex.: "joao" → "Jo", "genesis" → "Gn").
+  for (const book of BIBLE_CANON) {
+    const nameCompact = book.name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^\p{L}\p{N}]+/gu, '');
+    if (nameCompact === compact) return book;
+  }
   return undefined;
 }
 
