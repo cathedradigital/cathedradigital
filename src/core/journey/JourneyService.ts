@@ -124,6 +124,20 @@ export const JourneyService = {
     }
   },
 
+  async getStepById(stepId: string): Promise<ServiceResult<JourneyStep>> {
+    try {
+      const { data, error } = await supabase
+        .from('journey_steps')
+        .select('*')
+        .eq('id', stepId)
+        .maybeSingle();
+      if (error) throw error;
+      return ok(data ? JourneyAdapter.fromJourneyStepRow(data as any) : (null as any));
+    } catch (e) {
+      return fail(e);
+    }
+  },
+
   async getStep(journeyId: string, order: number): Promise<ServiceResult<JourneyStep>> {
     try {
       if (JourneyAdapter.isLegacyId(journeyId)) {
