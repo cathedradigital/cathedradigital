@@ -25,6 +25,7 @@ import {
 } from 'lucide-react';
 import { EditorialHero } from '@/components/editorial/harmony';
 import { supabase } from '@/lib/db';
+import { JourneyService } from '@/core/journey';
 import { useAuth } from '@/hooks/useAuth';
 import { AppRoute } from '@/types';
 import { SpaceLayout, SpaceHeader, SpaceDoors, type SpaceDoor, SpaceFooter } from '@/components/cathedra/space/SpaceLayout';
@@ -87,17 +88,14 @@ const AtriumJornadasPage: React.FC = () => {
       if (!cancelled && data) setJourneys(data as JourneyRow[]);
 
       if (user) {
-        const { data: prog, error: progError } = await supabase
-          .from('journey_progress')
-          .select('journey_id')
-          .eq('user_id', user.id);
-        if (progError) {
-          console.error('AtriumJornadas progress load error:', progError);
+        const progressRes = await JourneyService.listUserJourneyProgress(user.id);
+        if (progressRes.error) {
+          console.error('AtriumJornadas progress load error:', progressRes.error);
           if (!cancelled) setProgressError('O progresso pessoal não pôde ser carregado.');
         }
-        if (!cancelled && prog) {
+        if (!cancelled && progressRes.data) {
           const m: Record<string, number> = {};
-          prog.forEach((p: any) => {
+          progressRes.data.forEach((p) => {
             m[p.journey_id] = (m[p.journey_id] || 0) + 1;
           });
           setProgressMap(m);
