@@ -21,10 +21,12 @@ export function useNotes(contentType: string, contentId?: string) {
   const { user } = useAuth();
   const [notes, setNotes] = useState<UserNote[]>([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
 
   const fetchNotes = useCallback(async () => {
-    if (!user) { setNotes([]); return; }
+    if (!user) { setNotes([]); setError(null); return; }
     setLoading(true);
+    setError(null);
     let query = supabase
       .from('user_notes')
       .select('*')
@@ -35,7 +37,13 @@ export function useNotes(contentType: string, contentId?: string) {
     if (contentType !== 'all') query = query.eq('content_type', contentType);
     if (contentId) query = query.eq('content_id', contentId);
 
-    const { data } = await query;
+    const { data, error: queryError } = await query;
+    if (queryError) {
+      console.error('Error fetching notes:', queryError);
+      setError(queryError);
+      setLoading(false);
+      return;
+    }
     setNotes((data as UserNote[]) || []);
     setLoading(false);
   }, [user, contentType, contentId]);
@@ -173,5 +181,5 @@ export function useNotes(contentType: string, contentId?: string) {
     return true;
   }, [user, notes]);
 
-  return { notes, loading, addNote, updateNote, deleteNote, refetch: fetchNotes };
+  return { notes, loading, error, addNote, updateNote, deleteNote, refetch: fetchNotes };
 }

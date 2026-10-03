@@ -15,7 +15,7 @@ const StudyJournal: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'notes' | 'marks'>('notes');
   const [searchQuery, setSearchQuery] = useState('');
   
-  const { notes: allNotes, updateNote, deleteNote } = useNotes('all');
+  const { notes: allNotes, updateNote, deleteNote, error: notesError } = useNotes('all');
   
   const { marks, deleteMark, updateMark } = useReadingMarks();
   
@@ -81,6 +81,12 @@ const StudyJournal: React.FC = () => {
           />
         </div>
       </div>
+
+      {notesError && (
+        <div role="alert" className="rounded-premium border border-destructive/20 bg-destructive/5 p-spacing-md text-sm text-destructive">
+          Não foi possível carregar suas anotações. Tente novamente.
+        </div>
+      )}
 
       <AnimatePresence mode="wait">
         {activeTab === 'notes' ? (

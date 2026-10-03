@@ -20,7 +20,7 @@ const ReadingJournal: React.FC = () => {
   const navigate = useNavigate();
   const { user, profile } = useAuth();
   const { marks, deleteMark } = useReadingMarks();
-  const { notes, deleteNote, updateNote } = useNotes('all'); // All notes
+  const { notes, deleteNote, updateNote, error: notesError } = useNotes('all'); // All notes
   const [search, setSearch] = useState('');
   const [activeTab, setActiveTab] = useState('history');
   
@@ -191,6 +191,12 @@ const ReadingJournal: React.FC = () => {
           onChange={(e) => setSearch(e.target.value)}
         />
       </div>
+
+      {notesError && (
+        <div role="alert" className="rounded-premium border border-destructive/20 bg-destructive/5 p-spacing-md text-sm text-destructive">
+          Não foi possível carregar suas anotações. Tente novamente.
+        </div>
+      )}
 
       <Tabs defaultValue="history" className="w-full" onValueChange={setActiveTab}>
         <div className="flex items-center justify-between gap-spacing-md mb-spacing-xl">
