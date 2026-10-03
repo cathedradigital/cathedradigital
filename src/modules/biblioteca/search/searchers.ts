@@ -60,7 +60,7 @@ async function searchBible(q: string, limit: number): Promise<RawHit[]> {
     id: `book:${r.abbrev}`,
     title: r.name ?? r.abbrev ?? '',
     subtitle: r.testament ?? undefined,
-    href: `/bible?book=${encodeURIComponent(String(r.abbrev ?? ''))}&chapter=1`,
+    href: `/bible?book=${encodeURIComponent(String(r.abbrev ?? ''))}&ch=1`,
   }));
 }
 
