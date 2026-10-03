@@ -48,7 +48,7 @@ jobs:
         run: npm run build
 
       - name: Run public browser smoke
-        run: npx playwright test e2e/estudar-public-smoke.spec.ts
+        run: npx playwright test e2e/estudar-public-smoke.spec.ts e2e/bible-complete-smoke.spec.ts
 
       - name: Verify authenticated E2E account exists
         run: |
