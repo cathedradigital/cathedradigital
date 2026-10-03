@@ -57,7 +57,7 @@ const FavoritesPage: React.FC = () => {
                   <h3 className="font-serif font-bold text-foreground">{item.title}</h3>
                   <p className="text-premium-sm text-muted-foreground font-serif line-clamp-spacing-xs">{item.content}</p>
                 </div>
-                <Button onClick={() => removeFavorite(item.id)} aria-label={'Remover ' + item.title + ' dos favoritos'} className="p-spacing-xs rounded-premium-full opacity-0 group-hover:opacity-100 hover:bg-destructive/10 transition-all">
+                <Button onClick={() => removeFavorite(item.id)} aria-label={'Remover ' + item.title + ' dos favoritos'} className="min-h-11 min-w-11 p-spacing-xs rounded-premium-full opacity-100 md:opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 focus-visible:opacity-100 hover:bg-destructive/10 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-destructive/30 focus-visible:ring-offset-2">
                   <Icons.Cross className="w-spacing-md h-spacing-md text-destructive" />
                 </Button>
               </div>
