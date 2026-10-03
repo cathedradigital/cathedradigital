@@ -163,25 +163,9 @@ const JornadaCompletePage: React.FC = () => {
         .single();
       if (!profile) return;
 
-      const { data: allJourneys } = await supabase.from('journeys').select('id').eq('is_active', true);
-
-      let completedJourneyCount = 0;
-      if (allJourneys) {
-        for (const j of allJourneys) {
-          const { count: totalSteps } = await supabase
-            .from('journey_steps')
-            .select('*', { count: 'exact', head: true })
-            .eq('journey_id', j.id);
-          const { count: doneSteps } = await supabase
-            .from('journey_progress')
-            .select('*', { count: 'exact', head: true })
-            .eq('user_id', user.id)
-            .eq('journey_id', j.id);
-          if (totalSteps && doneSteps && doneSteps >= totalSteps) {
-            completedJourneyCount++;
-          }
-        }
-      }
+      const completedCountRes = await JourneyService.getCompletedJourneyCount(user.id);
+      if (completedCountRes.error) throw completedCountRes.error;
+      const completedJourneyCount = completedCountRes.data ?? 0;
 
       const xpGain = 100;
       const newXp = (profile.xp || 0) + xpGain;
