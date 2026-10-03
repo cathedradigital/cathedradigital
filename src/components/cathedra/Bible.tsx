@@ -280,6 +280,9 @@ const Bible: React.FC = () => {
 
   // Retoma o ponto visual exato do capítulo ao voltar de uma relação.
   useEffect(() => {
+    // Quando há um versículo profundo solicitado (?v=...), a restauração do
+    // versículo tem prioridade sobre a posição genérica salva do capítulo.
+    if (requestedVerse) return;
     if (viewMode !== 'reading' || !selectedBook) return;
     const key = 'cathedra_bible_scroll_' + selectedBook.abbr + '_' + selectedChapter;
     const raw = localStorage.getItem(key);
