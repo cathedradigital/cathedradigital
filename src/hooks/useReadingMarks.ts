@@ -20,19 +20,25 @@ export function useReadingMarks() {
   const { user } = useAuth();
   const [marks, setMarks] = useState<ReadingMark[]>([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
 
   const fetchMarks = useCallback(async () => {
-    if (!user) { setMarks([]); return; }
+    if (!user) { setMarks([]); setError(null); return; }
     setLoading(true);
+    setError(null);
     const { data, error } = await supabase
       .from('reading_marks')
       .select('*')
       .eq('user_id', user.id)
       .order('updated_at', { ascending: false });
 
-    if (!error && data) {
-      setMarks(data as ReadingMark[]);
+    if (error) {
+      console.error('Error fetching reading marks:', error);
+      setError(error);
+      setLoading(false);
+      return;
     }
+    setMarks((data as ReadingMark[]) || []);
     setLoading(false);
   }, [user]);
 
@@ -68,6 +74,7 @@ export function useReadingMarks() {
 
   const addMark = useCallback(async (mark: Partial<ReadingMark>) => {
     if (!user) return null;
+    setError(null);
 
     // If setting as last_read, unset others for this user
     if (mark.is_last_read) {
@@ -94,11 +101,15 @@ export function useReadingMarks() {
       .select()
       .single();
 
-    if (!error && data) {
-      setMarks(prev => [data as ReadingMark, ...prev]);
-      return data as ReadingMark;
+    if (error || !data) {
+      if (error) {
+        console.error('Error adding reading mark:', error);
+        setError(error);
+      }
+      return null;
     }
-    return null;
+    setMarks(prev => [data as ReadingMark, ...prev]);
+    return data as ReadingMark;
   }, [user]);
 
   const updateMark = useCallback(async (id: string, updates: Partial<ReadingMark>) => {
@@ -106,11 +117,15 @@ export function useReadingMarks() {
     const { error } = await supabase
       .from('reading_marks')
       .update(updates)
-      .eq('id', id);
+      .eq('id', id)
+      .eq('user_id', user.id);
 
-    if (!error) {
-      setMarks(prev => prev.map(m => m.id === id ? { ...m, ...updates } : m));
+    if (error) {
+      console.error('Error updating reading mark:', error);
+      setError(error);
+      return;
     }
+    setMarks(prev => prev.map(m => m.id === id ? { ...m, ...updates } : m));
   }, [user]);
 
   const deleteMark = useCallback(async (id: string) => {
@@ -118,11 +133,15 @@ export function useReadingMarks() {
     const { error } = await supabase
       .from('reading_marks')
       .delete()
-      .eq('id', id);
+      .eq('id', id)
+      .eq('user_id', user.id);
 
-    if (!error) {
-      setMarks(prev => prev.filter(m => m.id !== id));
+    if (error) {
+      console.error('Error deleting reading mark:', error);
+      setError(error);
+      return;
     }
+    setMarks(prev => prev.filter(m => m.id !== id));
   }, [user]);
 
   const saveLastRead = useCallback(async (mark: Partial<ReadingMark>) => {
@@ -130,7 +149,7 @@ export function useReadingMarks() {
 
     // Há uma única posição global de retomada por usuário. Atualize-a em vez
     // de inserir uma linha nova a cada mudança de parágrafo/scroll.
-    const { data: current } = await supabase
+    const { data: current, error: currentError } = await supabase
       .from('reading_marks')
       .select('id')
       .eq('user_id', user.id)
@@ -138,6 +157,12 @@ export function useReadingMarks() {
       .order('updated_at', { ascending: false })
       .limit(1)
       .maybeSingle();
+
+    if (currentError) {
+      console.error('Error locating last reading mark:', currentError);
+      setError(currentError);
+      return false;
+    }
 
     if (current?.id) {
       const { error } = await supabase
@@ -161,11 +186,17 @@ export function useReadingMarks() {
           ...mark,
           is_last_read: true,
         } : { ...m, is_last_read: false }));
-        return;
+        return true;
+      }
+      if (error) {
+        console.error('Error updating last reading mark:', error);
+        setError(error);
+        return false;
       }
     }
 
-    await addMark({ ...mark, is_last_read: true });
+    const created = await addMark({ ...mark, is_last_read: true });
+    return Boolean(created);
   }, [user, addMark]);
 
   const getLastRead = useCallback(async () => {
@@ -179,9 +210,13 @@ export function useReadingMarks() {
       .limit(1)
       .single();
 
-    if (!error && data) return data as ReadingMark;
-    return null;
+    if (error) {
+      console.error('Error fetching last reading mark:', error);
+      setError(error);
+      return null;
+    }
+    return data as ReadingMark | null;
   }, [user]);
 
-  return { marks, loading, addMark, updateMark, deleteMark, saveLastRead, getLastRead, refetch: fetchMarks };
+  return { marks, loading, error, addMark, updateMark, deleteMark, saveLastRead, getLastRead, refetch: fetchMarks };
 }

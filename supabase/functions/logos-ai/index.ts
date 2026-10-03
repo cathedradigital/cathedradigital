@@ -69,6 +69,59 @@ function publishableKey(): string | null {
   return Deno.env.get("SUPABASE_ANON_KEY") || null;
 }
 
+function hasPremiumAccess(user: { app_metadata?: Record<string, unknown> | null }): boolean {
+  const metadata = user.app_metadata ?? {};
+  if (metadata.is_premium === true) return true;
+
+  const plan = String(metadata.plan ?? metadata.subscription_plan ?? '').toLowerCase();
+  if (!['premium', 'pro', 'cathedra_pro'].includes(plan)) return false;
+
+  const status = String(metadata.subscription_status ?? metadata.status ?? 'active').toLowerCase();
+  if (['canceled', 'cancelled', 'expired', 'inactive', 'past_due', 'unpaid'].includes(status)) return false;
+
+  const expiresAt = metadata.expires_at ?? metadata.premium_expires_at;
+  if (typeof expiresAt === 'string' && expiresAt.trim()) {
+    const expiresMs = Date.parse(expiresAt);
+    if (Number.isFinite(expiresMs) && expiresMs <= Date.now()) return false;
+  }
+
+  return true;
+}
+
+async function requirePremiumUser(req: Request): Promise<{ user: any } | { response: Response }> {
+  const url = Deno.env.get("SUPABASE_URL");
+  const key = publishableKey();
+  const authorization = req.headers.get("Authorization");
+
+  if (!url || !key || !authorization) {
+    return { response: json({ error: "Autenticação obrigatória.", code: "auth_required" }, 401) };
+  }
+
+  const client = createClient(url, key, {
+    auth: { persistSession: false, autoRefreshToken: false },
+    global: { headers: { Authorization: authorization } },
+  });
+
+  const { data, error } = await client.auth.getUser();
+  if (error || !data.user) {
+    return { response: json({ error: "Sessão inválida ou expirada.", code: "invalid_session" }, 401) };
+  }
+
+  if (!hasPremiumAccess(data.user)) {
+    return {
+      response: json(
+        {
+          error: "O Cáter é uma funcionalidade premium. Faça upgrade para continuar.",
+          code: "premium_required",
+        },
+        403,
+      ),
+    };
+  }
+
+  return { user: data.user };
+}
+
 function makeDbClient(req: Request) {
   const url = Deno.env.get("SUPABASE_URL");
   if (!url) return null;
@@ -501,6 +554,9 @@ Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: CORS });
 
   if (req.method !== "POST") return json({ error: "Método não permitido." }, 405);
+
+  const access = await requirePremiumUser(req);
+  if ("response" in access) return access.response;
 
   const key = Deno.env.get("LOVABLE_API_KEY");
   if (!key) return json({ error: "Gateway de IA não configurado." }, 503);
