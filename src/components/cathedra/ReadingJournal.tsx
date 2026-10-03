@@ -19,7 +19,7 @@ import SEOHead from '@/components/SEOHead';
 const ReadingJournal: React.FC = () => {
   const navigate = useNavigate();
   const { user, profile } = useAuth();
-  const { marks, deleteMark } = useReadingMarks();
+  const { marks, deleteMark, error: marksError } = useReadingMarks();
   const { notes, deleteNote, updateNote, error: notesError } = useNotes('all'); // All notes
   const [search, setSearch] = useState('');
   const [activeTab, setActiveTab] = useState('history');
@@ -192,6 +192,12 @@ const ReadingJournal: React.FC = () => {
         />
       </div>
 
+      {marksError && (
+        <div role="alert" className="rounded-premium border border-destructive/20 bg-destructive/5 p-spacing-md text-sm text-destructive">
+          Não foi possível carregar seu histórico de leitura. Tente novamente.
+        </div>
+      )}
+
       {notesError && (
         <div role="alert" className="rounded-premium border border-destructive/20 bg-destructive/5 p-spacing-md text-sm text-destructive">
           Não foi possível carregar suas anotações. Tente novamente.
@@ -250,7 +256,7 @@ const ReadingJournal: React.FC = () => {
                     <Button 
                       variant="ghost" 
                       size="icon" 
-                      className="rounded-premium-full text-muted-foreground hover:text-destructive transition-colors opacity-0 group-hover:opacity-100"
+                      className="rounded-premium-full text-muted-foreground hover:text-destructive transition-colors md:opacity-0 md:group-hover:opacity-100 focus-visible:opacity-100"
                       onClick={() => deleteMark(mark.id)}
                     >
                       <Icons.Trash2 className="w-spacing-md h-spacing-md" />
