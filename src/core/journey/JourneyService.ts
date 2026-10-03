@@ -338,6 +338,21 @@ export const JourneyService = {
     }
   },
 
+  async getUserProgressCount(userId: string, since?: string): Promise<ServiceResult<number>> {
+    try {
+      let q = supabase
+        .from('journey_progress')
+        .select('id', { count: 'exact', head: true })
+        .eq('user_id', userId);
+      if (since) q = q.gte('completed_at', since);
+      const { count, error } = await q;
+      if (error) throw error;
+      return ok(count ?? 0);
+    } catch (e) {
+      return fail(e);
+    }
+  },
+
   async getCompletedJourneyCount(userId: string): Promise<ServiceResult<number>> {
     try {
       const [journeysRes, stepsRes, progressRes] = await Promise.all([
