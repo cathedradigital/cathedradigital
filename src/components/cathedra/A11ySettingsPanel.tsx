@@ -134,7 +134,7 @@ const A11ySettingsPanel: React.FC<A11ySettingsPanelProps> = ({
                 </div>
                 <h2 id="a11y-title" className="text-premium-xl font-serif font-bold text-primary">Acessibilidade</h2>
               </div>
-              <Button variant="ghost" size="icon" onClick={onClose} className="rounded-premium-full">
+              <Button variant="ghost" size="icon" onClick={onClose} aria-label="Fechar configurações de acessibilidade" className="min-h-11 min-w-11 rounded-premium-full focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:ring-offset-2">
                 <Icons.X className="w-spacing-md h-spacing-md" />
               </Button>
             </div>
@@ -376,7 +376,7 @@ const A11ySettingsPanel: React.FC<A11ySettingsPanelProps> = ({
             </div>
 
             <div className="pt-spacing-xl border-t border-border/10">
-              <Button className="w-full rounded-premium-full h-spacing-2xl text-[10px] font-bold uppercase tracking-[0.3em] shadow-premium btn-premium-primary" onClick={onClose}>
+              <Button className="w-full min-h-11 rounded-premium-full h-spacing-2xl text-xs font-bold uppercase tracking-[0.25em] shadow-premium btn-premium-primary focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:ring-offset-2" onClick={onClose}>
                 Concluído
               </Button>
             </div>
