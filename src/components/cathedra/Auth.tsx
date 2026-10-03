@@ -138,7 +138,7 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
       {/* Voltar */}
       <button
         onClick={() => navigate(AppRoute.HOME)}
-        className="group absolute left-6 top-6 inline-flex items-center gap-2 text-[10px] tracking-[0.28em] transition-colors md:left-12 md:top-10"
+        className="group absolute left-4 top-4 inline-flex min-h-11 items-center gap-2 px-2 text-premium-xs tracking-[0.28em] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary/50 focus-visible:ring-offset-2 md:left-10 md:top-8"
         style={{ color: 'var(--noir-text-faint)', fontFamily: 'Inter, sans-serif' }}
         onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--gold)')}
         onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--noir-text-faint)')}
@@ -151,7 +151,7 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
         {/* Cabeçalho editorial */}
         <div data-rise className="mb-12 flex flex-col items-center text-center">
           <span
-            className="mb-6 inline-block text-[10px] font-medium uppercase tracking-[0.32em]"
+            className="mb-6 inline-block text-premium-xs font-medium uppercase tracking-[0.32em]"
             style={{ color: 'var(--gold)', fontFamily: 'Inter, sans-serif' }}
           >
             Sanctuarium Spiritus
@@ -214,7 +214,7 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
             <div className="flex flex-col gap-2">
               <label
                 htmlFor="auth-name"
-                className="text-[10px] uppercase tracking-[0.28em]"
+                className="text-premium-xs uppercase tracking-[0.28em]"
                 style={{ color: 'var(--noir-text-faint)', fontFamily: 'Inter, sans-serif' }}
               >
                 Nome
@@ -235,7 +235,7 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
           <div className="flex flex-col gap-2">
             <label
               htmlFor="auth-email"
-              className="text-[10px] uppercase tracking-[0.28em]"
+              className="text-premium-xs uppercase tracking-[0.28em]"
               style={{ color: 'var(--noir-text-faint)', fontFamily: 'Inter, sans-serif' }}
             >
               Email
@@ -257,7 +257,7 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
             <div className="flex flex-col gap-2">
               <label
                 htmlFor="auth-password"
-                className="text-[10px] uppercase tracking-[0.28em]"
+                className="text-premium-xs uppercase tracking-[0.28em]"
                 style={{ color: 'var(--noir-text-faint)', fontFamily: 'Inter, sans-serif' }}
               >
                 Senha
@@ -280,7 +280,7 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
           <button
             type="submit"
             disabled={loading}
-            className="group mt-2 inline-flex w-full items-center justify-center gap-3 border px-8 py-4 text-xs uppercase tracking-[0.32em] transition-all disabled:opacity-40"
+            className="group mt-2 inline-flex min-h-11 w-full items-center justify-center gap-3 border px-8 py-4 text-xs uppercase tracking-[0.32em] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary/50 focus-visible:ring-offset-2 disabled:opacity-40"
             style={{
               borderColor: 'var(--gold)',
               color: 'var(--gold)',
@@ -341,7 +341,7 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
                 }
                 setLoading(false);
               }}
-              className="inline-flex items-center justify-center gap-3 border px-4 py-3 text-xs uppercase tracking-[0.28em] transition-colors disabled:opacity-40"
+              className="inline-flex min-h-11 items-center justify-center gap-3 border px-4 py-3 text-xs uppercase tracking-[0.28em] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary/50 focus-visible:ring-offset-2 disabled:opacity-40"
               style={{
                 borderColor: 'var(--noir-line-strong)',
                 color: 'var(--noir-text)',
@@ -383,7 +383,7 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
                 }
                 setLoading(false);
               }}
-              className="inline-flex items-center justify-center gap-3 border px-4 py-3 text-xs uppercase tracking-[0.28em] transition-colors disabled:opacity-40"
+              className="inline-flex min-h-11 items-center justify-center gap-3 border px-4 py-3 text-xs uppercase tracking-[0.28em] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary/50 focus-visible:ring-offset-2 disabled:opacity-40"
               style={{
                 borderColor: 'var(--noir-line-strong)',
                 color: 'var(--noir-text)',
@@ -439,7 +439,7 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
 
         {/* Rodapé leve */}
         <p
-          className="mt-16 text-center text-[10px] uppercase tracking-[0.32em]"
+          className="mt-16 text-center text-premium-xs uppercase tracking-[0.32em]"
           style={{ color: 'var(--noir-text-faint)', fontFamily: 'Inter, sans-serif' }}
         >
           Acesso essencial · 100% gratuito
