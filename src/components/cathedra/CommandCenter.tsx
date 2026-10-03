@@ -181,7 +181,7 @@ const CommandCenter: React.FC = () => {
         if (!user) return;
         const { data, error } = await supabase
           .from('user_notes')
-          .select('id, note_text, content_id, book_abbr, chapter, verse, paragraph, updated_at')
+          .select('id, note_text, content_type, content_id, book_abbr, chapter, verse, paragraph, updated_at')
           .eq('user_id', user.id)
           .ilike('note_text', `%\${q}%`)
           .order('updated_at', { ascending: false })
@@ -191,7 +191,11 @@ const CommandCenter: React.FC = () => {
         data?.forEach((n: any) => {
           const biblePath = n.content_type === 'bible' && n.book_abbr && n.chapter
             ? \`/bible?book=\${encodeURIComponent(n.book_abbr)}&ch=\${n.chapter}\${n.verse ? \`&v=\${n.verse}\` : ''}\`
-            : undefined;
+            : n.content_type === 'catechism' && n.paragraph
+              ? \`/catechism?p=\${n.paragraph}\`
+              : n.content_type === 'magisterium' && n.content_id
+                ? \`/magisterium?doc=\${encodeURIComponent(n.content_id)}\`
+                : '/diario';
           results.push({
             type: 'note',
             label: n.book_abbr && n.chapter
