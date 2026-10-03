@@ -81,7 +81,8 @@ test('Bíblia permite pesquisar uma referência real', async ({ page }) => {
   await expect(page).toHaveURL(/\/bible$/);
 
   expect(errors, '/bible search: console errors').toEqual([]);
-});\n
+});
+
 test('Bíblia preserva contexto no Nexus Gn 1:1 → CIC §279 → retorno exato', async ({ page }) => {
   const errors: string[] = [];
   page.on('console', message => {
