@@ -35,7 +35,7 @@ import {
   Sparkles,
 } from 'lucide-react';
 
-import { supabase } from '@/lib/db';
+import { JourneyService } from '@/core/journey';
 import { useAuth } from '@/hooks/useAuth';
 import { AppRoute } from '@/types';
 import { EditorialQuote } from '@/components/editorial/primitives';
@@ -75,31 +75,23 @@ const JornadaDetailPage: React.FC = () => {
   const loadJourney = async () => {
     setLoading(true);
     try {
-      const [journeyRes, stepsRes] = await Promise.all([
-        supabase.from('journeys').select('*').eq('id', id!).single(),
-        supabase.from('journey_steps').select('*').eq('journey_id', id!).order('step_order', { ascending: true }),
+      const [journeyRes, stepsRes, progressRes] = await Promise.all([
+        JourneyService.getById(id!),
+        JourneyService.listSteps(id!),
+        user ? JourneyService.getProgress(user.id, id!) : Promise.resolve({ data: [], error: null }),
       ]);
       const j = journeyRes.data;
+      if (journeyRes.error) throw journeyRes.error;
       if (j) setJourney(j);
+      if (stepsRes.error) throw stepsRes.error;
       if (stepsRes.data) setSteps(stepsRes.data);
-      if (user && j) {
-        const { data: progress } = await supabase
-          .from('journey_progress')
-          .select('step_id')
-          .eq('user_id', user.id)
-          .eq('journey_id', id!);
-        if (progress) setCompletedStepIds(new Set(progress.map((p) => p.step_id)));
-      }
+      if (progressRes.error) throw progressRes.error;
+      if (progressRes.data) setCompletedStepIds(new Set(progressRes.data.map((p) => p.step_id).filter(Boolean)));
+
       if (j?.category) {
-        const { data: rel } = await supabase
-          .from('journeys')
-          .select('id, title, subtitle, category, difficulty, estimated_days')
-          .eq('category', j.category)
-          .eq('is_active', true)
-          .neq('id', j.id)
-          .order('sort_order', { ascending: true })
-          .limit(3);
-        if (rel) setRelated(rel);
+        const relatedRes = await JourneyService.getRelated(j.id, 3);
+        if (relatedRes.error) throw relatedRes.error;
+        if (relatedRes.data) setRelated(relatedRes.data);
       }
     } catch (err) {
       console.error('Failed to load journey:', err);
