@@ -154,7 +154,7 @@ async function searchBibleReference(
   const match = input.match(/\b([1-3]?\s?[A-Za-zÀ-ÿ]+)\s+(\d+)\s*[,:]\s*(\d+)(?:\s*[-–]\s*(\d+))?\b/);
   if (!match) return [];
 
-  const book = match[1].replace(/\s+/g, "");
+  const book = match[1].trim().replace(/\s+/g, " ");
   const chapter = Number(match[2]);
   const verse = Number(match[3]);
   const verseEnd = Number(match[4] || match[3]);
@@ -178,15 +178,14 @@ async function searchBibleReference(
 
   const { data: verses } = await db
     .from("bible_verses")
-    .select("number,text,translation_id")
+    .select("number,text,source_url")
     .eq("chapter_id", chapterRow.id)
     .gte("number", verse)
     .lte("number", Math.min(verseEnd, verse + 49))
     .order("number", { ascending: true });
   if (!verses?.length) return [];
 
-  const translationId = verses[0].translation_id;
-  const filtered = verses.filter((v) => v.translation_id === translationId);
+  const filtered = verses;
   const refLabel = String(bookRow.abbrev) + " " + chapter + "," + verse +
     (verseEnd !== verse ? "-" + verseEnd : "");
 
@@ -195,7 +194,7 @@ async function searchBibleReference(
     ref: refLabel,
     title: refLabel + " — " + String(bookRow.name),
     excerpt: filtered.map((v) => String(v.number) + " " + String(v.text)).join(" ").slice(0, 1200),
-    href: "/bible?book=" + encodeURIComponent(String(bookRow.abbrev)) + "&chapter=" + chapter,
+    href: "/bible?book=" + encodeURIComponent(String(bookRow.abbrev)) + "&ch=" + chapter + "&v=" + verse,
   }];
 }
 
@@ -249,9 +248,8 @@ async function searchRealSources(db: ReturnType<typeof createClient>, query: str
 
   const [catechism, glossary, saints, prayers, spiritual, journeys, collections, corpus] = await Promise.all([
     db.from("catechism_official")
-      .select("paragraph, slug, texto_base")
-      .eq("status", "published")
-      .or(likeAny(["texto_base", "slug"], terms))
+      .select("paragraph, content, source_url, source_name")
+      .or(likeAny(["content", "source_name"], terms))
       .limit(limit),
     db.from("glossary")
       .select("slug, term, short_definition, category")
@@ -274,14 +272,13 @@ async function searchRealSources(db: ReturnType<typeof createClient>, query: str
       .or(likeAny(["title", "content_text"], terms))
       .limit(limit),
     db.from("journeys")
-      .select("id, slug, title, subtitle, description, category")
-      .eq("status", "published")
-      .or(likeAny(["title", "subtitle", "description"], terms))
+      .select("id, title, subtitle, description, category")
+      .eq("is_active", true)
+      .or(likeAny(["title", "subtitle", "description", "category"], terms))
       .limit(limit),
     db.from("collections")
       .select("id, slug, title, subtitle, description, category")
-      .eq("status", "published")
-      .or(likeAny(["title", "subtitle", "description"], terms))
+      .or(likeAny(["title", "subtitle", "description", "category"], terms))
       .limit(limit),
     searchCorpusSources(db, query, limit),
   ]);
@@ -291,7 +288,7 @@ async function searchRealSources(db: ReturnType<typeof createClient>, query: str
       kind: "catechism_paragraph",
       ref: String(r.paragraph),
       title: "Catecismo §" + r.paragraph,
-      excerpt: typeof r.texto_base === "string" ? r.texto_base.slice(0, 900) : undefined,
+      excerpt: typeof r.content === "string" ? r.content.slice(0, 900) : undefined,
       href: "/catechism?p=" + encodeURIComponent(String(r.paragraph)),
     });
   }
@@ -336,7 +333,7 @@ async function searchRealSources(db: ReturnType<typeof createClient>, query: str
     });
   }
   for (const r of journeys.data ?? []) {
-    const ref = String(r.slug || r.id);
+    const ref = String(r.id);
     hits.push({
       kind: "journey",
       ref,
