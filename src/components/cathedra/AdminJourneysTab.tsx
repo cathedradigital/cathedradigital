@@ -260,19 +260,27 @@ const AdminJourneysTab: React.FC = () => {
   const handleCreateJourney = async () => {
     try {
       console.log('Creating new journey:', newJourney.title);
-      const { data, error } = await supabase
-        .from('journeys')
-        .insert([newJourney])
-        .select()
-        .single();
-
-      if (error) {
+      const result = await JourneyService.createJourney({
+        title: newJourney.title,
+        subtitle: newJourney.subtitle,
+        description: newJourney.description,
+        category: newJourney.category,
+        difficulty: newJourney.difficulty,
+        is_active: newJourney.is_active,
+        is_premium: newJourney.is_premium,
+        estimated_days: newJourney.estimated_days,
+        icon: null,
+        cover_url: null,
+        sort_order: journeys.length,
+        tags: null,
+      });
+      if (result.error || !result.data) {
+        const error = result.error || new Error('Jornada não criada');
         console.error('Error creating journey:', error);
         toast.error(`Falha ao criar jornada: ${error.message}`);
         throw error;
       }
-      
-      setJourneys([data, ...journeys]);
+      setJourneys([result.data as Journey, ...journeys]);
       toast.success(`Jornada "${newJourney.title}" criada com sucesso.`);
       setIsAddJourneyDialogOpen(false);
       setNewJourney({
@@ -303,14 +311,14 @@ const AdminJourneysTab: React.FC = () => {
         content: { intro: '', reflection: '', practice: '', prayer: '' }
       };
 
-      const { data, error } = await supabase
-        .from('journey_steps')
-        .insert([newStep])
-        .select()
-        .single();
-
-      if (error) throw error;
-      
+      const result = await JourneyService.upsertStep(journeyId, {
+        ...newStep,
+        subtitle: null,
+        duration_minutes: null,
+        is_free: true,
+      } as any);
+      if (result.error || !result.data) throw result.error || new Error('Passo não criado');
+      const data = result.data as Step;
       setSteps([...steps, data]);
       handleEditStep(data);
       toast.success('Passo adicionado.');
