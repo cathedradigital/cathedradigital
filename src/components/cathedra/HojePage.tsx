@@ -75,15 +75,9 @@ function useRecommendedJourney(userId: string | undefined, profile: any, userLev
       else if (userLevel === 'avançado' || prayer === 'contemplative' || goal === 'transformation') category = 'formacao';
       else if (moment === 'struggling' || goal === 'peace') category = 'mistico';
       else if (goal === 'routine' || prayer === 'rarely' || prayer === 'sometimes') category = 'rotina';
-      const { data } = await supabase
-        .from('journeys')
-        .select('*')
-        .eq('category', category)
-        .eq('is_active', true)
-        .order('sort_order', { ascending: true })
-        .limit(1)
-        .maybeSingle();
-      return data;
+      const result = await JourneyService.list({ category, is_active: true, limit: 1 });
+      if (result.error) throw result.error;
+      return result.data?.[0] ?? null;
     },
     enabled: !!userId && !hasActiveJourney,
     staleTime: 1000 * 60 * 30,
