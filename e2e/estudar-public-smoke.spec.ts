@@ -53,8 +53,8 @@ test('Bíblia permite pesquisar uma referência real', async ({ page }) => {
     if (message.type() === 'error') errors.push(message.text());
   });
 
-  await page.goto('/bible');
-  await page.getByRole('button', { name: 'Pesquisar na Bíblia' }).click();
+  await page.goto('/bible?book=Gn&ch=1');
+  await page.getByRole('link', { name: 'Pesquisar na Bíblia' }).click();
 
   const input = page.getByPlaceholder('Pesquisar nas Escrituras...');
   await expect(input).toBeVisible();
@@ -121,12 +121,12 @@ test('Bíblia: os quatro controles principais da barra funcionam', async ({ page
   await page.getByTestId('bible-toolbar-search').click();
   await expect(page.getByTestId('bible-search-input')).toBeVisible();
   await page.getByTestId('bible-search-close').click();
-  await expect(page).toHaveURL(/\/bible$/);
+  await expect(page).toHaveURL(/\/bible\?book=Gn&ch=1/);
 
   await page.getByTestId('bible-toolbar-bookmarks').click();
   await expect(page.getByText(/Marcadores/i).first()).toBeVisible();
   await page.getByRole('button', { name: /Voltar|Fechar/i }).first().click().catch(() => {});
-  await page.goto('/bible');
+  await page.goto('/bible?book=Gn&ch=1');
 
   await page.getByTestId('bible-toolbar-more').click();
   await expect(page.getByRole('menuitem', { name: /Anotações/i })).toBeVisible();
