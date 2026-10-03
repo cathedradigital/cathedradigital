@@ -48,7 +48,10 @@ export function useAccountCounters() {
         safe(supabase.from("user_notes").select("id", head).eq("user_id", uid) as any),
         safe(supabase.from("bible_favorites").select("id", head).eq("user_id", uid) as any),
         safe(supabase.from("spiritual_journal").select("id", head).eq("user_id", uid) as any),
-        safe(supabase.from("journey_progress").select("id", head).eq("user_id", uid) as any),
+        JourneyService.getUserProgressCount(uid).then((result) => {
+          if (result.error) throw result.error;
+          return { count: result.data ?? 0 };
+        }),
         safe(supabase.from("collection_progress").select("id", head).eq("user_id", uid) as any),
         safe(supabase.from("prayer_sessions").select("id", head).eq("user_id", uid) as any),
         safe(supabase.from("reading_marks").select("id", head).eq("user_id", uid) as any),
