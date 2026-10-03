@@ -45,7 +45,7 @@ const StudyJournal: React.FC = () => {
     return marks.filter(m => {
       if (m.is_last_read) return false;
       const matchesQuery = !q || m.label?.toLowerCase().includes(q) || m.content_id.toLowerCase().includes(q);
-      const matchesType = contentFilter === 'all' || m.content_type === contentFilter;
+      const matchesType = contentFilter === 'all' || m.content_type === contentFilter || (contentFilter === 'bible' && m.content_type.startsWith('bible_'));
       return matchesQuery && matchesType && isWithinDateFilter(m.updated_at);
     });
   }, [marks, searchQuery, contentFilter, dateFilter]);
