@@ -311,7 +311,7 @@ export const EditorialBreadcrumb: React.FC<EditorialBreadcrumbProps> = ({
               onClick={item.onClick}
               aria-current={item.current || isLast ? 'page' : undefined}
               className={cn(
-                'transition-colors focus-visible:outline-none focus-visible:text-stitch-secondary',
+                'min-h-[44px] inline-flex items-center transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stitch-secondary/40 focus-visible:ring-offset-2 rounded-sm focus-visible:text-stitch-secondary',
                 item.current || isLast
                   ? 'text-stitch-secondary'
                   : 'hover:text-stitch-secondary',
@@ -371,7 +371,7 @@ export const EditorialCTA = React.forwardRef<
       ref={ref as never}
       type={as === 'button' ? 'button' : undefined}
       className={cn(
-        'group inline-flex items-center gap-3 font-stitch-label uppercase tracking-[0.28em] text-stitch-label-md',
+        'group inline-flex min-h-[44px] items-center gap-3 font-stitch-label uppercase tracking-[0.28em] text-stitch-label-md',
         'text-stitch-on-background',
         'pb-1 border-b border-stitch-secondary',
         'transition-[letter-spacing,color] duration-300',
@@ -452,7 +452,7 @@ export const EditorialPanel: React.FC<EditorialPanelProps> = ({
             type="button"
             onClick={onClose}
             aria-label={closeLabel}
-            className="shrink-0 h-8 w-8 flex items-center justify-center rounded-full text-stitch-on-surface-variant hover:text-stitch-secondary hover:bg-stitch-surface-container transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-stitch-secondary"
+            className="shrink-0 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-full text-stitch-on-surface-variant hover:text-stitch-secondary hover:bg-stitch-surface-container transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stitch-secondary/40 focus-visible:ring-offset-2"
           >
             ×
           </button>
@@ -630,7 +630,7 @@ export const EditorialChapterCard: React.FC<EditorialChapterCardProps> = ({
         </p>
       )}
       {meta && (
-        <p className="font-stitch-label text-stitch-label-sm uppercase tracking-[0.24em] text-stitch-on-surface-variant/80">
+        <p className="font-stitch-label text-stitch-label-md uppercase tracking-[0.24em] text-stitch-on-surface-variant/80">
           {meta}
         </p>
       )}

@@ -18,6 +18,14 @@ const ENV_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
   BookOpen, HandHeart, GraduationCap, Search, Compass,
 };
 
+const STEP_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
+  estudar: BookOpen,
+  rezar: HandHeart,
+  'formar-se': GraduationCap,
+  pesquisar: Search,
+  'minha-jornada': Compass,
+};
+
 const envCopy: Record<string, { eyebrow: string; action: string }> = {
   estudar: { eyebrow: 'Conhecimento', action: 'Entrar em Estudar' },
   rezar: { eyebrow: 'Vida espiritual', action: 'Entrar em Rezar' },
@@ -92,7 +100,7 @@ const HomeUnified: React.FC = () => {
                     className="min-w-0 flex-1 bg-transparent px-2 py-3 text-sm outline-none placeholder:text-muted-foreground/70 md:text-base"
                     aria-label="Buscar na Cátedra"
                   />
-                  <button type="submit" className="rounded-xl bg-primary px-5 py-3 text-xs font-semibold uppercase tracking-wider text-primary-foreground transition-opacity hover:opacity-90">
+                  <button type="submit" className="min-h-11 rounded-xl bg-primary px-5 py-3 text-xs font-semibold uppercase tracking-wider text-primary-foreground transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
                     Buscar
                   </button>
                 </form>
@@ -121,7 +129,14 @@ const HomeUnified: React.FC = () => {
                 <div className="mt-6 space-y-3">
                   {firstStep ? (
                     <Link to={firstStep.href} className="group flex items-center gap-4 rounded-2xl border border-border/70 p-4 transition-colors hover:border-primary/40 hover:bg-primary/[0.03]">
-                      <span className="text-2xl" aria-hidden>{firstStep.icon}</span>
+                      {(() => {
+  const StepIcon = STEP_ICONS[firstStep.category] || Compass;
+  return (
+    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary" aria-hidden>
+      <StepIcon className="h-5 w-5" />
+    </span>
+  );
+})()}
                       <span className="min-w-0 flex-1">
                         <span className="block text-[10px] font-semibold uppercase tracking-wider text-primary">{firstStep.category}</span>
                         <span className="mt-1 block font-medium">{firstStep.label}</span>

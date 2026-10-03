@@ -104,7 +104,7 @@ const CatechismParagraphPreview: React.FC<{ paragraphId: string }> = ({ paragrap
       data-testid="catechism-preview"
       data-cic-paragraph={pNum}
     >
-      <p className="text-[9px] font-black uppercase tracking-[0.16em] text-blue-600 dark:text-blue-300">
+      <p className="text-premium-xs font-bold uppercase tracking-[0.16em] text-blue-600 dark:text-blue-300">
         Texto do Catecismo · §{pNum}
       </p>
       <p className="mt-1 text-sm font-serif text-primary/80 leading-relaxed max-h-40 overflow-y-auto pr-2 scrollbar-thin">
@@ -1175,7 +1175,7 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
       <button 
         onClick={() => setIsDiagnosticOpen(true)}
         aria-label="Abrir diagnóstico cirúrgico da Bíblia"
-        className="fixed top-20 right-4 z-[999] min-h-11 min-w-11 p-spacing-xs bg-primary/5 rounded-full opacity-0 hover:opacity-100 focus-visible:opacity-100 transition-opacity flex items-center justify-center"
+        className="fixed top-20 right-4 z-[999] min-h-11 min-w-11 p-spacing-xs bg-primary/5 rounded-full opacity-100 sm:opacity-0 hover:opacity-100 focus-visible:opacity-100 transition-opacity flex items-center justify-center"
       >
         <Icons.Activity className="w-4 h-4 text-primary/20" aria-hidden="true" />
       </button>
@@ -1259,7 +1259,7 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
                       a.download = `bible-diag-logs.json`;
                       a.click();
                     }}
-                    className="flex-1 text-[9px]"
+                    className="flex-1 text-xs"
                   >
                     Exportar JSON
                   </Button>
@@ -1305,7 +1305,7 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
                       a.download = `bible-diag-logs.csv`;
                       a.click();
                     }}
-                    className="flex-1 text-[9px]"
+                    className="flex-1 text-xs"
                   >
                     Exportar CSV
                   </Button>
@@ -1327,7 +1327,7 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
                             link.download = `auditoria-final-${new Date().toISOString()}.json`;
                             link.click();
                           }}
-                          className="h-6 text-[8px] uppercase font-bold px-spacing-xs"
+                          className="min-h-11 text-xs uppercase font-bold px-spacing-xs"
                         >
                           JSON
                         </Button>
@@ -1344,7 +1344,7 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
                             link.download = `auditoria-final-${new Date().toISOString()}.csv`;
                             link.click();
                           }}
-                          className="h-6 text-[8px] uppercase font-bold px-spacing-xs"
+                          className="min-h-11 text-xs uppercase font-bold px-spacing-xs"
                         >
                           CSV
                         </Button>
@@ -1374,7 +1374,7 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
                         runDeepScan();
                       }}
                       disabled={isScanning}
-                      className="flex-1 text-[9px] uppercase font-bold text-secondary"
+                      className="flex-1 text-xs uppercase font-bold text-secondary"
                     >
                       {isScanning ? 'Varrendo...' : 'Nova Auditoria'}
                     </Button>
@@ -1390,16 +1390,16 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
                                 {groupKey}
                               </span>
                               <div className="flex-1 h-px bg-red-500/10" />
-                              <span className="text-[8px] opacity-40">{items.length} ocorrências</span>
+                              <span className="text-premium-xs opacity-60">{items.length} ocorrências</span>
                             </div>
                             
                             {items.map((res, i) => (
                               <div key={res.id} className="pl-2 space-y-spacing-xs border-l-2 border-red-500/10 pb-4 last:pb-0">
                                 <div className="flex items-center justify-between">
-                                  <span className="text-[9px] font-bold text-red-500">Versículo {res.v}</span>
-                                  <span className="text-[8px] opacity-40 italic">{res.type}</span>
+                                  <span className="text-premium-xs font-bold text-red-500">Versículo {res.v}</span>
+                                  <span className="text-premium-xs opacity-60 italic">{res.type}</span>
                                 </div>
-                                <p className="text-[9px] font-serif leading-tight italic">"{res.text.substring(0, 100)}..."</p>
+                                <p className="text-premium-sm font-serif leading-relaxed italic">"{res.text.substring(0, 100)}..."</p>
                                 {res.screenshot && (
                                   <div className="relative group cursor-pointer" onClick={() => {
                                     const win = window.open("");
@@ -1410,8 +1410,8 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
                                     `);
                                   }}>
                                     <img src={res.screenshot} className="w-full h-24 object-cover rounded-lg border border-primary/10" alt={`Captura da página original: ${res.title ?? 'documento litúrgico'}`} />
-                                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity rounded-lg">
-                                      <span className="text-[8px] text-white font-bold uppercase">Ver captura original</span>
+                                    <div className="absolute inset-0 bg-black/40 opacity-100 sm:opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 flex items-center justify-center transition-opacity rounded-lg">
+                                      <span className="text-premium-xs text-white font-bold uppercase">Ver captura original</span>
                                     </div>
                                   </div>
                                 )}
@@ -1438,7 +1438,7 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
                 >
                   Limpar Cache
                 </Button>
-                <Button onClick={() => setIsDiagnosticOpen(false)} className="flex-1 uppercase text-[10px] font-bold">Fechar Painel</Button>
+                <Button onClick={() => setIsDiagnosticOpen(false)} className="flex-1 min-h-11 uppercase text-xs font-bold focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:ring-offset-2">Fechar Painel</Button>
               </div>
             </motion.div>
           </div>
@@ -1552,11 +1552,11 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
             <div className="flex gap-spacing-md mb-spacing-2xl">
               <button 
                 onClick={handleExportData}
-                className="flex-1 flex items-center justify-center gap-spacing-xs p-spacing-sm bg-white border border-primary/5 rounded-xl text-[9px] font-black uppercase tracking-widest text-primary/40 shadow-sm"
+                className="flex-1 flex items-center justify-center gap-spacing-xs p-spacing-sm bg-white border border-primary/5 rounded-xl text-premium-xs font-bold uppercase tracking-widest text-primary/40 shadow-sm"
               >
                 <Icons.Download className="w-3 h-3" /> Exportar
               </button>
-              <label className="flex-1 flex items-center justify-center gap-spacing-xs p-spacing-sm bg-white border border-primary/5 rounded-xl text-[9px] font-black uppercase tracking-widest text-primary/40 cursor-pointer shadow-sm">
+              <label className="flex-1 flex items-center justify-center gap-spacing-xs p-spacing-sm bg-white border border-primary/5 rounded-xl text-premium-xs font-bold uppercase tracking-widest text-primary/40 cursor-pointer shadow-sm">
                 <Icons.Upload className="w-3 h-3" /> Importar
                 <input type="file" className="hidden" accept=".json" onChange={handleImportData} />
               </label>
@@ -1625,7 +1625,7 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
                   
                   {categories.map((cat: any) => (
                     <div key={cat.name} className="space-y-spacing-xs">
-                      <span className="text-[9px] font-black uppercase tracking-widest text-primary/20 ml-spacing-xs mb-spacing-xs block">{cat.name}</span>
+                      <span className="text-premium-xs font-bold uppercase tracking-widest text-primary/20 ml-spacing-xs mb-spacing-xs block">{cat.name}</span>
                       <div className="divide-y divide-primary/[0.03]">
                         {cat.books.map((book: BibleBook) => {
                           const isActive = selectedBook?.abbr === book.abbr;
@@ -1735,7 +1735,7 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
                   aria-current={selectedChapter === ch ? 'page' : undefined}
                   title={missing ? MISSING_CHAPTER_REASON : undefined}
                   className={cn(
-                    "min-h-10 sm:min-h-11 flex flex-col items-center justify-center rounded-lg border transition-all group shadow-sm",
+                    "min-h-11 flex flex-col items-center justify-center rounded-lg border transition-all group shadow-sm",
                     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary/60 focus-visible:ring-offset-1",
                     missing
                       ? "bg-muted/40 border-dashed border-primary/10 opacity-60 cursor-not-allowed"
@@ -1756,7 +1756,7 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
 
                   <div className="flex items-center gap-spacing-xs mt-spacing-xs">
                     {missing && (
-                      <span className="text-[9px] uppercase tracking-wider text-primary/40">
+                      <span className="text-premium-xs uppercase tracking-wider text-primary/50">
                         sem fonte
                       </span>
                     )}
@@ -1877,14 +1877,14 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
                           <Button
                             variant="default"
                             onClick={() => selectedBook && fetchVerses(selectedBook.abbr, selectedChapter)}
-                            className="h-12 rounded-xl text-[9px] font-black uppercase tracking-widest"
+                            className="h-12 rounded-xl text-premium-xs font-bold uppercase tracking-widest"
                           >
                             Tentar Novamente
                           </Button>
                           <Button
                             variant="outline"
                             onClick={() => setIsFeedbackOpen(true)}
-                            className="h-12 rounded-xl text-[9px] font-black uppercase tracking-widest border-primary/10"
+                            className="h-12 rounded-xl text-premium-xs font-bold uppercase tracking-widest border-primary/10"
                           >
                             Relatar Problema
                           </Button>
@@ -1932,7 +1932,7 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
                             {hasNote && (
                               <div className="flex flex-col items-center gap-spacing-xs">
                                 <div className="w-1.5 h-1.5 rounded-full bg-secondary/60 shadow-sm" title="Possui anotação" />
-                                <span className="text-[7px] font-black uppercase tracking-tighter text-secondary/40 leading-none">Meditado</span>
+                                <span className="text-premium-xs font-bold uppercase tracking-tight text-secondary/40 leading-none">Meditado</span>
                               </div>
                             )}
                           </div>
@@ -1970,7 +1970,7 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
                                   handleOpenAnnotation(v);
                                 }}
                                 aria-label={`Anotar versículo ${v.number}`}
-                                className="absolute right-0 top-0 p-1.5 min-h-10 min-w-10 flex items-center justify-center text-primary/20 hover:text-secondary opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-all"
+                                className="absolute right-0 top-0 p-1.5 min-h-11 min-w-11 flex items-center justify-center text-primary/20 hover:text-secondary opacity-100 sm:opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-1"
                               >
                                 <Icons.PenLine className="w-3.5 h-3.5" aria-hidden="true" />
                               </button>
@@ -2021,7 +2021,7 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
                                           <div className="pl-2.5 pr-2 py-spacing-xs.5 flex flex-col gap-spacing-0.5">
                                             <div className="flex items-center gap-spacing-xs.5">
                                               <span className={cn("shrink-0", meta.tone)}>{meta.icon}</span>
-                                              <span className={cn("text-[8px] font-black uppercase tracking-[0.12em]", meta.tone)}>
+                                              <span className={cn("text-premium-xs font-bold uppercase tracking-[0.12em]", meta.tone)}>
                                                 {meta.kicker}
                                               </span>
                                             </div>
@@ -2045,7 +2045,7 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
                                           <div className="flex items-start gap-spacing-xs">
                                             <span className={cn("mt-0.5 shrink-0", meta.tone)}>{meta.icon}</span>
                                             <div className="min-w-0">
-                                              <p className={cn("text-[9px] font-black uppercase tracking-[0.2em]", meta.tone)}>{meta.kicker}</p>
+                                              <p className={cn("text-premium-xs font-bold uppercase tracking-[0.2em]", meta.tone)}>{meta.kicker}</p>
                                               <h4 id={`nexus-popover-title-${v.number}-${idx}`} className="text-sm font-display font-bold text-primary truncate">{conn.label}</h4>
                                             </div>
                                           </div>
@@ -2054,7 +2054,7 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
                                           </p>
                                           {(conn.type === 'cross_ref' || conn.type === 'bible') && (
                                             <div className="rounded-xl border border-secondary/20 bg-secondary/[0.04] p-spacing-sm">
-                                              <p className="text-[9px] font-black uppercase tracking-[0.16em] text-secondary">
+                                              <p className="text-premium-xs font-bold uppercase tracking-[0.16em] text-secondary">
                                                 Texto bíblico da referência
                                               </p>
                                               {referenceVerseLoading ? (
@@ -2095,7 +2095,7 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
                                                   if (parts.length >= 2) navigate(`/bible?book=${parts[0]}&ch=${parts[1]}${parts[2] ? `&v=${parts[2]}` : ''}`);
                                                 }
                                               }}
-                                              className="w-full h-9 rounded-xl text-[10px] font-black uppercase tracking-widest"
+                                              className="w-full min-h-11 rounded-xl text-xs font-bold uppercase tracking-widest focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:ring-offset-2"
                                             >
                                               <Icons.BookOpen className="w-3.5 h-3.5 mr-spacing-xs text-secondary" />
                                               Abrir referência
@@ -2125,7 +2125,7 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
                                         e.stopPropagation();
                                         navigate(`/bible?book=${b}&ch=${c}&v=${vNum}`);
                                       }}
-                                      className="text-[9px] font-black uppercase tracking-widest bg-secondary/5 text-secondary/80 px-spacing-xs py-spacing-xs rounded-full border border-secondary/10 hover:bg-secondary/10 transition-colors"
+                                      className="text-premium-xs font-bold uppercase tracking-widest bg-secondary/5 text-secondary/80 px-spacing-xs py-spacing-xs rounded-full border border-secondary/10 hover:bg-secondary/10 transition-colors"
                                     >
                                       {b} {c}:{vNum}
                                     </button>
@@ -2364,7 +2364,7 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
 
               <div className="space-y-spacing-md">
                 <div className="space-y-spacing-xs">
-                  <span className="text-[9px] font-black uppercase tracking-widest text-primary/30">O que está acontecendo?</span>
+                  <span className="text-premium-xs font-bold uppercase tracking-widest text-primary/30">O que está acontecendo?</span>
                   <textarea 
                     placeholder="Ex: O capítulo 3 de Gênesis não está carregando..."
                     className="w-full bg-primary/[0.02] border border-primary/5 rounded-2xl p-spacing-md text-sm font-serif italic focus:outline-none focus:ring-1 focus:ring-secondary/20"
@@ -2405,7 +2405,7 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
             >
               <div className="flex items-center justify-between">
                 <h3 className="text-lg font-display font-bold text-primary uppercase">Editor Bíblia ↔ CIC</h3>
-                <Button variant="ghost" size="icon" onClick={() => setIsConnectionEditorOpen(false)} className="rounded-full opacity-40">
+                <Button variant="ghost" size="icon" onClick={() => setIsConnectionEditorOpen(false)} aria-label="Fechar editor de relação Bíblia e CIC" className="min-h-11 min-w-11 rounded-full opacity-60 focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:ring-offset-2">
                   <Icons.X className="w-6 h-6" />
                 </Button>
               </div>
@@ -2413,23 +2413,23 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
               <div className="space-y-spacing-md">
                 <div className="grid grid-cols-2 gap-spacing-md">
                   <div className="space-y-spacing-xs">
-                    <span className="text-[9px] font-black uppercase text-primary/30">Versículo</span>
+                    <span className="text-premium-xs font-bold uppercase text-primary/45">Versículo</span>
                     <input className="w-full bg-primary/[0.02] border border-primary/5 rounded-xl p-spacing-sm text-sm font-serif" placeholder="Ex: João 6,35" />
                   </div>
                   <div className="space-y-spacing-xs">
-                    <span className="text-[9px] font-black uppercase text-primary/30">Parágrafo CIC</span>
+                    <span className="text-premium-xs font-bold uppercase text-primary/45">Parágrafo CIC</span>
                     <input className="w-full bg-primary/[0.02] border border-primary/5 rounded-xl p-spacing-sm text-sm font-serif" placeholder="Ex: 1324" />
                   </div>
                 </div>
 
                 <div className="space-y-spacing-xs">
-                  <span className="text-[9px] font-black uppercase text-primary/30">Nota de Relacionamento</span>
+                  <span className="text-premium-xs font-bold uppercase text-primary/45">Nota de Relacionamento</span>
                   <textarea className="w-full bg-primary/[0.02] border border-primary/5 rounded-xl p-spacing-sm text-sm font-serif" rows={2} placeholder="Descreva o motivo desta conexão..." />
                 </div>
               </div>
 
               <div className="p-spacing-md bg-primary/[0.01] rounded-2xl border border-primary/5 max-h-40 overflow-y-auto">
-                <span className="text-[8px] font-black uppercase text-primary/20 block mb-spacing-sm">Histórico de Revisão</span>
+                <span className="text-premium-xs font-bold uppercase text-primary/45 block mb-spacing-sm">Histórico de Revisão</span>
                 <p className="text-xs text-primary/50">
                   Nenhuma revisão histórica foi carregada deste banco nesta sessão.
                 </p>

@@ -20,7 +20,7 @@ export const SectionHeader: React.FC<SectionHeaderProps> = ({
       align === 'center' ? "items-center text-center" : "items-start text-left",
       className
     )}>
-      <h2 className="text-[10px] md:text-premium-xs font-semibold uppercase tracking-premium-widest text-primary/30">
+      <h2 className="text-premium-xs font-semibold uppercase tracking-premium-widest text-primary/55">
         {title}
       </h2>
       {subtitle && (

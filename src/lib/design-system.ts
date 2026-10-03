@@ -10,6 +10,11 @@ export const DESIGN_TOKENS = {
     input: "0.75rem",
     premium: "var(--card-radius)",
   },
+  interaction: {
+    minTouchTarget: "44px",
+    focusRing: "ring-2 ring-primary/30 ring-offset-2",
+    transition: "transition-premium",
+  },
   shadows: {
     premium: "var(--card-shadow)",
     premiumHover: "var(--card-shadow-hover)",

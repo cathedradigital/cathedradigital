@@ -16,10 +16,12 @@ export const ReadingProgressSection: React.FC = () => {
   if (loading || !lastRead) return null;
 
   return (
-    <div
+    <button
+      type="button"
       id="reading-progress"
-      className="group relative overflow-hidden cursor-pointer transition-all duration-700"
+      className="group relative w-full min-h-11 overflow-hidden cursor-pointer transition-all duration-700 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary/50 focus-visible:ring-offset-2"
       onClick={() => lastRead.url && navigate(lastRead.url)}
+      aria-label={lastRead.label ? `Continuar leitura: ${lastRead.label}` : 'Continuar leitura'}
     >
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-spacing-lg md:gap-spacing-xl">
           <div className="flex items-center gap-spacing-lg md:gap-spacing-xl">
@@ -28,7 +30,7 @@ export const ReadingProgressSection: React.FC = () => {
             </div>
             <div className="space-y-spacing-xs md:space-y-spacing-md">
               <div className="flex items-center gap-spacing-md">
-                <span className="text-[8px] font-black uppercase tracking-[0.4em] text-primary/40">
+                <span className="text-premium-xs font-bold uppercase tracking-[0.28em] text-primary/55">
                   {lastRead.content_type === 'bible' ? 'Escrituras' : 
                    lastRead.content_type === 'catechism' ? 'Catecismo' : 
                    lastRead.content_type === 'magisterium' ? 'Magistério' : 'Conteúdo'}
@@ -42,7 +44,7 @@ export const ReadingProgressSection: React.FC = () => {
 
           <div className="flex items-center gap-spacing-md md:gap-spacing-xl">
             <div className="text-right hidden sm:block">
-              <p className="text-[8px] font-black uppercase tracking-[0.4em] text-primary/40 group-hover:text-primary/60 transition-colors">
+              <p className="text-premium-xs font-bold uppercase tracking-[0.28em] text-primary/55 group-hover:text-primary/60 transition-colors">
                 Retomar
               </p>
             </div>
@@ -60,6 +62,6 @@ export const ReadingProgressSection: React.FC = () => {
             className="h-full bg-primary/20"
           />
         </div>
-    </div>
+    </button>
   );
 };

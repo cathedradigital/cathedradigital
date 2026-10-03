@@ -47,7 +47,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
     >
       {/* 1. SAUDAÇÃO PERSONALIZADA (Monastery Style) */}
       <header className="w-full text-center space-y-spacing-xs py-spacing-md">
-        <p className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/40">
+        <p className="text-premium-xs font-bold uppercase tracking-[0.28em] text-primary/55">
           Mosteiro Digital
         </p>
         <h1 className="text-3xl md:text-5xl font-serif font-bold text-primary">
@@ -98,7 +98,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
           <div className="w-12 h-12 rounded-full bg-primary/5 flex items-center justify-center text-primary/40 group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-500 mb-spacing-md">
             <Icons.PrayingHands className="w-6 h-6" />
           </div>
-          <h2 className="text-[9px] font-black uppercase tracking-[0.3em] text-primary/40 mb-1">Reze Agora</h2>
+          <h2 className="text-premium-xs font-bold uppercase tracking-[0.24em] text-primary/55 mb-1">Reze Agora</h2>
           <span className="text-premium-xs text-muted-foreground italic font-serif">Sanctificatio</span>
         </CathedraCard>
 
@@ -110,7 +110,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
           <div className="w-12 h-12 rounded-full bg-primary/5 flex items-center justify-center text-primary/40 group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-500 mb-spacing-md">
             <Icons.Clock className="w-6 h-6" />
           </div>
-          <h2 className="text-[9px] font-black uppercase tracking-[0.3em] text-primary/40 mb-1">5 Minutos</h2>
+          <h2 className="text-premium-xs font-bold uppercase tracking-[0.24em] text-primary/55 mb-1">5 Minutos</h2>
           <span className="text-premium-xs text-muted-foreground italic font-serif">Lectio Brevis</span>
         </CathedraCard>
 
@@ -122,7 +122,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
           <div className="w-12 h-12 rounded-full bg-primary/5 flex items-center justify-center text-primary/40 group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-500 mb-spacing-md">
             <Icons.Mountain className="w-6 h-6" />
           </div>
-          <h2 className="text-[9px] font-black uppercase tracking-[0.3em] text-primary/40 mb-1">Silêncio</h2>
+          <h2 className="text-premium-xs font-bold uppercase tracking-[0.24em] text-primary/55 mb-1">Silêncio</h2>
           <span className="text-premium-xs text-muted-foreground italic font-serif">Silentium</span>
         </CathedraCard>
       </section>
@@ -139,10 +139,10 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
             <button
               key={item.label}
               onClick={() => onNavigate(item.route)}
-              className="flex flex-col items-center gap-2 p-4 rounded-premium hover:bg-primary/5 transition-colors group"
+              className="flex min-h-11 flex-col items-center gap-2 p-4 rounded-premium hover:bg-primary/5 transition-colors group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary/50 focus-visible:ring-offset-2"
             >
               <item.icon className="w-5 h-5 text-primary/20 group-hover:text-primary transition-colors" />
-              <h3 className="text-[8px] font-black uppercase tracking-[0.2em] text-primary/30 group-hover:text-primary/60">{item.label}</h3>
+              <h3 className="text-premium-xs font-bold uppercase tracking-[0.2em] text-primary/45 group-hover:text-primary/70">{item.label}</h3>
             </button>
           ))}
         </div>

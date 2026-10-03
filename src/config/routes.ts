@@ -18,11 +18,11 @@ export interface RouteConfig {
 // Aliases continuam registrados para compatibilidade/SEO.
 export const APP_ROUTES: RouteConfig[] = [
   // Core Routes (Hub Spiritual)
-  { path: '/bible', label: 'Bíblia', icon: Icons.BookOpen, showInMenu: true, category: 'core' },
-  { path: '/rezar', label: 'Orar', icon: Icons.Hand, showInMenu: true, category: 'core' },
+  { path: '/bible', label: 'Bíblia', icon: Icons.Bible, showInMenu: true, category: 'core' },
+  { path: '/rezar', label: 'Orar', icon: Icons.Prayer, showInMenu: true, category: 'core' },
   { path: '/igreja', label: 'Igreja', icon: Icons.Church, showInMenu: false, category: 'core' },
-  { path: '/santos', label: 'Santos', icon: Icons.Flame, showInMenu: true, category: 'core' },
-  { path: '/jornadas', label: 'Jornadas', icon: Icons.Route, showInMenu: true, category: 'core' },
+  { path: '/santos', label: 'Santos', icon: Icons.Saints, showInMenu: true, category: 'core' },
+  { path: '/jornadas', label: 'Jornadas', icon: Icons.Journeys, showInMenu: true, category: 'core' },
   { path: '/nexus', label: 'Nexus', icon: Icons.Orbit, showInMenu: true, category: 'core' },
   { path: '/biblioteca', label: 'Biblioteca', icon: Icons.Search, showInMenu: true, category: 'core' },
   { path: '/profile', label: 'Perfil', icon: Icons.User, showInMenu: true, category: 'core' },
@@ -35,21 +35,21 @@ export const APP_ROUTES: RouteConfig[] = [
 
 
   // Content & Resources
-  { path: '/oracao', label: 'Orações', icon: Icons.Flame, showInMenu: true, category: 'content' },
-  { path: '/rosary', label: 'Rosário', icon: Icons.Hash, showInMenu: true, category: 'content' },
-  { path: '/viacrucis', label: 'Via Sacra', icon: Icons.Activity, showInMenu: true, category: 'content' },
+  { path: '/oracao', label: 'Orações', icon: Icons.Prayer, showInMenu: true, category: 'content' },
+  { path: '/rosary', label: 'Rosário', icon: Icons.Rosary, showInMenu: true, category: 'content' },
+  { path: '/viacrucis', label: 'Via Sacra', icon: Icons.ViaCrucis, showInMenu: true, category: 'content' },
   { path: '/bible-recovery', label: 'Recovery Bíblia', icon: Icons.Stethoscope, showInMenu: true, category: 'content' },
-  { path: '/glossario', label: 'Glossário', icon: Icons.BookOpen, showInMenu: true, category: 'content' },
+  { path: '/glossario', label: 'Glossário', icon: Icons.Glossary, showInMenu: true, category: 'content' },
 
   // Órfãs catalogadas (rota real existe, showInMenu:false — decisão editorial futura)
   // ONDA 1: sair da condição de órfã sem promover ao menu.
-  { path: '/temas', label: 'Temas', icon: Icons.Hash, showInMenu: false, category: 'content' },
-  { path: '/aquinas', label: 'Aquinas', icon: Icons.BookOpen, showInMenu: false, category: 'content' },
+  { path: '/temas', label: 'Temas', icon: Icons.Themes, showInMenu: false, category: 'content' },
+  { path: '/aquinas', label: 'Aquinas', icon: Icons.Aquinas, showInMenu: false, category: 'content' },
   { path: '/papas', label: 'Papas', icon: Icons.User, showInMenu: false, category: 'content' },
   { path: '/aparicoes', label: 'Aparições', icon: Icons.Star, showInMenu: false, category: 'content' },
   { path: '/dogmas', label: 'Dogmas', icon: Icons.Shield, showInMenu: false, category: 'content' },
-  { path: '/az-faith', label: 'A–Z da Fé', icon: Icons.BookOpen, showInMenu: false, category: 'content' },
-  { path: '/lectio', label: 'Lectio Divina', icon: Icons.BookOpen, showInMenu: false, category: 'content' },
+  { path: '/az-faith', label: 'A–Z da Fé', icon: Icons.AZ, showInMenu: false, category: 'content' },
+  { path: '/lectio', label: 'Lectio Divina', icon: Icons.Lectio, showInMenu: false, category: 'content' },
   { path: '/confession', label: 'Confissão', icon: Icons.Heart, showInMenu: false, category: 'content' },
   { path: '/breviary', label: 'Breviário', icon: Icons.Book, showInMenu: false, category: 'content' },
   { path: '/missal', label: 'Missal', icon: Icons.Book, showInMenu: false, category: 'content' },

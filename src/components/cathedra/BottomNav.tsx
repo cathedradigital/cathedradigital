@@ -132,7 +132,7 @@ const BottomNavItem: React.FC<BottomNavItemProps> = React.memo(({
       }}
       transition={shouldReduceMotion ? { duration: 0 } : undefined}
       className={cn(
-        "text-[7px] md:text-[8.5px] font-medium uppercase tracking-[0.15em] leading-none transition-all truncate w-full px-spacing-3xs text-center relative z-10",
+        "text-[10px] md:text-[10px] font-medium uppercase tracking-[0.1em] leading-none transition-all truncate w-full px-1 text-center relative z-10",
         shouldReduceMotion ? "duration-0" : "duration-300",
         isActive ? 'text-[color:var(--gold-text)] font-semibold' : 'text-foreground/80'
       )}
@@ -188,13 +188,13 @@ const BottomNav: React.FC<BottomNavProps> = ({ user, onOpenSidebar }) => {
   return (
     <nav 
       className={cn(
-        "fixed bottom-0 left-0 right-0 z-[160] lg:hidden h-auto bg-background/85 backdrop-blur-xl border-t border-[#c9a84c]/25 bottom-nav bottom-nav-reading-auto-hide px-spacing-xs pt-spacing-xs pb-[env(safe-area-inset-bottom,12px)] transition-all will-change-transform flex items-center shadow-[0_-4px_20px_-10px_rgba(0,0,0,0.05)]",
-        "min-h-[64px]", 
+        "fixed bottom-0 left-0 right-0 z-[160] lg:hidden h-auto bg-background/95 backdrop-blur-xl border-t border-[#c9a84c]/20 bottom-nav bottom-nav-reading-auto-hide px-2 pt-2 pb-[env(safe-area-inset-bottom,12px)] transition-all will-change-transform flex items-center shadow-[0_-4px_20px_-10px_rgba(0,0,0,0.05)]",
+        "min-h-[68px]", 
         shouldReduceMotion ? "duration-0" : "duration-500"
       )} 
       aria-label={t('mobile_navigation') || 'Navegação móvel'}
     >
-      <div className="flex items-center justify-around h-full w-full relative gap-1 overflow-x-auto no-scrollbar">
+      <div className="grid grid-cols-5 items-stretch h-full w-full relative gap-1">
         {items.map((item, i) => {
           const isActive = item.isMenu || item.isAtalhos
             ? false

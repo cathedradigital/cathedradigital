@@ -123,21 +123,21 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
       catechism: Icons.Catechism,
       magisterium: Icons.ScrollText,
       library: Icons.Library,
-      saints: Icons.Flame,
+      saints: Icons.Saints,
       nexus: Icons.Orbit,
       church: Icons.Church,
-      pray: Icons.Hand,
+      pray: Icons.Prayer,
       liturgy: Icons.Liturgy,
-      lectio: Icons.BookOpen,
-      rosary: Icons.Hash,
-      viacrucis: Icons.Activity,
+      lectio: Icons.Lectio,
+      rosary: Icons.Rosary,
+      viacrucis: Icons.ViaCrucis,
       novenas: Icons.Calendar,
-      journeys: Icons.Route,
-      themes: Icons.Hash,
+      journeys: Icons.Journeys,
+      themes: Icons.Themes,
       search: Icons.Search,
-      glossary: Icons.BookOpen,
+      glossary: Icons.Glossary,
       atlas: Icons.Globe,
-      aquinas: Icons.Cross,
+      aquinas: Icons.Aquinas,
       dogmas: Icons.Shield,
       popes: Icons.User,
       apparitions: Icons.Star,
@@ -253,7 +253,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                   >
                     CATHEDRA
                   </span>
-                  <span style={{ color: 'var(--gold-text)', fontFamily: 'Inter, sans-serif', fontSize: '8px', letterSpacing: '0.3em', textTransform: 'uppercase', fontWeight: 'bold' }}>
+                  <span style={{ color: 'var(--gold-text)', fontFamily: 'Inter, sans-serif', fontSize: '0.75rem', letterSpacing: '0.3em', textTransform: 'uppercase', fontWeight: 'bold' }}>
                     Mosteiro Digital
                   </span>
                 </div>
@@ -264,7 +264,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                 variant="ghost"
                 size="icon"
                 onClick={onClose}
-                className="rounded-none w-10 h-10 bg-transparent hover:bg-transparent transition-all focus-visible:ring-2 focus-visible:ring-[#c9a84c]/40"
+                className="rounded-none min-h-11 min-w-11 bg-transparent hover:bg-transparent transition-all focus-visible:ring-2 focus-visible:ring-[#c9a84c]/40"
                 style={{ border: '1px solid rgba(201,168,76,0.35)', color: 'var(--gold-text)' }}
                 onMouseEnter={(e) => { e.currentTarget.style.background = '#c9a84c'; e.currentTarget.style.color = '#0a0a0a'; }}
                 onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#c9a84c'; }}
@@ -278,7 +278,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
               {sections.map((section, sectionIdx) => (section.items.length > 0 && (
                 <Collapsible key={section.label} defaultOpen={sectionIdx < 3}>
                   <CollapsibleTrigger asChild>
-                    <button className="w-full flex items-center justify-between py-2 px-3 group/trigger hover:bg-[#c9a84c]/[0.05] rounded-none transition-all">
+                    <button className="w-full min-h-11 flex items-center justify-between py-2 px-3 group/trigger hover:bg-[#c9a84c]/[0.05] rounded-none transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c9a84c]/40 focus-visible:ring-offset-2">
                       <h3 style={{ color: 'var(--gold-text)', fontFamily: 'Inter, sans-serif', fontSize: '9px', letterSpacing: '0.4em', textTransform: 'uppercase' }}>— {section.label}</h3>
                       <Icons.ChevronDown className="w-3 h-3 transition-all group-data-[state=open]:rotate-180" strokeWidth={1.5} style={{ color: 'var(--gold-text)' }} />
                     </button>
@@ -302,7 +302,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                                 onTouchStart={() => prefetchRoute(item.path)}
                                  aria-current={isActive ? 'page' : undefined}
                                  aria-label={`${item.label}${isActive ? ', página atual' : ''}`}
-                                className={`w-full flex items-center justify-start gap-3 px-3 py-2 rounded-none text-[9px] font-medium transition-all duration-300 outline-none h-auto min-h-[40px] border
+                                className={`w-full flex items-center justify-start gap-3 px-3 py-2 rounded-none text-xs font-medium transition-all duration-300 outline-none h-auto min-h-11 border
                                   ${isActive
                                     ? 'bg-[#c9a84c]/[0.08] text-[color:var(--gold-text)] border-[#c9a84c]/40'
                                     : 'text-foreground/70 hover:bg-[#c9a84c]/[0.04] hover:text-[color:var(--gold-text)] border-transparent hover:border-[#c9a84c]/20'}`}
@@ -312,7 +312,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                                   </span>
                                 <span className="tracking-[0.18em] uppercase truncate">{item.label}</span>
                                 {item.path === AppRoute.CACHE_MANAGER && cacheCount !== null && cacheCount > 0 && (
-                                  <span className="ml-auto text-[8px] font-bold px-2 py-0.5 rounded-none flex-shrink-0" style={{ background: '#c9a84c', color: '#0a0a0a' }}>
+                                  <span className="ml-auto text-premium-xs font-bold px-2 py-0.5 rounded-none flex-shrink-0" style={{ background: '#c9a84c', color: '#0a0a0a' }}>
                                     {cacheCount}
                                   </span>
                                 )}
@@ -377,7 +377,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                     <button
                       key={l}
                       onClick={() => (window as any).dispatchEvent(new CustomEvent('change-lang', { detail: l }))}
-                      className={`px-spacing-sm py-spacing-2xs text-[7px] font-black uppercase rounded-premium-lg border transition-all ${
+                      className={`min-h-11 px-spacing-sm py-spacing-2xs text-premium-xs font-bold uppercase rounded-premium-lg border transition-all ${
                         lang === l 
                           ? 'bg-primary/5 text-primary border-primary/10 shadow-premium-none' 
                           : 'bg-transparent text-muted-foreground/20 border-transparent hover:border-primary/5'
@@ -409,7 +409,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                     </div>
                     <div className="flex-1 min-w-spacing-0">
                       <p className="text-[10px] font-bold truncate text-primary">{user.name}</p>
-                      <p className="text-[7px] uppercase text-primary/70 font-bold tracking-[0.1em] mt-spacing-3xs">{user.isPremium ? 'Membro Premium' : 'Conta Gratuita'}</p>
+                      <p className="text-premium-xs uppercase text-primary/70 font-semibold tracking-[0.1em] mt-spacing-3xs">{user.isPremium ? 'Membro Premium' : 'Conta Gratuita'}</p>
                     </div>
                   </div>
                   
@@ -417,7 +417,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                     {!user.isPremium && (
                       <Button 
                         onClick={() => handleNav(AppRoute.UPGRADE)}
-                        className="flex-1 h-spacing-xl bg-primary/10 text-primary hover:bg-primary hover:text-primary-foreground rounded-premium-lg text-[8px] font-bold uppercase tracking-widest transition-all"
+                        className="flex-1 h-spacing-xl bg-primary/10 text-primary hover:bg-primary hover:text-primary-foreground rounded-premium-lg text-premium-xs font-bold uppercase tracking-widest transition-all"
                       >
                         Upgrade
                       </Button>
@@ -434,7 +434,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                   </div>
                 </div>
               ) : (
-                <Button onClick={() => handleNav(AppRoute.LOGIN)} className="w-full h-spacing-2xl bg-primary/90 hover:bg-primary text-primary-foreground rounded-premium font-bold uppercase text-[9px] tracking-[0.2em] transition-all">
+                <Button onClick={() => handleNav(AppRoute.LOGIN)} className="w-full h-spacing-2xl bg-primary/90 hover:bg-primary text-primary-foreground rounded-premium font-bold uppercase text-xs tracking-[0.2em] transition-all">
                   {t('enter')}
                 </Button>
               )}

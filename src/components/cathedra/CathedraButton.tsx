@@ -33,9 +33,11 @@ const CathedraButton = React.memo(React.forwardRef<HTMLButtonElement, CathedraBu
     return (
       <motion.button
         ref={ref as any}
+        type={props.type ?? "button"}
         whileTap={settings.reduceAnimations ? {} : { scale: 0.96 }}
         whileHover={settings.reduceAnimations ? {} : { y: -1, transition: { duration: 0.2, ease: "easeOut" } }}
         className={cn(
+          "inline-flex items-center justify-center gap-2 rounded-premium-full font-medium transition-premium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
           variantStyles[variant],
           sizeMap[size],
           isLoading && 'opacity-70 cursor-wait',

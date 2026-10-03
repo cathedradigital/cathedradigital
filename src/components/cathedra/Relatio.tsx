@@ -202,7 +202,7 @@ const Relatio: React.FC<RelatioProps> = ({
             <Icons.Sparkles className="w-spacing-sm h-spacing-sm text-primary/40" />
           </div>
           <div>
-            <h3 id="relatio-heading" className="text-[9px] font-black uppercase tracking-[0.5em] text-primary/80 group-hover:text-primary transition-all duration-1000">Relatio Contextual</h3>
+            <h3 id="relatio-heading" className="text-premium-xs font-bold uppercase tracking-[0.28em] text-primary/80 group-hover:text-primary transition-all duration-1000">Relatio Contextual</h3>
           </div>
         </div>
         <div className="flex items-center gap-spacing-md">
@@ -211,7 +211,7 @@ const Relatio: React.FC<RelatioProps> = ({
             size="icon"
             onClick={toggleAutoCollapse}
             className={cn(
-              "w-spacing-xl h-spacing-xl rounded-premium-full transition-all duration-300",
+              "min-h-11 min-w-11 w-spacing-xl h-spacing-xl rounded-premium-full transition-all duration-300",
               autoCollapse ? "text-primary bg-primary/10" : "text-muted-foreground/40 hover:text-primary"
             )}
             title={autoCollapse ? "Recolhimento automático ativado" : "Ativar recolhimento automático"}
@@ -225,7 +225,7 @@ const Relatio: React.FC<RelatioProps> = ({
                 key={d}
                 onClick={() => updateDensity(d)}
                 className={cn(
-                  "px-spacing-sm py-spacing-2xs min-h-11 text-[8px] font-black uppercase tracking-widest rounded-premium-full transition-all duration-300",
+                  "px-spacing-sm py-spacing-2xs min-h-11 text-premium-xs font-bold uppercase tracking-widest rounded-premium-full transition-all duration-300",
                   density === d ? "bg-primary text-primary-foreground shadow-premium-sm" : "text-foreground hover:text-primary"
                 )}
               >
@@ -340,25 +340,25 @@ const Relatio: React.FC<RelatioProps> = ({
                                 {(item.type === 'journey' || item.type === 'saint') && <Icons.Compass className="w-spacing-md h-spacing-md" strokeWidth={1} />}
                               </div>
                               <div className="space-y-spacing-3xs">
-                                <p className="text-[9px] font-black uppercase tracking-[0.2em] text-primary/80 group-hover:text-primary transition-colors">
+                                <p className="text-premium-xs font-bold uppercase tracking-[0.2em] text-primary/80 group-hover:text-primary transition-colors">
                                   {item.type === 'bible' ? 'Escritura' : 
                                    item.type === 'catechism' ? 'Catecismo' : 
                                    item.type === 'magisterium' ? 'Magistério' : 
                                    item.type === 'saint' ? 'Tradição' : 'Jornada'}
                                 </p>
                                 <div className="flex items-center gap-spacing-xs">
-                                  <span className="text-[8px] font-bold text-foreground uppercase tracking-widest">
+                                  <span className="text-premium-xs font-semibold text-foreground uppercase tracking-widest">
                                     {item.reason}
                                   </span>
                                   <div className={cn("w-spacing-2xs h-spacing-2xs rounded-premium-full", strength > 20 ? "bg-secondary animate-pulse" : "bg-primary/10")} />
-                                  <span className={cn("text-[7px] font-black uppercase tracking-widest", strength > 20 ? "text-secondary" : "text-primary/80")}>
+                                  <span className={cn("text-premium-xs font-bold uppercase tracking-widest", strength > 20 ? "text-secondary" : "text-primary/80")}>
                                     {strengthLabel}
                                   </span>
                                 </div>
                               </div>
                             </div>
                             
-                            <div className="flex items-center gap-spacing-2xs opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                            <div className="flex items-center gap-spacing-2xs opacity-100 md:opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity duration-500">
                               {onSelectLogosQuery && (
                                 <Button
                                   variant="ghost"
@@ -415,7 +415,7 @@ const Relatio: React.FC<RelatioProps> = ({
                           </div>
 
                           
-                          <div className="mt-spacing-md pt-spacing-md border-t border-primary/[0.02] flex items-center justify-between opacity-0 group-hover:opacity-100 transition-all duration-700 translate-y-1 group-hover:translate-y-0">
+                          <div className="mt-spacing-md pt-spacing-md border-t border-primary/[0.02] flex items-center justify-between opacity-100 md:opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-all duration-700 translate-y-1 group-hover:translate-y-0 group-focus-within:translate-y-0">
                             <span className="text-[8px] font-black uppercase tracking-[0.3em] text-primary/60">Explorar Conexão</span>
                             <Icons.ArrowRight className="w-spacing-sm h-spacing-sm text-primary/60" strokeWidth={1.5} />
                           </div>
