@@ -16,7 +16,7 @@
  * re-renderiza. Não há useEffect state ↔ URL (evita loops).
  */
 
-import { useCallback, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { useSearchParams } from '@/lib/rr-compat';
 import { BIBLE_DATA, BibleBook } from '@/data/bible-books';
 import { findBookByAbbr } from '@/lib/bibleCanon';
@@ -90,7 +90,7 @@ export function useBibleNavigation(): UseBibleNavigation {
 
   // Canonicalize legacy Bible URLs immediately: ?chapter → ?ch and ?verse → ?v.
   // This preserves old deep-links while ensuring copied/history URLs converge to one form.
-  useMemo(() => {
+  useEffect(() => {
     if (!legacyChapterParam && !legacyVerseParam) return;
     setSearchParams((prev) => {
       const next = new URLSearchParams(prev);
