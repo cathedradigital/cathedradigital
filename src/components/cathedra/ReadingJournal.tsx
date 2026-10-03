@@ -19,7 +19,7 @@ import SEOHead from '@/components/SEOHead';
 const ReadingJournal: React.FC = () => {
   const navigate = useNavigate();
   const { user, profile } = useAuth();
-  const { marks, deleteMark } = useReadingMarks();
+  const { marks, deleteMark, error: marksError } = useReadingMarks();
   const { notes, deleteNote, updateNote, error: notesError } = useNotes('all'); // All notes
   const [search, setSearch] = useState('');
   const [activeTab, setActiveTab] = useState('history');
@@ -191,6 +191,12 @@ const ReadingJournal: React.FC = () => {
           onChange={(e) => setSearch(e.target.value)}
         />
       </div>
+
+      {marksError && (
+        <div role="alert" className="rounded-premium border border-destructive/20 bg-destructive/5 p-spacing-md text-sm text-destructive">
+          Não foi possível carregar seu histórico de leitura. Tente novamente.
+        </div>
+      )}
 
       {notesError && (
         <div role="alert" className="rounded-premium border border-destructive/20 bg-destructive/5 p-spacing-md text-sm text-destructive">
