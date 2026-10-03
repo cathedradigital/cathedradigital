@@ -6,6 +6,7 @@
  */
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from '@/lib/db';
+import { JourneyService } from '@/core/journey';
 import { useAuth } from "@/hooks/useAuth";
 
 export interface AccountCounters {
@@ -35,16 +36,22 @@ export function useAccountCounters() {
       const uid = user.id;
       const head = { count: "exact" as const, head: true };
 
-      // Cada count é independente; falhas silenciosas viram 0 (não bloqueiam a UI).
+      // Counts pessoais mantêm falhas explícitas no cache; não transformamos
+      // uma falha de banco em um estado aparentemente vazio.
       const safe = async (p: PromiseLike<{ count: number | null }>) => {
-        try { const r = await p; return r.count ?? 0; } catch { return 0; }
+        const r = await p;
+        if ('error' in r && r.error) throw r.error;
+        return r.count ?? 0;
       };
 
       const [notes, favorites, journal, journeys, collections, prayers, readings] = await Promise.all([
         safe(supabase.from("user_notes").select("id", head).eq("user_id", uid) as any),
         safe(supabase.from("bible_favorites").select("id", head).eq("user_id", uid) as any),
         safe(supabase.from("spiritual_journal").select("id", head).eq("user_id", uid) as any),
-        safe(supabase.from("journey_progress").select("id", head).eq("user_id", uid) as any),
+        JourneyService.getUserProgressCount(uid).then((result) => {
+          if (result.error) throw result.error;
+          return result.data ?? 0;
+        }),
         safe(supabase.from("collection_progress").select("id", head).eq("user_id", uid) as any),
         safe(supabase.from("prayer_sessions").select("id", head).eq("user_id", uid) as any),
         safe(supabase.from("reading_marks").select("id", head).eq("user_id", uid) as any),

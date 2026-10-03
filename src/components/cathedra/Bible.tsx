@@ -12,6 +12,13 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Icons } from '@/constants';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
 import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
 import { cn, getElementSelector } from '@/lib/utils';
@@ -29,6 +36,7 @@ import { NoteEditModal } from './NoteEditModal';
 import BibleSearch from './BibleSearch';
 import { BibleHome } from './BibleHome';
 import BibleFullNotesList from './BibleFullNotesList';
+import BibleBookmarksList from './BibleBookmarksList';
 import { BibleReader } from './BibleReader';
 import { VerseNoteSup } from './VerseNoteSup';
 import { FORBIDDEN_ENGLISH_WORDS, LANGUAGE_ALLOWLIST } from '@/constants/language-config';
@@ -44,9 +52,10 @@ import { useHighContrast } from '@/hooks/useHighContrast';
 import biblePerf from '@/lib/biblePerf';
 import { isChapterMissing, MISSING_CHAPTER_REASON } from '@/lib/bibleMissingChapters';
 import NexusContributionDialog from './NexusContributionDialog';
+import { saveBibleReturnContext } from '@/lib/bibleReturnContext';
 
 const CatechismParagraphPreview: React.FC<{ paragraphId: string }> = ({ paragraphId }) => {
-  const pNum = parseInt(paragraphId);
+  const pNum = Number.parseInt(String(paragraphId).replace(/^§/, '').trim(), 10);
   const { data, isLoading } = useCatechismParagraph(pNum, !isNaN(pNum));
 
   if (isNaN(pNum)) return null;
@@ -90,8 +99,17 @@ const CatechismParagraphPreview: React.FC<{ paragraphId: string }> = ({ paragrap
 
 
   return (
-    <div className="text-sm font-serif text-primary/70 leading-relaxed max-h-32 overflow-y-auto pr-2 scrollbar-thin">
-      {data.content}
+    <div
+      className="rounded-xl border border-blue-500/15 bg-blue-500/[0.03] p-spacing-sm"
+      data-testid="catechism-preview"
+      data-cic-paragraph={pNum}
+    >
+      <p className="text-[9px] font-black uppercase tracking-[0.16em] text-blue-600 dark:text-blue-300">
+        Texto do Catecismo · §{pNum}
+      </p>
+      <p className="mt-1 text-sm font-serif text-primary/80 leading-relaxed max-h-40 overflow-y-auto pr-2 scrollbar-thin">
+        {data.content}
+      </p>
     </div>
   );
 };
@@ -101,11 +119,73 @@ const CatechismParagraphPreview: React.FC<{ paragraphId: string }> = ({ paragrap
 
 
 
+const readBibleRef = (ref: unknown) => {
+  if (!ref || typeof ref !== 'object') return null;
+  const value = ref as Record<string, unknown>;
+  const abbr = String(value.abbr ?? value.abbrev ?? value.book ?? value.book_abbr ?? '').trim();
+  const chapter = Number(value.chapter ?? value.ch ?? value.chapter_number);
+  const verse = Number(value.verse ?? value.v ?? value.verse_number);
+  if (!abbr || !Number.isFinite(chapter)) return null;
+  return { abbr, chapter, verse: Number.isFinite(verse) ? verse : undefined };
+};
+
+const nexusConnectionFromRow = (row: any, currentVerseId?: string) => {
+  const sourceBible = row.source_kind === 'bible_verse' ? readBibleRef(row.source_ref) : null;
+  const targetBible = row.target_kind === 'bible_verse' ? readBibleRef(row.target_ref) : null;
+  const sourceId = sourceBible?.verse ? `${sourceBible.abbr}-${sourceBible.chapter}-${sourceBible.verse}` : '';
+  const isSource = Boolean(sourceBible && sourceId === currentVerseId);
+  const otherKind = isSource ? row.target_kind : row.source_kind;
+  const otherRef = isSource ? row.target_ref : row.source_ref;
+  const otherBible = isSource ? targetBible : sourceBible;
+  const otherParagraph = otherKind === 'catechism_paragraph'
+    ? String((otherRef as any)?.paragraph ?? (otherRef as any)?.paragraph_id ?? (otherRef as any)?.paragraphNumber ?? (otherRef as any)?.p ?? '').trim()
+    : '';
+  const id = otherBible
+    ? otherBible.abbr + '-' + otherBible.chapter + (otherBible.verse ? '-' + otherBible.verse : '')
+    : otherParagraph || String((otherRef as any)?.id ?? (otherRef as any)?.slug ?? row.id);
+  const labels: Record<string, string> = { catechism_paragraph: 'Catecismo', magisterium_doc: 'Magistério', patristic: 'Patrística', saint: 'Santo', saint_work: 'Obra de santo', glossary: 'Glossário', prayer: 'Oração', journey: 'Jornada', liturgy: 'Liturgia', bible_verse: 'Bíblia', other: 'Referência' };
+  return { type: otherKind === 'catechism_paragraph' ? 'catechism' : otherKind === 'magisterium_doc' ? 'document' : otherKind === 'bible_verse' ? 'cross_ref' : 'reference', label: labels[otherKind] ?? 'Referência', color: otherKind === 'catechism_paragraph' ? 'bg-blue-500' : 'bg-amber-500', id, summary: row.note || '', theological_theme: undefined, relevance_level: row.confidence };
+};
+
 const Bible: React.FC = () => {
   const [isConnectionEditorOpen, setIsConnectionEditorOpen] = useState(false);
   const [navHistory, setNavHistory] = useState<{book: string, chapter: number, verse?: number}[]>([]);
 
   useRenderPerf('Sacra Biblia Mobile-First', 15);
+
+const fetchReferenceVerse = useCallback(async (connection: { type: string; id: string }) => {
+    if (connection.type !== 'cross_ref' && connection.type !== 'bible') {
+      setReferenceVerse(null);
+      return;
+    }
+    const parts = String(connection.id).split('-');
+    if (parts.length < 3) {
+      setReferenceVerse(null);
+      return;
+    }
+    const [abbr, chapterRaw, verseRaw] = parts;
+    const chapter = Number(chapterRaw);
+    const verse = Number(verseRaw);
+    if (!abbr || !Number.isInteger(chapter) || !Number.isInteger(verse)) {
+      setReferenceVerse(null);
+      return;
+    }
+    setReferenceVerseLoading(true);
+    try {
+      const { data: book } = await supabase.from('bible_books').select('id,name,abbrev').eq('abbrev', abbr).maybeSingle();
+      if (!book) throw new Error('reference_book_not_found');
+      const { data: chapterRow } = await supabase.from('bible_chapters').select('id').eq('book_id', book.id).eq('number', chapter).maybeSingle();
+      if (!chapterRow) throw new Error('reference_chapter_not_found');
+      const { data: verseRow } = await supabase.from('bible_verses').select('number,text').eq('chapter_id', chapterRow.id).eq('number', verse).maybeSingle();
+      if (!verseRow?.text) throw new Error('reference_verse_not_found');
+      setReferenceVerse({ reference: `${book.name} ${chapter}:${verse}`, text: verseRow.text });
+    } catch (error) {
+      console.warn('[Nexus] reference verse unavailable', { connection, error });
+      setReferenceVerse(null);
+    } finally {
+      setReferenceVerseLoading(false);
+    }
+  }, []);
 
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -144,6 +224,8 @@ const Bible: React.FC = () => {
   const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
   const [activeVerse, setActiveVerse] = useState<{ number: number; text: string } | null>(null);
   const [expandedConnection, setExpandedConnection] = useState<{ label: string, summary: string, type: string, id: string, color?: string, theological_theme?: string } | null>(null);
+  const [referenceVerse, setReferenceVerse] = useState<{ reference: string; text: string } | null>(null);
+  const [referenceVerseLoading, setReferenceVerseLoading] = useState(false);
   const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
   const [isGraphOpen, setIsGraphOpen] = useState(false);
   const [isScanning, setIsScanning] = useState(false);
@@ -169,7 +251,7 @@ const Bible: React.FC = () => {
   const [highlights, setHighlights] = useState<Record<string, string>>({});
   
   const { notes, addNote, deleteNote, updateNote, refetch: fetchNotes } = useNotes('bible');
-  const { saveLastRead: syncRemoteLastRead } = useReadingMarks();
+  const { marks: readingMarks, saveLastRead: syncRemoteLastRead, addMark, deleteMark } = useReadingMarks();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
 
@@ -332,7 +414,7 @@ const Bible: React.FC = () => {
         content_id: bookAbbr,
         chapter,
         label: `${book.name} ${chapter}`,
-        url: `/bible?book=${encodeURIComponent(bookAbbr)}&ch=${chapter}`,
+        url: `/bible?book=${encodeURIComponent(bookAbbr)}&ch=${chapter}${verse ? `&v=${verse}` : ''}`,
         is_last_read: true
       });
       
@@ -387,21 +469,119 @@ const Bible: React.FC = () => {
     toast.success('Nota salva');
   };
 
-  const toggleHighlight = (verseNumber: number, color: string) => {
+  const isVerseBookmarked = useCallback((verseNumber: number) => {
+    if (!selectedBook) return false;
+    const contentId = selectedBook.abbr + ':' + selectedChapter + ':' + verseNumber;
+    return readingMarks.some((mark) => mark.content_type === 'bible_bookmark' && mark.content_id === contentId);
+  }, [readingMarks, selectedBook, selectedChapter]);
+
+  const toggleBookmark = useCallback(async (verseNumber: number) => {
+    if (!selectedBook || !user) {
+      toast.info('Entre na sua conta para usar marcadores.');
+      return;
+    }
+    const contentId = selectedBook.abbr + ':' + selectedChapter + ':' + verseNumber;
+    const existing = readingMarks.find((mark) => mark.content_type === 'bible_bookmark' && mark.content_id === contentId);
+    if (existing) {
+      await deleteMark(existing.id);
+      toast.success('Marcador removido');
+      return;
+    }
+    const bookName = selectedBook.name;
+    const created = await addMark({
+      content_type: 'bible_bookmark',
+      content_id: contentId,
+      chapter: selectedChapter,
+      label: bookName + ' ' + selectedChapter + ':' + verseNumber,
+      url: '/bible?book=' + encodeURIComponent(selectedBook.abbr) + '&ch=' + selectedChapter + '&v=' + verseNumber,
+      is_last_read: false,
+    });
+    if (created) toast.success('Versículo marcado');
+    else toast.error('Não foi possível salvar o marcador.');
+  }, [selectedBook, selectedChapter, user, readingMarks, addMark, deleteMark]);
+
+  const toggleHighlight = async (verseNumber: number, color: string) => {
     if (!selectedBook) return;
     const key = `${selectedBook.abbr}-${selectedChapter}-${verseNumber}`;
-    const newHighlights = { ...highlights };
-    
-    if (newHighlights[key] === color) {
-      delete newHighlights[key];
-    } else {
-      newHighlights[key] = color;
+    const currentColor = highlights[key];
+    const next = { ...highlights };
+
+    if (currentColor === color) delete next[key];
+    else next[key] = color;
+
+    setHighlights(next);
+    localStorage.setItem('cathedra_bible_highlights', JSON.stringify(next));
+
+    if (!user) return;
+
+    try {
+      const contentId = `${selectedBook.abbr}:${selectedChapter}:${verseNumber}`;
+      if (currentColor === color) {
+        const { error } = await supabase
+          .from('user_notes')
+          .delete()
+          .eq('user_id', user.id)
+          .eq('content_type', 'bible')
+          .eq('content_id', contentId)
+          .eq('note_text', '');
+
+        if (error) throw error;
+      } else {
+        const { data: existing, error: existingError } = await supabase
+          .from('user_notes')
+          .select('id')
+          .eq('user_id', user.id)
+          .eq('content_type', 'bible')
+          .eq('content_id', contentId)
+          .eq('note_text', '')
+          .maybeSingle();
+
+        if (existingError) throw existingError;
+
+        if (existing?.id) {
+          const { error } = await supabase
+            .from('user_notes')
+            .update({ highlight_color: color })
+            .eq('id', existing.id)
+            .eq('user_id', user.id);
+          if (error) throw error;
+        } else {
+          const { error } = await supabase
+            .from('user_notes')
+            .insert({
+              user_id: user.id,
+              content_type: 'bible',
+              content_id: contentId,
+              note_text: '',
+              highlight_color: color,
+              book_abbr: selectedBook.abbr,
+              chapter: selectedChapter,
+              verse: verseNumber,
+            });
+          if (error) throw error;
+        }
+      }
+      await fetchNotes();
+    } catch (error) {
+      console.error('[Bible] highlight persistence failed', error);
+      setHighlights(prev => currentColor === color
+        ? { ...prev, [key]: color }
+        : (() => { const rollback = { ...prev }; delete rollback[key]; return rollback; })());
+      toast.error('Não foi possível salvar o destaque na conta.');
     }
-    
-    setHighlights(newHighlights);
-    localStorage.setItem('cathedra_bible_highlights', JSON.stringify(newHighlights));
   };
 
+
+  useEffect(() => {
+    const remoteHighlights: Record<string, string> = {};
+    for (const note of notes) {
+      if (note.content_type !== 'bible' || note.note_text !== '' || !note.book_abbr || !note.chapter || !note.verse) continue;
+      remoteHighlights[`${note.book_abbr}-${note.chapter}-${note.verse}`] = note.highlight_color || 'yellow';
+    }
+    if (Object.keys(remoteHighlights).length > 0) {
+      setHighlights(prev => ({ ...prev, ...remoteHighlights }));
+    }
+  }, [notes]);
 
   const handleExportData = () => {
     const data = {
@@ -537,9 +717,9 @@ const Bible: React.FC = () => {
 
     const connectionsPromise = Promise.resolve(
       supabase
-        .from('bible_connections')
-        .select('*')
-        .like('verse_id', `${abbr}-${chapter}-%`)
+        .from('nexus_relations')
+        .select('id, relation_type, source_kind, source_ref, target_kind, target_ref, note, confidence, status')
+        .eq('status', 'published')
     ).then((res) => {
       biblePerf.mark(runId, 'connections:end');
       return res;
@@ -552,19 +732,14 @@ const Bible: React.FC = () => {
           setDynamicConnections((prev) => {
             const newConns: Record<string, any[]> = { ...prev };
             dbConnections.forEach((conn: any) => {
-              const key = conn.verse_id;
+              const source = conn.source_kind === 'bible_verse' ? readBibleRef(conn.source_ref) : null;
+              const target = conn.target_kind === 'bible_verse' ? readBibleRef(conn.target_ref) : null;
+              const bible = source ?? target;
+              if (!bible?.verse) return;
+              const key = `${bible.abbr}-${bible.chapter}-${bible.verse}`;
+              const mapped = nexusConnectionFromRow(conn, key);
               if (!newConns[key]) newConns[key] = [];
-              if (!newConns[key].some((c) => c.id === conn.reference_id)) {
-                newConns[key].push({
-                  type: conn.category as any,
-                  label: conn.reference_title,
-                  color: conn.category === 'catechism' ? 'bg-blue-500' : 'bg-amber-500',
-                  id: conn.reference_id || conn.id,
-                  summary: conn.summary || '',
-                  theological_theme: conn.theological_theme,
-                  relevance_level: conn.relevance_level,
-                });
-              }
+              if (!newConns[key].some((item) => item.id === mapped.id && item.type === mapped.type)) newConns[key].push(mapped);
             });
             return newConns;
           });
@@ -750,22 +925,12 @@ const Bible: React.FC = () => {
         });
       }
     } catch (error: any) {
-      // Local fallback for Abdias or connection issues
-      if (abbr === 'Ab' || abbr === 'Abd') {
-        const obadiahText = [
-          { number: 1, text: "Visão de Abdias. Assim diz o Senhor Deus a respeito de Edom: Ouvimos um anúncio do Senhor, e um mensageiro foi enviado às nações: Levantai-vos! Levantemo-nos para a guerra contra ele!" },
-          { number: 2, text: "Eis que te fiz pequeno entre as nações; tu és muito desprezado." },
-          { number: 3, text: "A soberba do teu coração enganou-te, a ti que habitas nas fendas das rochas, na tua alta morada, que dizes no teu coração: Quem me derrubará por terra?" },
-        ];
-        setVerses(obadiahText.map((v) => ({ ...v, chapter: 1 })));
-        setIsLoading(false);
-        setSourceInfo('Fallback Local (Abdias)');
-        biblePerf.mark(runId, 'render');
-        biblePerf.end(runId, { status: 'ok', source: 'fallback:Ab', versesCount: 3 });
-        return;
-      }
+      setVerses([]);
       setSourceInfo('Erro no Carregamento');
-      toast.error('Erro ao carregar texto sagrado');
+      toast.error('Erro ao carregar texto sagrado', {
+        description: 'O capítulo não pôde ser recuperado da fonte oficial nem do banco local. Nenhum texto parcial foi exibido.',
+        id: `bible-text-error-${abbr}-${chapter}`,
+      });
       biblePerf.end(runId, { status: 'error', source: 'error' });
     } finally {
       setIsLoading(false);
@@ -899,7 +1064,8 @@ const Bible: React.FC = () => {
     const chapters = new Set<number>();
     const verses = new Set<string>();
     if (!selectedBook) return { chapters, verses };
-    Object.entries(KNOWLEDGE_CONNECTIONS).forEach(([key, conns]) => {
+    const mergedConnections = { ...KNOWLEDGE_CONNECTIONS, ...dynamicConnections };
+    Object.entries(mergedConnections).forEach(([key, conns]) => {
       if (key === 'all') return;
       const [abbr, ch, v] = key.split('-');
       if (abbr !== selectedBook.abbr) return;
@@ -918,7 +1084,8 @@ const Bible: React.FC = () => {
   const chapterHasConnections = useMemo(() => {
     if (!selectedBook || !selectedChapter) return false;
     const prefix = `${selectedBook.abbr}-${selectedChapter}-`;
-    return Object.entries(KNOWLEDGE_CONNECTIONS).some(([key, arr]) => key.startsWith(prefix) && Array.isArray(arr) && arr.length > 0);
+    const mergedConnections = { ...KNOWLEDGE_CONNECTIONS, ...dynamicConnections };
+    return Object.entries(mergedConnections).some(([key, arr]) => key.startsWith(prefix) && Array.isArray(arr) && arr.length > 0);
   }, [KNOWLEDGE_CONNECTIONS, selectedBook, selectedChapter]);
 
   // Pre-fetch all connections for the selected book (powers gold-dot indicators on the chapter grid)
@@ -929,13 +1096,13 @@ const Bible: React.FC = () => {
     (async () => {
       try {
         const { data, error } = await supabase
-          .from('bible_connections')
-          .select('verse_id, category, reference_id, reference_title, summary')
-          .like('verse_id', `${selectedBook.abbr}-%`);
+          .from('nexus_relations')
+          .select('id, relation_type, source_kind, source_ref, target_kind, target_ref, note, confidence, status')
+          .eq('status', 'published');
         if (cancelled) return;
         if (error) {
           const is406 = (error as any)?.code === 'PGRST406' || /406/.test(error.message || '');
-          console.warn('[Nexus] bible_connections fetch failed — usando fallback local', {
+          console.warn('[Nexus] nexus_relations fetch failed — usando fallback local', {
             code: (error as any)?.code,
             message: error.message,
             book: selectedBook.abbr,
@@ -954,17 +1121,14 @@ const Bible: React.FC = () => {
         setDynamicConnections(prev => {
           const next = { ...prev };
           data.forEach((conn: any) => {
-            const key = conn.verse_id;
+            const source = conn.source_kind === 'bible_verse' ? readBibleRef(conn.source_ref) : null;
+            const target = conn.target_kind === 'bible_verse' ? readBibleRef(conn.target_ref) : null;
+            const bible = source ?? target;
+            if (!bible?.verse) return;
+            const key = `${bible.abbr}-${bible.chapter}-${bible.verse}`;
+            const mapped = nexusConnectionFromRow(conn, key);
             if (!next[key]) next[key] = [];
-            if (!next[key].some((c: any) => c.id === (conn.reference_id || conn.id))) {
-              next[key].push({
-                type: conn.category,
-                label: conn.reference_title,
-                color: conn.category === 'catechism' ? 'bg-blue-500' : 'bg-amber-500',
-                id: conn.reference_id,
-                summary: conn.summary || '',
-              });
-            }
+            if (!next[key].some((item: any) => item.id === mapped.id && item.type === mapped.type)) next[key].push(mapped);
           });
           return next;
         });
@@ -1306,40 +1470,72 @@ const Bible: React.FC = () => {
                 <Icons.BookOpen className="w-8 h-8 text-secondary/40 mb-spacing-sm" />
                 <h1 className="font-display text-2xl tracking-[0.2em] uppercase text-primary/80">Bíblia Sagrada</h1>
               </div>
-              <div className="flex items-center gap-spacing-xs">
-                <button 
-                  onClick={() => setIsConnectionEditorOpen(true)}
-                  className="p-spacing-xs text-secondary/40 active:scale-95 transition-transform"
-                  title="Editor Bíblia ↔ CIC"
-                >
-                  <Icons.Edit3 className="w-5 h-5" />
-                </button>
-                <button 
-                  onClick={() => setIsFeedbackOpen(true)}
-                  className="p-spacing-xs text-secondary/40 active:scale-95 transition-transform"
-                  title="Suporte & Feedback"
-                >
-                  <Icons.HelpCircle className="w-5 h-5" />
-                </button>
-                <button 
-                  onClick={() => setShowKnowledgePanel(true)}
+              <div className="flex items-center gap-spacing-xs" data-testid="bible-toolbar">
+                <button
+                  type="button"
+                  onClick={() => setViewMode('search')}
+                  aria-label="Pesquisar na Bíblia"
+                  data-testid="bible-toolbar-search"
                   className="p-spacing-xs text-secondary/80 active:scale-95 transition-transform"
-                  title="Auditoria Estratégica"
+                  title="Pesquisar na Bíblia"
                 >
-                  <Icons.Activity className="w-6 h-6" />
+                  <Icons.Search className="w-5 h-5" aria-hidden="true" />
                 </button>
-                <button 
-                  onClick={() => navigate('/bible-recovery')}
+                <button
+                  type="button"
+                  onClick={() => setViewMode('bookmarks')}
+                  aria-label="Abrir marcadores"
+                  data-testid="bible-toolbar-bookmarks"
                   className="p-spacing-xs text-secondary/80 active:scale-95 transition-transform"
-                  title="Recovery Bíblia"
+                  title="Marcadores"
                 >
-                  <Icons.Stethoscope className="w-6 h-6" />
+                  <Icons.BookMarked className="w-6 h-6" aria-hidden="true" />
                 </button>
-                <button 
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button
+                      type="button"
+                      aria-label="Mais opções da Bíblia"
+                      data-testid="bible-toolbar-more"
+                      className="p-spacing-xs text-secondary/80 active:scale-95 transition-transform"
+                      title="Mais opções"
+                    >
+                      <Icons.MoreHorizontal className="w-6 h-6" aria-hidden="true" />
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="min-w-52">
+                    <DropdownMenuItem onClick={() => setViewMode('notes')}>
+                      <Icons.List className="w-4 h-4 mr-2" />
+                      Anotações
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setIsConnectionEditorOpen(true)}>
+                      <Icons.Edit3 className="w-4 h-4 mr-2" />
+                      Editor Bíblia ↔ CIC
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setIsFeedbackOpen(true)}>
+                      <Icons.HelpCircle className="w-4 h-4 mr-2" />
+                      Suporte & Feedback
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={() => setShowKnowledgePanel(true)}>
+                      <Icons.Activity className="w-4 h-4 mr-2" />
+                      Auditoria Estratégica
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => navigate('/bible-recovery')}>
+                      <Icons.Stethoscope className="w-4 h-4 mr-2" />
+                      Recovery Bíblia
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+                <button
+                  type="button"
                   onClick={() => setViewMode('notes')}
+                  aria-label="Abrir anotações"
+                  data-testid="bible-toolbar-notes"
                   className="p-spacing-xs text-secondary/80 active:scale-95 transition-transform"
+                  title="Anotações"
                 >
-                  <Icons.List className="w-6 h-6" />
+                  <Icons.List className="w-6 h-6" aria-hidden="true" />
                 </button>
               </div>
 
@@ -1633,7 +1829,7 @@ const Bible: React.FC = () => {
               onDragEnd={handleDragEnd}
             >
               {isLoading ? <BibleSkeleton /> : (
-                <article className="space-y-spacing-2xl">
+                <article className="space-y-spacing-lg">
                   <header className="flex flex-col items-center mb-spacing-2xl opacity-30">
                     <Icons.Logo className="w-10 h-10 mb-spacing-lg" />
                     <h3 className="text-2xl font-display font-light uppercase tracking-[0.4em] italic">{selectedBook.name} {selectedChapter}</h3>
@@ -1643,7 +1839,7 @@ const Bible: React.FC = () => {
                   <motion.div 
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="p-spacing-md bg-secondary/5 rounded-2xl border border-secondary/10 mb-spacing-xl"
+                    className="p-spacing-sm sm:p-spacing-md bg-secondary/5 rounded-2xl border border-secondary/10 mb-spacing-lg"
                   >
                     <div className="flex items-center gap-spacing-sm mb-spacing-xs">
                       <Icons.Info className="w-4 h-4 text-secondary/40" />
@@ -1667,7 +1863,7 @@ const Bible: React.FC = () => {
                     </div>
                   )}
 
-                  <div className="space-y-spacing-xl editorial-column">
+                  <div className="space-y-spacing-md editorial-column">
                     {verses.length === 0 && !isLoading ? (
                       <div className="py-spacing-2xl text-center space-y-spacing-lg bg-primary/[0.02] rounded-3xl border border-primary/5 p-spacing-xl">
                         <Icons.AlertCircle className="w-12 h-12 text-secondary/40 mx-auto" />
@@ -1695,7 +1891,7 @@ const Bible: React.FC = () => {
                         </div>
                       </div>
                     ) : (
-                      <div className="space-y-2 sm:space-y-3">
+                      <div className="space-y-0">
                         {verses.map((v, index) => {
 
 
@@ -1715,7 +1911,7 @@ const Bible: React.FC = () => {
                             setIsHighlightMenuOpen(true);
                           }}
                           className={cn(
-                            "w-full flex items-start gap-2 sm:gap-3 group relative transition-all duration-300 cursor-pointer active:bg-primary/[0.05] px-2 py-2 sm:px-3 sm:py-2.5 rounded-xl border border-transparent hover:border-primary/5",
+                            "w-full flex items-start gap-2 sm:gap-3 group relative transition-all duration-200 cursor-pointer active:bg-primary/[0.05] px-2 py-1 sm:px-3 sm:py-1.5 rounded-lg border border-transparent hover:border-primary/5",
                             highlights[`${selectedBook.abbr}-${selectedChapter}-${v.number}`] === 'yellow' && "bg-yellow-200/40",
                             highlights[`${selectedBook.abbr}-${selectedChapter}-${v.number}`] === 'green' && "bg-green-200/40",
                             highlights[`${selectedBook.abbr}-${selectedChapter}-${v.number}`] === 'blue' && "bg-blue-200/40",
@@ -1743,7 +1939,7 @@ const Bible: React.FC = () => {
 
 
                           
-                          <div className="flex-1 space-y-spacing-md">
+                          <div className="flex-1 space-y-0">
                             {(() => {
                               const connectionKey = `${selectedBook.abbr}-${selectedChapter}-${v.number}`;
                               const verseConnections = KNOWLEDGE_CONNECTIONS[connectionKey] || [];
@@ -1754,14 +1950,14 @@ const Bible: React.FC = () => {
                             <p 
                               data-testid={`verse-text-${v.number}`}
                               className={cn(
-                                "leading-[1.8] font-serif text-primary/85 tracking-tight relative flex-1 min-w-0",
+                                "leading-[1.65] font-serif text-primary/85 tracking-tight relative flex-1 min-w-0",
                                 settings.fontSize === 'small' && "text-[16px]",
                                 settings.fontSize === 'medium' && "text-[19px]",
                                 settings.fontSize === 'large' && "text-[22px]",
                                 settings.fontSize === 'extra-large' && "text-[26px]",
-                                settings.lineSpacing === 'tight' && "leading-[1.6]",
-                                settings.lineSpacing === 'normal' && "leading-[1.85]",
-                                settings.lineSpacing === 'wide' && "leading-[2.1]",
+                                settings.lineSpacing === 'tight' && "leading-[1.55]",
+                                settings.lineSpacing === 'normal' && "leading-[1.7]",
+                                settings.lineSpacing === 'wide' && "leading-[1.8]",
                                 settings.contrast === 'soft' && "opacity-70",
                                 settings.contrast === 'high' && "text-primary font-bold"
                               )}
@@ -1782,7 +1978,7 @@ const Bible: React.FC = () => {
 
                             {/* Knowledge Connection Cards — Nexus (squared, structured) */}
                             {verseConnections.length > 0 && (
-                              <div data-testid={`nexus-bubbles-${v.number}`} className="grid grid-cols-2 sm:grid-cols-3 gap-spacing-xs pt-2">
+                              <div data-testid={`nexus-bubbles-${v.number}`} className="grid grid-cols-2 sm:grid-cols-3 gap-spacing-xs pt-1">
                                 {verseConnections.slice(0, 6).map((conn, idx) => {
                                   const typeMeta: Record<string, { icon: React.ReactNode; tone: string; stripe: string; kicker: string }> = {
                                     catechism: { icon: <Icons.BookMarked className="w-3 h-3" />, tone: 'text-blue-800', stripe: 'bg-blue-600', kicker: 'Catecismo' },
@@ -1817,6 +2013,7 @@ const Bible: React.FC = () => {
                                               }));
                                             } catch {}
                                             setExpandedConnection(conn);
+                                            void fetchReferenceVerse(conn);
                                           }}
                                           className="group relative overflow-hidden rounded-md border border-primary/20 bg-white hover:border-secondary/50 hover:bg-secondary/[0.04] shadow-sm hover:shadow-md transition-all text-left active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2 dark:bg-primary/5 dark:border-primary/30"
                                         >
@@ -1842,9 +2039,9 @@ const Bible: React.FC = () => {
                                         data-testid="nexus-connection-popover"
                                         aria-labelledby={`nexus-popover-title-${v.number}-${idx}`}
                                         aria-describedby={`nexus-popover-desc-${v.number}-${idx}`}
-                                        className="w-[min(22rem,calc(100vw-24px))] z-[200] p-spacing-md rounded-2xl border border-primary/10 bg-card shadow-premium"
+                                        className="w-[min(22rem,calc(100vw-24px))] z-[200] p-spacing-sm rounded-xl border border-primary/10 bg-card shadow-premium"
                                       >
-                                        <div className="space-y-spacing-sm">
+                                        <div className="space-y-spacing-xs">
                                           <div className="flex items-start gap-spacing-xs">
                                             <span className={cn("mt-0.5 shrink-0", meta.tone)}>{meta.icon}</span>
                                             <div className="min-w-0">
@@ -1855,6 +2052,23 @@ const Bible: React.FC = () => {
                                           <p id={`nexus-popover-desc-${v.number}-${idx}`} className="text-xs font-serif italic text-primary/70 leading-relaxed">
                                             {conn.summary}
                                           </p>
+                                          {(conn.type === 'cross_ref' || conn.type === 'bible') && (
+                                            <div className="rounded-xl border border-secondary/20 bg-secondary/[0.04] p-spacing-sm">
+                                              <p className="text-[9px] font-black uppercase tracking-[0.16em] text-secondary">
+                                                Texto bíblico da referência
+                                              </p>
+                                              {referenceVerseLoading ? (
+                                                <p className="mt-1 text-xs text-primary/50">Carregando versículo…</p>
+                                              ) : referenceVerse ? (
+                                                <>
+                                                  <p className="mt-1 text-xs font-bold text-primary">{referenceVerse.reference}</p>
+                                                  <p className="mt-1 text-sm font-serif leading-relaxed text-primary/80">{referenceVerse.text}</p>
+                                                </>
+                                              ) : (
+                                                <p className="mt-1 text-xs text-primary/50">Texto da referência indisponível.</p>
+                                              )}
+                                            </div>
+                                          )}
 
                                           {conn.type === 'catechism' && (
                                             <div className="pt-spacing-sm border-t border-primary/5">
@@ -1868,6 +2082,12 @@ const Bible: React.FC = () => {
                                               data-testid="nexus-popover-nav-link"
                                               onClick={() => {
                                                 console.info('[Nexus] navigate', { from: 'bible', to: conn.type, id: conn.id });
+                                                saveBibleReturnContext({
+                                                  book: selectedBook.abbr,
+                                                  chapter: selectedChapter,
+                                                  verse: v.number,
+                                                  label: `${selectedBook.name} ${selectedChapter}:${v.number}`,
+                                                });
                                                 if (conn.type === 'catechism') navigate(`/catechism?p=${conn.id}`);
                                                 else if (conn.type === 'document') navigate(`/magisterium?doc=${conn.id}`);
                                                 else if (conn.type === 'bible' || conn.type === 'cross_ref') {
@@ -2017,6 +2237,16 @@ const Bible: React.FC = () => {
           />
         )}
 
+        {viewMode === 'bookmarks' && (
+          <BibleBookmarksList
+            onClose={() => setViewMode('home')}
+            onSelectReference={(book, chapter, verse) => {
+              navigate('/bible?book=' + book + '&ch=' + chapter + '&v=' + verse);
+              setViewMode('reading');
+            }}
+          />
+        )}
+
         {viewMode === 'monthly_recap' && (
           <MonthlyRecap 
             onClose={() => setViewMode('home')}
@@ -2062,6 +2292,10 @@ const Bible: React.FC = () => {
         onAddNote={() => {
           setIsHighlightMenuOpen(false);
           setIsNoteModalOpen(true);
+        }}
+        isBookmarked={activeVerse ? isVerseBookmarked(activeVerse.number) : false}
+        onToggleBookmark={() => {
+          if (activeVerse) void toggleBookmark(activeVerse.number);
         }}
         verseText={activeVerse?.text}
         reference={

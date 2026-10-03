@@ -15,6 +15,8 @@ interface HighlightMenuProps {
   reference?: string;
   passage?: PassageDescriptor;
   onOpenNexus?: () => void;
+  isBookmarked?: boolean;
+  onToggleBookmark?: () => void;
 }
 
 const COLORS = [
@@ -39,6 +41,8 @@ export const HighlightMenu: React.FC<HighlightMenuProps> = ({
   reference,
   passage,
   onOpenNexus,
+  isBookmarked = false,
+  onToggleBookmark,
 }) => {
   const sourceLabel = SOURCE_LABELS[passage?.kind ?? ''] ?? 'Leitura';
 
@@ -121,6 +125,17 @@ export const HighlightMenu: React.FC<HighlightMenuProps> = ({
               )}
 
               <div className="flex flex-wrap gap-2">
+                {onToggleBookmark && (
+                  <button
+                    type="button"
+                    onClick={onToggleBookmark}
+                    className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-primary/15 px-4 py-2 text-[10px] font-black uppercase tracking-[0.16em] text-primary/80 transition-colors hover:bg-primary/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                    aria-label={isBookmarked ? 'Remover marcador' : 'Marcar versículo'}
+                  >
+                    <Icons.BookMarked className="h-4 w-4" />
+                    {isBookmarked ? 'Marcado' : 'Marcar'}
+                  </button>
+                )}
                 <button
                   type="button"
                   onClick={onAddNote}

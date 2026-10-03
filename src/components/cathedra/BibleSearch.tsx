@@ -9,7 +9,7 @@ import { supabase } from '@/lib/db';
 import { toast } from 'sonner';
 
 interface SearchResult {
-  bookId: number;
+  bookId: string;
   bookAbbrev: string;
   bookName: string;
   chapter: number;
@@ -45,86 +45,34 @@ const BibleSearch: React.FC<BibleSearchProps> = ({ onSelectResult, onClose, init
 
 
   const handleSearch = async (e: React.FormEvent) => {
-
-
     e.preventDefault();
-    if (query.trim().length < 2) return;
+    const normalizedQuery = query.trim();
+    if (normalizedQuery.length < 2) return;
 
     setIsLoading(true);
+    setSelectedIndex(null);
     try {
-      // Mock logic for "Theological Themes" with Relevance Score and Reason (Phase 3)
-      const theologicalThemes: Record<string, { reason: string, score: number }> = {
-        'eucaristia': { reason: 'Centralidade no discurso do Pão da Vida (Jo 6)', score: 98 },
-        'criação': { reason: 'Fundamento ontológico nas Escrituras (Gn 1)', score: 95 },
-        'trindade': { reason: 'Revelação progressiva da natureza divina', score: 92 },
-        'graça': { reason: 'Doutrina da salvação paulina (Rm 5)', score: 88 }
-      };
-      
-      const queryLower = query.toLowerCase();
-      let matchedTheme = null;
-      
-      Object.keys(theologicalThemes).forEach(theme => {
-        if (queryLower.includes(theme)) matchedTheme = { name: theme, ...theologicalThemes[theme] };
-      });
-
-      if (matchedTheme) {
-        toast.success(`Tema Detectado: ${matchedTheme.name} (Score: ${matchedTheme.score})`);
-      }
-
       const { data, error } = await supabase.functions.invoke('bible-search', {
-        body: { query }
+        body: { query: normalizedQuery },
       });
-      // P0.2.0 — Contenção: bible-search retorna 503 (unavailable) enquanto
-      // a Bíblia está em reconstrução. Comunicar honestamente ao leitor.
-      const unavailable = (data && data.status === 'unavailable') || (error as any)?.context?.status === 503;
-      if (unavailable) {
-        toast.info(data?.message || 'Busca bíblica em atualização. Reative em breve.');
-        setResults([]);
-        return;
-      }
+
       if (error) throw error;
-      
-      // Fetch advanced results from Magisterium/Catechism for unified search
-      const { data: spiritualData } = await supabase
-        .from('spiritual_contents')
-        .select('*')
-        .or(`content_text.ilike.%${query}%,title.ilike.%${query}%`)
-        .limit(5);
 
-      const spiritualResults = (spiritualData || []).map(s => {
-        const metadata = s.metadata as any;
-        return {
-          bookAbbrev: s.type === 'bible' ? (metadata?.book_abbr || 'Bíb') : (s.type === 'catechism' ? 'CIC' : 'Mag'),
-          bookName: s.title,
-          chapter: metadata?.chapter || 0,
-          verse: metadata?.verse || 0,
-          text: s.content_text,
-          score: 90,
-          relevance: 'Conteúdo da Tradição',
-          isBible: s.type === 'bible'
-        };
-      });
+      const nextResults = Array.isArray(data?.results)
+        ? data.results.map((result: SearchResult) => ({ ...result, isBible: true }))
+        : [];
 
-      // Combine and Sort by Relevance Score
-      let combinedResults = [
-        ...(data.results || []).map((r: any) => ({ ...r, isBible: true })),
-        ...spiritualResults
-      ];
+      setResults(nextResults);
 
-          combinedResults = combinedResults.map((r: any) => ({
-          ...r,
-          relevance: r.relevance || matchedTheme.reason,
-          score: r.score || (Math.floor(Math.random() * 20) + 70)
-        }));
-      
-      const sortedResults = combinedResults.sort((a: any, b: any) => (b.score || 0) - (a.score || 0));
-      
-      setResults(sortedResults);
-      if (sortedResults.length === 0) {
-        toast.info('Nenhum resultado encontrado');
+      if (nextResults.length === 0) {
+        toast.info('Nenhum resultado encontrado para esta pesquisa.');
       }
-    } catch (error: any) {
-      toast.error('Erro na busca sagrada');
+    } catch (error) {
+      console.error('[BibleSearch] search failed', error);
+      setResults([]);
+      toast.error('Não foi possível pesquisar a Bíblia agora.', {
+        description: 'A leitura continua disponível; tente novamente em alguns instantes.',
+      });
     } finally {
       setIsLoading(false);
     }
@@ -132,23 +80,25 @@ const BibleSearch: React.FC<BibleSearchProps> = ({ onSelectResult, onClose, init
 
 
 
-
   return (
     <div className="fixed inset-0 z-[100] bg-[#FAF9F6] flex flex-col">
       <header className="px-6 h-16 flex items-center gap-4 border-b border-primary/5">
-        <button onClick={onClose} aria-label="Fechar busca" className="p-2 -ml-2 min-h-11 min-w-11 flex items-center justify-center text-primary/40 active:text-secondary">
+        <button type="button" onClick={onClose} aria-label="Fechar busca" data-testid="bible-search-close" className="p-2 -ml-2 min-h-11 min-w-11 flex items-center justify-center text-primary/40 active:text-secondary">
           <Icons.X className="w-6 h-6" aria-hidden="true" />
         </button>
-        <form onSubmit={handleSearch} className="flex-1">
+        <form id="bible-search-form" onSubmit={handleSearch} className="flex-1" data-testid="bible-search-form">
           <input 
             autoFocus
             type="text" 
-            placeholder="Pesquisar nas Escrituras..."
+            placeholder="Pesquisar nas Escrituras..." aria-label="Pesquisar nas Escrituras" data-testid="bible-search-input"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             className="w-full h-10 bg-transparent text-lg font-serif outline-none placeholder:text-primary/20"
           />
         </form>
+        <button type="submit" form="bible-search-form" aria-label="Executar busca" data-testid="bible-search-submit" className="p-2 min-h-11 min-w-11 flex items-center justify-center text-secondary/70 hover:text-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary rounded-md" disabled={isLoading || query.trim().length < 2}>
+          <Icons.Search className="w-5 h-5" aria-hidden="true" />
+        </button>
         {isLoading && <Icons.Loader className="w-4 h-4 text-secondary animate-spin" />}
       </header>
 
@@ -251,11 +201,7 @@ const BibleSearch: React.FC<BibleSearchProps> = ({ onSelectResult, onClose, init
                       } {result.chapter}:{result.verse}
                     </span>
                     <div className="flex-1 h-px bg-primary/5" />
-                    {result.score && (
-                      <span className="text-[8px] font-black text-secondary px-1.5 py-0.5 bg-secondary/5 rounded-md border border-secondary/10">
-                        {result.score}%
-                      </span>
-                    )}
+
                   </div>
                   {result.relevance && (
                     <p className="text-[10px] font-medium italic text-secondary/70">

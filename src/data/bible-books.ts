@@ -109,7 +109,7 @@ export const BIBLE_DATA: Record<string, BibleCategory[]> = {
         { 
           name: 'Salmos', 
           abbr: 'Sl', 
-          chapters: 151,
+          chapters: 150,
           category: 'Poético / Sapiencial',
           author: 'Davi e outros',
           description: 'Hinos e Orações do Povo de Deus.',
@@ -177,7 +177,7 @@ export const BIBLE_DATA: Record<string, BibleCategory[]> = {
       name: 'Profetas Menores',
       books: [
         { name: 'Oseias', abbr: 'Os', chapters: 14, category: 'Profético' },
-        { name: 'Joel', abbr: 'Jl', chapters: 4, category: 'Profético' },
+        { name: 'Joel', abbr: 'Jl', chapters: 3, category: 'Profético' },
         { name: 'Amós', abbr: 'Am', chapters: 9, category: 'Profético' },
         { 
           name: 'Abdias', 
@@ -200,7 +200,7 @@ export const BIBLE_DATA: Record<string, BibleCategory[]> = {
         { name: 'Sofonias', abbr: 'Sf', chapters: 3, category: 'Profético' },
         { name: 'Ageu', abbr: 'Ag', chapters: 2, category: 'Profético' },
         { name: 'Zacarias', abbr: 'Zc', chapters: 14, category: 'Profético' },
-        { name: 'Malaquias', abbr: 'Ml', chapters: 3, category: 'Profético' }
+        { name: 'Malaquias', abbr: 'Ml', chapters: 4, category: 'Profético' }
       ]
     }
   ],

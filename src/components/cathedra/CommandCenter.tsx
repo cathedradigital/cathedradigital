@@ -14,7 +14,7 @@ interface CommandItem {
   path?: string;
   icon: React.ReactNode;
   keywords: string[];
-  type: 'page' | 'bible' | 'community' | 'saint' | 'catechism' | 'journey' | 'glossary' | 'theme';
+  type: 'page' | 'bible' | 'community' | 'saint' | 'catechism' | 'journey' | 'glossary' | 'theme' | 'note';
 }
 
 const PAGE_COMMANDS: CommandItem[] = [
@@ -50,7 +50,7 @@ const PAGE_COMMANDS: CommandItem[] = [
 ];
 
 interface UnifiedResult {
-  type: 'page' | 'bible' | 'community' | 'saint' | 'catechism' | 'journey' | 'glossary' | 'theme';
+  type: 'page' | 'bible' | 'community' | 'saint' | 'catechism' | 'journey' | 'glossary' | 'theme' | 'note';
   label: string;
   description: string;
   path?: string;
@@ -65,6 +65,7 @@ const TYPE_LABELS: Record<string, string> = {
   journey: 'Jornada',
   glossary: 'Glossário',
   theme: 'Tema',
+  note: 'Minhas notas',
   page: 'Página',
 };
 
@@ -76,6 +77,7 @@ const TYPE_STYLES: Record<string, string> = {
   journey: 'bg-purple-500/10 text-purple-600 dark:text-purple-400',
   glossary: 'bg-cyan-500/10 text-cyan-600 dark:text-cyan-400',
   theme: 'bg-primary/10 text-primary',
+  note: 'bg-orange-500/10 text-orange-700 dark:text-orange-400',
   page: 'bg-muted text-muted-foreground',
 };
 
@@ -172,6 +174,40 @@ const CommandCenter: React.FC = () => {
             });
           }
         }).catch(() => {}),
+
+      // Personal notes: source is explicitly labeled so private reflection is never confused with source material.
+      (async () => {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) return;
+        const { data, error } = await supabase
+          .from('user_notes')
+          .select('id, note_text, content_type, content_id, book_abbr, chapter, verse, paragraph, updated_at')
+          .eq('user_id', user.id)
+          .ilike('note_text', `%${q}%`)
+          .order('updated_at', { ascending: false })
+          .limit(6);
+        if (error) return;
+
+        data?.forEach((n: any) => {
+          const biblePath = n.content_type === 'bible' && n.book_abbr && n.chapter
+            ? `/bible?book=${encodeURIComponent(n.book_abbr)}&ch=${n.chapter}${n.verse ? `&v=${n.verse}` : ''}`
+            : n.content_type === 'catechism' && n.paragraph
+              ? `/catechism?p=${n.paragraph}`
+              : n.content_type === 'magisterium' && n.content_id
+                ? `/magisterium?doc=${encodeURIComponent(n.content_id)}`
+                : '/diario';
+
+          results.push({
+            type: 'note',
+            label: n.book_abbr && n.chapter
+              ? `Minha nota • ${n.book_abbr} ${n.chapter}${n.verse ? `:${n.verse}` : ''}`
+              : 'Minha nota',
+            description: n.note_text.length > 110 ? n.note_text.substring(0, 110) + '…' : n.note_text,
+            path: biblePath,
+            icon: <Icons.Feather className="w-spacing-md h-spacing-md" />,
+          });
+        });
+      })().catch(() => {}),
 
       // Catechism search
       (async () => {

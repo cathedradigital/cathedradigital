@@ -14,30 +14,41 @@ const StudyJournal: React.FC = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<'notes' | 'marks'>('notes');
   const [searchQuery, setSearchQuery] = useState('');
+  const [contentFilter, setContentFilter] = useState('all');
+  const [colorFilter, setColorFilter] = useState('all');
+  const [dateFilter, setDateFilter] = useState<'all' | '7d' | '30d' | 'older'>('all');
   
   const { notes: allNotes, updateNote, deleteNote, error: notesError } = useNotes('all');
   
   const { marks, deleteMark, updateMark } = useReadingMarks();
   
+  const isWithinDateFilter = (date: string) => {
+    if (dateFilter === 'all') return true;
+    const age = Date.now() - new Date(date).getTime();
+    const days = age / (1000 * 60 * 60 * 24);
+    return dateFilter === '7d' ? days <= 7 : dateFilter === '30d' ? days <= 30 : days > 30;
+  };
+
   const filteredNotes = useMemo(() => {
-    if (!searchQuery) return allNotes;
-    const q = searchQuery.toLowerCase();
-    return allNotes.filter(n => 
-      n.note_text.toLowerCase().includes(q) || 
-      n.content_id.toLowerCase().includes(q)
-    );
-  }, [allNotes, searchQuery]);
+    const q = searchQuery.toLowerCase().trim();
+    return allNotes.filter(n => {
+      const matchesQuery = !q || n.note_text.toLowerCase().includes(q) || n.content_id.toLowerCase().includes(q) ||
+        (n.book_abbr ? n.book_abbr.toLowerCase().includes(q) : false);
+      const matchesType = contentFilter === 'all' || n.content_type === contentFilter;
+      const matchesColor = colorFilter === 'all' || n.highlight_color === colorFilter;
+      return matchesQuery && matchesType && matchesColor && isWithinDateFilter(n.updated_at);
+    });
+  }, [allNotes, searchQuery, contentFilter, colorFilter, dateFilter]);
 
   const filteredMarks = useMemo(() => {
-    // Exclude last_read marks from the general list as they are "system" marks
-    const regularMarks = marks.filter(m => !m.is_last_read);
-    if (!searchQuery) return regularMarks;
-    const q = searchQuery.toLowerCase();
-    return regularMarks.filter(m => 
-      m.label?.toLowerCase().includes(q) || 
-      m.content_id.toLowerCase().includes(q)
-    );
-  }, [marks, searchQuery]);
+    const q = searchQuery.toLowerCase().trim();
+    return marks.filter(m => {
+      if (m.is_last_read) return false;
+      const matchesQuery = !q || m.label?.toLowerCase().includes(q) || m.content_id.toLowerCase().includes(q);
+      const matchesType = contentFilter === 'all' || m.content_type === contentFilter || (contentFilter === 'bible' && m.content_type.startsWith('bible_'));
+      return matchesQuery && matchesType && isWithinDateFilter(m.updated_at);
+    });
+  }, [marks, searchQuery, contentFilter, dateFilter]);
 
   const handleUpdateNote = async (note: UserNote, newText: string) => {
     const ok = await updateNote(note.id, newText);
@@ -79,6 +90,31 @@ const StudyJournal: React.FC = () => {
             placeholder="Pesquisar..."
             className="pl-spacing-xl rounded-premium-full border-border/20 bg-muted/10 focus-visible:ring-primary/20"
           />
+        </div>
+        <div className="flex flex-wrap items-center gap-spacing-xs">
+          <select value={contentFilter} onChange={(e) => setContentFilter(e.target.value)} className="h-10 rounded-premium-full border border-border/20 bg-muted/10 px-3 text-xs">
+            <option value="all">Todos os conteúdos</option>
+            <option value="bible">Bíblia</option>
+            <option value="catechism">Catecismo</option>
+            <option value="magisterium">Magistério</option>
+            <option value="saint">Santos</option>
+          </select>
+          {activeTab === 'notes' && (
+            <select value={colorFilter} onChange={(e) => setColorFilter(e.target.value)} className="h-10 rounded-premium-full border border-border/20 bg-muted/10 px-3 text-xs">
+              <option value="all">Todas as cores</option>
+              <option value="yellow">Amarelo</option>
+              <option value="green">Verde</option>
+              <option value="blue">Azul</option>
+              <option value="red">Vermelho</option>
+              <option value="primary">Principal</option>
+            </select>
+          )}
+          <select value={dateFilter} onChange={(e) => setDateFilter(e.target.value as typeof dateFilter)} className="h-10 rounded-premium-full border border-border/20 bg-muted/10 px-3 text-xs">
+            <option value="all">Qualquer data</option>
+            <option value="7d">Últimos 7 dias</option>
+            <option value="30d">Últimos 30 dias</option>
+            <option value="older">Mais antigas</option>
+          </select>
         </div>
       </div>
 

@@ -1,0 +1,109 @@
+import { test, expect, Page } from '@playwright/test';
+
+const email = process.env.E2E_TEST_EMAIL;
+const password = process.env.E2E_TEST_PASSWORD;
+
+test.beforeEach(async () => {
+  if (!email || !password) throw new Error('E2E_TEST_EMAIL and E2E_TEST_PASSWORD must be configured as CI secrets.');
+});
+
+async function login(page: Page, destination: string) {
+  await page.goto('/login?next=' + encodeURIComponent(destination));
+  await page.getByLabel('Email').fill(email!);
+  await page.getByLabel('Senha').fill(password!);
+  await page.getByRole('button', { name: 'Entrar', exact: true }).click();
+  expect(page.url()).toContain(destination.split('?')[0]);
+}
+
+function watchBrowserHealth(page: Page) {
+  const bad: string[] = [];
+  page.on('console', message => { if (message.type() === 'error') bad.push('console: ' + message.text()); });
+  page.on('response', response => { if ([404, 500, 502, 503, 504].includes(response.status())) bad.push('http ' + response.status() + ': ' + response.url()); });
+  return bad;
+}
+
+async function saveReflection(page: Page, text: string) {
+  await expect(page.getByText('Scriptum Sanctuarium')).toBeVisible();
+  await page.locator('textarea[placeholder="O que esta passagem diz ao seu coração?"]').fill(text);
+  await page.getByRole('button', { name: 'Salvar Reflexão', exact: true }).click();
+  await expect(page.getByText('Nota salva')).toBeVisible().catch(() => {});
+}
+
+async function openStudyJournal(page: Page, marker: string) {
+  await page.goto('/conta/diario');
+  await expect(page.getByRole('button', { name: 'Estudo e Leitura' })).toBeVisible();
+  await page.getByRole('button', { name: 'Estudo e Leitura' }).click();
+  const note = page.getByText(marker, { exact: false }).first();
+  await expect(note).toBeVisible();
+  return note;
+}
+
+test('auth redirect preserves protected destination', async ({ page }) => {
+  await page.context().clearCookies();
+  await page.goto('/diario');
+  expect(page.url()).toContain('/login?next=');
+  expect(page.url()).toContain('diario');
+});
+
+test('Bíblia: anotação → Diário → retorno exato ao versículo', async ({ page }) => {
+  const bad = watchBrowserHealth(page);
+  const marker = 'E2E-BIBLE-' + Date.now();
+  await login(page, '/bible?book=joao&chapter=1&v=1');
+  await expect(page.locator('#verse-1')).toBeVisible();
+  await page.locator('#verse-1').click();
+  await saveReflection(page, marker);
+  const note = await openStudyJournal(page, marker);
+  await note.getByRole('button', { name: /Ver Contexto/i }).click();
+  expect(page.url()).toContain('/bible?');
+  expect(page.url()).toContain('v=1');
+  await expect(page.locator('#verse-1')).toBeVisible();
+  expect(bad).toEqual([]);
+});
+
+test('Catecismo: anotação → Diário → retorno exato ao parágrafo', async ({ page }) => {
+  const bad = watchBrowserHealth(page);
+  const marker = 'E2E-CATECHISM-' + Date.now();
+  await login(page, '/catechism?p=1');
+  await expect(page.getByRole('button', { name: /Anotar/i }).first()).toBeVisible();
+  await page.getByRole('button', { name: /Anotar/i }).first().click();
+  await saveReflection(page, marker);
+  const note = await openStudyJournal(page, marker);
+  await note.getByRole('button', { name: /Ver Contexto/i }).click();
+  expect(page.url()).toContain('/catechism?p=1');
+  expect(bad).toEqual([]);
+});
+
+test('Magistério: anotação → Diário → retorno ao documento/parágrafo', async ({ page }) => {
+  const bad = watchBrowserHealth(page);
+  const marker = 'E2E-MAGISTERIUM-' + Date.now();
+  await login(page, '/magisterium/dce?p=1');
+  await expect(page.getByRole('main')).toBeVisible();
+  await page.getByRole('button', { name: /Anotar/i }).first().click();
+  await saveReflection(page, marker);
+  const note = await openStudyJournal(page, marker);
+  await note.getByRole('button', { name: /Ver Contexto/i }).click();
+  expect(page.url()).toContain('/magisterium/dce?p=');
+  expect(bad).toEqual([]);
+});
+
+test('Bíblia: reload → back → forward preservam o deep-link do versículo', async ({ page }) => {
+  await login(page, '/bible?book=joao&chapter=1&v=1');
+  await expect(page.locator('#verse-1')).toBeVisible();
+  await page.reload();
+  await expect(page.locator('#verse-1')).toBeVisible();
+  await page.goBack();
+  await page.goForward();
+  expect(page.url()).toContain('/bible?');
+  expect(page.url()).toContain('v=1');
+  await expect(page.locator('#verse-1')).toBeVisible();
+});
+
+test.describe('responsive critical flow', () => {
+  test.use({ viewport: { width: 390, height: 844 } });
+  test('Bíblia abre sem overflow horizontal no mobile', async ({ page }) => {
+    await login(page, '/bible?book=joao&chapter=1&v=1');
+    await expect(page.locator('#verse-1')).toBeVisible();
+    const overflow = await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1);
+    expect(overflow).toBe(false);
+  });
+});

@@ -77,6 +77,23 @@ async function sha256Hex(value: string) {
 
 
 
+async function loadStoredBibleChapter(abbrev: string, chapter: number) {
+  const supabaseUrl = Deno.env.get("SUPABASE_URL");
+  const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+  if (!supabaseUrl || !serviceRoleKey) return null;
+  const db = createClient(supabaseUrl, serviceRoleKey, { auth: { persistSession: false, autoRefreshToken: false } });
+  const { data: book, error: bookError } = await db.from("bible_books").select("id,name").eq("abbrev", abbrev).maybeSingle();
+  if (bookError || !book?.id) return null;
+  const { data: chapterRow, error: chapterError } = await db.from("bible_chapters").select("id,source_name,source_url").eq("book_id", book.id).eq("number", chapter).maybeSingle();
+  if (chapterError || !chapterRow?.id) return null;
+  const { data: rows, error: verseError } = await db.from("bible_verses").select("number,text").eq("chapter_id", chapterRow.id).order("number");
+  if (verseError || !rows?.length) return null;
+  const verses = rows.map((row) => ({ number: Number(row.number), text: String(row.text ?? "").trim() }))
+    .filter((row) => Number.isInteger(row.number) && row.number > 0 && row.text.length > 0);
+  if (!verses.length) return null;
+  return { book: book.name, chapter, verses, source: chapterRow.source_name || "Cathedra Bible Recovery", sourceUrl: chapterRow.source_url || "https://github.com/bibliacatolica/biblia" };
+}
+
 async function persistBibleChapter(
   abbrev: string,
   chapter: number,
@@ -211,6 +228,38 @@ Deno.serve(async (req: Request) => {
   let lastStatus = 502;
 
   try {
+    const stored = await loadStoredBibleChapter(abbrev, chapter);
+    if (stored) {
+      const contentHash = await sha256Hex(JSON.stringify({ book: stored.book, chapter, verses: stored.verses }));
+      const etag = `"${contentHash}"`;
+      if (req.headers.get("if-none-match") === etag) {
+        return new Response(null, { status: 304, headers: { ...cors, ETag: etag, "Cache-Control": "public, max-age=3600, stale-while-revalidate=86400" } });
+      }
+      return json({
+        book: stored.book,
+        chapter,
+        verses: stored.verses,
+        metadata: {
+          source: stored.source,
+          source_url: stored.sourceUrl,
+          source_mode: "database-recovery",
+          correlationId: correlation,
+          cache_version: contentHash.slice(0, 12),
+          logic_version: 3,
+          current_version: 3,
+          contentHash,
+          ttl_hours: 24,
+          stale: false,
+          received_abbrev: abbrev,
+          canonical_abbr: abbrev,
+          bollsId: null,
+          translation_id: translationId,
+          translation_code: null,
+          modernized: modernize,
+        },
+      }, 200, { ETag: etag, "Cache-Control": "public, max-age=3600, stale-while-revalidate=86400", "X-Cathedra-Correlation-Id": correlation });
+    }
+
     for (const candidate of candidates) {
       const url = `${ORDINARIUM_BASE}/${encodeURIComponent(candidate)}/${chapter}`;
       const response = await fetchUpstream(url, correlation);

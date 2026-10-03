@@ -52,6 +52,7 @@ import {
 import { useCatechismNexus } from '@/hooks/useCatechismNexus';
 import { EditorialDivider } from '@/components/editorial';
 import { resolveEditorialClosure } from '@/lib/editorial/resolveClosure';
+import { clearBibleReturnContext, readBibleReturnContext, type BibleReturnContext } from '@/lib/bibleReturnContext';
 
 // Sprint 3 — motor editorial do Catecismo (dado puro + composição presentacional).
 import {
@@ -507,6 +508,16 @@ const Catechism: React.FC = memo(() => {
   const [activeHighlight, setActiveHighlight] = useState<UserNote | null>(null);
   const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
   const [noteParagraph, setNoteParagraph] = useState<number | null>(null);
+  const [bibleReturnContext, setBibleReturnContext] = useState<BibleReturnContext | null>(null);
+  useEffect(() => { setBibleReturnContext(readBibleReturnContext()); }, []);
+
+  const returnToBible = useCallback(() => {
+    if (!bibleReturnContext) return;
+    const { book, chapter, verse } = bibleReturnContext;
+    clearBibleReturnContext();
+    navigate('/bible?book=' + encodeURIComponent(book) + '&ch=' + chapter + (verse ? '&v=' + verse : ''));
+  }, [bibleReturnContext, navigate]);
+
   // Explicit ?p=N deep-links temporarily outrank the generic IntersectionObserver.
   // This prevents restoration from being overwritten by the first visible paragraph.
   const deepLinkRestorePendingRef = useRef(false);

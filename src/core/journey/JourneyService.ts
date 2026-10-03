@@ -348,6 +348,20 @@ export const JourneyService = {
     }
   },
 
+  async getUserReflectionCount(userId: string): Promise<ServiceResult<number>> {
+    try {
+      const { count, error } = await supabase
+        .from('journey_progress')
+        .select('id', { count: 'exact', head: true })
+        .eq('user_id', userId)
+        .not('reflection', 'is', null);
+      if (error) throw error;
+      return ok(count ?? 0);
+    } catch (e) {
+      return fail(e);
+    }
+  },
+
   async getUserProgressCount(userId: string, since?: string): Promise<ServiceResult<number>> {
     try {
       let q = supabase
@@ -461,6 +475,29 @@ export const JourneyService = {
     }
   },
 
+  async deleteStep(id: string): Promise<ServiceResult<true>> {
+    try {
+      const { error } = await supabase.from('journey_steps').delete().eq('id', id);
+      if (error) throw error;
+      return ok(true);
+    } catch (e) {
+      return fail(e);
+    }
+  },
+
+  async countSteps(journeyId: string): Promise<ServiceResult<number>> {
+    try {
+      const { count, error } = await supabase
+        .from('journey_steps')
+        .select('id', { count: 'exact', head: true })
+        .eq('journey_id', journeyId);
+      if (error) throw error;
+      return ok(count ?? 0);
+    } catch (e) {
+      return fail(e);
+    }
+  },
+
   async deleteJourney(id: string): Promise<ServiceResult<true>> {
     try {
       if (JourneyAdapter.isLegacyId(id)) return fail(LEGACY_WRITE_ERROR);
@@ -514,6 +551,20 @@ export const JourneyService = {
         users_completed,
         completion_rate,
       });
+    } catch (e) {
+      return fail(e);
+    }
+  },
+
+  async getGlobalProgressCounts(): Promise<ServiceResult<{ started: number; completed: number }>> {
+    try {
+      const [startedRes, completedRes] = await Promise.all([
+        supabase.from('journey_progress').select('id', { count: 'exact', head: true }),
+        supabase.from('journey_progress').select('id', { count: 'exact', head: true }).not('completed_at', 'is', null),
+      ]);
+      if (startedRes.error) throw startedRes.error;
+      if (completedRes.error) throw completedRes.error;
+      return ok({ started: startedRes.count ?? 0, completed: completedRes.count ?? 0 });
     } catch (e) {
       return fail(e);
     }

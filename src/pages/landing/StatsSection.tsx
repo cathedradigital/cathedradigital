@@ -1,3 +1,4 @@
+import { JourneyService } from '@/core/journey';
 import { useEffect, useRef, useState } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
@@ -85,12 +86,14 @@ const StatsSection = () => {
   const { data: counts } = useQuery({
     queryKey: ["platform-counts"],
     queryFn: async () => {
-      const [reflections, started, completed, saints] = await Promise.all([
+      const [reflections, progressStats, saints] = await Promise.all([
         supabase.from("spiritual_journal").select("*", { count: "exact", head: true }),
-        supabase.from("journey_progress").select("*", { count: "exact", head: true }),
-        supabase.from("journey_progress").select("*", { count: "exact", head: true }).not("completed_at", "is", null),
+        JourneyService.getGlobalProgressCounts(),
         supabase.from("saints").select("*", { count: "exact", head: true }),
       ]);
+      if (progressStats.error) throw progressStats.error;
+      const started = { count: progressStats.data?.started ?? 0 };
+      const completed = { count: progressStats.data?.completed ?? 0 };
       
       // Multiplication factors for visual impact in landing page (dev numbers are low)
       const baseReflections = (reflections.count || 0) + 1250;

@@ -26,12 +26,14 @@ export type BibleViewMode =
   | 'reading'
   | 'search'
   | 'notes'
-  | 'monthly_recap';
+  | 'monthly_recap'
+  | 'bookmarks';
 
 const SPECIAL_VIEWS: ReadonlySet<BibleViewMode> = new Set([
   'search',
   'notes',
   'monthly_recap',
+  'bookmarks',
 ]);
 
 const ALL_BOOKS: BibleBook[] = Object.values(BIBLE_DATA)
@@ -109,7 +111,7 @@ export function useBibleNavigation(): UseBibleNavigation {
     (book: BibleBook | null) => {
       mutate((p) => {
         if (book) {
-          p.set('book', encodeURIComponent(book.abbr));
+          p.set('book', book.abbr);
           // Trocar de livro reseta o capítulo (comportamento atual).
           p.delete('ch');
           p.delete('v');
@@ -153,7 +155,7 @@ export function useBibleNavigation(): UseBibleNavigation {
           // Requer book+ch já presentes na URL.
           p.delete('view');
         } else {
-          // search | notes | monthly_recap
+          // search | notes | monthly_recap | bookmarks
           p.set('view', mode);
         }
       });

@@ -1,0 +1,40 @@
+name: Estudar final audit
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches:
+      - "agent/master-estudar-final-audit-*"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install
+        run: npm install --no-audit --no-fund
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Validate links
+        run: npm run validate:links
+
+      - name: Validate security
+        run: npm run validate:security
+
+      - name: Build
+        run: npm run build

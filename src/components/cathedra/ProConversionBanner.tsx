@@ -5,6 +5,7 @@ import { useNavigate } from '@/lib/rr-compat';
 import { motion, AnimatePresence } from 'framer-motion';
 
 import { supabase } from '@/lib/db';
+import { JourneyService } from '@/core/journey';
 import { useAuth } from '@/hooks/useAuth';
 import { AppRoute } from '@/types';
 
@@ -42,11 +43,12 @@ const ProConversionBanner: React.FC<ProConversionBannerProps> = ({ context, forc
           .from('spiritual_journal')
           .select('id', { count: 'exact', head: true })
           .eq('user_id', user.id),
-        supabase
-          .from('journey_progress')
-          .select('id', { count: 'exact', head: true })
-          .eq('user_id', user.id)
-          .not('reflection', 'is', null),
+        JourneyService.getUserReflectionCount(user.id).then(async (result) => {
+          if (result.error) throw result.error;
+          // The service count covers journey progress; this banner only uses it
+          // as a personal activity signal, never as an authorization decision.
+          return { count: result.data ?? 0 };
+        }),
       ]);
 
       const total = (journalRes.count ?? 0) + (journeyRes.count ?? 0);
