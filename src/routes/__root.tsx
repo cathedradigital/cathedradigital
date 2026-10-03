@@ -10,6 +10,7 @@ import {
 import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
+import cathedraLogo from "../assets/cathedra-logo.webp";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 
 function NotFoundComponent() {
@@ -96,7 +97,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         rel: "stylesheet",
         href: appCss,
       },
-      { rel: "icon", href: "/cathedra-favicon.svg", type: "image/svg+xml" },
+      { rel: "icon", href: cathedraLogo, type: "image/webp" },
+      { rel: "apple-touch-icon", href: cathedraLogo },
     ],
   }),
   shellComponent: RootShell,
