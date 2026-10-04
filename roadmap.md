@@ -23,3 +23,9 @@
 - [ ] Corrigir acessibilidade, ícones, responsividade e estados principais
 - [ ] Validar rotas e fluxos principais em 390, 768, 1024 e desktop largo
 - [ ] Rodar typecheck, lint, testes relevantes e build; fazer segunda revisão visual
+
+## Teste controlado — Sidebar de leitura
+- [ ] Implementar Sidebar esquerdo reutilizável com estados fechado, compacto e expandido
+- [ ] Realocar controles secundários de Bíblia, Catecismo e Estudar sem remover funções
+- [ ] Validar teclado, foco, touch, overflow e leitura em desktop/mobile
+- [ ] Rodar testes aplicáveis e revisar o preview sem publicar
