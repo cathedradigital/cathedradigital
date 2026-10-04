@@ -106,7 +106,7 @@ test('Bíblia: seletor de livro e capítulo permanece sincronizado com a URL can
   await expect(page.getByText('João', { exact: true })).toBeVisible();
 
   await page.getByRole('button', { name: 'Trocar livro' }).click();
-  await page.getByRole('button', { name: 'Gênesis', exact: true }).click();
+  await page.getByRole('button', { name: /^Gênesis/ }).click();
   await page.getByRole('button', { name: '1', exact: true }).click();
 
   await expect(page).toHaveURL(/\/bible\?book=Gn&ch=1/);
