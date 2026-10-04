@@ -127,15 +127,6 @@ export function MobileTopBar({
         >
           <MoreVertical className="h-5 w-5" />
         </button>
-        <button
-          type="button"
-          aria-label={t('open_sidebar')}
-          onClick={handleMenu}
-          className="inline-flex h-11 w-11 items-center justify-center rounded-full text-stitch-on-surface hover:bg-stitch-surface-container disabled:opacity-40"
-          disabled={false}
-        >
-          <img src="/monograma-cathedra.svg" alt="" className="h-6 w-6 object-contain" aria-hidden="true" />
-        </button>
       </div>
 
     </header>
