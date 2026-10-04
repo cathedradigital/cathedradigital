@@ -50,11 +50,10 @@ export function MobileBottomNav({
 }: MobileBottomNavProps) {
   const { pathname } = useLocation();
 
-  if (hidden) return null;
-
   return (
     <>
-      <SmartModuleMenu />
+      <SmartModuleMenu bottomNavVisible={!hidden} />
+      {hidden ? null : (
       <nav
       aria-label="Navegação principal"
       className={cn(
@@ -116,6 +115,7 @@ export function MobileBottomNav({
         );
       })}
       </nav>
+      )}
     </>
   );
 }
