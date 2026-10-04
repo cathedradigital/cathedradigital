@@ -60,3 +60,22 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: deploy
+      - name: Validate production endpoints
+        shell: bash
+        run: |
+          set -euo pipefail
+          endpoints=(
+            "https://cathedradigital.com.br"
+            "https://www.cathedradigital.com.br"
+            "https://cathedradigital.cathedradigital.workers.dev"
+          )
+          for url in "${endpoints[@]}"; do
+            echo "Checking $url"
+            body_file="$(mktemp)"
+            status="$(curl --fail --silent --show-error --location --retry 2 --retry-all-errors --connect-timeout 10 --max-time 30 --output "$body_file" --write-out "%{http_code}" "$url")"
+            size="$(wc -c < "$body_file")"
+            rm -f "$body_file"
+            test "$status" = "200"
+            test "$size" -gt 100
+            echo "OK $url -> HTTP $status ($size bytes)"
+          done
