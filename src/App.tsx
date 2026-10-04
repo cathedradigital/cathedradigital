@@ -17,7 +17,7 @@ import { cn } from './lib/utils';
 import { AppRoute, Language } from './types';
 import { AuthProvider, useAuth } from './hooks/useAuth';
 import { LangContext, LangProvider } from './contexts/LangContext';
-import { resolveRouterBasename } from '@/lib/i18n/locales';
+import { DEFAULT_LOCALE, isSupportedLocale, resolveRouterBasename, withLocalePath } from '@/lib/i18n/locales';
 
 /**
  * Prefixo de idioma da URL (`/en`, `/es`, `/it`, `/la`). Calculado uma única
@@ -1064,6 +1064,27 @@ const AppLayout: React.FC = () => {
 };
 
 const AppProviders: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [localeBootReady, setLocaleBootReady] = useState(false);
+
+  // Boot do idioma: respeita a preferência salva antes de montar o BrowserRouter.
+  useEffect(() => {
+    try {
+      const pathname = window.location.pathname;
+      const stored = localStorage.getItem('cathedra_lang');
+      const savedLocale = isSupportedLocale(stored) ? stored : DEFAULT_LOCALE;
+      const isRootEntry = pathname === '/' || pathname === '';
+      if (isRootEntry && savedLocale !== DEFAULT_LOCALE) {
+        window.location.replace(withLocalePath('/', savedLocale));
+        return;
+      }
+    } catch {
+      // Segue com o idioma padrão se o storage estiver indisponível.
+    }
+    setLocaleBootReady(true);
+  }, []);
+
+  if (!localeBootReady) return null;
+
   return (
     <HelmetProvider>
       <Sentry.ErrorBoundary fallback={<Suspense fallback={null}><AppErrorBoundary children={<LoadingFallback />} /></Suspense>}>
