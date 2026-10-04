@@ -150,6 +150,8 @@ const SEOHead = ({ title, description, path, keywords, type = 'website', breadcr
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link rel="preload" as="image" href="/src/assets/cathedra-logo.webp" />
+      <link rel="icon" type="image/svg+xml" href="/cathedra-favicon.svg" />
+      <link rel="apple-touch-icon" href="/icon-192.png" />
       <meta name="robots" content="index, follow, max-image-preview:large" />
       <title>{displayTitle}</title>
       <meta name="description" content={displayDescription} />
