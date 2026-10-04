@@ -84,7 +84,7 @@ const HomeUnified: React.FC = () => {
       {opening && (
         <div className="fixed inset-0 z-[100] flex min-h-screen items-center justify-center bg-background" role="status" aria-label="Abrindo a Cathedra Digital">
           <div className="flex flex-col items-center px-6 text-center animate-[atrium-opening_1.8s_ease-out_forwards]">
-            <Icons.Logo className="h-24 w-24 text-primary md:h-28 md:w-28" />
+            <span className="relative flex h-32 w-32 items-center justify-center rounded-full border border-primary/30 bg-primary/[0.06] p-5 shadow-[0_0_0_10px_hsl(var(--primary)/0.04),0_14px_50px_hsl(var(--primary)/0.16)] md:h-40 md:w-40 md:p-6" aria-hidden="true"><span className="absolute inset-2 rounded-full border border-primary/15" /><Icons.Logo className="relative h-24 w-24 text-primary md:h-32 md:w-32" /></span>
             <span className="mt-5 font-display text-4xl tracking-tight md:text-6xl">Cathedra</span>
             <span className="mt-2 text-xs font-semibold uppercase tracking-[0.38em] text-primary/70 md:text-sm">Digital</span>
             <span className="mt-8 text-[10px] font-semibold uppercase tracking-[0.32em] text-muted-foreground">Átrio · Estudo · Oração · Formação</span>
