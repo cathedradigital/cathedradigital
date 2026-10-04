@@ -1,18 +1,14 @@
-    );
-  }
+import React from 'react';
+import { Link } from '@/lib/rr-compat';
+import { ShieldAlert } from 'lucide-react';
+import { useBibleReadGate } from '@/hooks/useBibleReadGate';
+import { useIsAdmin } from '@/hooks/useIsAdmin';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+import BiblePartialCoverageBanner from './BiblePartialCoverageBanner';
 
-  // Só mostramos aviso quando a diagnose canônica realmente bloqueia a
-  // cobertura. Com o cânon completo e gate saudável, a leitura fica limpa.
-  const showCoverageBanner =
-    !!gate?.blocked &&
-    (gate.status === 'missing_book' || gate.status === 'missing_chapter');
-
-  return (
-    <>
-      {showCoverageBanner && <BiblePartialCoverageBanner />}
-      {children}
-    </>
-  );
+/**
+ * Gate de leitura da rota /bible.
  *
  * Regra:
  *  - Admin sempre atravessa.
