@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { ArrowRight, BookMarked, BookOpen, Compass, Landmark, Sparkles } from 'lucide-react';
+import { ArrowRight, BookMarked, BookOpen, Compass, Landmark, Sparkles, Search } from 'lucide-react';
 import { Helmet } from '@/lib/helmet-compat';
 import { Link } from '@/lib/rr-compat';
 import { MODULE_NAVIGATION } from '@/config/moduleNavigation';
 import { MobileTopBar } from '@/components/mobile/MobileTopBar';
+import { ReadingSidebar } from '@/components/reader/ReadingSidebar';
 import { JourneyService } from '@/core/journey/JourneyService';
 import type { Journey } from '@/core/journey/types';
 import { supabase } from '@/lib/db';
@@ -96,6 +97,15 @@ const EstudarHubPage: React.FC = () => {
       </Helmet>
 
       <MobileTopBar kicker="Cathedra" title="Estudar" transparent />
+      <ReadingSidebar
+        title="Estudar"
+        items={[
+          { id: 'bible', label: 'Bíblia', icon: <BookOpen className="h-5 w-5" />, onSelect: () => { window.location.href = '/bible'; } },
+          { id: 'catechism', label: 'Catecismo', icon: <BookMarked className="h-5 w-5" />, onSelect: () => { window.location.href = '/catechism'; } },
+          { id: 'documents', label: 'Documentos', icon: <Landmark className="h-5 w-5" />, onSelect: () => { window.location.href = '/magisterium'; } },
+          { id: 'search', label: 'Buscar no Cátedra', icon: <Search className="h-5 w-5" />, onSelect: () => { window.location.href = '/buscar'; } },
+        ]}
+      />
 
       <main className="mx-auto w-full min-w-0 max-w-[1120px] px-4 pb-[calc(var(--stitch-mobile-bottomnav-h)+var(--stitch-mobile-safe-bottom)+1.5rem)] pt-5 sm:px-5 md:px-16 md:pb-16 md:pt-14">
         <header className="max-w-3xl pb-7 md:pb-9">
