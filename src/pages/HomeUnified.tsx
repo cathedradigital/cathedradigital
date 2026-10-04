@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Helmet } from '@/lib/helmet-compat';
 import { Link, useNavigate } from '@/lib/rr-compat';
 import {
@@ -49,6 +49,20 @@ const HomeUnified: React.FC = () => {
   const { lastRead, dailySteps } = useSpiritualJourney();
   const { profile, authenticated } = useAuth();
   const [query, setQuery] = useState('');
+  const [opening, setOpening] = useState(true);
+
+  useEffect(() => {
+    const key = 'catedra:atrium-opening-seen';
+    if (window.sessionStorage.getItem(key) === '1') {
+      setOpening(false);
+      return;
+    }
+    const timer = window.setTimeout(() => {
+      window.sessionStorage.setItem(key, '1');
+      setOpening(false);
+    }, 1800);
+    return () => window.clearTimeout(timer);
+  }, []);
 
   const featured = themes[0];
   const firstStep = dailySteps[0];
@@ -67,6 +81,16 @@ const HomeUnified: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
+      {opening && (
+        <div className="fixed inset-0 z-[100] flex min-h-screen items-center justify-center bg-background" role="status" aria-label="Abrindo a Cátedra Digital">
+          <div className="flex flex-col items-center px-6 text-center animate-[atrium-opening_1.8s_ease-out_forwards]">
+            <Icons.Logo className="h-24 w-24 text-primary md:h-28 md:w-28" />
+            <span className="mt-5 font-display text-4xl tracking-tight md:text-6xl">Cátedra</span>
+            <span className="mt-2 text-xs font-semibold uppercase tracking-[0.38em] text-primary/70 md:text-sm">Digital</span>
+            <span className="mt-8 text-[10px] font-semibold uppercase tracking-[0.32em] text-muted-foreground">Átrio · Estudo · Oração · Formação</span>
+          </div>
+        </div>
+      )}
       <Helmet>
         <title>Cathedra — sua jornada de estudo, oração e formação</title>
         <meta name="description" content="Estude, reze, forme-se e descubra a tradição cristã em uma única plataforma." />
@@ -274,6 +298,22 @@ const HomeUnified: React.FC = () => {
           </section>
         )}
       </main>
+
+        <footer className="border-t border-border/60 bg-muted/20">
+          <div className="mx-auto max-w-7xl px-5 py-14 md:px-10 md:py-20">
+            <div className="max-w-3xl">
+              <span className="text-[10px] font-semibold uppercase tracking-[0.24em] text-primary/70">Entenda a Cátedra</span>
+              <h2 className="mt-3 font-display text-3xl md:text-4xl">Um pequeno guia para entrar e saber onde você está.</h2>
+              <p className="mt-4 text-sm leading-7 text-muted-foreground md:text-base">Os nomes da plataforma não são apenas nomes de menu. Eles explicam a lógica da experiência: um lugar para entrar, encontrar fontes, aprender, rezar e continuar uma jornada.</p>
+            </div>
+            <div className="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+              <div className="rounded-2xl border border-border bg-card p-6"><h3 className="font-display text-xl">Átrio</h3><p className="mt-3 text-sm leading-6 text-muted-foreground">É a entrada da Cátedra. Como o átrio de uma igreja, é o espaço de acolhida, orientação e passagem para os diferentes ambientes.</p></div>
+              <div className="rounded-2xl border border-border bg-card p-6"><h3 className="font-display text-xl">Cátedra</h3><p className="mt-3 text-sm leading-6 text-muted-foreground">É a cadeira ou lugar do ensinamento. Na tradição cristã, a cátedra também expressa a missão de ensinar com responsabilidade e fidelidade.</p></div>
+              <div className="rounded-2xl border border-border bg-card p-6"><h3 className="font-display text-xl">Biblioteca</h3><p className="mt-3 text-sm leading-6 text-muted-foreground">É o espaço das fontes: livros, documentos, textos e referências que ajudam o visitante a estudar, pesquisar e voltar à fonte original.</p></div>
+              <div className="rounded-2xl border border-border bg-card p-6"><h3 className="font-display text-xl">Os ambientes</h3><p className="mt-3 text-sm leading-6 text-muted-foreground">Estudar, Rezar, Formar-se, Pesquisar e Minha Jornada organizam a experiência sem separar conhecimento e vida espiritual.</p></div>
+            </div>
+          </div>
+        </footer>
     </div>
   );
 };
