@@ -1,16 +1,12 @@
-  subtitle,
-  backHref,
-  shareUrl,
-  actions,
-  className,
-}) => {
-        </div>
-
-        <div className="flex shrink-0 items-center gap-1">
-          {actions}
-          <ToolbarButton
-            label={`Tamanho da fonte (${settings.fontSize})`}
-            onClick={cycleFont}
+/**
+ * ReaderToolbar — barra editorial canônica do Reader Template Master.
+ *
+ * Sticky strip com:
+ *  - Kicker + breadcrumb + título/subtítulo
+ *  - Ações: fonte, modo foco (immersive), compartilhar
+ *
+ * Substitui o legado `@/components/editorial/EditorialReaderChrome`
+ * (C0.5.a). Convive com `ReaderShell` (barra sticky) sem duplicar layout:
  * NÃO renderiza corpo de leitura, apenas o chrome utilitário.
  *
  * Regra COS §10 — Reader Architecture Rule:
