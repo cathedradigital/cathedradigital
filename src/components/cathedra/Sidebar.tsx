@@ -152,13 +152,13 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
     };
 
     const environmentSections = MODULE_NAVIGATION.map((group) => ({
-      label: group.label,
+      label: t(group.labelKey),
       items: group.items
         .filter((item) => item.id !== 'profile' && item.id !== 'settings')
         .map((item) => {
           const Icon = iconMap[item.id] ?? Icons.Circle;
           return {
-            label: item.label,
+            label: t(item.labelKey),
             path: item.path,
             description: item.description,
             icon: <Icon size={19} />,
@@ -168,10 +168,10 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
 
     return [
       {
-        label: 'Início',
+        label: t('nav.inicio'),
         items: [
           {
-            label: 'Átrio',
+            label: t('nav.inicio'),
             path: '/',
             description: 'Entrada principal da Cathedra.',
             icon: <Icons.Home size={19} />,
@@ -180,15 +180,15 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
       },
       ...environmentSections,
       {
-        label: 'Conta',
+        label: t('nav.conta'),
         items: [
-          { label: 'Perfil', path: AppRoute.PROFILE, description: 'Identidade e preferências pessoais.', icon: <Icons.User size={19} /> },
-          { label: 'Configurações', path: AppRoute.SETTINGS, description: 'Preferências da conta e experiência.', icon: <Icons.Settings size={19} /> },
+          { label: t('nav.perfil'), path: AppRoute.PROFILE, description: 'Identidade e preferências pessoais.', icon: <Icons.User size={19} /> },
+          { label: t('nav.configuracoes'), path: AppRoute.SETTINGS, description: 'Preferências da conta e experiência.', icon: <Icons.Settings size={19} /> },
         ],
       },
       ...(isAdmin
         ? [{
-            label: 'Administração',
+            label: t('admin'),
             items: [
               { label: 'Painel Admin', path: '/admin', description: 'Operação protegida da plataforma.', icon: <Icons.Lock size={19} /> },
             ],
