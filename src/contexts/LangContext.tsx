@@ -32,7 +32,7 @@ export const LangProvider: React.FC<{ children: React.ReactNode }> = ({ children
     (window as any).cathedra_t = (key: string) => {
       // Esta é uma implementação simplificada para o teste conseguir acessar o contexto
       // No mundo real, poderíamos usar um CustomEvent ou similar se necessário
-      return key; 
+      return UI_TRANSLATIONS[lang]?.[key] ?? UI_TRANSLATIONS[DEFAULT_LOCALE]?.[key] ?? key;
     };
   }, []);
   const [lang, setLangState] = useState<Language>(() => {
