@@ -16,10 +16,11 @@
  * re-renderiza. Não há useEffect state ↔ URL (evita loops).
  */
 
-import { useCallback, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { useSearchParams } from '@/lib/rr-compat';
 import { BIBLE_DATA, BibleBook } from '@/data/bible-books';
 import { parseBibleReferences } from '@/lib/bibleRefParser';
+import { findBookByAbbr } from '@/lib/bibleCanon';
 
 export type BibleViewMode =
   | 'home'
@@ -80,6 +81,8 @@ export function useBibleNavigation(): UseBibleNavigation {
   // `ch` is the active URL key; accept legacy aliases and Nexus `ref` deep-links
   // at this boundary, then expose one consistent derived reader state.
   const chapterParam = searchParams.get('ch') ?? searchParams.get('chapter');
+  const legacyChapterParam = searchParams.get('chapter');
+  const legacyVerseParam = searchParams.get('verse');
   const refParam = searchParams.get('ref');
   const parsedRef = useMemo(
     () => refParam ? parseBibleReferences(refParam).find((segment) => segment.type === 'bibleRef') ?? null : null,
@@ -89,7 +92,27 @@ export function useBibleNavigation(): UseBibleNavigation {
   const effectiveChapterParam = chapterParam ?? (parsedRef?.chapter ? String(parsedRef.chapter) : null);
   const searchQuery = searchParams.get('q') ?? '';
 
-  const selectedBook = useMemo(() => findBook(effectiveBookParam), [effectiveBookParam]);
+  const selectedBook = useMemo(() => {
+    const direct = findBook(effectiveBookParam);
+    if (direct || !effectiveBookParam) return direct;
+    const canonical = findBookByAbbr(effectiveBookParam);
+    if (!canonical) return null;
+    return ALL_BOOKS.find((book) => book.name === canonical.name) ?? null;
+  }, [effectiveBookParam]);
+
+  useEffect(() => {
+    const needsBookNormalization = Boolean(selectedBook && bookParam !== selectedBook.abbr);
+    if (!needsBookNormalization && !legacyChapterParam && !legacyVerseParam) return;
+    setSearchParams((prev) => {
+      const next = new URLSearchParams(prev);
+      if (selectedBook) next.set('book', selectedBook.abbr);
+      if (!next.get('ch') && legacyChapterParam) next.set('ch', legacyChapterParam);
+      if (!next.get('v') && legacyVerseParam) next.set('v', legacyVerseParam);
+      next.delete('chapter');
+      next.delete('verse');
+      return next;
+    }, { replace: true });
+  }, [bookParam, legacyChapterParam, legacyVerseParam, selectedBook, setSearchParams]);
 
   const selectedChapter = useMemo(() => {
     if (!effectiveChapterParam) return 1;
@@ -154,9 +177,6 @@ export function useBibleNavigation(): UseBibleNavigation {
       mutate((p) => {
         if (mode === 'home') {
           p.delete('view');
-          p.delete('book');
-          p.delete('ch');
-          p.delete('v');
           p.delete('q');
         } else if (mode === 'chapters') {
           // Requer book já presente na URL (callsites atuais garantem isso).
