@@ -200,13 +200,10 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
                 </div>
               </div>
             </div>
-</Button>
-                ))}
-              </nav>
-            )}
           </div>
         </div>
-      </header>
+      </div>
+    </header>
     </>
   );
 });
