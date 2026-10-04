@@ -2,6 +2,7 @@
 @config "../tailwind.config.legacy.ts";
 @import "tw-animate-css";
 @import "./styles/estudar-modules.css";
+@import "./styles/catedra-foundation.css";
 
 @custom-variant dark (&:is(.dark *));
 
