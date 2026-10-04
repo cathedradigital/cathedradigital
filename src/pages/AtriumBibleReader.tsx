@@ -10,13 +10,13 @@
 import React, { lazy, Suspense, useEffect, useMemo, useState } from 'react';
 import { Helmet } from '@/lib/helmet-compat';
 import { Link, useNavigate, useSearchParams } from '@/lib/rr-compat';
-import { BookOpen, Search as SearchIcon, ArrowRight, LayoutGrid, Bookmark, MoreHorizontal, List } from 'lucide-react';
+import { BookOpen, Search as SearchIcon, ArrowRight, LayoutGrid, Bookmark, List, Type, Focus, Share2 } from 'lucide-react';
 import { BIBLE_DATA, type BibleBook } from '@/data/bible-books';
 import { buildBibleUrl } from '@/lib/bibleUrl';
 import { AppRoute } from '@/types';
 import BibleReadGate from '@/components/cathedra/BibleReadGate';
 import { BibleSkeleton } from '@/components/cathedra/RouteSkeletons';
-import { ReaderToolbar } from '@/components/reader';
+import { ReadingSidebar } from '@/components/reader/ReadingSidebar';
 import { MobileTopBar } from '@/components/mobile/MobileTopBar';
 import {
   BiblePickerSheet,
@@ -24,7 +24,7 @@ import {
   setBibleLastRead,
 } from '@/components/mobile/BiblePickerSheet';
 import { EditorialHero } from '@/components/editorial/harmony';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
 
 const Bible = lazy(() => import('@/components/cathedra/Bible'));
 
@@ -65,6 +65,69 @@ function findBookByAbbr(abbr: string | null): BibleBook | undefined {
   return undefined;
 }
 
+const BibleReadingChrome: React.FC<{
+  bookAbbr: string;
+  chapter: string;
+  onPick: () => void;
+}> = ({ bookAbbr, chapter, onPick }) => {
+  const { settings, updateSettings } = useReadingSettings();
+  const href = (view: string) => buildBibleUrl({ abbr: bookAbbr, chapter, extra: { view } });
+
+  const share = async () => {
+    const url = typeof window !== 'undefined' ? window.location.href : '';
+    if (!url) return;
+    try {
+      if (navigator.share) await navigator.share({ title: 'Bíblia — Cátedra', url });
+      else if (navigator.clipboard) await navigator.clipboard.writeText(url);
+    } catch {
+      /* cancelado pelo usuário */
+    }
+  };
+
+  return (
+    <ReadingSidebar
+      title="Bíblia"
+      items={[
+        { id: 'back', label: 'Voltar para a Bíblia', icon: <BookOpen className="h-5 w-5" />, onSelect: () => window.history.back() },
+        { id: 'picker', label: 'Escolher livro e capítulo', icon: <LayoutGrid className="h-5 w-5" />, onSelect: onPick },
+        { id: 'search', label: 'Pesquisar na Bíblia', icon: <SearchIcon className="h-5 w-5" />, onSelect: () => { window.location.href = href('search'); } },
+        { id: 'bookmarks', label: 'Marcadores', icon: <Bookmark className="h-5 w-5" />, onSelect: () => { window.location.href = href('bookmarks'); } },
+        { id: 'notes', label: 'Anotações', icon: <List className="h-5 w-5" />, onSelect: () => { window.location.href = href('notes'); } },
+      ]}
+    >
+      <div className="mt-3 border-t border-stitch-outline-variant/20 pt-3">
+        <p className="px-3 pb-2 font-stitch-body text-[9px] font-bold uppercase tracking-[0.16em] text-stitch-secondary">Leitura</p>
+        <button
+          type="button"
+          onClick={() => updateSettings({ fontSize: settings.fontSize === 'extra-large' ? 'small' : settings.fontSize === 'small' ? 'medium' : settings.fontSize === 'medium' ? 'large' : 'extra-large' })}
+          className="flex min-h-11 w-full items-center gap-3 rounded-xl px-3 text-left text-xs text-stitch-on-surface-variant hover:bg-stitch-secondary/10"
+          aria-label={`Tamanho da fonte: ${settings.fontSize}`}
+        >
+          <Type className="h-5 w-5" />
+          <span>Tamanho da fonte</span>
+        </button>
+        <button
+          type="button"
+          onClick={() => updateSettings({ immersiveMode: !settings.immersiveMode })}
+          className="flex min-h-11 w-full items-center gap-3 rounded-xl px-3 text-left text-xs text-stitch-on-surface-variant hover:bg-stitch-secondary/10"
+          aria-pressed={settings.immersiveMode}
+        >
+          <Focus className="h-5 w-5" />
+          <span>{settings.immersiveMode ? 'Sair do modo foco' : 'Modo foco'}</span>
+        </button>
+        <button
+          type="button"
+          onClick={share}
+          className="flex min-h-11 w-full items-center gap-3 rounded-xl px-3 text-left text-xs text-stitch-on-surface-variant hover:bg-stitch-secondary/10"
+        >
+          <Share2 className="h-5 w-5" />
+          <span>Compartilhar</span>
+        </button>
+      </div>
+    </ReadingSidebar>
+  );
+};
+
 const AtriumBibleReader: React.FC = () => {
   const [sp] = useSearchParams();
   const navigate = useNavigate();
@@ -101,19 +164,11 @@ const AtriumBibleReader: React.FC = () => {
           title={book ? `${book.name} ${chapterStr ?? ''}`.trim() : 'Bíblia'}
           showBack
           onBack={() => navigate(AppRoute.BIBLE)}
-          actions={
-            <>
-              <Link to={buildBibleUrl({ abbr: abbr ?? '', chapter: chapterStr ?? '1', extra: { view: 'search' } })} aria-label="Pesquisar na Bíblia" data-testid="bible-toolbar-search-mobile"><SearchIcon className="h-5 w-5" /></Link>
-              <button type="button" onClick={() => setPickerOpen(true)} aria-label="Escolher livro e capítulo" className="inline-flex h-12 w-12 items-center justify-center rounded-full text-stitch-on-surface hover:bg-stitch-surface-container"><LayoutGrid className="h-5 w-5" /></button>
-            </>
-          }
         />
-        <ReaderToolbar className="hidden md:block" kicker="Cathedra · Lectio Divina" title={title} subtitle={subtitle} backHref={AppRoute.BIBLE}
-          actions={<>
-            <Link to={buildBibleUrl({ abbr: abbr ?? '', chapter: chapterStr ?? '1', extra: { view: 'search' } })} aria-label="Pesquisar na Bíblia" data-testid="bible-toolbar-search"><SearchIcon className="h-4 w-4" /></Link>
-            <Link to={buildBibleUrl({ abbr: abbr ?? '', chapter: chapterStr ?? '1', extra: { view: 'bookmarks' } })} aria-label="Abrir marcadores" data-testid="bible-toolbar-bookmarks"><Bookmark className="h-4 w-4" /></Link>
-            <DropdownMenu><DropdownMenuTrigger asChild><button type="button" aria-label="Mais opções da Bíblia" data-testid="bible-toolbar-more"><MoreHorizontal className="h-4 w-4" /></button></DropdownMenuTrigger><DropdownMenuContent align="end"><DropdownMenuItem onSelect={() => setPickerOpen(true)}><LayoutGrid className="mr-2 h-4 w-4" />Escolher livro e capítulo</DropdownMenuItem><DropdownMenuItem asChild><Link to={buildBibleUrl({ abbr: abbr ?? '', chapter: chapterStr ?? '1', extra: { view: 'notes' } })}><List className="mr-2 h-4 w-4" />Anotações</Link></DropdownMenuItem></DropdownMenuContent></DropdownMenu>
-          </>}
+        <BibleReadingChrome
+          bookAbbr={abbr ?? ''}
+          chapter={chapterStr ?? '1'}
+          onPick={() => setPickerOpen(true)}
         />
         <BibleReadGate>
           <Bible />
