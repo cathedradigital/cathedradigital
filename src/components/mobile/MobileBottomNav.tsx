@@ -3,6 +3,7 @@ import { Icons } from "@/constants";
 import { cn } from "@/lib/utils";
 import type { LucideIcon } from "lucide-react";
 import { MODULE_NAVIGATION } from "@/config/moduleNavigation";
+import { SmartModuleMenu } from "./SmartModuleMenu";
 
 interface MobileNavItem {
   to: string;
