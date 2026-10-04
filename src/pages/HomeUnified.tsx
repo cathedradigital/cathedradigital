@@ -80,9 +80,9 @@ const HomeUnified: React.FC = () => {
           <div className="relative mx-auto max-w-7xl px-5 pb-16 pt-16 md:px-10 md:pb-24 md:pt-24">
             <div className="grid items-end gap-10 lg:grid-cols-[1.15fr_.85fr]">
               <div>
-                <div className="mb-6 flex items-center gap-3">
-                  <Icons.Logo className="h-10 w-10 text-primary" />
-                  <Eyebrow>Cathedra Digital</Eyebrow>
+                <div className="mb-7 flex items-center gap-4">
+                  <Icons.Logo className="h-14 w-14 shrink-0 text-primary md:h-16 md:w-16" />
+                  <span className="text-xs font-semibold uppercase tracking-[0.22em] text-primary/70 md:text-sm">Cathedra Digital</span>
                 </div>
                 <h1 className="max-w-4xl font-display text-5xl leading-[1.02] tracking-tight md:text-7xl lg:text-8xl">
                   Um só lugar para <span className="text-primary">estudar, rezar e continuar.</span>
