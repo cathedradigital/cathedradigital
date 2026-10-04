@@ -203,7 +203,7 @@ export const NAV_ITEMS = (t: (key: string) => string, lang: string) => [
   { label: t('menu') || 'Menu', icon: 'Menu', isMenu: true },
 ];
 
-import cathedraLogo from './assets/cathedra-logo.webp';
+const cathedraLogo = '/monograma-cathedra.svg';
 
 export const Logo = forwardRef<HTMLDivElement, { className?: string, variant?: 'gold' | 'light' | 'dark' | 'blue' }>(({ 
   className = "w-spacing-2xl h-spacing-2xl", 
@@ -217,7 +217,7 @@ export const Logo = forwardRef<HTMLDivElement, { className?: string, variant?: '
     )}>
       <img 
         src={cathedraLogo} 
-        alt="Cathedra - Digital Sanctuarium" 
+        alt="Cathedra Digital" 
         loading="lazy"
         width="64"
         height="64"
