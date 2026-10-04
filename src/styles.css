@@ -490,6 +490,13 @@
 }
 
 
+@keyframes atrium-opening {
+  0% { opacity: 0; transform: translateY(10px) scale(.97); }
+  18% { opacity: 1; transform: translateY(0) scale(1); }
+  78% { opacity: 1; transform: translateY(0) scale(1); }
+  100% { opacity: 0; transform: translateY(-6px) scale(1.01); }
+}
+
 /* Identidade do Átrio e cor contextual dos ambientes */
 :root {
   --catedra-atrium-ink: #26333a;
