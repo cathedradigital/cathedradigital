@@ -13,8 +13,15 @@ test.describe('Bíblia — catálogo completo', () => {
 
     expect(books).toHaveLength(73);
 
-    for (const book of books) {
-      for (const chapter of [...new Set([1, book.chapters])]) {
+    const checks = books.flatMap((book) =>
+      [...new Set([1, book.chapters])].map((chapter) => ({ book, chapter })),
+    );
+
+    // Preserve full 73-book coverage while avoiding a serial 146-request E2E
+    // that can make CI appear hung when the Edge Function is cold-starting.
+    for (let i = 0; i < checks.length; i += 6) {
+      const batch = checks.slice(i, i + 6);
+      await Promise.all(batch.map(async ({ book, chapter }) => {
         const response = await request.post(
           `${baseUrl}/functions/v1/bible-text`,
           {
@@ -24,6 +31,7 @@ test.describe('Bíblia — catálogo completo', () => {
               'Content-Type': 'application/json',
             },
             data: { abbrev: book.abbr, chapter },
+            timeout: 20_000,
           },
         );
 
@@ -35,7 +43,7 @@ test.describe('Bíblia — catálogo completo', () => {
         expect(body.verses?.every((verse: { number: number; text: string }) =>
           Number.isInteger(verse.number) && verse.number > 0 && typeof verse.text === 'string' && verse.text.trim().length > 0
         ), `${book.name} ${chapter}: texto`).toBeTruthy();
-      }
+      }));
     }
   });
 

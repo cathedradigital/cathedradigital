@@ -35,8 +35,12 @@ test('Documentos e Catecismo abrem sem erro de navegação', async ({ page }) =>
 
 test('Bíblia abre e renderiza conteúdo real', async ({ page }) => {
   const errors: string[] = [];
+  const badResponses: string[] = [];
   page.on('console', message => {
     if (message.type() === 'error') errors.push(message.text());
+  });
+  page.on('response', response => {
+    if (response.status() >= 400) badResponses.push(`${response.status()}: ${response.url()}`);
   });
 
   const response = await page.goto('/bible?book=Gen&ch=1');
@@ -45,6 +49,7 @@ test('Bíblia abre e renderiza conteúdo real', async ({ page }) => {
   await expect(page.locator('body')).toContainText(/Gênesis|Genesis/i);
   await expect(page.locator('body')).toContainText(/No princípio|No principio/i);
   expect(errors, '/bible: console errors').toEqual([]);
+  expect(badResponses, '/bible: HTTP errors').toEqual([]);
 });
 
 test('Bíblia permite pesquisar uma referência real', async ({ page }) => {
