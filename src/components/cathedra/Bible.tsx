@@ -1756,39 +1756,45 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
             exit={{ opacity: 0 }}
             className="min-h-screen"
           >
-            {/* Sticky Reading Header */}
+            {/* Sticky Reading Header — separado visualmente da coluna de leitura. */}
             <header className={cn(
-              "sticky top-0 z-50 backdrop-blur-md border-b border-primary/5 px-spacing-md h-14 flex items-center justify-between transition-colors duration-1000",
-              settings.theme === 'night' ? "bg-[#0A0B0D]/90" : "bg-[#FAF9F6]/90"
+              "sticky top-0 z-50 border-b border-primary/8 backdrop-blur-md transition-colors duration-1000",
+              settings.theme === 'night' ? "bg-[#0A0B0D]/95" : "bg-[#FAF9F6]/95"
             )}>
-
-              <button onClick={() => navigate(`/bible?book=${selectedBook.abbr}`)} aria-label="Voltar para lista de capítulos" className="p-spacing-xs min-h-11 min-w-11 flex items-center justify-center text-primary/40 active:text-secondary">
-                <Icons.ChevronLeft className="w-6 h-6" aria-hidden="true" />
-              </button>
-              <div className="text-center">
-                <h2 className="text-[11px] font-black uppercase tracking-widest text-primary/80">{selectedBook.name} {selectedChapter}</h2>
-              </div>
-              <div className="flex items-center gap-spacing-xs">
-                <button
-                  type="button"
-                  onClick={toggleHighContrast}
-                  aria-pressed={highContrast}
-                  aria-label={highContrast ? 'Desativar alto contraste das bolhas do Nexus' : 'Ativar alto contraste das bolhas do Nexus'}
-                  title="Alto contraste do Nexus"
-                  data-testid="nexus-contrast-toggle"
-                  className={cn(
-                    'p-spacing-xs rounded-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2',
-                    highContrast ? 'text-secondary bg-secondary/15' : 'text-primary/50 hover:text-primary',
-                  )}
-                >
-                  <Icons.Contrast className="w-5 h-5" />
+              <div className="mx-auto flex min-h-16 w-full max-w-5xl items-center justify-between gap-spacing-sm px-4 sm:px-6 lg:px-8">
+                <button onClick={() => navigate(`/bible?book=${selectedBook.abbr}`)} aria-label="Voltar para lista de capítulos" className="min-h-11 min-w-11 flex items-center justify-center rounded-full text-primary/45 transition-colors hover:bg-primary/5 hover:text-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2">
+                  <Icons.ChevronLeft className="w-5 h-5" aria-hidden="true" />
                 </button>
-                <ReadingSettingsPopover />
+
+                <div className="min-w-0 flex-1 px-2 text-center">
+                  <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-secondary/80">Bíblia</p>
+                  <h2 className="mt-0.5 truncate text-sm sm:text-base font-display font-semibold tracking-tight text-primary/85">
+                    {selectedBook.name} {selectedChapter}
+                  </h2>
+                </div>
+
+                <div className="flex min-w-[5.5rem] items-center justify-end gap-1.5">
+                  <button
+                    type="button"
+                    onClick={toggleHighContrast}
+                    aria-pressed={highContrast}
+                    aria-label={highContrast ? 'Desativar alto contraste das bolhas do Nexus' : 'Ativar alto contraste das bolhas do Nexus'}
+                    title="Alto contraste do Nexus"
+                    data-testid="nexus-contrast-toggle"
+                    className={cn(
+                      'min-h-11 min-w-11 rounded-full p-spacing-xs transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2',
+                      highContrast ? 'text-secondary bg-secondary/15' : 'text-primary/50 hover:bg-primary/5 hover:text-primary',
+                    )}
+                  >
+                    <Icons.Contrast className="mx-auto h-5 w-5" />
+                  </button>
+                  <ReadingSettingsPopover />
+                </div>
               </div>
             </header>
 
             <motion.div 
-              className="w-full px-3 sm:px-5 lg:px-8 py-5 sm:py-8 pb-32 mx-auto max-w-5xl"
+              className="w-full px-4 sm:px-6 lg:px-8 pb-32 pt-6 sm:pt-8 mx-auto max-w-5xl"
               drag="x"
               dragConstraints={{ left: 0, right: 0 }}
               dragElastic={0.1}
@@ -1796,12 +1802,13 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
             >
               {isLoading ? <BibleSkeleton /> : (
                 <article className="space-y-spacing-lg">
-                  <header className="mb-spacing-lg text-center">
-                    <h3 className="font-display text-xl sm:text-2xl font-medium tracking-tight text-primary/75">
+                  <header className="mb-7 border-b border-primary/6 pb-5 text-center">
+                    <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-secondary/75">Leitura</p>
+                    <h3 className="mt-1 font-display text-2xl sm:text-3xl font-semibold tracking-tight text-primary/85">
                       {selectedBook.name} {selectedChapter}
                     </h3>
                     {selectedBook.context && (
-                      <p className="mt-1 mx-auto max-w-2xl text-xs font-serif italic text-primary/45 leading-relaxed">
+                      <p className="mt-2 mx-auto max-w-2xl text-xs sm:text-sm font-serif italic text-primary/50 leading-relaxed">
                         {selectedBook.context}
                       </p>
                     )}
