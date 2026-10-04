@@ -19,6 +19,14 @@ const GROUP_ICONS: Record<string, typeof Icons.Circle> = {
   "minha-jornada": Icons.Compass,
 };
 
+const GROUP_ROOT_PATHS: Record<string, string> = {
+  estudar: "/estudar",
+  rezar: "/oracao",
+  "formar-se": "/jornadas",
+  pesquisar: "/buscar",
+  "minha-jornada": "/hoje",
+};
+
 const ITEM_ICONS: Record<string, typeof Icons.Circle> = {
   bible: Icons.Bible,
   catechism: Icons.Catechism,
@@ -102,6 +110,7 @@ export function SmartModuleMenu({ bottomNavVisible = true }: SmartModuleMenuProp
           "transition-transform duration-200 active:scale-95",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stitch-secondary",
           "focus-visible:ring-offset-2 focus-visible:ring-offset-stitch-background",
+          open && "pointer-events-none opacity-0",
         )}
         style={{
           bottom: bottomNavVisible
@@ -165,7 +174,12 @@ export function SmartModuleMenu({ bottomNavVisible = true }: SmartModuleMenuProp
                         : "border-stitch-outline-variant/70 bg-stitch-surface-container/60",
                     )}
                   >
-                    <div className="flex items-center gap-3 px-3 py-3">
+                    <button
+                      type="button"
+                      onClick={() => handleNavigate(GROUP_ROOT_PATHS[group.key] ?? group.items[0]?.path ?? "/")}
+                      className="flex w-full items-center gap-3 px-3 py-3 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-stitch-secondary"
+                      aria-label={"Abrir módulo " + group.label}
+                    >
                       <span
                         className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl"
                         style={{
@@ -192,7 +206,7 @@ export function SmartModuleMenu({ bottomNavVisible = true }: SmartModuleMenuProp
                           Atual
                         </span>
                       )}
-                    </div>
+                    </button>
 
                     <div className="grid grid-cols-2 gap-1 border-t border-stitch-outline-variant/50 p-2">
                       {group.items.map((item) => {
