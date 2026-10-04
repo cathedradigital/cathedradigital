@@ -158,7 +158,7 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
                   size="icon"
                   onClick={onToggleDark}
                   className="w-spacing-xl h-spacing-xl md:w-spacing-2xl md:h-spacing-2xl rounded-premium-full hover:bg-primary/[0.03] transition-all duration-300 group hidden md:flex"
-                  aria-label={isDark ? "Ativar modo claro" : "Ativar modo escuro"}
+                  aria-label={isDark ? t('light') : t('dark')}
                 >
                   {isDark ? 
                     <Icons.Sun className="opacity-70" /> : 
