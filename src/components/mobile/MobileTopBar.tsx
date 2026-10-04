@@ -15,8 +15,6 @@ interface MobileTopBarProps {
   onBack?: () => void;
   /** Ações à direita (ícones). */
   actions?: ReactNode;
-  /** Abre a navegação lateral global no mobile. */
-  onMenu?: () => void;
   /** Deixa o fundo transparente com blur (útil sobre Hero). */
   transparent?: boolean;
   className?: string;
@@ -38,14 +36,6 @@ export function MobileTopBar({
 }: MobileTopBarProps) {
   const navigate = useNavigate();
   const { t } = useLang();
-
-  const handleMenu = () => {
-    if (onMenu) {
-      onMenu();
-      return;
-    }
-    window.dispatchEvent(new CustomEvent("open-sidebar"));
-  };
 
   const handleBack = () => {
     if (onBack) onBack();
