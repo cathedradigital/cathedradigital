@@ -47,18 +47,12 @@ export const BIBLE_CANON: readonly BibleBook[] = [
   { abbr: 'Sl', name: 'Salmos', bollsId: 19, testament: 'OT' },
   { abbr: 'Pv', name: 'Provérbios', bollsId: 20, testament: 'OT' },
   { abbr: 'Ec', name: 'Eclesiastes', bollsId: 21, testament: 'OT' },
-  for (const [k, v] of Object.entries(BY_ABBR)) {
-    if (k.toLowerCase() === compact) return v;
-  }
-  // Também aceita o nome completo do livro em URLs antigas/importações
-  // (ex.: "joao" → "Jo", "genesis" → "Gn").
-  for (const book of BIBLE_CANON) {
-    const nameCompact = book.name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^\p{L}\p{N}]+/gu, '');
-    if (nameCompact === compact) return book;
-  }
-  return undefined;
-}
-
+  { abbr: 'Ct', name: 'Cânticos', bollsId: 22, testament: 'OT' },
+  { abbr: 'Is', name: 'Isaías', bollsId: 23, testament: 'OT' },
+  { abbr: 'Jr', name: 'Jeremias', bollsId: 24, testament: 'OT' },
+  { abbr: 'Lm', name: 'Lamentações', bollsId: 25, testament: 'OT' },
+  { abbr: 'Ez', name: 'Ezequiel', bollsId: 26, testament: 'OT' },
+  { abbr: 'Dn', name: 'Daniel', bollsId: 27, testament: 'OT' },
   { abbr: 'Os', name: 'Oseias', bollsId: 28, testament: 'OT' },
   { abbr: 'Jl', name: 'Joel', bollsId: 29, testament: 'OT' },
   { abbr: 'Am', name: 'Amós', bollsId: 30, testament: 'OT' },
