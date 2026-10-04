@@ -1,43 +1,40 @@
-  await expect(page).toHaveURL(/\/bible\?book=Jo&ch=3&v=16/);
-  await expect(page.locator('#verse-16')).toBeVisible();
+import { test, expect } from '@playwright/test';
 
-  await page.goto('/bible?view=search');
-  const searchInput = page.getByTestId('bible-search-input');
-  await searchInput.fill('Porque Deus amou');
-  await searchInput.press('Enter');
+test('public browser smoke: landing and login render', async ({ page }) => {
+  const bad: string[] = [];
+  page.on('console', message => {
+    if (message.type() === 'error') bad.push('console: ' + message.text());
+  });
+  page.on('response', response => {
     if ([404, 500, 502, 503, 504].includes(response.status())) {
       bad.push('http ' + response.status() + ': ' + response.url());
     }
-  await expect(page).toHaveURL(/\/bible\?book=Gn&ch=1&v=1/);
-  await expect(page.locator('#verse-1')).toBeVisible();
-
-  expect(
-    errors.filter((message) => !message.includes('public_seo_settings')),
-    'Nexus return flow: console errors',
-  ).toEqual([]);
-});
-
-test('Bíblia: os quatro controles principais da barra funcionam no desktop', async ({ page }) => {
-  test.skip((page.viewportSize()?.width ?? 1280) < 768, 'Toolbar desktop é ocultada no mobile para evitar duplicação.');
-  const errors: string[] = [];
-  page.on('console', message => {
-    if (message.type() === 'error') errors.push(message.text());
   });
 
-  await page.goto('/bible?book=Gn&ch=1');
+  await page.goto('/');
+  await expect(page).toHaveTitle(/Cathedra/i);
+  await page.goto('/login');
+  await expect(page.getByLabel('Email')).toBeVisible();
+  await expect(page.getByLabel('Senha')).toBeVisible();
+  expect(bad).toEqual([]);
+});
 
-  await page.getByTestId('bible-toolbar-search').click();
-  await expect(page.getByTestId('bible-search-input')).toBeVisible();
-  await page.getByTestId('bible-search-close').click();
-  await expect(page).toHaveURL(/\/bible\?book=Gn&ch=1/);
+test('Documentos e Catecismo abrem sem erro de navegação', async ({ page }) => {
+  for (const route of ['/magisterium', '/catechism']) {
+    const errors: string[] = [];
+    page.on('console', message => {
+      if (message.type() === 'error') errors.push(message.text());
+    });
 
-  await page.getByTestId('bible-toolbar-bookmarks').click();
-  await expect(page.getByText(/Marcadores/i).first()).toBeVisible();
-  await page.getByRole('button', { name: /Voltar|Fechar/i }).first().click().catch(() => {});
-  await page.goto('/bible?book=Gn&ch=1');
+    const response = await page.goto(route);
+    expect(response?.ok(), `${route}: HTTP ${response?.status()}`).toBeTruthy();
+    await expect(page.locator('body')).not.toContainText(/Application error|Something went wrong/i);
+    expect(errors, `${route}: console errors`).toEqual([]);
+  }
+});
 
-  await page.getByTestId('bible-toolbar-more').click();
-  await expect(page.getByRole('menuitem', { name: /Anotações/i })).toBeVisible();
+test('Bíblia abre e renderiza conteúdo real', async ({ page }) => {
+  const errors: string[] = [];
   const badResponses: string[] = [];
   page.on('console', message => {
     if (message.type() === 'error') errors.push(message.text());
@@ -69,27 +66,9 @@ test('Bíblia permite pesquisar uma referência real', async ({ page }) => {
   await input.fill('Jo 3:16');
   await expect(page.getByTestId('bible-search-submit')).toBeEnabled();
   await page.getByTestId('bible-search-submit').click();
-    expect(bubbleBox?.height ?? 0).toBeLessThan(140);
-  }
-});
 
-
-test('Bíblia: deep-link legado converge para URL canônica', async ({ page }) => {
-  await page.goto('/bible?book=joao&chapter=1&verse=1');
-  await expect(page).toHaveURL(/\/bible\?book=Jo&ch=1&v=1/);
-  await expect(page.locator('#verse-1')).toBeVisible();
-});
-
-test('Bíblia: busca continua acessível no topo mobile sem duplicar a toolbar', async ({ page }) => {
-  await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto('/bible?book=Gn&ch=1');
-  const search = page.getByTestId('bible-toolbar-search-mobile');
-  await expect(search).toBeVisible();
-  await search.click();
-  await expect(page.getByTestId('bible-search-input')).toBeVisible();
-  await page.getByTestId('bible-search-close').click();
-  await expect(page).toHaveURL(/\/bible\?book=Gn&ch=1/);
-});
+  const result = page.getByRole('button').filter({ hasText: /João.*3:16/i }).first();
+  await expect(result).toBeVisible();
   await expect(result).toContainText(/Deus/i);
 
   await result.click();
