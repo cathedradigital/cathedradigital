@@ -7,6 +7,7 @@ import { MobileTopBar } from '@/components/mobile/MobileTopBar';
 import { JourneyService } from '@/core/journey/JourneyService';
 import type { Journey } from '@/core/journey/types';
 import { supabase } from '@/lib/db';
+import { useLang } from '@/hooks/useLang';
 import { getStudyContext, type StudyContext } from '@/services/studyContextService';
 
 const ICONS = {
@@ -33,6 +34,7 @@ const EstudarHubPage: React.FC = () => {
   const [studyQuery, setStudyQuery] = useState('');
   const [studyContext, setStudyContext] = useState<StudyContext | null>(null);
   const [studyLoading, setStudyLoading] = useState(false);
+  const { t } = useLang();
 
   useEffect(() => {
     let active = true;
@@ -88,24 +90,24 @@ const EstudarHubPage: React.FC = () => {
       className="min-h-screen w-full min-w-0 overflow-x-hidden bg-stitch-background text-stitch-on-background"
     >
       <Helmet>
-        <title>Cathedra — Estudar</title>
+        <title>{t('brand_alt')} — {t('estudar')}</title>
         <meta
           name="description"
-          content="Estude por temas e percorra conexões entre Escritura, Catecismo, Magistério e vida espiritual."
+          content={t('study_intro')}
         />
       </Helmet>
 
-      <MobileTopBar kicker="Cathedra" title="Estudar" transparent />
+      <MobileTopBar kicker={t('brand_alt')} title={t('estudar')} transparent />
       <main className="mx-auto w-full min-w-0 max-w-[1120px] px-4 pb-[calc(var(--stitch-mobile-bottomnav-h)+var(--stitch-mobile-safe-bottom)+1.5rem)] pt-5 sm:px-5 md:px-16 md:pb-16 md:pt-14">
         <header className="max-w-3xl pb-7 md:pb-9">
           <p className="font-stitch-body text-[10px] font-bold uppercase tracking-[0.24em] text-stitch-secondary md:text-[12px] md:tracking-[0.32em]">
-            Ambiente 01 · Conhecimento
+            {`Ambiente 01 · ${t('knowledge')}`}
           </p>
           <h1 className="mt-2 font-stitch-display text-[32px] leading-tight text-stitch-primary md:mt-3 md:text-[56px]">
-            O que você quer compreender hoje?
+            {t('study_question')}
           </h1>
           <p className="mt-3 max-w-2xl font-stitch-body text-[15px] leading-6 text-stitch-on-surface-variant md:mt-4 md:text-[17px] md:leading-7">
-            Em vez de procurar cada fonte separadamente, comece por um tema. O Cátedra organiza o caminho para você aprofundar, conectar e continuar.
+            {t('study_intro')}
           </p>
         </header>
 
@@ -114,15 +116,15 @@ const EstudarHubPage: React.FC = () => {
             <div className="flex items-start gap-3">
               <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-stitch-secondary" aria-hidden="true" />
               <div className="min-w-0 flex-1">
-                <h2 id="estudar-busca" className="font-stitch-display text-[18px] text-stitch-primary md:text-[20px]">Comece por um tema</h2>
+                <h2 id="estudar-busca" className="font-stitch-display text-[18px] text-stitch-primary md:text-[20px]">{t('start_theme')}</h2>
                 <p className="mt-1.5 font-stitch-body text-[12px] leading-5 text-stitch-on-surface-variant md:text-[13px]">
-                  A busca consulta somente fontes persistidas e publicadas. A Yá poderá organizar esse contexto depois; aqui a recuperação continua determinística e verificável.
+                  {t('published_sources_only')}
                 </p>
                 <input
                   value={studyQuery}
                   onChange={(event) => setStudyQuery(event.target.value)}
-                  placeholder="Ex.: esperança, oração, Eucaristia"
-                  aria-label="Buscar um tema no acervo do Cátedra"
+                  placeholder={t('search_theme_placeholder')}
+                  aria-label={t('search_theme_aria')}
                   className="mt-3 w-full rounded-xl border border-stitch-outline-variant/30 bg-stitch-surface-container-lowest px-3 py-2.5 font-stitch-body text-sm text-stitch-primary outline-none focus:border-stitch-secondary"
                 />
               </div>
@@ -130,12 +132,12 @@ const EstudarHubPage: React.FC = () => {
             {studyQuery.trim().length >= 2 && (
               <div className="mt-4 border-t border-stitch-outline-variant/20 pt-4">
                 {studyLoading ? (
-                  <p className="text-sm text-stitch-on-surface-variant">Consultando o acervo real…</p>
+                  <p className="text-sm text-stitch-on-surface-variant">{t('consulting_collection')}</p>
                 ) : studyContext && (studyContext.sources.length > 0 || studyContext.journeys.length > 0) ? (
                   <div className="space-y-4">
                     {studyContext.sources.length > 0 && (
                       <div>
-                        <p className="mb-2 font-stitch-body text-[10px] font-bold uppercase tracking-[0.16em] text-stitch-secondary">Fontes encontradas</p>
+                        <p className="mb-2 font-stitch-body text-[10px] font-bold uppercase tracking-[0.16em] text-stitch-secondary">{t('sources_found')}</p>
                         <div className="grid gap-2 sm:grid-cols-2">
                           {studyContext.sources.slice(0, 6).map((source) => (
                             (() => {
@@ -147,7 +149,7 @@ const EstudarHubPage: React.FC = () => {
                                   {source.excerpt && <p className="mt-1 line-clamp-2 text-[11px] leading-4 text-stitch-on-surface-variant">{source.excerpt}</p>}
                                 </div>
                               );
-                              return href ? (href.startsWith('/') ? <Link to={href} aria-label={'Abrir ' + source.title}>{content}</Link> : <a href={href} target="_blank" rel="noreferrer" aria-label={'Abrir fonte externa: ' + source.title}>{content}</a>) : content;
+                              return href ? (href.startsWith('/') ? <Link to={href} aria-label={t('open_source') + ' ' + source.title}>{content}</Link> : <a href={href} target="_blank" rel="noreferrer" aria-label={t('open_external_source') + ': ' + source.title}>{content}</a>) : content;
                             })()
                           ))}
                         </div>
@@ -155,7 +157,7 @@ const EstudarHubPage: React.FC = () => {
                     )}
                     {studyContext.journeys.length > 0 && (
                       <div>
-                        <p className="mb-2 font-stitch-body text-[10px] font-bold uppercase tracking-[0.16em] text-stitch-secondary">Jornadas relacionadas</p>
+                        <p className="mb-2 font-stitch-body text-[10px] font-bold uppercase tracking-[0.16em] text-stitch-secondary">{t('related_journeys')}</p>
                         <div className="flex flex-wrap gap-2">
                           {studyContext.journeys.map((journey) => (
                             <Link key={journey.id} to={`/jornadas/${journey.id}`} className="rounded-full border border-stitch-secondary/25 bg-stitch-secondary-container/25 px-3 py-1.5 text-xs text-stitch-primary">
@@ -167,12 +169,12 @@ const EstudarHubPage: React.FC = () => {
                     )}
                     <p className="text-[11px] text-stitch-on-surface-variant">
                       {studyContext.nexus.length > 0
-                        ? studyContext.nexus.length + ' conexões publicadas foram encontradas para este contexto.'
-                        : 'Nenhuma conexão Nexus publicada foi encontrada para este contexto.'}
+                        ? studyContext.nexus.length + ' {t('published_connections')}'
+                        : '{t('no_published_connections')}'}
                     </p>
                   </div>
                 ) : (
-                  <p className="text-sm text-stitch-on-surface-variant">Nenhuma fonte publicada correspondeu a este tema. O Cátedra não preencherá a ausência com conteúdo inventado.</p>
+                  <p className="text-sm text-stitch-on-surface-variant">{t('no_source_match')}</p>
                 )}
               </div>
             )}
@@ -182,24 +184,24 @@ const EstudarHubPage: React.FC = () => {
         <section aria-labelledby="estudar-jornadas" className="pb-8 md:pb-10">
           <div className="mb-4 flex items-end justify-between gap-4 md:mb-6">
             <div>
-              <p className="font-stitch-body text-[10px] font-bold uppercase tracking-[0.16em] text-stitch-secondary md:text-[11px] md:tracking-[0.2em]">Caminhos reais</p>
-              <h2 id="estudar-jornadas" className="mt-1 font-stitch-display text-[22px] leading-tight text-stitch-primary md:text-[28px]">Continue por uma jornada</h2>
+              <p className="font-stitch-body text-[10px] font-bold uppercase tracking-[0.16em] text-stitch-secondary md:text-[11px] md:tracking-[0.2em]">{t('real_paths')}</p>
+              <h2 id="estudar-jornadas" className="mt-1 font-stitch-display text-[22px] leading-tight text-stitch-primary md:text-[28px]">{t('continue_journey')}</h2>
             </div>
-            <span className="hidden items-center gap-1.5 font-stitch-body text-[11px] text-stitch-on-surface-variant sm:flex"><Compass className="h-3.5 w-3.5" aria-hidden="true" />Conteúdo publicado</span>
+            <span className="hidden items-center gap-1.5 font-stitch-body text-[11px] text-stitch-on-surface-variant sm:flex"><Compass className="h-3.5 w-3.5" aria-hidden="true" />{t('published_content')}</span>
           </div>
           {journeysLoading ? (
-            <div className="rounded-2xl border border-stitch-outline-variant/20 bg-stitch-surface-container-low p-5 text-sm text-stitch-on-surface-variant">Carregando jornadas disponíveis…</div>
+            <div className="rounded-2xl border border-stitch-outline-variant/20 bg-stitch-surface-container-low p-5 text-sm text-stitch-on-surface-variant">{t('loading_journeys')}</div>
           ) : journeys.length > 0 ? (
             <div className="grid min-w-0 grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3 md:gap-4">
               {journeys.map((journey) => (
                 <Link key={journey.id} to={`/jornadas/${journey.id}`} className="group flex min-h-[158px] flex-col justify-between rounded-2xl border border-stitch-secondary/25 bg-stitch-secondary-container/25 p-4 transition-all hover:-translate-y-0.5 hover:border-stitch-secondary hover:shadow-lg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-stitch-secondary md:p-5">
                   <div className="flex items-start justify-between gap-4"><span className="flex h-9 w-9 items-center justify-center rounded-full bg-stitch-surface-container-lowest text-stitch-secondary"><Compass className="h-4 w-4" aria-hidden="true" /></span><ArrowRight className="h-4 w-4 text-stitch-on-surface-variant transition-transform group-hover:translate-x-1" aria-hidden="true" /></div>
-                  <div><h3 className="font-stitch-display text-[19px] leading-tight text-stitch-primary">{journey.title}</h3><p className="mt-1.5 line-clamp-2 font-stitch-body text-[12px] leading-5 text-stitch-on-surface-variant">{journey.description ?? 'Continue sua formação.'}</p></div>
+                  <div><h3 className="font-stitch-display text-[19px] leading-tight text-stitch-primary">{journey.title}</h3><p className="mt-1.5 line-clamp-2 font-stitch-body text-[12px] leading-5 text-stitch-on-surface-variant">{journey.description ?? '{t('continue_formation')}'}</p></div>
                 </Link>
               ))}
             </div>
           ) : (
-            <div className="rounded-2xl border border-stitch-outline-variant/20 bg-stitch-surface-container-low p-5 text-sm text-stitch-on-surface-variant">Nenhuma jornada publicada está disponível neste momento.</div>
+            <div className="rounded-2xl border border-stitch-outline-variant/20 bg-stitch-surface-container-low p-5 text-sm text-stitch-on-surface-variant">{t('no_journeys')}</div>
           )}
         </section>
 
@@ -208,9 +210,9 @@ const EstudarHubPage: React.FC = () => {
             <div className="flex items-start gap-3">
               <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-stitch-secondary" aria-hidden="true" />
               <div>
-                <h2 id="estudar-conexoes" className="font-stitch-display text-[18px] text-stitch-primary md:text-[20px]">Conexões entre as fontes</h2>
+                <h2 id="estudar-conexoes" className="font-stitch-display text-[18px] text-stitch-primary md:text-[20px]">{t('source_connections')}</h2>
                 <p className="mt-1.5 max-w-3xl font-stitch-body text-[12px] leading-5 text-stitch-on-surface-variant md:text-[13px]">
-                  {nexusCount === null ? 'Verificando as relações publicadas no Nexus…' : nexusCount > 0 ? `${nexusCount} relações publicadas estão disponíveis para conectar os conteúdos.` : 'O Nexus ainda não tem relações publicadas. O Cátedra não exibirá conexões inventadas enquanto a base oficial estiver sendo sincronizada.'}
+                  {nexusCount === null ? '{t('checking_nexus')}' : nexusCount > 0 ? `${nexusCount} {t('published_relations')}` : '{t('no_published_relations')}'}
                 </p>
               </div>
             </div>
@@ -220,10 +222,10 @@ const EstudarHubPage: React.FC = () => {
         <section aria-labelledby="estudar-fontes" className="border-t border-stitch-outline-variant/20 pt-7 md:pt-9">
           <div className="mb-4 md:mb-5">
             <p className="font-stitch-body text-[10px] font-bold uppercase tracking-[0.16em] text-stitch-secondary md:text-[11px] md:tracking-[0.2em]">
-              Fontes
+              {t('source_links')}
             </p>
             <h2 id="estudar-fontes" className="mt-1 font-stitch-display text-[22px] leading-tight text-stitch-primary md:text-[28px]">
-              Ou entre diretamente em uma fonte
+              {t('direct_source')}
             </h2>
           </div>
 
