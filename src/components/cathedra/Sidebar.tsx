@@ -316,7 +316,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                 >
                   <CollapsibleTrigger asChild>
                     <button className="w-full min-h-10 flex items-center justify-between py-1.5 px-2.5 group/trigger hover:bg-[#c9a84c]/[0.05] rounded-lg transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c9a84c]/40 focus-visible:ring-offset-2">
-                      <h3 style={{ color: 'var(--gold-text)', fontFamily: 'Inter, sans-serif', fontSize: '0.72rem', letterSpacing: '0.12em', textTransform: 'uppercase' }}>— {section.label}</h3>
+                      <h3 style={{ color: 'var(--gold-text)', fontFamily: 'Inter, sans-serif', fontSize: '0.74rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase' }}>— {section.label}</h3>
                       <Icons.ChevronDown className="w-3 h-3 transition-all group-data-[state=open]:rotate-180" strokeWidth={1.5} style={{ color: 'var(--gold-text)' }} />
                     </button>
                   </CollapsibleTrigger>
@@ -339,15 +339,15 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                                 onTouchStart={() => prefetchRoute(item.path)}
                                  aria-current={isActive ? 'page' : undefined}
                                  aria-label={isActive ? `${item.label}, ${t('current_page')}` : item.label}
-                                className={`w-full flex items-center justify-start gap-3 px-3 py-2 rounded-lg text-xs font-medium transition-all duration-200 outline-none h-auto min-h-11 border
+                                className={`w-full flex items-center justify-start gap-3 px-3 py-2 rounded-lg text-xs font-semibold transition-all duration-200 outline-none h-auto min-h-11 border
                                   ${isActive
                                     ? 'bg-[#c9a84c]/[0.08] text-[color:var(--gold-text)] border-[#c9a84c]/40'
-                                    : 'text-foreground/70 hover:bg-[#c9a84c]/[0.04] hover:text-[color:var(--gold-text)] border-transparent hover:border-[#c9a84c]/20'}`}
+                                    : 'text-foreground/80 hover:bg-[#c9a84c]/[0.04] hover:text-[color:var(--gold-text)] border-transparent hover:border-[#c9a84c]/20'}`}
                               >
                                   <span className={`transition-all duration-300 transform ${isActive ? 'opacity-100 scale-105' : 'opacity-80'}`}>
                                     {item.icon}
                                   </span>
-                                <span className="tracking-[0.06em] truncate text-[0.82rem]">{item.label}</span>
+                                <span className="tracking-[0.04em] truncate text-[0.84rem]">{item.label}</span>
                                 {item.path === AppRoute.CACHE_MANAGER && cacheCount !== null && cacheCount > 0 && (
                                   <span className="ml-auto text-premium-xs font-bold px-2 py-0.5 rounded-none flex-shrink-0" style={{ background: '#c9a84c', color: '#0a0a0a' }}>
                                     {cacheCount}
