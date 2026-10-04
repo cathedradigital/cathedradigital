@@ -1,12 +1,20 @@
-import "jsr:@supabase/functions-js/edge-runtime.d.ts";
-import { createClient } from "npm:@supabase/supabase-js@2";
+  if (!match) return null;
+  const [, rawBook, chapterRaw, verseRaw] = match;
+  const normalizedBook = normalize(rawBook);
+  const compactBook = normalizedBook.replace(/\s+/g, "");
 
-const cors = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-  "Access-Control-Allow-Methods": "POST, OPTIONS",
-};
-
+  // Abreviações são mais específicas que nomes normalizados. Sem essa
+  // prioridade, "Jo 3:16" pode colidir com "Jó" antes de "João".
+  const exactAbbrev = books.find((candidate) => {
+    const abbrev = normalize(candidate.abbrev);
+    return abbrev === normalizedBook || abbrev.replace(/\s+/g, "") === compactBook;
+  });
+  const book = exactAbbrev ?? books.find((candidate) => {
+    const name = normalize(candidate.name);
+    return name === normalizedBook || name.replace(/\s+/g, "") === compactBook;
+  });
+  if (!book) return null;
+  return { book, chapter: Number(chapterRaw), verse: Number(verseRaw) };
 const json = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body), {
     status,
