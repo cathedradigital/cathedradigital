@@ -862,20 +862,6 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
       const sourceLabel = `API de Produção (${data.source || 'Edge'}) - Vernáculo PT Garantido`;
       setSourceInfo(sourceLabel);
 
-      // Telemetria: envia render_ms para a edge correlacionando pelo correlationId.
-      // Mede até o segundo rAF para capturar o paint real (não só o setState).
-      const corrId: string | undefined = data?.metadata?.correlationId;
-      if (corrId) {
-        requestAnimationFrame(() => requestAnimationFrame(() => {
-          const renderMs = Math.round(performance.now() - renderStartedAt);
-          if (renderMs >= 0 && renderMs < 30000) {
-            supabase.functions
-              .invoke('bible-perf-render', { body: { correlation_id: corrId, render_ms: renderMs } })
-              .catch(() => { /* best-effort */ });
-          }
-        }));
-      }
-
       // Update Diagnostic Logs
       setDiagnosticLogs((prev) => [
         {
