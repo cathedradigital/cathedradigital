@@ -20,6 +20,7 @@ export interface ModuleNavItem {
   labelKey: string;
   path: string;
   description: string;
+  descriptionKey?: string;
 }
 
 export interface ModuleNavGroup {
@@ -42,9 +43,9 @@ export const MODULE_NAVIGATION: ModuleNavGroup[] = [
     labelKey: 'nav.estudar',
     description: 'Fontes, textos e caminhos para aprofundar.',
     items: [
-      { id: 'bible', label: 'Bíblia', labelKey: 'nav.biblia', path: '/bible', description: 'A Palavra que ilumina o caminho.' },
-      { id: 'catechism', label: 'Catecismo', labelKey: 'nav.catecismo', path: '/catechism', description: 'A fé compreendida e transmitida.' },
-      { id: 'documents', label: 'Documentos', labelKey: 'nav.documentos', path: '/magisterium', description: 'A voz da Igreja através do tempo.' },
+      { id: 'bible', label: 'Bíblia', labelKey: 'nav.biblia', path: '/bible', description: 'A Palavra que ilumina o caminho.', descriptionKey: 'source_desc_bible' },
+      { id: 'catechism', label: 'Catecismo', labelKey: 'nav.catecismo', path: '/catechism', description: 'A fé compreendida e transmitida.', descriptionKey: 'source_desc_catechism' },
+      { id: 'documents', label: 'Documentos', labelKey: 'nav.documentos', path: '/magisterium', description: 'A voz da Igreja através do tempo.', descriptionKey: 'source_desc_documents' },
     ],
   },
   {
