@@ -373,25 +373,37 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                   </Button>
                 )}
 
-                <div className="flex flex-wrap gap-spacing-2xs justify-center mt-spacing-xs">
-                  {SUPPORTED_LOCALES.map((locale) => {
-                    const l = locale.code;
-                    return (
-                    <button
-                      key={l}
-                      onClick={() => (window as any).dispatchEvent(new CustomEvent('change-lang', { detail: l }))}
-                      className={`min-h-11 px-spacing-sm py-spacing-2xs text-premium-xs font-bold uppercase rounded-premium-lg border transition-all ${
-                        lang === l 
-                          ? 'bg-primary/5 text-primary border-primary/10 shadow-premium-none' 
-                          : 'bg-transparent text-muted-foreground/20 border-transparent hover:border-primary/5'
-                      }`}
+                <div className="mt-spacing-xs">
+                  <label
+                    htmlFor="cathedra-language"
+                    className="mb-2 block text-[8px] font-black uppercase tracking-[0.28em] text-muted-foreground/50"
+                  >
+                    Idioma
+                  </label>
+                  <div className="relative">
+                    <select
+                      id="cathedra-language"
+                      value={lang}
+                      onChange={(e) =>
+                        (window as any).dispatchEvent(
+                          new CustomEvent('change-lang', { detail: e.target.value }),
+                        )
+                      }
+                      className="w-full min-h-11 appearance-none rounded-premium-lg border border-primary/10 bg-background/70 px-3 pr-9 text-xs font-semibold text-foreground outline-none transition-colors focus:border-primary/30 focus:ring-2 focus:ring-primary/10"
+                      aria-label="Selecionar idioma"
                     >
-                      {l}
-                    </button>
-                    );
-                  })}
+                      {SUPPORTED_LOCALES.map((locale) => (
+                        <option key={locale.code} value={locale.code}>
+                          {locale.nativeName}
+                        </option>
+                      ))}
+                    </select>
+                    <Icons.ChevronDown
+                      aria-hidden="true"
+                      className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground/50"
+                    />
+                  </div>
                 </div>
-
                 <div className="flex justify-center gap-spacing-lg py-spacing-xs mt-spacing-xs">
                   <a href="https://www.instagram.com/cathedradigital/" target="_blank" rel="noopener noreferrer" className="text-primary/70 hover:text-secondary transition-colors" aria-label="Siga-nos no Instagram"><Icons.Instagram size={14} /></a>
                   <a href="https://www.youtube.com/@cathedradigital" target="_blank" rel="noopener noreferrer" className="text-primary/70 hover:text-secondary transition-colors" aria-label="Inscreva-se no nosso canal do Youtube"><Icons.Youtube size={14} /></a>
