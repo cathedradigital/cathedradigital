@@ -69,7 +69,7 @@ const HomeUnified: React.FC = () => {
 
   const greeting = useMemo(() => {
     const name = profile?.name?.split(' ')[0];
-    return name ? `Olá, ${name}.` : 'Bem-vindo à Cathedra.';
+    return name ? `Olá, ${name}.` : 'Bem-vindo à Cathedra Digital.';
   }, [profile?.name]);
 
   const submitSearch = (e: React.FormEvent) => {
@@ -92,7 +92,7 @@ const HomeUnified: React.FC = () => {
         </div>
       )}
       <Helmet>
-        <title>Cathedra — sua jornada de estudo, oração e formação</title>
+        <title>Cathedra Digital — sua jornada de estudo, oração e formação</title>
         <meta name="description" content="Estude, reze, forme-se e descubra a tradição cristã em uma única plataforma." />
         <link rel="canonical" href="/" />
       </Helmet>
