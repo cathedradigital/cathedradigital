@@ -6,78 +6,41 @@
  */
 
 :root {
-  --catedra-content-max: 72rem;
-  --catedra-reading-max: 46rem;
-  --catedra-gutter: clamp(1rem, 3vw, 2rem);
-  --catedra-section-gap: clamp(2rem, 5vw, 4rem);
-  --catedra-stack-1: .375rem;
-  --catedra-stack-2: .625rem;
-  --catedra-stack-3: .875rem;
-  --catedra-stack-4: 1.125rem;
-  --catedra-stack-5: 1.5rem;
-  --catedra-stack-6: 2rem;
-  --catedra-stack-7: 3rem;
-  --catedra-radius-sm: .625rem;
-  --catedra-radius-md: .875rem;
-  --catedra-radius-lg: 1.25rem;
-  --catedra-control-min: 2.75rem;
-  --catedra-motion-fast: 150ms;
-  --catedra-motion-base: 220ms;
+  --catedra-foundation-gutter: clamp(1rem, 3vw, 2rem);
+  --catedra-foundation-stack-5: 1.5rem;
+  --catedra-foundation-control-min: 2.75rem;
+  --catedra-foundation-motion-base: 220ms;
 
-  --catedra-atrium-accent: #b08a3e;
-  --catedra-atrium-soft: rgba(176,138,62,.10);
-  --catedra-estudar-accent: #2f6f8f;
-  --catedra-estudar-soft: rgba(47,111,143,.12);
-  --catedra-rezar-accent: #76527f;
-  --catedra-rezar-soft: rgba(118,82,127,.12);
-  --catedra-formar-accent: #a96d3c;
-  --catedra-formar-soft: rgba(169,109,60,.12);
-  --catedra-pesquisar-accent: #3d6f58;
-  --catedra-pesquisar-soft: rgba(61,111,88,.12);
-  --catedra-jornada-accent: #6655a3;
-  --catedra-jornada-soft: rgba(102,85,163,.12);
 }
 
 [data-catedra-module="atrium"],
 [data-catedra-module="atrior"] {
-  --catedra-module-accent: var(--catedra-atrium-accent);
-  --catedra-module-accent-soft: var(--catedra-atrium-soft);
 }
 
 [data-catedra-module="estudar"] {
-  --catedra-module-accent: var(--catedra-estudar-accent);
-  --catedra-module-accent-soft: var(--catedra-estudar-soft);
 }
 
 [data-catedra-module="rezar"] {
-  --catedra-module-accent: var(--catedra-rezar-accent);
-  --catedra-module-accent-soft: var(--catedra-rezar-soft);
 }
 
 [data-catedra-module="formar"],
 [data-catedra-module="formar-se"] {
-  --catedra-module-accent: var(--catedra-formar-accent);
-  --catedra-module-accent-soft: var(--catedra-formar-soft);
 }
 
 [data-catedra-module="pesquisar"] {
-  --catedra-module-accent: var(--catedra-pesquisar-accent);
-  --catedra-module-accent-soft: var(--catedra-pesquisar-soft);
 }
 
 [data-catedra-module="jornada"],
 [data-catedra-module="minha-jornada"] {
-  --catedra-module-accent: var(--catedra-jornada-accent);
-  --catedra-module-accent-soft: var(--catedra-jornada-soft);
 }
 
 .catedra-page {
-  width: min(calc(100% - 2 * var(--catedra-gutter)), var(--catedra-content-max));
+  width: min(calc(100% - 2 * var(--catedra-foundation-gutter)), 72rem);
   margin-inline: auto;
 }
 
 .catedra-stack > * + * {
-  margin-top: var(--catedra-stack-5);
+  margin-top: var(--catedra-foundation-stack-5);
 }
 
 .catedra-section {
@@ -97,9 +60,9 @@
   background: hsl(var(--card));
   color: hsl(var(--card-foreground));
   box-shadow: 0 1px 2px hsl(var(--foreground) / .04);
-  transition: border-color var(--catedra-motion-base) ease,
-              box-shadow var(--catedra-motion-base) ease,
-              transform var(--catedra-motion-base) ease;
+  transition: border-color var(--catedra-foundation-motion-base) ease,
+              box-shadow var(--catedra-foundation-motion-base) ease,
+              transform var(--catedra-foundation-motion-base) ease;
 }
 
 .catedra-card:hover {
@@ -108,8 +71,8 @@
 }
 
 .catedra-action {
-  min-width: var(--catedra-control-min);
-  min-height: var(--catedra-control-min);
+  min-width: var(--catedra-foundation-control-min);
+  min-height: var(--catedra-foundation-control-min);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -119,10 +82,10 @@
 }
 
 .catedra-icon-button {
-  width: var(--catedra-control-min);
-  height: var(--catedra-control-min);
-  min-width: var(--catedra-control-min);
-  min-height: var(--catedra-control-min);
+  width: var(--catedra-foundation-control-min);
+  height: var(--catedra-foundation-control-min);
+  min-width: var(--catedra-foundation-control-min);
+  min-height: var(--catedra-foundation-control-min);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -188,7 +151,7 @@
   display: flex;
   align-items: center;
   gap: .5rem;
-  min-height: var(--catedra-control-min);
+  min-height: var(--catedra-foundation-control-min);
 }
 
 .catedra-divider {
