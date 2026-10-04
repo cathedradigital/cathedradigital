@@ -21,7 +21,7 @@ interface LanguageSwitcherProps {
  * o caminho atual — o português permanece sem prefixo.
  */
 export function LanguageSwitcher({ className, variant = 'compact' }: LanguageSwitcherProps) {
-  const { lang, setLang } = useLang();
+  const { lang, setLang, t } = useLang();
   const current = SUPPORTED_LOCALES.find((l) => l.code === lang) ?? SUPPORTED_LOCALES[0];
 
   return (
@@ -31,7 +31,7 @@ export function LanguageSwitcher({ className, variant = 'compact' }: LanguageSwi
           variant="ghost"
           size="sm"
           className={cn('gap-2 text-muted-foreground hover:text-foreground', className)}
-          aria-label={`Idioma: ${current.nativeName}. Alterar idioma`}
+          aria-label={`${t('language')}: ${current.nativeName}. ${t('change_language')}`}
         >
           <Globe className="h-4 w-4" aria-hidden="true" />
           <span className="text-xs font-medium uppercase tracking-wide">
