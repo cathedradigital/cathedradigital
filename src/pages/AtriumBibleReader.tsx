@@ -9,7 +9,7 @@
 
 import React, { lazy, Suspense, useEffect, useMemo, useState } from 'react';
 import { Helmet } from '@/lib/helmet-compat';
-import { Link, useSearchParams } from '@/lib/rr-compat';
+import { Link, useNavigate, useSearchParams } from '@/lib/rr-compat';
 import { BookOpen, Search as SearchIcon, ArrowRight, LayoutGrid } from 'lucide-react';
 import { BIBLE_DATA, type BibleBook } from '@/data/bible-books';
 import { buildBibleUrl } from '@/lib/bibleUrl';
@@ -66,11 +66,19 @@ function findBookByAbbr(abbr: string | null): BibleBook | undefined {
 
 const AtriumBibleReader: React.FC = () => {
   const [sp] = useSearchParams();
-  const hasReaderParams = sp.get('book') || sp.get('view');
+  const navigate = useNavigate();
+  const hasReaderParams = Boolean(sp.get('book') || sp.get('view') || sp.get('ref'));
   const [pickerOpen, setPickerOpen] = useState(false);
 
   const abbr = sp.get('book');
-  const chapterStr = sp.get('chapter') ?? sp.get('c');
+  // `ch` is the canonical Cátedra Bible URL parameter. Accept the legacy
+  // `chapter`/`c` aliases at the boundary so every entry point lands on the
+  // same reader state and the picker always reflects the current passage.
+  const chapterStr = sp.get('ch') ?? sp.get('chapter') ?? sp.get('c');
+  const currentChapter = chapterStr ? Number(chapterStr) : null;
+  const currentSelection = abbr && Number.isInteger(currentChapter) && currentChapter > 0
+    ? { abbr, chapter: currentChapter }
+    : null;
 
   // Persistência: sempre que abrir com book+chapter, salvar como "último lido".
   useEffect(() => {
@@ -91,6 +99,7 @@ const AtriumBibleReader: React.FC = () => {
           kicker="Cathedra · Bíblia"
           title={book ? `${book.name} ${chapterStr ?? ''}`.trim() : 'Bíblia'}
           showBack
+          onBack={() => navigate(AppRoute.BIBLE)}
           actions={
             <button
               type="button"
@@ -111,7 +120,11 @@ const AtriumBibleReader: React.FC = () => {
         <BibleReadGate>
           <Bible />
         </BibleReadGate>
-        <BiblePickerSheet open={pickerOpen} onOpenChange={setPickerOpen} />
+        <BiblePickerSheet
+          open={pickerOpen}
+          onOpenChange={setPickerOpen}
+          initialSelection={currentSelection}
+        />
         </Suspense>
       </div>
     );

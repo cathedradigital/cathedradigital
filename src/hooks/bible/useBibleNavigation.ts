@@ -19,6 +19,7 @@
 import { useCallback, useMemo } from 'react';
 import { useSearchParams } from '@/lib/rr-compat';
 import { BIBLE_DATA, BibleBook } from '@/data/bible-books';
+import { parseBibleReferences } from '@/lib/bibleRefParser';
 
 export type BibleViewMode =
   | 'home'
@@ -42,9 +43,13 @@ const ALL_BOOKS: BibleBook[] = Object.values(BIBLE_DATA)
 
 function findBook(rawAbbr: string | null): BibleBook | null {
   if (!rawAbbr) return null;
-  const decoded = decodeURIComponent(rawAbbr);
+  const decoded = decodeURIComponent(rawAbbr).trim();
+  const lower = decoded.toLocaleLowerCase('pt-BR');
   return (
-    ALL_BOOKS.find((b) => b.abbr === decoded || b.name === decoded) ?? null
+    ALL_BOOKS.find((b) =>
+      b.abbr.toLocaleLowerCase('pt-BR') === lower ||
+      b.name.toLocaleLowerCase('pt-BR') === lower,
+    ) ?? null
   );
 }
 
@@ -72,25 +77,32 @@ export function useBibleNavigation(): UseBibleNavigation {
 
   const rawView = searchParams.get('view') as BibleViewMode | null;
   const bookParam = searchParams.get('book');
-  // `ch` is the active URL key; accept `chapter` too because older Nexus/search/adapters emit it.
-  // Setters continue writing `ch` so the URL converges to one canonical form.
+  // `ch` is the active URL key; accept legacy aliases and Nexus `ref` deep-links
+  // at this boundary, then expose one consistent derived reader state.
   const chapterParam = searchParams.get('ch') ?? searchParams.get('chapter');
+  const refParam = searchParams.get('ref');
+  const parsedRef = useMemo(
+    () => refParam ? parseBibleReferences(refParam).find((segment) => segment.type === 'bibleRef') ?? null : null,
+    [refParam],
+  );
+  const effectiveBookParam = bookParam ?? parsedRef?.abbr ?? null;
+  const effectiveChapterParam = chapterParam ?? (parsedRef?.chapter ? String(parsedRef.chapter) : null);
   const searchQuery = searchParams.get('q') ?? '';
 
-  const selectedBook = useMemo(() => findBook(bookParam), [bookParam]);
+  const selectedBook = useMemo(() => findBook(effectiveBookParam), [effectiveBookParam]);
 
   const selectedChapter = useMemo(() => {
-    if (!chapterParam) return 1;
-    const n = parseInt(chapterParam, 10);
+    if (!effectiveChapterParam) return 1;
+    const n = parseInt(effectiveChapterParam, 10);
     return Number.isFinite(n) && n > 0 ? n : 1;
-  }, [chapterParam]);
+  }, [effectiveChapterParam]);
 
   const viewMode: BibleViewMode = useMemo(() => {
     if (rawView && SPECIAL_VIEWS.has(rawView)) return rawView;
-    if (selectedBook && chapterParam) return 'reading';
+    if (selectedBook && effectiveChapterParam) return 'reading';
     if (selectedBook) return 'chapters';
     return 'home';
-  }, [rawView, selectedBook, chapterParam]);
+  }, [rawView, selectedBook, effectiveChapterParam]);
 
   // Helper to mutate params without stomping siblings.
   const mutate = useCallback(

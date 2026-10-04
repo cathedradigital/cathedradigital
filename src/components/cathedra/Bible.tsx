@@ -53,6 +53,7 @@ import biblePerf from '@/lib/biblePerf';
 import { isChapterMissing, MISSING_CHAPTER_REASON } from '@/lib/bibleMissingChapters';
 import NexusContributionDialog from './NexusContributionDialog';
 import { saveBibleReturnContext } from '@/lib/bibleReturnContext';
+import { parseBibleReferences } from '@/lib/bibleRefParser';
 
 const CatechismParagraphPreview: React.FC<{ paragraphId: string }> = ({ paragraphId }) => {
   const pNum = Number.parseInt(String(paragraphId).replace(/^§/, '').trim(), 10);
@@ -304,7 +305,13 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
   // R1.2.3 — restaura o versículo solicitado depois que o DOM estiver pronto.
   // Isso também cobre retorno do Diário sem recarregar o capítulo (somente ?v muda)
   // e cache local, que antes retornava de fetchVerses antes do scroll.
-  const requestedVerse = searchParams.get('v');
+  const referenceVerseParam = searchParams.get('ref');
+  const referenceVerseNumber = useMemo(() => {
+    if (!referenceVerseParam) return null;
+    const parsed = parseBibleReferences(referenceVerseParam).find((segment) => segment.type === 'bibleRef');
+    return parsed?.verse ? String(parsed.verse) : null;
+  }, [referenceVerseParam]);
+  const requestedVerse = searchParams.get('v') ?? referenceVerseNumber;
 
   useEffect(() => {
     if (viewMode !== 'reading' || isLoading || verses.length === 0) return;
