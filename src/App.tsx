@@ -46,7 +46,6 @@ const EditorialShowcase = lazy(() => import('./pages/dev/EditorialShowcase'));
 const MobileShowcase = lazy(() => import('./pages/dev/MobileShowcase'));
 const CathedralFooter = lazy(() => import('./components/cathedra/Footer'));
 const NotFound = lazy(() => import('./pages/NotFound'));
-const BottomNav = lazy(() => import('./components/cathedra/BottomNav'));
 const AppHeader = lazy(() => import('./components/cathedra/AppHeader'));
 import { TooltipProvider } from '@/components/ui/tooltip';
 const NexusMetricsOverlay = lazy(() => import('@/components/nexus/NexusMetricsOverlay').then(m => ({ default: m.NexusMetricsOverlay })));
@@ -573,7 +572,7 @@ const AppLayout: React.FC = () => {
         {!isAccountArea && !location.pathname.startsWith('/prototype-2.0') && location.pathname !== '/auth' && location.pathname !== '/login' && (
           <button
             type="button"
-            className="mobile-menu-fallback fixed left-3 z-[155] md:hidden inline-flex h-10 w-10 items-center justify-center rounded-full border border-primary/15 bg-background/90 text-foreground shadow-sm backdrop-blur-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            className="mobile-menu-fallback fixed left-3 z-[155] md:hidden inline-flex h-11 w-11 items-center justify-center rounded-full border border-primary/15 bg-background/90 text-foreground shadow-sm backdrop-blur-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             style={{ top: 'calc(var(--stitch-mobile-safe-top, 0px) + 0.5rem)' }}
             aria-label="Abrir menu de navegação"
             onClick={handleOpenSidebar}
@@ -1030,11 +1029,7 @@ const AppLayout: React.FC = () => {
           </SwipeNavigation>
         </main>
 
-        {(!settings.immersiveMode || !location.pathname.startsWith('/bible')) && !location.pathname.startsWith('/prototype-2.0') && location.pathname !== '/' && location.pathname !== '/auth' && location.pathname !== '/login' && !isAccountArea && (
-          <Suspense fallback={null}>
-            <BottomNav user={authUserAdapter} onOpenSidebar={handleOpenSidebar} />
-          </Suspense>
-        )}
+
         </AppErrorBoundary></Suspense>
         {(!settings.immersiveMode || !location.pathname.startsWith('/bible')) && !location.pathname.startsWith('/prototype-2.0') && !isAccountArea && (
           <Suspense fallback={null}>
