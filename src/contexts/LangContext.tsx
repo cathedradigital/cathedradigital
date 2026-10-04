@@ -66,7 +66,20 @@ export const LangProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } catch {
       /* storage indisponível */
     }
+
     document.documentElement.lang = getLocaleDefinition(lang).hreflang;
+
+    // Se o usuário já escolheu outro idioma, a raiz também precisa respeitar
+    // essa preferência. Sem isso a interface poderia ficar em EN/ES/etc. enquanto
+    // a URL e o router continuavam canônicos em PT.
+    const pathLocale = detectLocaleFromPath(window.location.pathname);
+    const hasExplicitLocale = isSupportedLocale(window.location.pathname.split('/').filter(Boolean)[0]);
+    if (!hasExplicitLocale && lang !== DEFAULT_LOCALE && pathLocale === DEFAULT_LOCALE) {
+      const target = withLocalePath(window.location.pathname, lang) + window.location.search + window.location.hash;
+      if (target !== window.location.pathname + window.location.search + window.location.hash) {
+        window.location.replace(target);
+      }
+    }
   }, [lang]);
 
   /**
