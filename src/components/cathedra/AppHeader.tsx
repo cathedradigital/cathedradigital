@@ -200,29 +200,7 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
                 </div>
               </div>
             </div>
-
-            {/* Desktop Navigation Links */}
-            {isDashboard && (
-              <nav className="hidden lg:flex items-center gap-spacing-xs border-l border-primary/10 pl-spacing-xl ml-spacing-md" aria-label="Navegação principal">
-                {headerRoutes.map(item => (
-                  <Button 
-                    key={item.path} 
-                    variant="ghost"
-                    size="sm"
-                    onClick={(e) => {
-                      if (!isLegitimateClick(e)) return;
-                      navigate(item.path);
-                      window.scrollTo({ top: 0, behavior: 'instant' });
-                    }}
-                    className={`min-h-[44px] px-spacing-md py-spacing-xs h-auto text-[10px] font-bold uppercase tracking-[0.3em] transition-all relative group ${
-                      pathname === item.path ? 'text-primary font-medium' : 'text-muted-foreground/60 hover:text-primary'
-                    }`}
-                  >
-                    {item.label}
-                    {pathname === item.path && (
-                      <motion.div layoutId="nav-active" className="absolute -bottom-spacing-2xs left-spacing-2xs/2 -translate-x-1/2 w-spacing-2xs h-spacing-2xs rounded-premium-full bg-primary" />
-                    )}
-                  </Button>
+</Button>
                 ))}
               </nav>
             )}
