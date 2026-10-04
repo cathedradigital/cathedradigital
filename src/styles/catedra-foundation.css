@@ -1,195 +1,46 @@
-/**
- * CÁTEDRA DIGITAL — FUNDAÇÃO VISUAL
- * Camada única para ritmo, superfícies, navegação e identidade contextual.
- * Regra: componentes novos devem preferir estes tokens/classes em vez de
- * inventar espaçamentos, raios, sombras ou tamanhos de toque próprios.
- */
-
 :root {
+  --catedra-content-max: 72rem;
+  --catedra-reading-max: 46rem;
   --catedra-foundation-gutter: clamp(1rem, 3vw, 2rem);
+  --catedra-foundation-section-gap: clamp(2rem, 5vw, 4rem);
   --catedra-foundation-stack-5: 1.5rem;
+  --catedra-foundation-radius-sm: .625rem;
+  --catedra-foundation-radius-md: .875rem;
+  --catedra-foundation-radius-lg: 1.25rem;
   --catedra-foundation-control-min: 2.75rem;
   --catedra-foundation-motion-base: 220ms;
-
+  --catedra-atrium-accent: #9b7a3c; --catedra-atrium-soft: rgba(155,122,60,.10);
+  --catedra-estudar-accent: #2f6f8f; --catedra-estudar-soft: rgba(47,111,143,.12);
+  --catedra-rezar-accent: #76527f; --catedra-rezar-soft: rgba(118,82,127,.12);
+  --catedra-formar-accent: #a96d3c; --catedra-formar-soft: rgba(169,109,60,.12);
+  --catedra-pesquisar-accent: #3d6f58; --catedra-pesquisar-soft: rgba(61,111,88,.12);
+  --catedra-jornada-accent: #6655a3; --catedra-jornada-soft: rgba(102,85,163,.12);
 }
-
-[data-catedra-module="atrium"],
-[data-catedra-module="atrior"] {
-}
-
-[data-catedra-module="estudar"] {
-}
-
-[data-catedra-module="rezar"] {
-}
-
-[data-catedra-module="formar"],
-[data-catedra-module="formar-se"] {
-}
-
-[data-catedra-module="pesquisar"] {
-}
-
-[data-catedra-module="jornada"],
-[data-catedra-module="minha-jornada"] {
-}
-
-.catedra-page {
-  width: min(calc(100% - 2 * var(--catedra-foundation-gutter)), 72rem);
-  margin-inline: auto;
-}
-
-.catedra-stack > * + * {
-  margin-top: var(--catedra-foundation-stack-5);
-}
-
-.catedra-section {
-  padding-block: var(--catedra-section-gap);
-}
-
-.catedra-surface {
-  border: 1px solid hsl(var(--border));
-  border-radius: var(--catedra-radius-md);
-  background: hsl(var(--card));
-  color: hsl(var(--card-foreground));
-}
-
-.catedra-card {
-  border: 1px solid hsl(var(--border));
-  border-radius: var(--catedra-radius-md);
-  background: hsl(var(--card));
-  color: hsl(var(--card-foreground));
-  box-shadow: 0 1px 2px hsl(var(--foreground) / .04);
-  transition: border-color var(--catedra-foundation-motion-base) ease,
-              box-shadow var(--catedra-foundation-motion-base) ease,
-              transform var(--catedra-foundation-motion-base) ease;
-}
-
-.catedra-card:hover {
-  border-color: hsl(var(--muted-foreground) / .35);
-  box-shadow: 0 8px 24px hsl(var(--foreground) / .08);
-}
-
-.catedra-action {
-  min-width: var(--catedra-foundation-control-min);
-  min-height: var(--catedra-foundation-control-min);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: .5rem;
-  padding: .625rem 1rem;
-  border-radius: var(--catedra-radius-sm);
-}
-
-.catedra-icon-button {
-  width: var(--catedra-foundation-control-min);
-  height: var(--catedra-foundation-control-min);
-  min-width: var(--catedra-foundation-control-min);
-  min-height: var(--catedra-foundation-control-min);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 999px;
-}
-
-.catedra-module-shell {
-  min-height: 100%;
-  background: linear-gradient(
-    180deg,
-    color-mix(in srgb, var(--catedra-module-accent-soft, transparent) 70%, transparent),
-    transparent 18rem
-  );
-}
-
-.catedra-module-shell::before {
-  content: "";
-  display: block;
-  height: 2px;
-  background: var(--catedra-module-accent, transparent);
-  opacity: .72;
-}
-
-.catedra-module-kicker {
-  color: var(--catedra-module-accent, hsl(var(--primary)));
-}
-
-.catedra-module-surface {
-  border-color: color-mix(in srgb, var(--catedra-module-accent, hsl(var(--border))) 24%, hsl(var(--border)));
-  background:
-    linear-gradient(180deg, var(--catedra-module-accent-soft, transparent), transparent 12rem),
-    hsl(var(--card));
-}
-
-.catedra-module-action {
-  border: 1px solid color-mix(in srgb, var(--catedra-module-accent, hsl(var(--border))) 38%, transparent);
-  color: var(--catedra-module-accent, hsl(var(--foreground)));
-}
-
-.catedra-module-action:hover {
-  background: var(--catedra-module-accent-soft, hsl(var(--muted)));
-}
-
-.catedra-reading {
-  width: min(100%, var(--catedra-reading-max));
-  margin-inline: auto;
-}
-
-.catedra-reader p {
-  margin-block: .55rem;
-  line-height: 1.72;
-}
-
-.catedra-reader > :first-child {
-  margin-top: 0;
-}
-
-.catedra-reader > :last-child {
-  margin-bottom: 0;
-}
-
-.catedra-nav-row {
-  display: flex;
-  align-items: center;
-  gap: .5rem;
-  min-height: var(--catedra-foundation-control-min);
-}
-
-.catedra-divider {
-  height: 1px;
-  width: 100%;
-  background: hsl(var(--border));
-}
-
-:where(.catedra-action, .catedra-icon-button, .catedra-card, .catedra-module-action):focus-visible {
-  outline: 2px solid var(--catedra-module-accent, hsl(var(--ring)));
-  outline-offset: 2px;
-  box-shadow: 0 0 0 4px color-mix(in srgb, var(--catedra-module-accent, hsl(var(--ring))) 15%, transparent);
-}
-
-@media (max-width: 640px) {
-  :root {
-    --catedra-gutter: .75rem;
-    --catedra-section-gap: 2rem;
-  }
-
-  .catedra-section {
-    padding-block: var(--catedra-section-gap);
-  }
-
-  .catedra-reader {
-    padding-inline: .25rem;
-  }
-
-  .catedra-reader p {
-    margin-block: .4rem;
-    line-height: 1.68;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .catedra-card,
-  .catedra-action,
-  .catedra-module-action {
-    transition: none;
-  }
-}
+[data-catedra-module="atrium"], [data-catedra-module="atrior"] { --catedra-module-accent: var(--catedra-atrium-accent); --catedra-module-accent-soft: var(--catedra-atrium-soft); }
+[data-catedra-module="estudar"] { --catedra-module-accent: var(--catedra-estudar-accent); --catedra-module-accent-soft: var(--catedra-estudar-soft); }
+[data-catedra-module="rezar"] { --catedra-module-accent: var(--catedra-rezar-accent); --catedra-module-accent-soft: var(--catedra-rezar-soft); }
+[data-catedra-module="formar"], [data-catedra-module="formar-se"] { --catedra-module-accent: var(--catedra-formar-accent); --catedra-module-accent-soft: var(--catedra-formar-soft); }
+[data-catedra-module="pesquisar"] { --catedra-module-accent: var(--catedra-pesquisar-accent); --catedra-module-accent-soft: var(--catedra-pesquisar-soft); }
+[data-catedra-module="jornada"], [data-catedra-module="minha-jornada"] { --catedra-module-accent: var(--catedra-jornada-accent); --catedra-module-accent-soft: var(--catedra-jornada-soft); }
+.catedra-page { width: min(calc(100% - 2 * var(--catedra-foundation-gutter)), var(--catedra-content-max)); margin-inline: auto; }
+.catedra-stack > * + * { margin-top: var(--catedra-foundation-stack-5); }
+.catedra-section { padding-block: var(--catedra-foundation-section-gap); }
+.catedra-surface, .catedra-card { border: 1px solid hsl(var(--border)); border-radius: var(--catedra-foundation-radius-md); background: hsl(var(--card)); color: hsl(var(--card-foreground)); }
+.catedra-card { box-shadow: 0 1px 2px hsl(var(--foreground) / .04); transition: border-color var(--catedra-foundation-motion-base) ease, box-shadow var(--catedra-foundation-motion-base) ease; }
+.catedra-card:hover { border-color: hsl(var(--muted-foreground) / .35); box-shadow: 0 8px 24px hsl(var(--foreground) / .08); }
+.catedra-action { min-width: var(--catedra-foundation-control-min); min-height: var(--catedra-foundation-control-min); display: inline-flex; align-items: center; justify-content: center; gap: .5rem; padding: .625rem 1rem; border-radius: var(--catedra-foundation-radius-sm); }
+.catedra-icon-button { width: var(--catedra-foundation-control-min); height: var(--catedra-foundation-control-min); min-width: var(--catedra-foundation-control-min); min-height: var(--catedra-foundation-control-min); display: inline-flex; align-items: center; justify-content: center; border-radius: 999px; }
+.catedra-module-shell { min-height: 100%; background: linear-gradient(180deg, color-mix(in srgb, var(--catedra-module-accent-soft, transparent) 70%, transparent), transparent 18rem); }
+.catedra-module-shell::before { content: ""; display: block; height: 2px; background: var(--catedra-module-accent, transparent); opacity: .72; }
+.catedra-module-kicker { color: var(--catedra-module-accent, hsl(var(--primary))); }
+.catedra-module-surface { border-color: color-mix(in srgb, var(--catedra-module-accent, hsl(var(--border))) 24%, hsl(var(--border))); background: linear-gradient(180deg, var(--catedra-module-accent-soft, transparent), transparent 12rem), hsl(var(--card)); }
+.catedra-module-action { border: 1px solid color-mix(in srgb, var(--catedra-module-accent, hsl(var(--border))) 38%, transparent); color: var(--catedra-module-accent, hsl(var(--foreground))); }
+.catedra-module-action:hover { background: var(--catedra-module-accent-soft, hsl(var(--muted))); }
+.catedra-reading { width: min(100%, var(--catedra-reading-max)); margin-inline: auto; }
+.catedra-reader p { margin-block: .55rem; line-height: 1.72; }
+.catedra-reader > :first-child { margin-top: 0; } .catedra-reader > :last-child { margin-bottom: 0; }
+.catedra-nav-row { display: flex; align-items: center; gap: .5rem; min-height: var(--catedra-foundation-control-min); }
+.catedra-divider { height: 1px; width: 100%; background: hsl(var(--border)); }
+:where(.catedra-action, .catedra-icon-button, .catedra-card, .catedra-module-action):focus-visible { outline: 2px solid var(--catedra-module-accent, hsl(var(--ring))); outline-offset: 2px; box-shadow: 0 0 0 4px color-mix(in srgb, var(--catedra-module-accent, hsl(var(--ring))) 15%, transparent); }
+@media (max-width: 640px) { :root { --catedra-foundation-gutter: .75rem; --catedra-foundation-section-gap: 2rem; } .catedra-reader { padding-inline: .25rem; } .catedra-reader p { margin-block: .4rem; line-height: 1.68; } }
+@media (prefers-reduced-motion: reduce) { .catedra-card { transition: none; } }
