@@ -2,6 +2,7 @@ import { ArrowLeft, Search, MoreVertical } from "lucide-react";
 import { useNavigate, Link } from '@/lib/rr-compat';
 import { cn } from "@/lib/utils";
 import { EnvironmentModuleNav } from "@/components/mobile/EnvironmentModuleNav";
+import { useLang } from "@/hooks/useLang";
 import type { ReactNode } from "react";
 
 interface MobileTopBarProps {
@@ -36,6 +37,7 @@ export function MobileTopBar({
   className,
 }: MobileTopBarProps) {
   const navigate = useNavigate();
+  const { t } = useLang();
 
   const handleMenu = () => {
     if (onMenu) {
@@ -71,7 +73,7 @@ export function MobileTopBar({
         <button
           type="button"
           onClick={handleBack}
-          aria-label="Voltar"
+          aria-label={t('back')}
           className={cn(
             "inline-flex items-center justify-center rounded-full mr-1",
             "text-stitch-on-surface hover:bg-stitch-surface-container",
@@ -87,7 +89,7 @@ export function MobileTopBar({
         </button>
       )}
       <Link to="/" className="shrink-0">
-        <img src="/monograma-cathedra.svg" alt="Cathedra" className="h-8 w-8" />
+        <img src="/monograma-cathedra.svg" alt={t('brand_alt')} className="h-8 w-8" />
       </Link>
 
       <div className="min-w-0 flex-1">
@@ -111,7 +113,7 @@ export function MobileTopBar({
       <div className="flex shrink-0 items-center gap-1">
         <Link
           to="/buscar"
-          aria-label="Busca"
+          aria-label={t('search')}
           className="inline-flex h-11 w-11 items-center justify-center rounded-full text-stitch-on-surface hover:bg-stitch-surface-container"
         >
           <Search className="h-5 w-5" />
@@ -119,7 +121,7 @@ export function MobileTopBar({
         {actions && <div className="flex items-center">{actions}</div>}
         <button
           type="button"
-          aria-label="Configurações de leitura"
+          aria-label={t('reading_preferences')}
           onClick={() => window.dispatchEvent(new CustomEvent("open-reading-preferences"))}
           className="inline-flex h-11 w-11 items-center justify-center rounded-full text-stitch-on-surface hover:bg-stitch-surface-container focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stitch-secondary"
         >
@@ -127,7 +129,7 @@ export function MobileTopBar({
         </button>
         <button
           type="button"
-          aria-label="Abrir menu lateral"
+          aria-label={t('open_sidebar')}
           onClick={handleMenu}
           className="inline-flex h-11 w-11 items-center justify-center rounded-full text-stitch-on-surface hover:bg-stitch-surface-container disabled:opacity-40"
           disabled={false}
