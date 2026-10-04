@@ -663,13 +663,13 @@ const AppLayout: React.FC = () => {
 
               <Route path="/estudar" element={<Suspense fallback={<BibleSkeleton />}><EstudarHubPage /></Suspense>} />
               <Route path="/bible" element={<Suspense fallback={<BibleSkeleton />}><AtriumBibleReader /></Suspense>} />
-              <Route path="/bible-legacy" element={<Suspense fallback={<BibleSkeleton />}><BibleReadGate><Bible /></BibleReadGate></Suspense>} />
+              <Route path="/bible-legacy" element={<Navigate to="/bible" replace />} />
               <Route path="/biblia" element={<Navigate to="/bible" replace />} />
               <Route path="/catechism" element={<Suspense fallback={<CatechismSkeleton />}><AtriumCatechismReader /></Suspense>} />
               <Route path="/catechism/debug" element={<Suspense fallback={<LoadingFallback />}><AdminGuard><CatechismDebug /></AdminGuard></Suspense>} />
               <Route path="/catechism/integrity" element={<Suspense fallback={<LoadingFallback />}><AdminGuard><CatechismIntegrity /></AdminGuard></Suspense>} />
               <Route path="/catechism/verify" element={<Navigate to="/catechism/integrity" replace />} />
-              <Route path="/catechism-legacy" element={<Suspense fallback={<CatechismSkeleton />}><Catechism /></Suspense>} />
+              <Route path="/catechism-legacy" element={<Navigate to="/catechism" replace />} />
               <Route path="/catecismo" element={<Navigate to="/catechism" replace />} />
               {/* Alias legado: a área Igreja agora desemboca na Comunidade canônica, evitando retorno à Home. */}
               <Route path="/igreja" element={<Navigate to="/community" replace />} />
@@ -680,7 +680,7 @@ const AppLayout: React.FC = () => {
               <Route path="/magisterium-legacy/:id" element={<Suspense fallback={<LoadingFallback />}><MagisteriumViewer /></Suspense>} />
 
               <Route path="/buscar" element={<Suspense fallback={<LoadingFallback />}><AtriumBuscarPage /></Suspense>} />
-              <Route path="/buscar-legacy" element={<Suspense fallback={<LoadingFallback />}><GlobalSearchPage /></Suspense>} />
+              <Route path="/buscar-legacy" element={<Navigate to="/buscar" replace />} />
               <Route path="/logos" element={<Suspense fallback={<LoadingFallback />}><LogosPage /></Suspense>} />
 
               <Route path="/chat" element={<Navigate to="/logos" replace />} />
@@ -714,7 +714,7 @@ const AppLayout: React.FC = () => {
 
               {/* Biblioteca */}
               <Route path="/biblioteca" element={<Suspense fallback={<LoadingFallback />}><AtriumBibliotecaPage /></Suspense>} />
-              <Route path="/biblioteca-legacy" element={<Suspense fallback={<LoadingFallback />}><BibliotecaPage /></Suspense>} />
+              <Route path="/biblioteca-legacy" element={<Navigate to="/biblioteca" replace />} />
               {/* Rota canônica dos Padres/Doutores — redireciona para /santos/:id (mesma fonte de dados). */}
               <Route path="/biblioteca/padres/:slug" element={<Suspense fallback={<LoadingFallback />}><PadresRedirect /></Suspense>} />
 
