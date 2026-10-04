@@ -62,12 +62,14 @@ const ITEM_ICONS: Record<string, typeof Icons.Circle> = {
 };
 
 function findActiveGroup(pathname: string): ModuleNavGroup | undefined {
-  return MODULE_NAVIGATION.find((group) =>
-    group.items.some(
-      (item) =>
-        pathname === item.path ||
-        (item.path !== "/" && pathname.startsWith(item.path + "/")),
-    ),
+  return MODULE_NAVIGATION.find(
+    (group) =>
+      pathname === GROUP_ROOT_PATHS[group.key] ||
+      group.items.some(
+        (item) =>
+          pathname === item.path ||
+          (item.path !== "/" && pathname.startsWith(item.path + "/")),
+      ),
   );
 }
 
