@@ -22,7 +22,7 @@ export const ROUTE_META: Record<string, RouteMeta> = {
   '/docs': {
     title: 'Documentação Cathedra — Guias de Uso',
     description:
-      'Guias práticos para usar a Cathedra: leitura bíblica, oração, liturgia e estudo. Disponíveis em português, inglês, espanhol, italiano e latim.',
+      'Guias práticos para usar a Cathedra: leitura bíblica, oração, liturgia e estudo. Disponíveis em português, inglês, espanhol, italiano, latim, francês e alemão.',
   },
   '/docs/:slug': {
     title: 'Guia — Documentação Cathedra',
@@ -613,7 +613,7 @@ const DYNAMIC_PATTERNS: Array<{ test: RegExp; meta: RouteMeta }> = [
 ];
 
 /** Locales suportados pelo portal de documentação (prefixo de URL). */
-const LOCALE_PREFIX = /^\/(en|es|it|la)(?=\/|$)/;
+const LOCALE_PREFIX = /^\/(en|es|it|la|fr|de)(?=\/|$)/;
 
 export function resolveRouteMeta(pathname: string): RouteMeta | null {
   let clean = pathname.replace(/\/+$/, '') || '/';
