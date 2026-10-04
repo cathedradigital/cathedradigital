@@ -120,6 +120,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
   
   const sections = useMemo(() => {
     const iconMap: Record<string, any> = {
+      atrium: Icons.Home,
       bible: Icons.Bible,
       catechism: Icons.Catechism,
       magisterium: Icons.ScrollText,
@@ -152,18 +153,39 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
 
     const environmentSections = MODULE_NAVIGATION.map((group) => ({
       label: group.label,
-      items: group.items.map((item) => {
-        const Icon = iconMap[item.id] ?? Icons.Circle;
-        return {
-          label: item.label,
-          path: item.path,
-          description: item.description,
-          icon: <Icon size={19} />,
-        };
-      }),
+      items: group.items
+        .filter((item) => item.id !== 'profile' && item.id !== 'settings')
+        .map((item) => {
+          const Icon = iconMap[item.id] ?? Icons.Circle;
+          return {
+            label: item.label,
+            path: item.path,
+            description: item.description,
+            icon: <Icon size={19} />,
+          };
+        }),
     }));
 
     return [
+      {
+        label: 'Início',
+        items: [
+          {
+            label: 'Átrio',
+            path: '/',
+            description: 'Entrada principal da Cathedra.',
+            icon: <Icons.Home size={19} />,
+          },
+        ],
+      },
+      ...environmentSections,
+      {
+        label: 'Conta',
+        items: [
+          { label: 'Perfil', path: AppRoute.PROFILE, description: 'Identidade e preferências pessoais.', icon: <Icons.User size={19} /> },
+          { label: 'Configurações', path: AppRoute.SETTINGS, description: 'Preferências da conta e experiência.', icon: <Icons.Settings size={19} /> },
+        ],
+      },
       ...(isAdmin
         ? [{
             label: 'Administração',
@@ -172,7 +194,6 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
             ],
           }]
         : []),
-      ...environmentSections,
     ];
   }, [isAdmin, t]);
 
@@ -224,14 +245,14 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
               duration: settings.reduceAnimations ? 0.3 : 0.6, 
               ease: [0.16, 1, 0.3, 1] 
             }}
-            className="fixed top-spacing-0 left-0 bottom-spacing-0 w-[min(280px,85vw)] bg-background/98 backdrop-blur-2xl border-r border-primary/[0.02] flex flex-col p-spacing-lg z-[170] shadow-premium-none overflow-hidden admin-hide touch-none pt-[calc(1rem+env(safe-area-inset-top,0px))] pb-[calc(1rem+env(safe-area-inset-bottom,0px))] will-change-transform"
+            className="fixed top-0 left-0 bottom-0 w-[min(304px,88vw)] bg-background/98 backdrop-blur-2xl border-r border-primary/10 flex flex-col px-3 sm:px-4 z-[170] shadow-xl overflow-hidden admin-hide touch-none pt-[calc(0.75rem+env(safe-area-inset-top,0px))] pb-[calc(0.75rem+env(safe-area-inset-bottom,0px))] will-change-transform"
             role="dialog"
             aria-modal="true"
             aria-label={t('navigation_menu') || 'Menu de navegação'}
             tabIndex={-1}
           >
             {/* Mobile Header — Noir & Gold wordmark */}
-            <header className="flex items-center justify-between mb-4 pb-3" style={{ borderBottom: '1px solid rgba(201,168,76,0.25)' }}>
+            <header className="flex items-center justify-between gap-3 mb-3 pb-3" style={{ borderBottom: '1px solid rgba(201,168,76,0.25)' }}>
               <div 
                 className="flex items-baseline gap-2 cursor-pointer group outline-none" 
                 onClick={(e) => handleNav('/', e)}
@@ -284,12 +305,18 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
               </Button>
             </header>
 
-            <nav className="flex-1 space-y-spacing-xs overflow-y-auto pb-spacing-md no-scrollbar pr-spacing-2xs" role="navigation">
+            <nav className="flex-1 min-h-0 space-y-1 overflow-y-auto pb-3 no-scrollbar pr-1" role="navigation">
               {sections.map((section, sectionIdx) => (section.items.length > 0 && (
-                <Collapsible key={section.label} defaultOpen={sectionIdx < 3}>
+                <Collapsible
+                  key={section.label}
+                  defaultOpen={
+                    section.label === 'Início' ||
+                    section.items.some((item) => currentPath === item.path || (item.path !== '/' && currentPath.startsWith(item.path + '/')))
+                  }
+                >
                   <CollapsibleTrigger asChild>
-                    <button className="w-full min-h-11 flex items-center justify-between py-2 px-3 group/trigger hover:bg-[#c9a84c]/[0.05] rounded-none transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c9a84c]/40 focus-visible:ring-offset-2">
-                      <h3 style={{ color: 'var(--gold-text)', fontFamily: 'Inter, sans-serif', fontSize: '0.7rem', letterSpacing: '0.18em', textTransform: 'uppercase' }}>— {section.label}</h3>
+                    <button className="w-full min-h-10 flex items-center justify-between py-1.5 px-2.5 group/trigger hover:bg-[#c9a84c]/[0.05] rounded-lg transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c9a84c]/40 focus-visible:ring-offset-2">
+                      <h3 style={{ color: 'var(--gold-text)', fontFamily: 'Inter, sans-serif', fontSize: '0.72rem', letterSpacing: '0.12em', textTransform: 'uppercase' }}>— {section.label}</h3>
                       <Icons.ChevronDown className="w-3 h-3 transition-all group-data-[state=open]:rotate-180" strokeWidth={1.5} style={{ color: 'var(--gold-text)' }} />
                     </button>
                   </CollapsibleTrigger>
@@ -298,9 +325,9 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                       initial={{ opacity: 0, height: 0 }}
                       animate={{ opacity: 1, height: 'auto' }}
                       exit={{ opacity: 0, height: 0 }}
-                      className="overflow-hidden"
+                      className="overflow-hidden px-0.5"
                     >
-                      <ul className="space-y-spacing-2xs mt-spacing-2xs">
+                      <ul className="space-y-0.5 mt-0.5">
                         {section.items.map((item, idx) => {
                           const isActive = currentPath === item.path || (item.path !== '/' && currentPath.startsWith(item.path));
                           return (
@@ -312,7 +339,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                                 onTouchStart={() => prefetchRoute(item.path)}
                                  aria-current={isActive ? 'page' : undefined}
                                  aria-label={`${item.label}${isActive ? ', página atual' : ''}`}
-                                className={`w-full flex items-center justify-start gap-3 px-3 py-2 rounded-none text-xs font-medium transition-all duration-300 outline-none h-auto min-h-11 border
+                                className={`w-full flex items-center justify-start gap-3 px-3 py-2 rounded-lg text-xs font-medium transition-all duration-200 outline-none h-auto min-h-11 border
                                   ${isActive
                                     ? 'bg-[#c9a84c]/[0.08] text-[color:var(--gold-text)] border-[#c9a84c]/40'
                                     : 'text-foreground/70 hover:bg-[#c9a84c]/[0.04] hover:text-[color:var(--gold-text)] border-transparent hover:border-[#c9a84c]/20'}`}
@@ -320,7 +347,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                                   <span className={`transition-all duration-300 transform ${isActive ? 'opacity-100 scale-105' : 'opacity-80'}`}>
                                     {item.icon}
                                   </span>
-                                <span className="tracking-[0.18em] uppercase truncate">{item.label}</span>
+                                <span className="tracking-[0.06em] truncate text-[0.82rem]">{item.label}</span>
                                 {item.path === AppRoute.CACHE_MANAGER && cacheCount !== null && cacheCount > 0 && (
                                   <span className="ml-auto text-premium-xs font-bold px-2 py-0.5 rounded-none flex-shrink-0" style={{ background: '#c9a84c', color: '#0a0a0a' }}>
                                     {cacheCount}
@@ -339,13 +366,13 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
               )))}
             </nav>
 
-            <div className="pt-spacing-md mt-auto space-y-spacing-md">
+            <div className="shrink-0 border-t border-primary/10 pt-3 mt-2 space-y-3">
               <div className="flex flex-col gap-spacing-sm">
-                <div className="grid grid-cols-2 gap-spacing-xs">
+                <div className="grid grid-cols-2 gap-2">
                   <Button 
                     variant="ghost"
                     onClick={onToggleDark} 
-                    className="h-spacing-xl rounded-premium border border-primary/[0.01] dark:border-white/[0.01] bg-primary/[0.01] dark:bg-white/[0.01] flex items-center justify-center gap-spacing-xs transition-all hover:bg-primary/5 dark:hover:bg-white/5 group/btn"
+                    className="min-h-11 h-auto rounded-lg border border-primary/[0.01] dark:border-white/[0.01] bg-primary/[0.01] dark:bg-white/[0.01] flex items-center justify-center gap-spacing-xs transition-all hover:bg-primary/5 dark:hover:bg-white/5 group/btn"
                     aria-label={isDark ? "Modo Claro" : "Modo Escuro"}
                   >
                     {isDark ? <Icons.Sun className="w-spacing-sm h-spacing-sm text-primary/40 group-hover/btn:text-primary transition-colors" /> : <Icons.Moon className="w-spacing-sm h-spacing-sm opacity-30 group-hover/btn:opacity-60 transition-opacity" />}
@@ -382,7 +409,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                   </Button>
                 )}
 
-                <div className="mt-spacing-xs">
+                <div className="pt-1">
                   <label
                     htmlFor="cathedra-language"
                     className="mb-2 block text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground/70"
@@ -413,19 +440,19 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                     />
                   </div>
                 </div>
-                <div className="flex justify-center gap-spacing-lg py-spacing-xs mt-spacing-xs">
+                <div className="flex justify-center gap-5 py-1">
                   <a href="https://www.instagram.com/cathedradigital/" target="_blank" rel="noopener noreferrer" className="text-primary/70 hover:text-secondary transition-colors" aria-label="Siga-nos no Instagram"><Icons.Instagram size={14} /></a>
                   <a href="https://www.youtube.com/@cathedradigital" target="_blank" rel="noopener noreferrer" className="text-primary/70 hover:text-secondary transition-colors" aria-label="Inscreva-se no nosso canal do Youtube"><Icons.Youtube size={14} /></a>
                 </div>
               </div>
 
               {user ? (
-                <div className="p-spacing-md bg-primary/[0.01] dark:bg-white/[0.005] rounded-[2rem] border border-primary/[0.01] dark:border-white/[0.01]">
+                <div className="p-3 bg-primary/[0.025] dark:bg-white/[0.02] rounded-xl border border-primary/10">
                   <div 
                     onClick={() => handleNav(AppRoute.PROFILE)} 
                     className="flex items-center gap-spacing-sm cursor-pointer group"
                   >
-                    <div className="w-spacing-xl h-spacing-xl rounded-premium bg-primary/90 flex items-center justify-center text-primary-foreground font-bold shadow-premium-none group-hover:scale-105 transition-transform overflow-hidden">
+                    <div className="w-11 h-11 shrink-0 rounded-full bg-primary/90 flex items-center justify-center text-primary-foreground font-bold shadow-premium-none group-hover:scale-105 transition-transform overflow-hidden">
                       {avatarSrc ? (
                         <img src={avatarSrc} alt={user.name} className="w-full h-full object-cover" />
                       ) : (
@@ -438,11 +465,11 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                     </div>
                   </div>
                   
-                  <div className="flex items-center justify-between gap-spacing-xs mt-spacing-md">
+                  <div className="flex items-center justify-between gap-2 mt-3">
                     {!user.isPremium && (
                       <Button 
                         onClick={() => handleNav(AppRoute.UPGRADE)}
-                        className="flex-1 h-spacing-xl bg-primary/10 text-primary hover:bg-primary hover:text-primary-foreground rounded-premium-lg text-premium-xs font-bold uppercase tracking-widest transition-all"
+                        className="flex-1 min-h-11 h-auto bg-primary/10 text-primary hover:bg-primary hover:text-primary-foreground rounded-premium-lg text-premium-xs font-bold uppercase tracking-widest transition-all"
                       >
                         Upgrade
                       </Button>
@@ -459,7 +486,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                   </div>
                 </div>
               ) : (
-                <Button onClick={() => handleNav(AppRoute.LOGIN)} className="w-full h-spacing-2xl bg-primary/90 hover:bg-primary text-primary-foreground rounded-premium font-bold uppercase text-xs tracking-[0.2em] transition-all">
+                <Button onClick={() => handleNav(AppRoute.LOGIN)} className="w-full min-h-11 h-auto bg-primary/90 hover:bg-primary text-primary-foreground rounded-premium font-bold uppercase text-xs tracking-[0.2em] transition-all">
                   {t('enter')}
                 </Button>
               )}
