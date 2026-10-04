@@ -252,10 +252,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                       color: 'hsl(var(--foreground))',
                     }}
                   >
-                    CATHEDRA
-                  </span>
-                  <span style={{ color: 'var(--gold-text)', fontFamily: 'Inter, sans-serif', fontSize: '0.75rem', letterSpacing: '0.3em', textTransform: 'uppercase', fontWeight: 'bold' }}>
-                    Mosteiro Digital
+                    Cátedra Digital
                   </span>
                 </div>
               </div>
@@ -280,7 +277,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                 <Collapsible key={section.label} defaultOpen={sectionIdx < 3}>
                   <CollapsibleTrigger asChild>
                     <button className="w-full min-h-11 flex items-center justify-between py-2 px-3 group/trigger hover:bg-[#c9a84c]/[0.05] rounded-none transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c9a84c]/40 focus-visible:ring-offset-2">
-                      <h3 style={{ color: 'var(--gold-text)', fontFamily: 'Inter, sans-serif', fontSize: '9px', letterSpacing: '0.4em', textTransform: 'uppercase' }}>— {section.label}</h3>
+                      <h3 style={{ color: 'var(--gold-text)', fontFamily: 'Inter, sans-serif', fontSize: '0.7rem', letterSpacing: '0.18em', textTransform: 'uppercase' }}>— {section.label}</h3>
                       <Icons.ChevronDown className="w-3 h-3 transition-all group-data-[state=open]:rotate-180" strokeWidth={1.5} style={{ color: 'var(--gold-text)' }} />
                     </button>
                   </CollapsibleTrigger>
@@ -340,7 +337,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                     aria-label={isDark ? "Modo Claro" : "Modo Escuro"}
                   >
                     {isDark ? <Icons.Sun className="w-spacing-sm h-spacing-sm text-primary/40 group-hover/btn:text-primary transition-colors" /> : <Icons.Moon className="w-spacing-sm h-spacing-sm opacity-30 group-hover/btn:opacity-60 transition-opacity" />}
-                    <span className="text-[7.5px] font-black uppercase tracking-widest text-muted-foreground/40 group-hover/btn:text-muted-foreground/80 transition-colors">{isDark ? 'Claro' : 'Escuro'}</span>
+                    <span className="text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground/60 group-hover/btn:text-muted-foreground transition-colors">{isDark ? 'Claro' : 'Escuro'}</span>
                   </Button>
 
                   <Button 
@@ -354,7 +351,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                     }`}
                   >
                     <Icons.ShieldCheck className="w-spacing-sm h-spacing-sm" />
-                    <span className="text-[7.5px] font-black uppercase tracking-widest">A11y</span>
+                    <span className="text-xs font-semibold uppercase tracking-[0.12em]">A11y</span>
                   </Button>
                 </div>
 
@@ -376,7 +373,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                 <div className="mt-spacing-xs">
                   <label
                     htmlFor="cathedra-language"
-                    className="mb-2 block text-[8px] font-black uppercase tracking-[0.28em] text-muted-foreground/50"
+                    className="mb-2 block text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground/70"
                   >
                     Idioma
                   </label>
@@ -424,8 +421,8 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                       )}
                     </div>
                     <div className="flex-1 min-w-spacing-0">
-                      <p className="text-[10px] font-bold truncate text-primary">{user.name}</p>
-                      <p className="text-premium-xs uppercase text-primary/70 font-semibold tracking-[0.1em] mt-spacing-3xs">{user.isPremium ? 'Membro Premium' : 'Conta Gratuita'}</p>
+                      <p className="text-sm font-semibold truncate text-primary">{user.name}</p>
+                      <p className="text-xs uppercase text-primary/70 font-semibold tracking-[0.1em] mt-spacing-3xs">{user.isPremium ? 'Membro Premium' : 'Conta Gratuita'}</p>
                     </div>
                   </div>
                   
