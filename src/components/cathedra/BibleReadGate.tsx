@@ -5,7 +5,6 @@ import { useBibleReadGate } from '@/hooks/useBibleReadGate';
 import { useIsAdmin } from '@/hooks/useIsAdmin';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import BiblePartialCoverageBanner from './BiblePartialCoverageBanner';
 
 /**
  * Gate de leitura da rota /bible.
@@ -74,14 +73,9 @@ export const BibleReadGate: React.FC<{ children: React.ReactNode }> = ({ childre
     );
   }
 
-  // P0.2.0 — Contenção: banner de reconstrução sempre presente para
-  // não-admins até que a importação do cânon completo seja certificada.
-  return (
-    <>
-      <BiblePartialCoverageBanner />
-      {children}
-    </>
-  );
+  // Leitura normal: não exibir avisos de infraestrutura dentro do leitor.
+  // O estado de integridade continua sendo tratado pelo gate quando há erro real.
+  return <>{children}</>;
 };
 
 export default BibleReadGate;
