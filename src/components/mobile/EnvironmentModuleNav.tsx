@@ -3,6 +3,7 @@ import { ChevronRight } from 'lucide-react';
 import { Link, useLocation } from '@/lib/rr-compat';
 import { MODULE_NAVIGATION, getModuleByPath, type ModuleEnvironment } from '@/config/moduleNavigation';
 import { cn } from '@/lib/utils';
+import { useLang } from '@/hooks/useLang';
 
 const ROOT_PATHS: Partial<Record<ModuleEnvironment, string>> = {
   estudar: '/estudar',
@@ -19,6 +20,7 @@ function resolveEnvironment(pathname: string): ModuleEnvironment | undefined {
 
 export function EnvironmentModuleNav({ environmentKey }: { environmentKey?: ModuleEnvironment }) {
   const { pathname } = useLocation();
+  const { t } = useLang();
   const key = environmentKey ?? resolveEnvironment(pathname);
   const group = key ? MODULE_NAVIGATION.find((item) => item.key === key) : undefined;
   const activeItem = getModuleByPath(pathname);
@@ -32,7 +34,7 @@ export function EnvironmentModuleNav({ environmentKey }: { environmentKey?: Modu
 
   return (
     <nav
-      aria-label={`Módulos de ${group.label}`}
+      aria-label={`${t(group.labelKey)} modules`}
       className="sticky z-30 border-b border-stitch-outline-variant/45 bg-stitch-surface/95 backdrop-blur-md md:hidden"
       style={{ top: `calc(var(--stitch-mobile-topbar-h) + var(--stitch-mobile-safe-top))` }}
     >
@@ -54,7 +56,7 @@ export function EnvironmentModuleNav({ environmentKey }: { environmentKey?: Modu
                   : 'border-stitch-outline-variant/45 bg-stitch-surface-container-lowest text-stitch-on-surface-variant hover:border-stitch-secondary/60 hover:text-stitch-primary',
               )}
             >
-              <span>{item.label}</span>
+              <span>{t(item.labelKey)}</span>
               {active && <ChevronRight className="h-3 w-3" aria-hidden="true" />}
             </Link>
           );
