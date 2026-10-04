@@ -16,6 +16,8 @@ export type ModuleEnvironment =
 export interface ModuleNavItem {
   id: string;
   label: string;
+  /** Chave de tradução global para o rótulo do item. */
+  labelKey: string;
   path: string;
   description: string;
 }
