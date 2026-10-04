@@ -61,8 +61,8 @@ export const READER_MODULES: readonly ReaderModule[] = [
   {
     id: 'bible',
     label: 'Bíblia',
-    entry: 'src/components/cathedra/BibleReader.tsx',
-    sampleRoutes: ['/bible?book=joao&chapter=1'],
+    entry: 'src/components/cathedra/Bible.tsx',
+    sampleRoutes: ['/bible?book=Jo&ch=1'],
     targetScore: 85,
     status: 'certified',
     blocking: false,

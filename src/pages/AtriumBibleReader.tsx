@@ -10,7 +10,7 @@
 import React, { lazy, Suspense, useEffect, useMemo, useState } from 'react';
 import { Helmet } from '@/lib/helmet-compat';
 import { Link, useSearchParams } from '@/lib/rr-compat';
-import { BookOpen, Search as SearchIcon, ArrowRight, LayoutGrid, Bookmark, List, Type, Focus, Share2 } from 'lucide-react';
+import { BookOpen, Search as SearchIcon, ArrowRight, LayoutGrid } from 'lucide-react';
 import { BIBLE_DATA, type BibleBook } from '@/data/bible-books';
 import { buildBibleUrl } from '@/lib/bibleUrl';
 import { AppRoute } from '@/types';
@@ -22,7 +22,6 @@ import {
   setBibleLastRead,
 } from '@/components/mobile/BiblePickerSheet';
 import { EditorialHero } from '@/components/editorial/harmony';
-import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
 
 const Bible = lazy(() => import('@/components/cathedra/Bible'));
 
@@ -73,10 +72,6 @@ const AtriumBibleReader: React.FC = () => {
   // same reader state and the picker always reflects the current passage.
   const chapterStr = sp.get('ch') ?? sp.get('chapter') ?? sp.get('c');
   const currentChapter = chapterStr ? Number(chapterStr) : null;
-  const currentSelection = abbr && Number.isInteger(currentChapter) && currentChapter > 0
-    ? { abbr, chapter: currentChapter }
-    : null;
-
   // Persistência: sempre que abrir com book+chapter, salvar como "último lido".
   useEffect(() => {
     if (!abbr || !chapterStr) return;
@@ -131,18 +126,6 @@ const BibleLanding: React.FC = () => {
         <meta property="og:url" content="https://www.cathedradigital.com.br/bible" />
         <meta property="og:type" content="website" />
       </Helmet>
-
-      <MobileTopBar
-        kicker="Cathedra"
-        title="Bíblia"
-        transparent
-        actions={
-          <>
-            <Link to="/bible?view=search" aria-label="Pesquisar na Bíblia" data-testid="bible-toolbar-search-mobile"><SearchIcon className="h-5 w-5" /></Link>
-            <button type="button" onClick={() => setPickerOpen(true)} aria-label="Escolher livro e capítulo" className="inline-flex h-12 w-12 items-center justify-center rounded-full text-stitch-on-surface hover:bg-stitch-surface-container"><LayoutGrid className="h-5 w-5" /></button>
-          </>
-        }
-      />
 
       <section className="estudar-module-landing mx-auto w-full max-w-[1120px] px-5 pb-[calc(var(--stitch-mobile-bottomnav-h)+var(--stitch-mobile-safe-bottom)+2rem)] pt-6 md:px-16 md:pt-14 md:pb-16 animate-fade-in">
         {/* CAT-SP4 · Onda B.1 — Hero universal (Harmony) — irmão do Catecismo */}

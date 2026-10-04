@@ -1525,11 +1525,6 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
 
             </header>
 
-            {/* Bible Home Experience */}
-            <div className="space-y-spacing-md mb-spacing-2xl">
-              <BibleHome onSelectBook={selectBook} searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
-            </div>
-
             <div className="flex gap-spacing-md mb-spacing-2xl">
               <button 
                 onClick={handleExportData}
