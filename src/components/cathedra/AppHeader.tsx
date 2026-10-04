@@ -80,7 +80,7 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
           <button
             type="button"
             className="flex items-baseline gap-spacing-sm cursor-pointer group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20 focus-visible:ring-offset-2 rounded-premium-full"
-            aria-label="Ir para a página inicial" 
+            aria-label={t('home')} 
             onClick={(e) => {
               if (!isLegitimateClick(e)) return;
               navigate('/');
@@ -177,8 +177,8 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
                       size="icon"
                       onClick={(e) => isLegitimateClick(e) && navigate(AppRoute.PROFILE)}
                       className="w-[44px] h-[44px] md:w-spacing-2xl md:h-spacing-2xl rounded-premium-full border-primary/10 hover:border-primary/20 overflow-hidden bg-primary/[0.03] tap-premium"
-                      aria-label={user.name ? `Perfil de ${user.name}` : 'Abrir perfil'}
-                      title={user.name ? `Perfil de ${user.name}` : 'Abrir perfil'}
+                      aria-label={user.name ? `${t('profile_open')}: ${user.name}` : t('profile_open')}
+                      title={user.name ? `${t('profile_open')}: ${user.name}` : t('profile_open')}
                     >
                       {avatarSrc ? (
                         <img src={avatarSrc} alt="" className="w-full h-full object-cover" />
