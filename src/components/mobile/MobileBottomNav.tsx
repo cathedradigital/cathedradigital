@@ -53,7 +53,9 @@ export function MobileBottomNav({
   if (hidden) return null;
 
   return (
-    <nav
+    <>
+      <SmartModuleMenu />
+      <nav
       aria-label="Navegação principal"
       className={cn(
         "fixed bottom-0 left-0 right-0 z-40 md:hidden",
@@ -113,7 +115,8 @@ export function MobileBottomNav({
           </NavLink>
         );
       })}
-    </nav>
+      </nav>
+    </>
   );
 }
 
