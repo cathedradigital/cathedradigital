@@ -98,6 +98,27 @@ test('Bíblia: reload → back → forward preservam o deep-link do versículo',
   await expect(page.locator('#verse-1')).toBeVisible();
 });
 
+test('Bíblia: seletor de livro e capítulo permanece sincronizado com a URL canônica', async ({ page }) => {
+  await login(page, '/bible?book=Jo&ch=3');
+  await expect(page.locator('#verse-1')).toBeVisible();
+
+  await page.getByRole('button', { name: 'Escolher livro e capítulo' }).click();
+  await expect(page.getByText('João', { exact: true })).toBeVisible();
+
+  await page.getByRole('button', { name: 'Trocar livro' }).click();
+  await page.getByRole('button', { name: 'Gênesis', exact: true }).click();
+  await page.getByRole('button', { name: '1', exact: true }).click();
+
+  await expect(page).toHaveURL(/\/bible\?book=Gn&ch=1/);
+  await expect(page.locator('#verse-1')).toBeVisible();
+});
+
+test('Bíblia: deep-link por referência abre o capítulo e o versículo correto', async ({ page }) => {
+  await login(page, '/bible?ref=Jo%203%3A16');
+  await expect(page.locator('#verse-16')).toBeVisible();
+  expect(page.url()).toContain('/bible?ref=');
+});
+
 test.describe('responsive critical flow', () => {
   test.use({ viewport: { width: 390, height: 844 } });
   test('Bíblia abre sem overflow horizontal no mobile', async ({ page }) => {
