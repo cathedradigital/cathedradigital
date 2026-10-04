@@ -16,8 +16,6 @@ import { buildBibleUrl } from '@/lib/bibleUrl';
 import { AppRoute } from '@/types';
 import BibleReadGate from '@/components/cathedra/BibleReadGate';
 import { BibleSkeleton } from '@/components/cathedra/RouteSkeletons';
-import { ReadingSidebar } from '@/components/reader/ReadingSidebar';
-import { MobileTopBar } from '@/components/mobile/MobileTopBar';
 import {
   BiblePickerSheet,
   getBibleLastRead,
@@ -65,74 +63,10 @@ function findBookByAbbr(abbr: string | null): BibleBook | undefined {
   return undefined;
 }
 
-const BibleReadingChrome: React.FC<{
-  bookAbbr: string;
-  chapter: string;
-  onPick: () => void;
-}> = ({ bookAbbr, chapter, onPick }) => {
-  const { settings, updateSettings } = useReadingSettings();
-  const href = (view: string) => buildBibleUrl({ abbr: bookAbbr, chapter, extra: { view } });
-
-  const share = async () => {
-    const url = typeof window !== 'undefined' ? window.location.href : '';
-    if (!url) return;
-    try {
-      if (navigator.share) await navigator.share({ title: 'Bíblia — Cátedra', url });
-      else if (navigator.clipboard) await navigator.clipboard.writeText(url);
-    } catch {
-      /* cancelado pelo usuário */
-    }
-  };
-
-  return (
-    <ReadingSidebar
-      title="Bíblia"
-      items={[
-        { id: 'back', label: 'Voltar para a Bíblia', icon: <BookOpen className="h-5 w-5" />, onSelect: () => window.history.back() },
-        { id: 'picker', label: 'Escolher livro e capítulo', icon: <LayoutGrid className="h-5 w-5" />, onSelect: onPick },
-        { id: 'search', label: 'Pesquisar na Bíblia', icon: <SearchIcon className="h-5 w-5" />, onSelect: () => { window.location.href = href('search'); } },
-        { id: 'bookmarks', label: 'Marcadores', icon: <Bookmark className="h-5 w-5" />, onSelect: () => { window.location.href = href('bookmarks'); } },
-        { id: 'notes', label: 'Anotações', icon: <List className="h-5 w-5" />, onSelect: () => { window.location.href = href('notes'); } },
-      ]}
-    >
-      <div className="mt-3 border-t border-stitch-outline-variant/20 pt-3">
-        <p className="px-3 pb-2 font-stitch-body text-[9px] font-bold uppercase tracking-[0.16em] text-stitch-secondary">Leitura</p>
-        <button
-          type="button"
-          onClick={() => updateSettings({ fontSize: settings.fontSize === 'extra-large' ? 'small' : settings.fontSize === 'small' ? 'medium' : settings.fontSize === 'medium' ? 'large' : 'extra-large' })}
-          className="flex min-h-11 w-full items-center gap-3 rounded-xl px-3 text-left text-xs text-stitch-on-surface-variant hover:bg-stitch-secondary/10"
-          aria-label={`Tamanho da fonte: ${settings.fontSize}`}
-        >
-          <Type className="h-5 w-5" />
-          <span>Tamanho da fonte</span>
-        </button>
-        <button
-          type="button"
-          onClick={() => updateSettings({ immersiveMode: !settings.immersiveMode })}
-          className="flex min-h-11 w-full items-center gap-3 rounded-xl px-3 text-left text-xs text-stitch-on-surface-variant hover:bg-stitch-secondary/10"
-          aria-pressed={settings.immersiveMode}
-        >
-          <Focus className="h-5 w-5" />
-          <span>{settings.immersiveMode ? 'Sair do modo foco' : 'Modo foco'}</span>
-        </button>
-        <button
-          type="button"
-          onClick={share}
-          className="flex min-h-11 w-full items-center gap-3 rounded-xl px-3 text-left text-xs text-stitch-on-surface-variant hover:bg-stitch-secondary/10"
-        >
-          <Share2 className="h-5 w-5" />
-          <span>Compartilhar</span>
-        </button>
-      </div>
-    </ReadingSidebar>
-  );
-};
-
 const AtriumBibleReader: React.FC = () => {
   const [sp] = useSearchParams();
   const navigate = useNavigate();
   const hasReaderParams = Boolean(sp.get('book') || sp.get('view') || sp.get('ref'));
-  const [pickerOpen, setPickerOpen] = useState(false);
 
   const abbr = sp.get('book');
   // `ch` is the canonical Cátedra Bible URL parameter. Accept the legacy
@@ -159,25 +93,9 @@ const AtriumBibleReader: React.FC = () => {
     return (
       <div data-catedra-module="bible">
         <Suspense fallback={<BibleSkeleton />}>
-        <MobileTopBar
-          kicker="Cathedra · Bíblia"
-          title={book ? `${book.name} ${chapterStr ?? ''}`.trim() : 'Bíblia'}
-          showBack
-          onBack={() => navigate(AppRoute.BIBLE)}
-        />
-        <BibleReadingChrome
-          bookAbbr={abbr ?? ''}
-          chapter={chapterStr ?? '1'}
-          onPick={() => setPickerOpen(true)}
-        />
         <BibleReadGate>
           <Bible />
         </BibleReadGate>
-        <BiblePickerSheet
-          open={pickerOpen}
-          onOpenChange={setPickerOpen}
-          initialSelection={currentSelection}
-        />
         </Suspense>
       </div>
     );
