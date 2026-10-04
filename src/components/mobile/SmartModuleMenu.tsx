@@ -69,7 +69,12 @@ function findActiveGroup(pathname: string): ModuleNavGroup | undefined {
  * Mobile-only: fica recolhida como um pequeno botão flutuante e abre uma
  * gaveta lateral com os ambientes e destinos canônicos.
  */
-export interface SmartModuleMenuProps {\n  /** Mantém o botão acima da barra inferior quando ela está visível. */\n  bottomNavVisible?: boolean;\n}\n\nexport function SmartModuleMenu({ bottomNavVisible = true }: SmartModuleMenuProps) {
+export interface SmartModuleMenuProps {
+  /** Mantém o botão acima da barra inferior quando ela está visível. */
+  bottomNavVisible?: boolean;
+}
+
+export function SmartModuleMenu({ bottomNavVisible = true }: SmartModuleMenuProps) {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const [open, setOpen] = useState(false);
@@ -99,8 +104,9 @@ export interface SmartModuleMenuProps {\n  /** Mantém o botão acima da barra i
           "focus-visible:ring-offset-2 focus-visible:ring-offset-stitch-background",
         )}
         style={{
-          bottom:
-            "calc(var(--stitch-mobile-bottomnav-h) + var(--stitch-mobile-safe-bottom) + 0.75rem)",
+          bottom: bottomNavVisible
+            ? "calc(var(--stitch-mobile-bottomnav-h) + var(--stitch-mobile-safe-bottom) + 0.75rem)"
+            : "calc(var(--stitch-mobile-safe-bottom) + 1rem)",
         }}
       >
         <Icons.LayoutGrid
