@@ -92,8 +92,8 @@ export function useBibleNavigation(): UseBibleNavigation {
   const selectedBook = useMemo(() => findBook(effectiveBookParam), [effectiveBookParam]);
 
   const selectedChapter = useMemo(() => {
-    if (!chapterParam) return 1;
-    const n = parseInt(chapterParam, 10);
+    if (!effectiveChapterParam) return 1;
+    const n = parseInt(effectiveChapterParam, 10);
     return Number.isFinite(n) && n > 0 ? n : 1;
   }, [effectiveChapterParam]);
 
