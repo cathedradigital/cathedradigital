@@ -169,7 +169,7 @@ const EstudarHubPage: React.FC = () => {
                     )}
                     <p className="text-[11px] text-stitch-on-surface-variant">
                       {studyContext.nexus.length > 0
-                        ? studyContext.nexus.length + ' {t('published_connections')}'
+                        ? studyContext.nexus.length + ' ' + t('published_connections')
                         : t('no_published_connections')}
                     </p>
                   </div>
@@ -247,7 +247,7 @@ const EstudarHubPage: React.FC = () => {
                   <div>
                     <h3 className="font-stitch-display text-[17px] leading-tight text-stitch-primary md:text-[19px]">{item.label}</h3>
                     <p className="mt-1 font-stitch-body text-[12px] leading-5 text-stitch-on-surface-variant">
-                      {item.description}
+                      {t(`source_desc_${item.id}`)}
                     </p>
                   </div>
                 </Link>
@@ -262,10 +262,10 @@ const EstudarHubPage: React.FC = () => {
               <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-stitch-secondary" aria-hidden="true" />
               <div>
                 <h2 id="estudar-principio" className="font-stitch-display text-[18px] text-stitch-primary md:text-[20px]">
-                  Ler é só o começo
+                  {t('study_principle_title')}
                 </h2>
                 <p className="mt-1.5 max-w-3xl font-stitch-body text-[12px] leading-5 text-stitch-on-surface-variant md:text-[13px]">
-                  O estudo ganha sentido quando você consegue compreender, relacionar, refletir e continuar. As conexões são apresentadas a partir do contexto que você está lendo.
+                  {t('study_principle_body')}
                 </p>
               </div>
             </div>
