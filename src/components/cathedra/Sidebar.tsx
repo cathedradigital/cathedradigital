@@ -13,6 +13,7 @@ import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { useIsAdmin } from '@/hooks/useIsAdmin';
 import { MODULE_NAVIGATION } from '@/config/moduleNavigation';
+import { SUPPORTED_LOCALES } from '@/lib/i18n/locales';
 
 
 
@@ -373,7 +374,9 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                 )}
 
                 <div className="flex flex-wrap gap-spacing-2xs justify-center mt-spacing-xs">
-                  {(['pt', 'en', 'es', 'la'] as const).map((l) => (
+                  {SUPPORTED_LOCALES.map((locale) => {
+                    const l = locale.code;
+                    return (
                     <button
                       key={l}
                       onClick={() => (window as any).dispatchEvent(new CustomEvent('change-lang', { detail: l }))}
@@ -385,7 +388,8 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                     >
                       {l}
                     </button>
-                  ))}
+                    );
+                  })}
                 </div>
 
                 <div className="flex justify-center gap-spacing-lg py-spacing-xs mt-spacing-xs">
