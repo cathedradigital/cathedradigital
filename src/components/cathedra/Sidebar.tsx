@@ -171,7 +171,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
         label: t('nav.inicio'),
         items: [
           {
-            label: t('nav.inicio'),
+            label: t('home'),
             path: '/',
             description: 'Entrada principal da Cathedra.',
             icon: <Icons.Home size={19} />,
@@ -190,7 +190,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
         ? [{
             label: t('admin'),
             items: [
-              { label: 'Painel Admin', path: '/admin', description: 'Operação protegida da plataforma.', icon: <Icons.Lock size={19} /> },
+              { label: t('admin_panel'), path: '/admin', description: 'Operação protegida da plataforma.', icon: <Icons.Lock size={19} /> },
             ],
           }]
         : []),
@@ -248,7 +248,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
             className="fixed top-0 left-0 bottom-0 w-[min(304px,88vw)] bg-background/98 backdrop-blur-2xl border-r border-primary/10 flex flex-col px-3 sm:px-4 z-[170] shadow-xl overflow-hidden admin-hide touch-none pt-[calc(0.75rem+env(safe-area-inset-top,0px))] pb-[calc(0.75rem+env(safe-area-inset-bottom,0px))] will-change-transform"
             role="dialog"
             aria-modal="true"
-            aria-label={t('navigation_menu') || 'Menu de navegação'}
+            aria-label={t('navigation')}
             tabIndex={-1}
           >
             {/* Mobile Header — Noir & Gold wordmark */}
@@ -299,7 +299,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                 style={{ border: '1px solid rgba(201,168,76,0.35)', color: 'var(--gold-text)' }}
                 onMouseEnter={(e) => { e.currentTarget.style.background = '#c9a84c'; e.currentTarget.style.color = '#0a0a0a'; }}
                 onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#c9a84c'; }}
-                aria-label="Fechar menu"
+                aria-label={t('close_menu')}
               >
                 <Icons.X className="w-4 h-4" />
               </Button>
@@ -373,10 +373,10 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                     variant="ghost"
                     onClick={onToggleDark} 
                     className="min-h-11 h-auto rounded-lg border border-primary/[0.01] dark:border-white/[0.01] bg-primary/[0.01] dark:bg-white/[0.01] flex items-center justify-center gap-spacing-xs transition-all hover:bg-primary/5 dark:hover:bg-white/5 group/btn"
-                    aria-label={isDark ? "Modo Claro" : "Modo Escuro"}
+                    aria-label={isDark ? t('light') : t('dark')}
                   >
                     {isDark ? <Icons.Sun className="w-spacing-sm h-spacing-sm text-primary/40 group-hover/btn:text-primary transition-colors" /> : <Icons.Moon className="w-spacing-sm h-spacing-sm opacity-30 group-hover/btn:opacity-60 transition-opacity" />}
-                    <span className="text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground/60 group-hover/btn:text-muted-foreground transition-colors">{isDark ? 'Claro' : 'Escuro'}</span>
+                    <span className="text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground/60 group-hover/btn:text-muted-foreground transition-colors">{isDark ? t('light') : t('dark')}</span>
                   </Button>
 
                   <Button 
@@ -390,7 +390,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                     }`}
                   >
                     <Icons.ShieldCheck className="w-spacing-sm h-spacing-sm" />
-                    <span className="text-xs font-semibold uppercase tracking-[0.12em]">A11y</span>
+                    <span className="text-xs font-semibold uppercase tracking-[0.12em]">{t('accessibility')}</span>
                   </Button>
                 </div>
 
@@ -405,7 +405,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                     }`}
                   >
                     {isSpeaking ? <Icons.MessageCircle className="w-spacing-sm h-spacing-sm animate-pulse" /> : <Icons.Volume2 className="w-spacing-sm h-spacing-sm" />}
-                    <span className="text-xs font-semibold uppercase tracking-[0.12em]">{isSpeaking ? 'Parar' : 'Ouvir'}</span>
+                    <span className="text-xs font-semibold uppercase tracking-[0.12em]">{isSpeaking ? t('stop') : t('listen')}</span>
                   </Button>
                 )}
 
@@ -426,7 +426,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                         )
                       }
                       className="w-full min-h-11 appearance-none rounded-premium-lg border border-primary/10 bg-background/70 px-3 pr-9 text-xs font-semibold text-foreground outline-none transition-colors focus:border-primary/30 focus:ring-2 focus:ring-primary/10"
-                      aria-label="Selecionar idioma"
+                      aria-label={t('language_select')}
                     >
                       {SUPPORTED_LOCALES.map((locale) => (
                         <option key={locale.code} value={locale.code}>
@@ -461,7 +461,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                     </div>
                     <div className="flex-1 min-w-spacing-0">
                       <p className="text-sm font-semibold truncate text-primary">{user.name}</p>
-                      <p className="text-xs uppercase text-primary/70 font-semibold tracking-[0.1em] mt-spacing-3xs">{user.isPremium ? 'Membro Premium' : 'Conta Gratuita'}</p>
+                      <p className="text-xs uppercase text-primary/70 font-semibold tracking-[0.1em] mt-spacing-3xs">{user.isPremium ? t('member_premium') : t('free_account')}</p>
                     </div>
                   </div>
                   
@@ -478,7 +478,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                       variant="ghost"
                       size="icon"
                       onClick={onSignOut}
-                      aria-label="Sair da conta"
+                      aria-label={t('sign_out')}
                       className="h-spacing-xl w-spacing-xl rounded-premium-lg text-primary/70 hover:text-destructive hover:bg-destructive/10 transition-colors"
                     >
                       <Icons.LogOut className="w-spacing-sm h-spacing-sm" aria-hidden="true" />
