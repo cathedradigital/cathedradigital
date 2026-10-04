@@ -183,7 +183,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
         label: t('nav.conta'),
         items: [
           { label: t('nav.perfil'), path: AppRoute.PROFILE, description: t('profile'), icon: <Icons.User size={19} /> },
-          { label: t('nav.configuracoes'), path: AppRoute.SETTINGS, description: t('settings_description'), icon: <Icons.Settings size={19} /> },
+          { label: t('nav.configuracoes'), path: '/settings', description: t('settings_description'), icon: <Icons.Settings size={19} /> },
         ],
       },
       ...(isAdmin
