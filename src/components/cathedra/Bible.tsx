@@ -2230,7 +2230,7 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
         }
         onOpenNexus={() => {
           setIsHighlightMenuOpen(false);
-          setIsNexusContribOpen(true);
+          setIsGraphOpen(true);
         }}
       />
 
