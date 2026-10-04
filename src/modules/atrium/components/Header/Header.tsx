@@ -5,46 +5,19 @@ import { useAtriumProfile, useLiturgyToday } from '../../hooks';
 const Header: React.FC = () => {
   const user = useAtriumProfile();
   const liturgy = useLiturgyToday();
-
+  const today = liturgy ? `Hoje · ${liturgy.season} · ${liturgy.weekday}${liturgy.saintOfDay ? ` · ${liturgy.saintOfDay.name}` : ''}` : 'Hoje';
   return (
-    <header
-      data-atrium-block="HEADER"
-      className="pt-6 pb-2 flex flex-col gap-2"
-    >
-      <div className="flex items-center justify-between">
-        <div className="flex items-baseline gap-2">
-          <span className="text-lg font-serif tracking-tight">Cathedra</span>
-          <span className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground">2.0</span>
-        </div>
-        <div className="flex items-center gap-1 text-muted-foreground">
-          <button
-            aria-label="Buscar"
-            className="inline-flex items-center justify-center min-h-11 min-w-11 rounded-md hover:bg-muted transition"
-          >
-            <Search aria-hidden="true" className="w-4 h-4" />
-          </button>
-          <button
-            aria-label="Retomar"
-            className="inline-flex items-center justify-center min-h-11 min-w-11 rounded-md hover:bg-muted transition"
-          >
-            <RotateCcw aria-hidden="true" className="w-4 h-4" />
-          </button>
-          <button
-            aria-label="Perfil"
-            className="inline-flex items-center justify-center min-h-11 min-w-11 rounded-md hover:bg-muted transition"
-          >
-            <User aria-hidden="true" className="w-4 h-4" />
-          </button>
-        </div>
+    <header data-atrium-block="HEADER" className="catedra-surface mt-4 flex items-center justify-between gap-4 px-4 py-3 sm:px-5">
+      <div className="min-w-0">
+        <p className="text-base font-serif font-semibold tracking-tight">Cátedra Digital</p>
+        <p className="mt-1 truncate text-xs text-muted-foreground">{today}{user.displayName && <> · <span className="text-foreground/80">{user.displayName}</span></>}</p>
       </div>
-      <p className="text-xs text-muted-foreground">
-        {liturgy
-          ? <>Hoje · {liturgy.season} · {liturgy.weekday}{liturgy.saintOfDay ? ` · ${liturgy.saintOfDay.name}` : ''}</>
-          : <>Hoje</>}
-        {user.displayName && <> · <span className="text-foreground/80">{user.displayName}</span></>}
-      </p>
+      <div className="flex shrink-0 items-center gap-1">
+        <button type="button" aria-label="Buscar" className="catedra-icon-button text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"><Search aria-hidden="true" className="h-4 w-4" /></button>
+        <button type="button" aria-label="Retomar" className="catedra-icon-button text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"><RotateCcw aria-hidden="true" className="h-4 w-4" /></button>
+        <button type="button" aria-label="Perfil" className="catedra-icon-button text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"><User aria-hidden="true" className="h-4 w-4" /></button>
+      </div>
     </header>
   );
 };
-
 export default Header;
