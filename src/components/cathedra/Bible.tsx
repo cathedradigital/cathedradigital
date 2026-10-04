@@ -1796,38 +1796,19 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
             >
               {isLoading ? <BibleSkeleton /> : (
                 <article className="space-y-spacing-lg">
-                  <header className="flex flex-col items-center mb-spacing-2xl opacity-30">
-                    <Icons.Logo className="w-10 h-10 mb-spacing-lg" />
-                    <h3 className="text-2xl font-display font-light uppercase tracking-[0.4em] italic">{selectedBook.name} {selectedChapter}</h3>
+                  <header className="mb-spacing-lg text-center">
+                    <h3 className="font-display text-xl sm:text-2xl font-medium tracking-tight text-primary/75">
+                      {selectedBook.name} {selectedChapter}
+                    </h3>
+                    {selectedBook.context && (
+                      <p className="mt-1 mx-auto max-w-2xl text-xs font-serif italic text-primary/45 leading-relaxed">
+                        {selectedBook.context}
+                      </p>
+                    )}
                   </header>
 
-                  {/* Context Banner */}
-                  <motion.div 
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="p-spacing-sm sm:p-spacing-md bg-secondary/5 rounded-2xl border border-secondary/10 mb-spacing-lg"
-                  >
-                    <div className="flex items-center gap-spacing-sm mb-spacing-xs">
-                      <Icons.Info className="w-4 h-4 text-secondary/40" />
-                      <span className="text-[10px] font-black uppercase tracking-widest text-secondary/80">Contexto do Livro</span>
-                    </div>
-                    <p className="text-xs font-serif italic text-primary/60 leading-relaxed">
-                      {selectedBook.context || selectedBook.description || "Este livro faz parte do Cânone Sagrado das Escrituras."}
-                    </p>
-                  </motion.div>
-
-                  {/* Hidratação de conexões — não bloqueia leitura */}
-                  {connectionsLoading && verses.length > 0 && (
-                    <div
-                      className="flex items-center gap-spacing-xs -mt-spacing-md mb-spacing-md text-[10px] font-black uppercase tracking-widest text-secondary/60"
-                      role="status"
-                      aria-live="polite"
-                    >
-                      <span className="inline-block w-1.5 h-1.5 rounded-full bg-secondary/60 animate-pulse" />
-                      <span>Carregando referências cruzadas…</span>
-                      <span className="flex-1 h-px bg-secondary/10" />
-                    </div>
-                  )}
+                  {/* As conexões Nexus são carregadas em segundo plano e não criam
+                      um bloco de infraestrutura na leitura. */}
 
                   <div className="space-y-spacing-md editorial-column">
                     {verses.length === 0 && !isLoading ? (
@@ -2110,8 +2091,6 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
                   )}
                 </div>
 
-                  {/* Nexus: conexões reais aparecem apenas de forma contextual,
-                      ancoradas aos versículos que possuem relação publicada. */}
                   {/* Vertical Navigation Buttons */}
                   <footer className="pt-12 pb-20 space-y-spacing-md">
                     <div className="flex gap-spacing-md">
