@@ -929,13 +929,13 @@ const AppLayout: React.FC = () => {
                       <Route path="/bible-abbr-validate" element={<BibleAbbrValidatePage />} />
                       <Route path="/bible-perf" element={<BiblePerfDashboard />} />
                       <Route path="/admin/bible-cache-timeseries" element={<BibleCacheTimeseriesDashboard />} />
-                     <Route path="/bible-perf-breakdown" element={<BiblePerfBreakdown />} />
+                     <Route path="/bible-perf-breakdown" element={<Navigate to="/admin/bible-perf-breakdown" replace />} />
                      <Route path="/admin/bible-perf-breakdown" element={<BiblePerfBreakdown />} />
-                     <Route path="/bible-sources" element={<BibleSourcesAudit />} />
+                     <Route path="/bible-sources" element={<Navigate to="/admin/bible-sources" replace />} />
                       <Route path="/admin/bible-sources" element={<BibleSourcesAudit />} />
                       <Route path="/admin/bible-diagnostic-runs" element={<BibleDiagnosticRuns />} />
                       <Route path="/admin/bible-import" element={<BibleImportAdmin />} />
-                      <Route path="/bible-import" element={<BibleImportAdmin />} />
+                      <Route path="/bible-import" element={<Navigate to="/admin/bible-import" replace />} />
                       <Route path="/admin/bible-import-missing" element={<BibleImportMissing />} />
                       <Route path="/admin/bible-import-jobs" element={<BibleImportJobs />} />
                       <Route path="/admin/bible-import-jobs/:id" element={<BibleImportJobDetail />} />

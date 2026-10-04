@@ -8,7 +8,7 @@ const routeImports: Record<string, () => Promise<any>> = {
   '/biblioteca': () => import('@/components/cathedra/BibliotecaPage'),
   '/community': () => import('@/components/cathedra/CommunityPage'),
   '/profile': () => import('@/components/cathedra/ProfilePage'),
-  '/bible': () => import('@/components/cathedra/Bible'),
+  '/bible': () => import('@/pages/AtriumBibleReader'),
   '/catechism': () => import('@/components/cathedra/Catechism'),
   '/santos': () => import('@/components/cathedra/Saints'),
   '/liturgia': () => import('@/components/cathedra/LiturgiaPage'),
