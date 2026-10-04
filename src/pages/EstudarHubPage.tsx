@@ -170,7 +170,7 @@ const EstudarHubPage: React.FC = () => {
                     <p className="text-[11px] text-stitch-on-surface-variant">
                       {studyContext.nexus.length > 0
                         ? studyContext.nexus.length + ' {t('published_connections')}'
-                        : '{t('no_published_connections')}'}
+                        : t('no_published_connections')}
                     </p>
                   </div>
                 ) : (
@@ -196,7 +196,7 @@ const EstudarHubPage: React.FC = () => {
               {journeys.map((journey) => (
                 <Link key={journey.id} to={`/jornadas/${journey.id}`} className="group flex min-h-[158px] flex-col justify-between rounded-2xl border border-stitch-secondary/25 bg-stitch-secondary-container/25 p-4 transition-all hover:-translate-y-0.5 hover:border-stitch-secondary hover:shadow-lg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-stitch-secondary md:p-5">
                   <div className="flex items-start justify-between gap-4"><span className="flex h-9 w-9 items-center justify-center rounded-full bg-stitch-surface-container-lowest text-stitch-secondary"><Compass className="h-4 w-4" aria-hidden="true" /></span><ArrowRight className="h-4 w-4 text-stitch-on-surface-variant transition-transform group-hover:translate-x-1" aria-hidden="true" /></div>
-                  <div><h3 className="font-stitch-display text-[19px] leading-tight text-stitch-primary">{journey.title}</h3><p className="mt-1.5 line-clamp-2 font-stitch-body text-[12px] leading-5 text-stitch-on-surface-variant">{journey.description ?? '{t('continue_formation')}'}</p></div>
+                  <div><h3 className="font-stitch-display text-[19px] leading-tight text-stitch-primary">{journey.title}</h3><p className="mt-1.5 line-clamp-2 font-stitch-body text-[12px] leading-5 text-stitch-on-surface-variant">{journey.description ?? t('continue_formation')}</p></div>
                 </Link>
               ))}
             </div>
@@ -212,7 +212,7 @@ const EstudarHubPage: React.FC = () => {
               <div>
                 <h2 id="estudar-conexoes" className="font-stitch-display text-[18px] text-stitch-primary md:text-[20px]">{t('source_connections')}</h2>
                 <p className="mt-1.5 max-w-3xl font-stitch-body text-[12px] leading-5 text-stitch-on-surface-variant md:text-[13px]">
-                  {nexusCount === null ? '{t('checking_nexus')}' : nexusCount > 0 ? `${nexusCount} {t('published_relations')}` : '{t('no_published_relations')}'}
+                  {nexusCount === null ? t('checking_nexus') : nexusCount > 0 ? `${nexusCount} ${t('published_relations')}` : t('no_published_relations')}
                 </p>
               </div>
             </div>
