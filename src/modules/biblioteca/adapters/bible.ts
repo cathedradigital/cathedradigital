@@ -1,15 +1,15 @@
-        slug: abbr,
-        summary: chapters ? `${chapters} capítulo${chapters > 1 ? 's' : ''}` : undefined,
-        category: testament,
-        href: `/bible?book=${encodeURIComponent(abbr)}&ch=1`,
-      };
-    });
-  },
+import { supabase } from '@/lib/db';
+import type { LibraryAdapter, LibraryItem } from '../types';
 
-  resolveHref({ slug }) {
-    return `/bible?book=${encodeURIComponent(slug)}&ch=1`;
-  },
-};
+/**
+ * Bíblia — para a Biblioteca listamos LIVROS (não capítulos). Cada livro é
+ * um card cujo `href` aponta para o capítulo 1 do livro.
+ */
+export const bibleAdapter: LibraryAdapter = {
+  module: 'bible',
+  label: 'Bíblia',
+
+  async list({ limit = 73, offset = 0 } = {}) {
     const { data, error } = await supabase
       .from('bible_books')
       .select('id, abbrev, name, testament, chapters_count')
