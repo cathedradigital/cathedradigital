@@ -11,4 +11,3 @@ export { MobileTopBar } from "./MobileTopBar";
 export { MobileBottomNav, type MobileNavItem } from "./MobileBottomNav";
 export { MobileSheet } from "./MobileSheet";
 export { MobileReaderChrome } from "./MobileReaderChrome";
-export { SmartModuleMenu } from "./SmartModuleMenu";

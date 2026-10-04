@@ -3,7 +3,6 @@ import { Icons } from "@/constants";
 import { cn } from "@/lib/utils";
 import type { LucideIcon } from "lucide-react";
 import { MODULE_NAVIGATION } from "@/config/moduleNavigation";
-import { SmartModuleMenu } from "./SmartModuleMenu";
 
 interface MobileNavItem {
   to: string;
@@ -52,7 +51,6 @@ export function MobileBottomNav({
 
   return (
     <>
-      <SmartModuleMenu bottomNavVisible={!hidden} />
       {hidden ? null : (
       <nav
       aria-label="Navegação principal"
