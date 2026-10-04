@@ -69,7 +69,7 @@ function findActiveGroup(pathname: string): ModuleNavGroup | undefined {
  * Mobile-only: fica recolhida como um pequeno botão flutuante e abre uma
  * gaveta lateral com os ambientes e destinos canônicos.
  */
-export function SmartModuleMenu() {
+export interface SmartModuleMenuProps {\n  /** Mantém o botão acima da barra inferior quando ela está visível. */\n  bottomNavVisible?: boolean;\n}\n\nexport function SmartModuleMenu({ bottomNavVisible = true }: SmartModuleMenuProps) {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const [open, setOpen] = useState(false);
