@@ -726,32 +726,17 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
       supabase
         .from('nexus_relations')
         .select('id, relation_type, source_kind, source_ref, target_kind, target_ref, note, confidence, status')
-        .eq('status', 'published')
-    ).then((res) => {
-      biblePerf.mark(runId, 'connections:end');
-      return res;
-    });
+      }
 
-    // Hidrata conexões assim que chegarem, sem bloquear o render do texto
-    connectionsPromise
-      .then(({ data: dbConnections }) => {
-        if (dbConnections && dbConnections.length > 0) {
-          setDynamicConnections((prev) => {
-            const newConns: Record<string, any[]> = { ...prev };
-            dbConnections.forEach((conn: any) => {
-              const source = conn.source_kind === 'bible_verse' ? readBibleRef(conn.source_ref) : null;
-              const target = conn.target_kind === 'bible_verse' ? readBibleRef(conn.target_ref) : null;
-              const bible = source ?? target;
-              if (!bible?.verse) return;
-              const key = `${bible.abbr}-${bible.chapter}-${bible.verse}`;
-              const mapped = nexusConnectionFromRow(conn, key);
-              if (!newConns[key]) newConns[key] = [];
-              if (!newConns[key].some((item) => item.id === mapped.id && item.type === mapped.type)) newConns[key].push(mapped);
-            });
-            return newConns;
-          });
-        }
-      })
+      // RENDER do texto imediatamente — conexões hidratam depois sem bloquear
+      setVerses(loadedVerses.map((v: any) => ({ ...v, chapter })));
+      biblePerf.mark(runId, 'render');
+      const sourceLabel = `API de Produção (${data.source || 'Edge'}) - Vernáculo PT Garantido`;
+      setSourceInfo(sourceLabel);
+
+      // Update Diagnostic Logs
+      setDiagnosticLogs((prev) => [
+        {
       .catch(() => {
         // silenciar — conexões são best-effort
       })
@@ -1803,13 +1788,13 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
                   aria-label={highContrast ? 'Desativar alto contraste das bolhas do Nexus' : 'Ativar alto contraste das bolhas do Nexus'}
                   title="Alto contraste do Nexus"
                   data-testid="nexus-contrast-toggle"
-                  className={cn(
-                    'p-spacing-xs rounded-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2',
-                    highContrast ? 'text-secondary bg-secondary/15' : 'text-primary/50 hover:text-primary',
-                  )}
-                >
-                  <Icons.Contrast className="w-5 h-5" />
-                </button>
+                            setIsHighlightMenuOpen(true);
+                          }}
+                          className={cn(
+                            "w-full flex items-start gap-2 sm:gap-3 group relative transition-all duration-200 cursor-pointer active:bg-primary/[0.05] px-2 py-0.5 sm:px-3 sm:py-1 rounded-lg border border-transparent hover:border-primary/5",
+                            highlights[`${selectedBook.abbr}-${selectedChapter}-${v.number}`] === 'yellow' && "bg-yellow-200/40",
+                            highlights[`${selectedBook.abbr}-${selectedChapter}-${v.number}`] === 'green' && "bg-green-200/40",
+                            highlights[`${selectedBook.abbr}-${selectedChapter}-${v.number}`] === 'blue' && "bg-blue-200/40",
                 <ReadingSettingsPopover />
               </div>
             </header>
@@ -1842,13 +1827,13 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
                       {selectedBook.context || selectedBook.description || "Este livro faz parte do Cânone Sagrado das Escrituras."}
                     </p>
                   </motion.div>
-
-                  {/* Hidratação de conexões — não bloqueia leitura */}
-                  {connectionsLoading && verses.length > 0 && (
-                    <div
-                      className="flex items-center gap-spacing-xs -mt-spacing-md mb-spacing-md text-[10px] font-black uppercase tracking-widest text-secondary/60"
-                      role="status"
-                      aria-live="polite"
+                            <p 
+                              data-testid={`verse-text-${v.number}`}
+                              className={cn(
+                                "leading-[1.55] font-serif text-primary/85 tracking-tight relative flex-1 min-w-0",
+                                settings.fontSize === 'small' && "text-[16px]",
+                                settings.fontSize === 'medium' && "text-[19px]",
+                                settings.fontSize === 'large' && "text-[22px]",
                     >
                       <span className="inline-block w-1.5 h-1.5 rounded-full bg-secondary/60 animate-pulse" />
                       <span>Carregando referências cruzadas…</span>
@@ -2036,38 +2021,49 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
                                       >
                                         <div className="space-y-spacing-xs">
                                           <div className="flex items-start gap-spacing-xs">
-                                            <span className={cn("mt-0.5 shrink-0", meta.tone)}>{meta.icon}</span>
-                                            <div className="min-w-0">
-                                              <p className={cn("text-premium-xs font-bold uppercase tracking-[0.2em]", meta.tone)}>{meta.kicker}</p>
-                                              <h4 id={`nexus-popover-title-${v.number}-${idx}`} className="text-sm font-display font-bold text-primary truncate">{conn.label}</h4>
-                                            </div>
-                                          </div>
-                                          <p id={`nexus-popover-desc-${v.number}-${idx}`} className="text-xs font-serif italic text-primary/70 leading-relaxed">
-                                            {conn.summary}
-                                          </p>
-                                          {(conn.type === 'cross_ref' || conn.type === 'bible') && (
-                                            <div className="rounded-xl border border-secondary/20 bg-secondary/[0.04] p-spacing-sm">
-                                              <p className="text-premium-xs font-bold uppercase tracking-[0.16em] text-secondary">
-                                                Texto bíblico da referência
-                                              </p>
-                                              {referenceVerseLoading ? (
-                                                <p className="mt-1 text-xs text-primary/50">Carregando versículo…</p>
-                                              ) : referenceVerse ? (
-                                                <>
-                                                  <p className="mt-1 text-xs font-bold text-primary">{referenceVerse.reference}</p>
-                                                  <p className="mt-1 text-sm font-serif leading-relaxed text-primary/80">{referenceVerse.text}</p>
-                                                </>
-                                              ) : (
-                                                <p className="mt-1 text-xs text-primary/50">Texto da referência indisponível.</p>
-                                              )}
-                                            </div>
-                                          )}
+                  )}
+                </div>
 
-                                          {conn.type === 'catechism' && (
-                                            <div className="pt-spacing-sm border-t border-primary/5">
-                                              <CatechismParagraphPreview paragraphId={conn.id} />
-                                            </div>
-                                          )}
+                  {/* Nexus — estado vazio do capítulo, separado visualmente da leitura */}
+                  {!isLoading && verses.length > 0 && !chapterHasConnections && (
+                    <section
+                      data-testid="nexus-empty-state"
+                      aria-labelledby="nexus-empty-title"
+                      className="mt-6 rounded-xl border border-primary/10 bg-primary/[0.025] p-4 sm:p-5"
+                    >
+                      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                        <div className="flex min-w-0 items-start gap-3">
+                          <div className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-secondary/10">
+                            <Icons.Sparkles className="h-4 w-4 text-secondary" aria-hidden="true" />
+                          </div>
+                          <div className="min-w-0">
+                            <div className="flex flex-wrap items-center gap-2">
+                              <h3 id="nexus-empty-title" className="font-display text-[15px] text-primary">
+                                Nexus do capítulo
+                              </h3>
+                              <span className="rounded-full border border-primary/10 px-2 py-0.5 text-[9px] font-black uppercase tracking-[0.14em] text-primary/45">
+                                Ainda não catalogado
+                              </span>
+                            </div>
+                            <p className="mt-1 max-w-2xl text-[13px] leading-relaxed text-primary/60">
+                              {selectedBook.name} {selectedChapter} ainda não possui conexões catalogadas com o Catecismo, Magistério ou outras referências da Escritura.
+                            </p>
+                          </div>
+                        </div>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => setIsNexusContribOpen(true)}
+                          data-testid="nexus-contribute-btn"
+                          className="shrink-0 rounded-lg text-[10px] font-black uppercase tracking-widest"
+                        >
+                          <Icons.Plus className="mr-2 h-4 w-4 text-secondary" aria-hidden="true" />
+                          Sugerir conexão
+                        </Button>
+                      </div>
+                    </section>
+                  )}
+
                                           <div className="pt-spacing-sm border-t border-primary/5">
                                             <Button
                                               variant="outline"
