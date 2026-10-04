@@ -13,8 +13,7 @@ import { cn } from '@/lib/utils';
  *  - Admin sempre atravessa.
  *  - status='error' (falha real da diagnose) → manutenção total.
  *  - blocked por dados incompletos (missing_book / missing_chapter) →
- *    permite navegação nos livros existentes com banner fixo de cobertura
- *    parcial (BiblePartialCoverageBanner). Não mascara a rota.
+ *    mantém a leitura disponível sem inserir avisos de infraestrutura na tela.
  *  - Sem bloqueio → passa direto.
  */
 export const BibleReadGate: React.FC<{ children: React.ReactNode }> = ({ children }) => {
