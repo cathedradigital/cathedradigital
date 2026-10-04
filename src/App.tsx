@@ -110,7 +110,6 @@ const persister = createSyncStoragePersister({
 });
 
 // Lazy loaded routes
-const Bible = lazy(() => import('./components/cathedra/Bible'));
 // Sprint CQ-1.2 · Feature flag: quando VITE_MODULES_CATEQUESE=1, o import
 // resolve o barrel do módulo Catequese; caso contrário mantém o shim legado.
 // Ambos apontam para o mesmo componente após CQ-1.2 (shims reexportam o módulo).
