@@ -243,16 +243,28 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                 <div className="flex flex-col leading-none gap-1">
                   <span
                     role="text"
-                    aria-label="Cathedra Digital"
+                    aria-label="Cathedra Digital — Mosteiro Digital"
                     style={{
                       fontFamily: "'Playfair Display', serif",
                       fontWeight: 600,
                       fontSize: '1.25rem',
-                      letterSpacing: '0.1em',
+                      letterSpacing: '0.08em',
                       color: 'hsl(var(--foreground))',
                     }}
                   >
-                    Cátedra Digital
+                    Cathedra Digital
+                  </span>
+                  <span
+                    style={{
+                      fontFamily: 'Inter, sans-serif',
+                      fontSize: '0.68rem',
+                      fontWeight: 500,
+                      letterSpacing: '0.18em',
+                      textTransform: 'uppercase',
+                      color: 'hsl(var(--muted-foreground))',
+                    }}
+                  >
+                    Mosteiro Digital
                   </span>
                 </div>
               </div>
@@ -366,7 +378,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                     }`}
                   >
                     {isSpeaking ? <Icons.MessageCircle className="w-spacing-sm h-spacing-sm animate-pulse" /> : <Icons.Volume2 className="w-spacing-sm h-spacing-sm" />}
-                    <span className="text-[7.5px] font-black uppercase tracking-widest">{isSpeaking ? 'Parar' : 'Ouvir'}</span>
+                    <span className="text-xs font-semibold uppercase tracking-[0.12em]">{isSpeaking ? 'Parar' : 'Ouvir'}</span>
                   </Button>
                 )}
 
