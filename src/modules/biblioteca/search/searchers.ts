@@ -1,10 +1,10 @@
-/**
- * Sprint B.1 · Onda B.1.2 — Searchers por módulo.
- *
- * Cada função consulta a tabela publicada com `ilike` em campos textuais
- * relevantes e retorna dados brutos + shape mínimo. O ranking (score,
- * doutrina, ICE, nexus) é aplicado em `searchLibrary.ts`. Nada de RPCs
- * novos: reaproveita as tabelas já governadas pelo Editorial Engine.
+    id: `book:${r.abbrev}`,
+    title: r.name ?? r.abbrev ?? '',
+    subtitle: r.testament ?? undefined,
+    href: `/bible?book=${encodeURIComponent(String(r.abbrev ?? ''))}&ch=1`,
+  }));
+}
+
  */
 import { supabase } from '@/lib/db';
 import type { LibraryIce, LibraryModule } from '../types';

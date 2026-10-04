@@ -1,14 +1,14 @@
-import React from 'react';
-import { Link } from '@/lib/rr-compat';
-import { ShieldAlert } from 'lucide-react';
-import { useBibleReadGate } from '@/hooks/useBibleReadGate';
-import { useIsAdmin } from '@/hooks/useIsAdmin';
-
-/**
- * Banner fixo no topo do /bible quando o gate está bloqueando por dados
- * incompletos (missing_book / missing_chapter). Em vez de esconder a rota
- * inteira, informa cobertura parcial e mantém a navegação para os livros
- * que já existem no banco. Admin não vê o banner (já vê o painel).
+      <div className="container mx-auto flex items-start gap-3 px-4 py-2 text-sm text-amber-900 dark:text-amber-100">
+        <ShieldAlert className="mt-0.5 h-4 w-4 shrink-0" aria-hidden />
+        <div className="flex-1">
+          <h2 className="font-medium">Índice bíblico com cobertura parcial</h2>
+          <p className="text-xs opacity-90">
+            Alguns capítulos ainda não foram indexados localmente. A leitura dos
+            capítulos disponíveis continua normal; recursos que dependem do índice
+            podem ficar indisponíveis até a cobertura ser completada.
+          </p>
+        </div>
+        <Link
  */
 export const BiblePartialCoverageBanner: React.FC = () => {
   const { isLoading } = useBibleReadGate();

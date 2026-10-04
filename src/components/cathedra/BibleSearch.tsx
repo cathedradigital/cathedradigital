@@ -1,16 +1,86 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Icons } from '@/constants';
-import { cn } from '@/lib/utils';
-import { useEffect } from 'react';
+    setIsLoading(true);
+    setSelectedIndex(null);
+    try {
+      let nextResults: SearchResult[] = [];
+      let searchError: unknown = null;
 
+      try {
+        const { data, error } = await supabase.functions.invoke('bible-search', {
+          body: { query: normalizedQuery },
+        });
+        if (error) throw error;
+        nextResults = Array.isArray(data?.results)
+          ? data.results.map((result: SearchResult) => ({ ...result, isBible: true }))
+          : [];
+      } catch (error) {
+        searchError = error;
+        console.error('[BibleSearch] search failed', error);
+      }
+
+      if (nextResults.length === 0) {
+        const reference = parseBibleReference(normalizedQuery);
+        if (reference) {
+          try {
+            const { data, error } = await supabase.functions.invoke('bible-text', {
+              body: { abbrev: reference.book.abbr, chapter: reference.chapter },
+            });
+            if (error) throw error;
+            const verse = Array.isArray(data?.verses)
+              ? data.verses.find((item: { number?: number }) => Number(item.number) === reference.verse)
+              : null;
+            if (verse) {
+              nextResults = [{
+                bookId: reference.book.abbr,
+                bookAbbrev: reference.book.abbr,
+                bookName: reference.book.name,
+                chapter: reference.chapter,
+                verse: reference.verse,
+                text: verse.text,
+                score: 100,
+                relevance: 'Referência exata',
+                isBible: true,
+              }];
+            }
+          } catch (fallbackError) {
+            console.error('[BibleSearch] reference fallback failed', fallbackError);
+          }
+        }
+      }
+
+      setResults(nextResults);
+
+      if (nextResults.length === 0) {
+        if (searchError) {
+          toast.error('Não foi possível pesquisar a Bíblia agora.', {
+            description: 'A leitura continua disponível; tente novamente em alguns instantes.',
+          });
+        } else {
+          toast.info('Nenhum resultado encontrado para esta pesquisa.');
+        }
+      }
+    } catch (error) {
+      console.error('[BibleSearch] search failed', error);
+  });
+  const book = exactAbbrev ?? books.find((candidate) => {
+    const name = normalizeReference(candidate.name);
+    return name === normalizedBook || name.replace(/\\s+/g, '') === compactBook;
+  });
+  return book ? { book, chapter: Number(chapterRaw), verse: Number(verseRaw) } : null;
+}
+
+const BibleSearch: React.FC<BibleSearchProps> = ({ onSelectResult, onClose, initialTheme }) => {
+  const [query, setQuery] = useState(initialTheme || '');
 
 import { supabase } from '@/lib/db';
-import { toast } from 'sonner';
 
-interface SearchResult {
-  bookId: string;
-  bookAbbrev: string;
+            <div className="space-y-8">
+              {results.map((result, idx) => (
+                <motion.button
+                  type="button"
+                  data-testid={`bible-search-result-${result.bookAbbrev}-${result.chapter}-${result.verse}`}
+                  key={`${result.bookAbbrev}-${result.chapter}-${result.verse}-${idx}`}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
   bookName: string;
   chapter: number;
   verse: number;
