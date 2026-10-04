@@ -9,7 +9,7 @@
 
 import React, { lazy, Suspense, useEffect, useMemo, useState } from 'react';
 import { Helmet } from '@/lib/helmet-compat';
-import { Link, useNavigate, useSearchParams } from '@/lib/rr-compat';
+import { Link, useSearchParams } from '@/lib/rr-compat';
 import { BookOpen, Search as SearchIcon, ArrowRight, LayoutGrid, Bookmark, List, Type, Focus, Share2 } from 'lucide-react';
 import { BIBLE_DATA, type BibleBook } from '@/data/bible-books';
 import { buildBibleUrl } from '@/lib/bibleUrl';
@@ -65,7 +65,6 @@ function findBookByAbbr(abbr: string | null): BibleBook | undefined {
 
 const AtriumBibleReader: React.FC = () => {
   const [sp] = useSearchParams();
-  const navigate = useNavigate();
   const hasReaderParams = Boolean(sp.get('book') || sp.get('view') || sp.get('ref'));
 
   const abbr = sp.get('book');
@@ -87,9 +86,6 @@ const AtriumBibleReader: React.FC = () => {
   }, [abbr, chapterStr]);
 
   if (hasReaderParams) {
-    const book = findBookByAbbr(abbr);
-    const title = book ? book.name : 'Sagrada Escritura';
-    const subtitle = chapterStr ? `Capítulo ${chapterStr}` : undefined;
     return (
       <div data-catedra-module="bible">
         <Suspense fallback={<BibleSkeleton />}>
@@ -170,7 +166,7 @@ const BibleLanding: React.FC = () => {
             <button
               type="button"
               onClick={() => setPickerOpen(true)}
-              className="hidden md:inline-flex min-h-[44px] items-center gap-2 rounded-full border border-stitch-secondary/40 bg-stitch-surface-container-lowest px-4 py-2 font-stitch-body text-[12px] font-bold uppercase tracking-[0.15em] text-stitch-primary transition-colors hover:border-stitch-secondary hover:bg-stitch-secondary-container"
+              className="inline-flex min-h-[44px] items-center gap-2 rounded-full border border-stitch-secondary/40 bg-stitch-surface-container-lowest px-4 py-2 font-stitch-body text-[12px] font-bold uppercase tracking-[0.15em] text-stitch-primary transition-colors hover:border-stitch-secondary hover:bg-stitch-secondary-container"
             >
               <LayoutGrid className="h-4 w-4 text-stitch-secondary" />
               Escolher livro
@@ -227,27 +223,6 @@ const BibleLanding: React.FC = () => {
         </section>
 
 
-        <section className="mt-8 rounded-2xl border border-stitch-outline-variant/30 bg-stitch-surface-container-lowest p-4 md:p-5">
-          <p className="font-stitch-body text-[9px] font-bold uppercase tracking-[0.16em] text-stitch-secondary">Evangelhos sinóticos</p>
-          <h2 className="mt-1 font-stitch-display text-[21px] text-stitch-primary">Mateus · Marcos · Lucas</h2>
-          <p className="mt-1 max-w-2xl font-stitch-body text-[13px] leading-relaxed text-stitch-on-surface-variant">
-            Três testemunhos do mesmo mistério de Cristo. A Cátedra poderá ligar episódios paralelos, referências e diferenças de redação sem misturar o texto bíblico com comentários.
-          </p>
-          <div className="mt-4 grid grid-cols-3 gap-1.5">
-            {[
-              { abbr: 'Mt', name: 'Mateus', note: 'Evangelho segundo Mateus' },
-              { abbr: 'Mc', name: 'Marcos', note: 'Evangelho segundo Marcos' },
-              { abbr: 'Lc', name: 'Lucas', note: 'Evangelho segundo Lucas' },
-            ].map((gospel) => (
-              <Link key={gospel.abbr} to={buildBibleUrl({ abbr: gospel.abbr, chapter: 1 })}
-                className="group rounded-lg border border-stitch-outline-variant/30 bg-stitch-surface p-2 transition-colors hover:border-stitch-secondary">
-                <span className="font-stitch-display text-[22px] text-stitch-secondary">{gospel.abbr}</span>
-                <span className="mt-1 block font-stitch-body text-[13px] font-semibold text-stitch-primary">{gospel.name}</span>
-                <span className="mt-0.5 block text-[10px] leading-snug text-stitch-on-surface-variant">{gospel.note}</span>
-              </Link>
-            ))}
-          </div>
-        </section>
 
         {/* Categorias e livros */}
         <section className="pt-10 space-y-14">
