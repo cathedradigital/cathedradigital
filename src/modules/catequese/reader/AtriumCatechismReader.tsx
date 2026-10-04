@@ -7,15 +7,13 @@
 
 import React, { lazy, Suspense } from 'react';
 import { Helmet } from '@/lib/helmet-compat';
-import { Link, useSearchParams, useNavigate } from '@/lib/rr-compat';
-import { BookMarked, ArrowRight, Search as SearchIcon, Home, Type, Focus } from 'lucide-react';
+import { Link, useSearchParams } from '@/lib/rr-compat';
+import { BookMarked, ArrowRight, Search as SearchIcon } from 'lucide-react';
 import { CIC_SECTIONS } from '@/data/catechism';
 import { AppRoute } from '@/types';
 import { CatechismSkeleton } from '@/components/cathedra/RouteSkeletons';
 import { MobileTopBar } from '@/components/mobile/MobileTopBar';
 import { EditorialHero, EditorialCard } from '@/components/editorial/harmony';
-import { ReadingSidebar } from '@/components/reader/ReadingSidebar';
-import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
 
 const Catechism = lazy(() => import('./Catechism'));
 
@@ -27,32 +25,8 @@ const PART_KICKERS: Record<string, string> = {
   'Parte IV': 'Oração',
 };
 
-const CatechismReadingChrome: React.FC<{ onHome: () => void }> = ({ onHome }) => {
-  const { settings, updateSettings } = useReadingSettings();
-  return (
-    <ReadingSidebar
-      title="Catecismo"
-      items={[
-        { id: 'home', label: 'Voltar ao Catecismo', icon: <Home className="h-5 w-5" />, onSelect: onHome },
-        { id: 'search', label: 'Buscar no Catecismo', icon: <SearchIcon className="h-5 w-5" />, onSelect: () => { window.location.href = AppRoute.BUSCAR; } },
-      ]}
-    >
-      <div className="mt-3 border-t border-stitch-outline-variant/20 pt-3">
-        <p className="px-3 pb-2 font-stitch-body text-[9px] font-bold uppercase tracking-[0.16em] text-stitch-secondary">Leitura</p>
-        <button type="button" onClick={() => updateSettings({ fontSize: settings.fontSize === 'extra-large' ? 'small' : settings.fontSize === 'small' ? 'medium' : settings.fontSize === 'medium' ? 'large' : 'extra-large' })} className="flex min-h-11 w-full items-center gap-3 rounded-xl px-3 text-left text-xs text-stitch-on-surface-variant hover:bg-stitch-secondary/10">
-          <Type className="h-5 w-5" /><span>Tamanho da fonte</span>
-        </button>
-        <button type="button" onClick={() => updateSettings({ immersiveMode: !settings.immersiveMode })} aria-pressed={settings.immersiveMode} className="flex min-h-11 w-full items-center gap-3 rounded-xl px-3 text-left text-xs text-stitch-on-surface-variant hover:bg-stitch-secondary/10">
-          <Focus className="h-5 w-5" /><span>{settings.immersiveMode ? 'Sair do modo foco' : 'Modo foco'}</span>
-        </button>
-      </div>
-    </ReadingSidebar>
-  );
-};
-
 const AtriumCatechismReader: React.FC = () => {
   const [sp] = useSearchParams();
-  const navigate = useNavigate();
   const pParam = sp.get('p');
 
   // Reader Template Master (COS §10 / Regra 11):
@@ -67,7 +41,6 @@ const AtriumCatechismReader: React.FC = () => {
           title={`§${pParam}`}
           showBack
         />
-        <CatechismReadingChrome onHome={() => navigate(AppRoute.CATECHISM)} />
         <Catechism />
       </Suspense>
     );
