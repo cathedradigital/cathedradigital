@@ -704,24 +704,12 @@ const Catechism: React.FC = memo(() => {
   }, [chapterNotes, selectedSection, startPara, endPara]);
 
   // Localização canônica (Parte/Seção/Capítulo/Artigo/Tema) e moldura editorial.
-              </div>
-            }
-          >
-            {bibleReturnContext && (
-              <div className="mb-6 flex flex-col gap-3 rounded-2xl border border-secondary/20 bg-secondary/[0.05] px-4 py-3 md:flex-row md:items-center md:justify-between" data-testid="bible-return-context">
-                <div className="min-w-0">
-                  <p className="text-[9px] font-black uppercase tracking-[0.18em] text-secondary">Retorno de estudo</p>
-                  <p className="mt-1 truncate text-sm font-serif text-primary/80">{bibleReturnContext.label}</p>
-                </div>
-                <Button type="button" variant="outline" size="sm" onClick={returnToBible} className="shrink-0 rounded-full text-[10px] font-black uppercase tracking-widest">
-                  Voltar à passagem
-                </Button>
-              </div>
-            )}
-
-            <div className="w-full editorial-column editorial-section" data-testid={`secao-${selectedSection.id}-conteudo`}>
-              {/* Unified Reading Navigation */}
-              <div className="flex items-center justify-between gap-spacing-md py-spacing-xs border-b border-primary/5 mb-spacing-md">
+  // Memoizadas por parágrafo — sem recomputar a cada scroll dentro do mesmo artigo.
+  const location = useMemo(
+    () => resolveCatechismLocation(currentParagraph),
+    [currentParagraph],
+  );
+  const editorial = useMemo(
     () => resolveCatechismEditorial(location),
     [location],
   );
