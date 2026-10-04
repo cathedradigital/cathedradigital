@@ -30,6 +30,8 @@ export const SUPPORTED_LOCALES: LocaleDefinition[] = [
   { code: 'es', nativeName: 'Español', hreflang: 'es', ogLocale: 'es_ES' },
   { code: 'it', nativeName: 'Italiano', hreflang: 'it', ogLocale: 'it_IT' },
   { code: 'la', nativeName: 'Latina', hreflang: 'la', ogLocale: 'la' },
+  { code: 'fr', nativeName: 'Français', hreflang: 'fr', ogLocale: 'fr_FR' },
+  { code: 'de', nativeName: 'Deutsch', hreflang: 'de', ogLocale: 'de_DE' },
 ];
 
 export const SUPPORTED_LOCALE_CODES = SUPPORTED_LOCALES.map((l) => l.code);
