@@ -71,7 +71,6 @@ const WelcomeFirstAccess = lazy(() => import('./components/cathedra/WelcomeFirst
 import { installSessionRenewal } from './lib/sessionRenewal';
 
 
-import SwipeNavigation from './components/cathedra/SwipeNavigation';
 import ContrastInspector from './components/dev/ContrastInspector';
 import { PreviewSkeleton } from './components/cathedra/PreviewSkeleton';
 
@@ -577,7 +576,7 @@ const AppLayout: React.FC = () => {
             aria-label="Abrir menu de navegação"
             onClick={handleOpenSidebar}
           >
-            <Icons.Menu className="h-5 w-5" aria-hidden="true" />
+            <img src="/monograma-cathedra.svg" alt="" className="h-6 w-6 object-contain" aria-hidden="true" />
           </button>
         )}
 
@@ -643,10 +642,9 @@ const AppLayout: React.FC = () => {
           } as React.CSSProperties : undefined}
         >
           
-          <SwipeNavigation>
-            <Suspense fallback={null}><RouteSeo /></Suspense>
-            <AnimatePresence mode="wait" onExitComplete={() => window.scrollTo({ top: 0, behavior: 'instant' })}>
-            <Routes location={location} key={location.pathname}>
+          <Suspense fallback={null}><RouteSeo /></Suspense>
+          <AnimatePresence mode="wait" onExitComplete={() => window.scrollTo({ top: 0, behavior: 'instant' })}>
+            <Routes location={location} key={location}>
 
               <Route path="/" element={<Suspense fallback={<LoadingFallback />}><HomeUnified /></Suspense>} />
               <Route path="/atrium" element={<Navigate to="/" replace />} />
@@ -1025,8 +1023,7 @@ const AppLayout: React.FC = () => {
 
 
             </Routes>
-            </AnimatePresence>
-          </SwipeNavigation>
+          </AnimatePresence>
         </main>
 
 
