@@ -173,7 +173,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
           {
             label: t('home'),
             path: '/',
-            description: 'Entrada principal da Cathedra.',
+            description: t('home'),
             icon: <Icons.Home size={19} />,
           },
         ],
@@ -182,15 +182,15 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
       {
         label: t('nav.conta'),
         items: [
-          { label: t('nav.perfil'), path: AppRoute.PROFILE, description: 'Identidade e preferências pessoais.', icon: <Icons.User size={19} /> },
-          { label: t('nav.configuracoes'), path: AppRoute.SETTINGS, description: 'Preferências da conta e experiência.', icon: <Icons.Settings size={19} /> },
+          { label: t('nav.perfil'), path: AppRoute.PROFILE, description: t('profile'),, icon: <Icons.User size={19} /> },
+          { label: t('nav.configuracoes'), path: AppRoute.SETTINGS, description: t('settings_description'),, icon: <Icons.Settings size={19} /> },
         ],
       },
       ...(isAdmin
         ? [{
             label: t('admin'),
             items: [
-              { label: t('admin_panel'), path: '/admin', description: 'Operação protegida da plataforma.', icon: <Icons.Lock size={19} /> },
+              { label: t('admin_panel'), path: '/admin', description: t('admin_description'),, icon: <Icons.Lock size={19} /> },
             ],
           }]
         : []),
@@ -310,7 +310,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                 <Collapsible
                   key={section.label}
                   defaultOpen={
-                    section.label === 'Início' ||
+                    sectionIdx === 0 ||
                     section.items.some((item) => currentPath === item.path || (item.path !== '/' && currentPath.startsWith(item.path + '/')))
                   }
                 >
@@ -338,7 +338,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                                 onMouseEnter={() => prefetchRoute(item.path)}
                                 onTouchStart={() => prefetchRoute(item.path)}
                                  aria-current={isActive ? 'page' : undefined}
-                                 aria-label={`${item.label}${isActive ? ', página atual' : ''}`}
+                                 aria-label={isActive ? `${item.label}, ${t('current_page')}` : item.label}
                                 className={`w-full flex items-center justify-start gap-3 px-3 py-2 rounded-lg text-xs font-medium transition-all duration-200 outline-none h-auto min-h-11 border
                                   ${isActive
                                     ? 'bg-[#c9a84c]/[0.08] text-[color:var(--gold-text)] border-[#c9a84c]/40'
@@ -441,8 +441,8 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                   </div>
                 </div>
                 <div className="flex justify-center gap-5 py-1">
-                  <a href="https://www.instagram.com/cathedradigital/" target="_blank" rel="noopener noreferrer" className="text-primary/70 hover:text-secondary transition-colors" aria-label="Siga-nos no Instagram"><Icons.Instagram size={14} /></a>
-                  <a href="https://www.youtube.com/@cathedradigital" target="_blank" rel="noopener noreferrer" className="text-primary/70 hover:text-secondary transition-colors" aria-label="Inscreva-se no nosso canal do Youtube"><Icons.Youtube size={14} /></a>
+                  <a href="https://www.instagram.com/cathedradigital/" target="_blank" rel="noopener noreferrer" className="text-primary/70 hover:text-secondary transition-colors" aria-label={t('instagram_follow')}><Icons.Instagram size={14} /></a>
+                  <a href="https://www.youtube.com/@cathedradigital" target="_blank" rel="noopener noreferrer" className="text-primary/70 hover:text-secondary transition-colors" aria-label={t('youtube_subscribe')}><Icons.Youtube size={14} /></a>
                 </div>
               </div>
 
