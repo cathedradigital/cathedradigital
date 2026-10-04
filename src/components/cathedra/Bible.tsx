@@ -1520,16 +1520,6 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
-                <button
-                  type="button"
-                  onClick={() => setViewMode('notes')}
-                  aria-label="Abrir anotações"
-                  data-testid="bible-toolbar-notes"
-                  className="p-spacing-xs text-secondary/80 active:scale-95 transition-transform"
-                  title="Anotações"
-                >
-                  <Icons.List className="w-6 h-6" aria-hidden="true" />
-                </button>
               </div>
 
 
