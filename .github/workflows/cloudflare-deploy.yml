@@ -41,24 +41,17 @@ jobs:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: npx wrangler whoami --account "$CLOUDFLARE_ACCOUNT_ID"
-      - name: Inspect Cloudflare DNS
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      - name: Inspect public DNS
         shell: bash
         run: |
           set -euo pipefail
-          zone_json="$(curl --fail --silent --show-error --connect-timeout 10 --max-time 30 -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" -H "Content-Type: application/json" "https://api.cloudflare.com/client/v4/zones?name=cathedradigital.com.br")"
-          echo "$zone_json" | jq '{success,errors,result:[.result[]|{id,name,status,name_servers}]}'
-          zone_id="$(echo "$zone_json" | jq -r '.result[0].id // empty')"
-          if [ -z "$zone_id" ]; then
-            echo "No active Cloudflare zone found for cathedradigital.com.br"
-            exit 0
-          fi
-          for name in cathedradigital.com.br www.cathedradigital.com.br; do
-            echo "DNS records for $name"
-            curl --fail --silent --show-error --connect-timeout 10 --max-time 30 -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" -H "Content-Type: application/json" "https://api.cloudflare.com/client/v4/zones/$zone_id/dns_records?name=$name" | jq '{success,errors,result:[.result[]|{id,name,type,content,proxied,status}]}'
+          for name in cathedradigital.com.br www.cathedradigital.com.br cathedradigital.cathedradigital.workers.dev; do
+            echo "=== DNS $name ==="
+            for type in A AAAA CNAME NS; do
+              echo "-- $type"
+              curl --fail --silent --show-error --connect-timeout 10 --max-time 20 "https://dns.google/resolve?name=$name&type=$type" | jq '{Status,Answer}'
+            done
           done
-
       - name: Typecheck
         run: npm run typecheck
 
