@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { ChevronLeft, ChevronRight, Menu, X } from 'lucide-react';
+import { ChevronLeft, Menu } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 export interface ReadingSidebarItem {
@@ -62,12 +62,13 @@ export const ReadingSidebar: React.FC<ReadingSidebarProps> = ({
           setCompact(false);
         }}
         className={cn(
-          'fixed left-2 top-1/2 z-[150] -translate-y-1/2',
-          'inline-flex h-11 w-11 items-center justify-center rounded-full',
+          'fixed right-3 top-1/2 z-[150] -translate-y-1/2 md:right-4',
+          'inline-flex h-10 w-10 items-center justify-center rounded-full',
           'border border-stitch-outline-variant/50 bg-stitch-background/95 text-stitch-on-surface-variant shadow-lg',
           'backdrop-blur-md transition-all hover:border-stitch-secondary hover:text-stitch-secondary',
           'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stitch-secondary',
-          open && 'opacity-0 pointer-events-none',
+          'safe-area-right',
+          open && 'pointer-events-none opacity-0',
         )}
       >
         <Menu className="h-5 w-5" aria-hidden="true" />
@@ -88,15 +89,15 @@ export const ReadingSidebar: React.FC<ReadingSidebarProps> = ({
       <aside
         aria-label={title}
         className={cn(
-          'fixed left-0 top-0 z-[160] h-dvh',
-          'border-r border-stitch-outline-variant/30 bg-stitch-background/98 backdrop-blur-xl',
+          'fixed right-0 top-0 z-[160] h-dvh',
+          'border-l border-stitch-outline-variant/30 bg-stitch-background/98 backdrop-blur-xl',
           'shadow-xl transition-[width,transform] duration-200 ease-out',
           'flex flex-col overflow-hidden',
           open
             ? 'w-[min(18rem,88vw)] translate-x-0'
             : compact
-              ? 'w-14 -translate-x-full md:translate-x-0'
-              : 'w-14 -translate-x-full',
+              ? 'w-14 translate-x-full md:translate-x-full'
+              : 'w-14 translate-x-full',
           className,
         )}
       >
