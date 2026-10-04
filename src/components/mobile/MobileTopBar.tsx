@@ -112,7 +112,7 @@ export function MobileTopBar({
         <Link
           to="/buscar"
           aria-label="Busca"
-          className="inline-flex h-10 w-10 items-center justify-center rounded-full text-stitch-on-surface hover:bg-stitch-surface-container"
+          className="inline-flex h-11 w-11 items-center justify-center rounded-full text-stitch-on-surface hover:bg-stitch-surface-container"
         >
           <Search className="h-5 w-5" />
         </Link>
@@ -121,7 +121,7 @@ export function MobileTopBar({
           type="button"
           aria-label="Configurações de leitura"
           onClick={() => window.dispatchEvent(new CustomEvent("open-reading-preferences"))}
-          className="inline-flex h-10 w-10 items-center justify-center rounded-full text-stitch-on-surface hover:bg-stitch-surface-container focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stitch-secondary"
+          className="inline-flex h-11 w-11 items-center justify-center rounded-full text-stitch-on-surface hover:bg-stitch-surface-container focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stitch-secondary"
         >
           <MoreVertical className="h-5 w-5" />
         </button>
@@ -129,7 +129,7 @@ export function MobileTopBar({
           type="button"
           aria-label="Abrir menu lateral"
           onClick={handleMenu}
-          className="inline-flex h-10 w-10 items-center justify-center rounded-full text-stitch-on-surface hover:bg-stitch-surface-container disabled:opacity-40"
+          className="inline-flex h-11 w-11 items-center justify-center rounded-full text-stitch-on-surface hover:bg-stitch-surface-container disabled:opacity-40"
           disabled={false}
         >
           <Menu className="h-5 w-5" />
