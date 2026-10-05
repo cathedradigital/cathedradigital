@@ -1,5 +1,5 @@
 // SKILLS ATIVADOS: cathedra-operating-system, cathedra-design-system-guardian, cathedra-architecture-guardian, cathedra-saints-expert
-import { Icons } from './constants';
+import { CATHEDRA_BRAND, Icons } from './constants';
 import React, { useState, useEffect, useCallback, useMemo, lazy, Suspense, useContext } from 'react';
 import { HelmetProvider } from '@/lib/helmet-compat';
 import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation, useParams } from '@/lib/rr-compat';
@@ -576,7 +576,7 @@ const AppLayout: React.FC = () => {
             aria-label="Abrir menu de navegação"
             onClick={handleOpenSidebar}
           >
-            <img src="/monograma-cathedra.svg" alt="" className="h-6 w-6 object-contain" aria-hidden="true" />
+            <img src={CATHEDRA_BRAND.logoUrl} alt="" className="h-6 w-6 object-contain" aria-hidden="true" />
           </button>
         )}
 
