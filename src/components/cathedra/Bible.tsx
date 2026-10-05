@@ -1794,7 +1794,8 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
             </header>
 
             <motion.div 
-              className="w-full px-4 sm:px-6 lg:px-8 pb-32 pt-6 sm:pt-8 mx-auto max-w-5xl"
+              data-testid="bible-reader"
+              className="w-full px-4 sm:px-6 lg:px-8 pb-32 pt-5 sm:pt-7 mx-auto max-w-5xl"
               drag="x"
               dragConstraints={{ left: 0, right: 0 }}
               dragElastic={0.1}
@@ -1802,17 +1803,11 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
             >
               {isLoading ? <BibleSkeleton /> : (
                 <article className="space-y-spacing-lg">
-                  <header className="mb-7 border-b border-primary/6 pb-5 text-center">
-                    <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-secondary/75">Leitura</p>
-                    <h3 className="mt-1 font-display text-2xl sm:text-3xl font-semibold tracking-tight text-primary/85">
-                      {selectedBook.name} {selectedChapter}
-                    </h3>
-                    {selectedBook.context && (
-                      <p className="mt-2 mx-auto max-w-2xl text-xs sm:text-sm font-serif italic text-primary/50 leading-relaxed">
-                        {selectedBook.context}
-                      </p>
-                    )}
-                  </header>
+                  {selectedBook.context && (
+                    <p className="mb-5 mx-auto max-w-2xl text-center text-xs sm:text-sm font-serif italic text-primary/50 leading-relaxed">
+                      {selectedBook.context}
+                    </p>
+                  )}
 
                   {/* As conexões Nexus são carregadas em segundo plano e não criam
                       um bloco de infraestrutura na leitura. */}
@@ -1865,7 +1860,7 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
                             setIsHighlightMenuOpen(true);
                           }}
                           className={cn(
-                            "w-full flex items-start gap-2 sm:gap-3 group relative transition-all duration-200 cursor-pointer active:bg-primary/[0.05] px-2 py-1 sm:px-3 sm:py-1.5 rounded-lg border border-transparent hover:border-primary/5",
+                            "w-full flex items-start gap-2 sm:gap-3 group relative transition-all duration-200 cursor-pointer active:bg-primary/[0.05] px-2 py-0.5 sm:px-3 sm:py-1 rounded-lg border border-transparent hover:border-primary/5",
                             highlights[`${selectedBook.abbr}-${selectedChapter}-${v.number}`] === 'yellow' && "bg-yellow-200/40",
                             highlights[`${selectedBook.abbr}-${selectedChapter}-${v.number}`] === 'green' && "bg-green-200/40",
                             highlights[`${selectedBook.abbr}-${selectedChapter}-${v.number}`] === 'blue' && "bg-blue-200/40",
@@ -1904,7 +1899,7 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
                             <p 
                               data-testid={`verse-text-${v.number}`}
                               className={cn(
-                                "leading-[1.65] font-serif text-primary/85 tracking-tight relative flex-1 min-w-0",
+                                "leading-[1.6] font-serif text-primary/85 tracking-tight relative flex-1 min-w-0",
                                 settings.fontSize === 'small' && "text-[16px]",
                                 settings.fontSize === 'medium' && "text-[19px]",
                                 settings.fontSize === 'large' && "text-[22px]",
