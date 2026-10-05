@@ -644,7 +644,7 @@ const AppLayout: React.FC = () => {
           
           <Suspense fallback={null}><RouteSeo /></Suspense>
           <AnimatePresence mode="wait" onExitComplete={() => window.scrollTo({ top: 0, behavior: 'instant' })}>
-            <Routes location={location} key={location}>
+            <Routes location={location} key={location.key}>
 
               <Route path="/" element={<Suspense fallback={<LoadingFallback />}><HomeUnified /></Suspense>} />
               <Route path="/atrium" element={<Navigate to="/" replace />} />

@@ -52,7 +52,7 @@ test.describe('Bíblia — catálogo completo', () => {
       { book: 'Gn', chapter: 1, marker: /No princípio|No principio/i },
       { book: 'Ap', chapter: 22, marker: /vida|Deus|Apocalipse/i },
     ]) {
-      await page.goto(`/bible?book=${encodeURIComponent(target.book)}&chapter=${target.chapter}`);
+      await page.goto(`/bible?book=${encodeURIComponent(target.book)}&ch=${target.chapter}`);
       await expect(page.locator('[data-testid="verse-text-1"]')).toBeVisible({ timeout: 30_000 });
       await expect(page.locator('[data-testid="verse-text-1"]')).not.toHaveText(/^\s*$/);
       await expect(page.locator('body')).toContainText(target.marker);
