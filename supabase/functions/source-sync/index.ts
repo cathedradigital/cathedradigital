@@ -96,7 +96,7 @@ Deno.serve(async(req:Request)=>{
   if(req.method==="OPTIONS")return new Response("ok",{headers:CORS});if(req.method!=="POST")return json({error:"Método não permitido."},405);if(!(await authorized(req)))return json({error:"Não autorizado."},401);
   const url=Deno.env.get("SUPABASE_URL"),key=Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");if(!url||!key)return json({error:"Configuração segura do Supabase ausente."},503);
   let body:any={};try{body=await req.json();}catch{}
-  const bibleLimit=Math.min(Math.max(Number(body.max_bible_chapters)||8,1),12);const catechismPages=Math.min(Math.max(Number(body.max_catechism_pages)||1,1),2);
+  const bibleLimit=Math.min(Math.max(Number(body.max_bible_chapters)||8,1),12);const catechismPages=Math.min(Math.max(Number(body.max_catechism_pages)||27,1),27);
   const db=createClient(url,key,{auth:{persistSession:false,autoRefreshToken:false}});
   try{const [bible,catechism]=await Promise.all([syncBible(db,bibleLimit),syncCatechism(db,catechismPages)]);return json({ok:true,bible,catechism,limits:{bibleLimit,catechismPages},at:new Date().toISOString()});}
   catch(error){const message=error instanceof Error?error.message:String(error);console.error("[source-sync] failed",message);return json({ok:false,error:message},502);}

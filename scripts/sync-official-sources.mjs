@@ -19,7 +19,7 @@ async function post(body) {
 
 const result = await post({
   max_bible_chapters: 0,
-  max_catechism_pages: 2,
+  max_catechism_pages: 27,
 });
 
 console.log(JSON.stringify(result, null, 2));
