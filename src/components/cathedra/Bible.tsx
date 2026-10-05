@@ -955,10 +955,10 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
   ];
 
   const CROSS_REFERENCES: Record<string, string[]> = {
-    'Jo-1-1': ['Gn-1-1', '1Jo-1-1', 'Sl 33:6'],
-    'Jo-3-16': ['Rm-5-8', '1Jo-4-9', 'Ef 2:4'],
-    'Gn-1-1': ['Jo-1-1', 'Hb-11-3', 'Sl 102:25'],
-    'Mt-5-3': ['Lc-6-20', 'Is 57:15'],
+    'Jo-1-1': ['Gn-1-1', '1Jo-1-1', 'Sl-33-6'],
+    'Jo-3-16': ['Rm-5-8', '1Jo-4-9', 'Ef-2-4'],
+    'Gn-1-1': ['Jo-1-1', 'Hb-11-3', 'Sl-102-25'],
+    'Mt-5-3': ['Lc-6-20', 'Is-57-15'],
   };
 
   
