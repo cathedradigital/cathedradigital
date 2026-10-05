@@ -30,7 +30,6 @@ export function MobileTopBar({
   showBack = false,
   onBack,
   actions,
-  onMenu,
   transparent = false,
   className,
 }: MobileTopBarProps) {
