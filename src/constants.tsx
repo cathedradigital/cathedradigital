@@ -187,6 +187,17 @@ import {
 import { cn } from './lib/utils';
 import { AppRoute } from './types';
 
+export const CATHEDRA_BRAND = {
+  logoUrl: 'https://isojguvcnfncokoxoauk.supabase.co/storage/v1/object/public/public-assets/logo-cathedra.png',
+  palette: {
+    black: '#0B0B0B',
+    gold: '#D4AF37',
+    ivory: '#F8F5EE',
+    bronze: '#B07A35',
+    blue: '#2F6F8F',
+  },
+} as const;
+
 export const COLORS = {
   primary: '#0F172A',
   secondary: '#D4AF37',
@@ -203,7 +214,7 @@ export const NAV_ITEMS = (t: (key: string) => string, lang: string) => [
   { label: t('menu') || 'Menu', icon: 'Menu', isMenu: true },
 ];
 
-const cathedraLogo = '/monograma-cathedra.svg';
+const cathedraLogo = CATHEDRA_BRAND.logoUrl;
 
 export const Logo = forwardRef<HTMLDivElement, { className?: string, variant?: 'gold' | 'light' | 'dark' | 'blue' }>(({ 
   className = "w-spacing-2xl h-spacing-2xl", 
