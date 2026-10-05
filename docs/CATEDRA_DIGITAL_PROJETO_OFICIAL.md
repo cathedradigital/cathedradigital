@@ -9,6 +9,16 @@
 
 ---
 
+## Documento Mestre de Produto
+
+O detalhamento página por página, recursos, prioridades, entidades, camadas contextuais e sequência incremental de implementação está em:
+
+docs/CATEDRA_DIGITAL_PROJETO_MESTRE_TELAS_E_CONTEUDO.md
+
+Este documento oficial continua sendo a base arquitetural. O documento mestre complementa essa base sem substituir decisões estruturais já estabilizadas.
+
+---
+
 ## 1. Visão
 
 O Cátedra Digital deve funcionar como uma **biblioteca viva e um átrio digital da Igreja**: acolhedor na entrada, profundo no conteúdo, preciso nas fontes e simples de navegar.
