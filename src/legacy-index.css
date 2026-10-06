@@ -135,6 +135,9 @@
     --rule-gold-hair: hsl(var(--rule-gold) / 0.12);
     --font-display: 'Cormorant Garamond', ui-serif, Georgia, serif;
     --font-body: 'Karla', ui-sans-serif, system-ui, sans-serif;
+    --font-serif: var(--font-display);
+    --font-reader: var(--font-body);
+    --font-ui: var(--font-body);
 
     /* ==================================================================
      * STITCH TOKENS (Sprint R0 — Reskin foundation)
@@ -338,9 +341,9 @@
 
   /* Typography System */
   .font-display { font-family: 'Cinzel', serif; font-weight: 400; }
-  .font-serif { font-family: 'Playfair Display', serif; font-weight: 400; }
-  .font-reader { font-family: 'Lora', serif; font-weight: 400; }
-  .font-ui { font-family: 'Inter', sans-serif; }
+  .font-serif { font-family: var(--font-display); font-weight: 400; }
+  .font-reader { font-family: var(--font-body); font-weight: 400; }
+  .font-ui { font-family: var(--font-ui); }
 
   /* =====================================================================
    * Cathedra Noir & Gold — escopo local da Home unificada.
