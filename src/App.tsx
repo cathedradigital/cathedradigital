@@ -14,6 +14,7 @@ const ScrollToTop = lazy(() => import('./components/ScrollToTop'));
 const RouteSeo = lazy(() => import('./components/RouteSeo'));
 
 import { cn } from './lib/utils';
+import { Menu } from 'lucide-react';
 import { AppRoute, Language } from './types';
 import { AuthProvider, useAuth } from './hooks/useAuth';
 import { LangContext, LangProvider } from './contexts/LangContext';
@@ -576,7 +577,7 @@ const AppLayout: React.FC = () => {
             aria-label="Abrir menu de navegação"
             onClick={handleOpenSidebar}
           >
-            <img src={CATHEDRA_BRAND.logoUrl} alt="" className="h-6 w-6 object-contain" aria-hidden="true" />
+            <Menu className="h-5 w-5" strokeWidth={2} aria-hidden="true" />
           </button>
         )}
 
