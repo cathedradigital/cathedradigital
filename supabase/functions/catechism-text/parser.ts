@@ -79,6 +79,10 @@ function isNotesHeading(block: string): boolean {
   return /^(?:notas|notes)\b/i.test(block);
 }
 
+function isFootnoteBlock(block: string): boolean {
+  return /^\d{1,3}\s*\.?\s+(?:cf\.?|ibid\.?|idem\.?|[A-ZÀ-ÿ])/i.test(block);
+}
+
 function markerIndex(block: string, paragraph: number): number {
   const match = paragraphMarker(paragraph).exec(block);
   return match ? match.index + match[1].length : -1;
@@ -114,15 +118,19 @@ export function extractParagraph(
   const collected: string[] = [];
   for (let index = startIndex; index < blocks.length; index += 1) {
     const block = blocks[index];
-    if (index > startIndex && isNotesHeading(block)) break;
+    if (index > startIndex && (isNotesHeading(block) || isFootnoteBlock(block))) break;
 
     const from = index === startIndex ? startOffset : 0;
     const tail = block.slice(from);
     const nextOffset = markerIndex(tail, nextParagraph);
+    const markerPrefix = index === startIndex
+      ? new RegExp("^" + paragraph + "\\s*\\.\\s+")
+      : null;
+    const withoutMarker = markerPrefix ? tail.replace(markerPrefix, "").trim() : tail.trim();
 
     const content = nextOffset >= 0
-      ? tail.slice(0, nextOffset).trim()
-      : tail.trim();
+      ? withoutMarker.slice(0, nextOffset).trim()
+      : withoutMarker;
 
     if (content) collected.push(content);
     if (nextOffset >= 0) break;
