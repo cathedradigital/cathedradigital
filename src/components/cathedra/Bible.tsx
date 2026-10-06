@@ -105,7 +105,7 @@ const CatechismParagraphPreview: React.FC<{ paragraphId: string }> = ({ paragrap
       <p className="text-premium-xs font-bold uppercase tracking-[0.16em] text-blue-700 dark:text-blue-200">
         Texto do Catecismo · §{pNum}
       </p>
-      <p className="mt-1 text-sm font-serif text-foreground leading-[1.6] max-h-40 overflow-y-auto pr-2 scrollbar-thin">
+      <p className="mt-1 text-sm font-body text-foreground leading-[1.6] max-h-40 overflow-y-auto pr-2 scrollbar-thin">
         {data.content}
       </p>
     </div>
