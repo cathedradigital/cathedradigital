@@ -86,6 +86,14 @@ test('Magistério: anotação → Diário → retorno ao documento/parágrafo', 
   expect(bad).toEqual([]);
 });
 
+test('Bíblia: leitor oferece retorno para a tela anterior', async ({ page }) => {
+  await login(page, '/bible?book=Jo&ch=3');
+  await expect(page.locator('#verse-1')).toBeVisible();
+  const back = page.getByTestId('bible-reader-back');
+  await expect(back).toBeVisible();
+  await expect(back).toHaveAttribute('aria-label', 'Voltar para a tela anterior');
+});
+
 test('Bíblia: reload → back → forward preservam o deep-link do versículo', async ({ page }) => {
   await login(page, '/bible?book=joao&chapter=1&v=1');
   await expect(page.locator('#verse-1')).toBeVisible();
