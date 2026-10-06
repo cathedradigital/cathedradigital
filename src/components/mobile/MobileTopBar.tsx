@@ -2,6 +2,7 @@ import { ArrowLeft, Search, MoreVertical } from "lucide-react";
 import { useNavigate, Link } from '@/lib/rr-compat';
 import { cn } from "@/lib/utils";
 import { CATHEDRA_BRAND } from "@/constants";
+import cathedraLogo from "@/assets/cathedra-logo.webp";
 import { useLang } from "@/hooks/useLang";
 import type { ReactNode } from "react";
 
@@ -78,7 +79,7 @@ export function MobileTopBar({
         </button>
       )}
       <Link to="/" className="shrink-0">
-        <img src={CATHEDRA_BRAND.logoUrl} alt={t('brand_alt')} className="h-8 w-8" />
+        <img src={cathedraLogo} alt={t('brand_alt')} className="h-9 w-9 object-contain drop-shadow-[0_1px_2px_rgba(0,0,0,0.28)]" />
       </Link>
 
       <div className="min-w-0 flex-1">
