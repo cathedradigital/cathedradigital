@@ -144,6 +144,15 @@ test('Catecismo: leitor não exibe a barra duplicada Bíblia/Catecismo/Documento
   await expect(page.locator('nav[aria-label="Estudar modules"]')).toHaveCount(0);
 });
 
+test('Catecismo: gatilho do Nexus/Yá permanece visível e acionável no mobile', async ({ page }) => {
+  await login(page, '/catechism?p=10');
+  await expect(page.locator('#p10')).toBeVisible();
+  const trigger = page.getByTestId('catechism-nexus-trigger-10');
+  await expect(trigger).toBeVisible();
+  await expect(trigger).toBeEnabled();
+  await expect(trigger).toHaveAttribute('aria-label', 'Abrir Yá para o parágrafo 10');
+});
+
 test('Catecismo: texto oficial com entidades HTML é exibido como caracteres reais', async ({ page }) => {
   await login(page, '/catechism?p=10');
   await expect(page.locator('#p10')).toBeVisible();
