@@ -100,8 +100,6 @@ Deno.serve(async (req: Request) => {
         error: "Extração do parágrafo não passou pela validação de integridade.",
         code: "invalid_extraction",
         paragraph,
-        contentPreview: content?.slice(0, 240) ?? null,
-        contentLength: content?.length ?? 0,
       }, 422);
     }
 
