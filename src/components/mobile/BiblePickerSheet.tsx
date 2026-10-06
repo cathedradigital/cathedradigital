@@ -102,7 +102,7 @@ export function BiblePickerSheet({
       size="full"
     >
       {!book ? (
-        <div className="space-y-6 rounded-2xl bg-stitch-surface p-1">
+        <div className="space-y-6 rounded-2xl border border-stitch-outline-variant/60 bg-background p-3 shadow-sm dark:bg-card">
           {/* Testamento */}
           <div className="flex gap-2 border-b border-stitch-outline-variant/30">
             {(Object.keys(BIBLE_DATA) as Testament[]).map((t) => {
@@ -143,7 +143,7 @@ export function BiblePickerSheet({
                     onClick={() => setBook(b)}
                     style={{ minHeight: "44px" }}
                     className={cn(
-                      "flex min-h-12 flex-col items-start justify-center rounded-lg border border-stitch-outline-variant/60 bg-stitch-surface-container-lowest px-2.5 py-2 text-left shadow-sm transition-colors",
+                      "flex min-h-12 flex-col items-start justify-center rounded-lg border border-stitch-outline-variant bg-card px-2.5 py-2 text-left shadow-sm transition-colors",
                       
                       "hover:border-stitch-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stitch-secondary",
                     )}
@@ -161,7 +161,7 @@ export function BiblePickerSheet({
           ))}
         </div>
       ) : (
-        <div className="space-y-4 rounded-2xl bg-stitch-surface p-1">
+        <div className="space-y-4 rounded-2xl border border-stitch-outline-variant/60 bg-background p-3 shadow-sm dark:bg-card">
           <button
             type="button"
             onClick={() => setBook(null)}
@@ -182,7 +182,7 @@ export function BiblePickerSheet({
                 }}
                 className={cn(
                   "flex aspect-square items-center justify-center rounded-md border border-stitch-outline-variant/30",
-                  "bg-stitch-surface-container-lowest font-stitch-display text-[16px] text-stitch-primary",
+                  "bg-card font-stitch-display text-[16px] text-stitch-primary",
                   "transition-colors hover:border-stitch-secondary hover:bg-stitch-secondary-container",
                   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stitch-secondary",
                 )}
