@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { ChevronLeft, Menu } from 'lucide-react';
+import { ChevronLeft, PanelRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 export interface ReadingSidebarItem {
@@ -71,7 +71,7 @@ export const ReadingSidebar: React.FC<ReadingSidebarProps> = ({
           open && 'pointer-events-none opacity-0',
         )}
       >
-        <Menu className="h-5 w-5" aria-hidden="true" />
+        <PanelRight className="h-5 w-5" aria-hidden="true" />
       </button>
 
       {open && (
