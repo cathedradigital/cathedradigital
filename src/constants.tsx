@@ -186,6 +186,7 @@ import {
 
 import { cn } from './lib/utils';
 import { AppRoute } from './types';
+import cathedraLogoAsset from './assets/cathedra-logo.webp';
 
 export const CATHEDRA_BRAND = {
   logoUrl: 'https://isojguvcnfncokoxoauk.supabase.co/storage/v1/object/public/public-assets/logo-cathedra.png',
@@ -214,7 +215,7 @@ export const NAV_ITEMS = (t: (key: string) => string, lang: string) => [
   { label: t('menu') || 'Menu', icon: 'Menu', isMenu: true },
 ];
 
-const cathedraLogo = CATHEDRA_BRAND.logoUrl;
+const cathedraLogo = cathedraLogoAsset;
 
 export const Logo = forwardRef<HTMLDivElement, { className?: string, variant?: 'gold' | 'light' | 'dark' | 'blue' }>(({ 
   className = "w-spacing-2xl h-spacing-2xl", 
@@ -228,7 +229,7 @@ export const Logo = forwardRef<HTMLDivElement, { className?: string, variant?: '
       <img 
         src={cathedraLogo} 
         alt="Cathedra Digital" 
-        loading="lazy"
+        loading="eager" fetchPriority="high"
         width="64"
         height="64"
         className={cn(
