@@ -93,7 +93,7 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
                 <span
                   className="text-primary/90 group-hover:text-primary transition-colors"
                   style={{
-                    fontFamily: "'Playfair Display', serif",
+                    fontFamily: var(--font-display),
                     fontWeight: 600,
                     fontSize: 'clamp(1.35rem, 2.8vw, 1.9rem)',
                     letterSpacing: '0.1em',
