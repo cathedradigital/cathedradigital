@@ -33,14 +33,33 @@ export class CatechismFetchError extends Error {
   }
 }
 
+
+function isSuspiciousStoredCatechismContent(content: unknown, paragraph: number): boolean {
+  if (typeof content !== 'string') return true;
+  const text = content.trim();
+  if (!text) return true;
+
+  // The old importer sometimes persisted a footnote tail or the paragraph
+  // marker itself instead of the paragraph prose.
+  if (/^(?:cf\.?|ibid\.?|idem\.?|\d+\s*\.?\s*(?:cf\.?|\(|$))/i.test(text)) return true;
+  if (new RegExp('^' + paragraph + '\\s*\\.\\s+').test(text)) return true;
+  if (paragraph !== 2865 && text.length < 40) return true;
+
+  return false;
+}
+
 export const fetchCatechismParagraph = async (paragraph: number, forceGenerate = false): Promise<CatechismParagraph> => {
   const isOfflineMode = localStorage.getItem('cathedra_offline_mode') === 'true';
 
   // 1) IndexedDB cache
   const cached = await getCachedCatechismParagraph(paragraph);
-  if (cached && !forceGenerate) {
+  if (cached && !forceGenerate && !isSuspiciousStoredCatechismContent(cached.content, paragraph)) {
     logCatechismDiag({ paragraph, step: 'cache_hit' });
     return cached;
+  }
+
+  if (cached && !forceGenerate) {
+    logCatechismDiag({ paragraph, step: 'cache_suspect', meta: { reason: 'stored_content_integrity' } });
   }
 
   // 2) Direct table read (now allowed by RLS public read policy)
@@ -66,7 +85,7 @@ export const fetchCatechismParagraph = async (paragraph: number, forceGenerate =
         message: officialError.message,
         meta: { hint: (officialError as any)?.hint, details: (officialError as any)?.details },
       });
-    } else if (officialData) {
+    } else if (officialData && !isSuspiciousStoredCatechismContent(officialData.content, paragraph)) {
       const result: CatechismParagraph = {
         paragraph: officialData.paragraph,
         content: officialData.content,
@@ -82,6 +101,8 @@ export const fetchCatechismParagraph = async (paragraph: number, forceGenerate =
       logCatechismDiag({ paragraph, step: 'official_hit', meta: { source: 'catechism_official' } });
       cacheCatechismParagraph(paragraph, result);
       return result;
+    } else if (officialData) {
+      logCatechismDiag({ paragraph, step: 'official_suspect', meta: { reason: 'stored_content_integrity' } });
     }
   } catch (e: any) {
     const classified = classifyCatechismError(e);

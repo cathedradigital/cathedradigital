@@ -1,5 +1,6 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { createClient } from "npm:@supabase/supabase-js@2";
+import { extractParagraph, isPlausibleCatechismParagraph } from "./parser.ts";
 
 const VATICAN_BASE = "https://www.vatican.va/archive/cathechism_po/index_new/";
 
@@ -64,36 +65,6 @@ function pageFor(paragraph: number) {
   return PAGES.find(([from, to]) => paragraph >= from && paragraph <= to);
 }
 
-function extractParagraph(html: string, paragraph: number, nextParagraph: number) {
-  // Preserve enough block boundaries for the static Vatican HTML, then strip tags.
-  const withBreaks = html
-    .replace(/<br\s*\/?>/gi, "\n")
-    .replace(/<\/p>/gi, "\n")
-    .replace(/<\/div>/gi, "\n")
-    .replace(/<\/li>/gi, "\n");
-  const text = withBreaks
-    .replace(/<[^>]+>/g, " ")
-    .replace(/&nbsp;/gi, " ")
-    .replace(/&quot;/gi, '"')
-    .replace(/&#39;/gi, "'")
-    .replace(/&amp;/gi, "&")
-    .replace(/\s+/g, " ")
-    .trim();
-
-  const startRe = new RegExp(`(?:^|\\s)${paragraph}\\.\\s+`);
-  const start = text.search(startRe);
-  if (start < 0) return null;
-
-  const from = start === 0 ? 0 : start + 1;
-  const nextRe = new RegExp(`\\s${nextParagraph}\\.\\s+`);
-  const tail = text.slice(from);
-  const next = tail.search(nextRe);
-  const raw = next >= 0 ? tail.slice(0, next) : tail;
-  const cleaned = raw.replace(new RegExp(`^${paragraph}\\.\\s*`), "").trim();
-  if (!cleaned || cleaned.length < 5) return null;
-  return cleaned;
-}
-
 Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: cors });
   if (req.method !== "POST") return json({ error: "Método não permitido." }, 405);
@@ -117,9 +88,19 @@ Deno.serve(async (req: Request) => {
     if (!response.ok) return json({ error: "Fonte oficial indisponível.", code: "upstream_error", status: response.status }, 502);
 
     const html = await response.text();
-    const content = extractParagraph(html, paragraph, paragraph < to ? paragraph + 1 : paragraph + 1);
-    if (!content) {
-      return json({ error: "Parágrafo não localizado na fonte oficial.", code: "not_found", paragraph }, 404);
+    const nextParagraph = paragraph < to ? paragraph + 1 : paragraph + 1;
+    const content = extractParagraph(html, paragraph, nextParagraph);
+    if (!isPlausibleCatechismParagraph(content, paragraph)) {
+      console.warn("[catechism-text] rejected suspicious extraction", {
+        paragraph,
+        contentPreview: content?.slice(0, 160) ?? null,
+        contentLength: content?.length ?? 0,
+      });
+      return json({
+        error: "Extração do parágrafo não passou pela validação de integridade.",
+        code: "invalid_extraction",
+        paragraph,
+      }, 422);
     }
 
     await persistCatechismParagraph(paragraph, content, url);
