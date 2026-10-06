@@ -133,8 +133,8 @@ const GOLD = '#c9a84c';
 const GOLD_TEXT = '#8a7020';
 const GOLD_SOFT = 'rgba(201,168,76,0.35)';
 const GOLD_HAIR = 'rgba(201,168,76,0.18)';
-const FONT_DISPLAY = "'Cormorant Garamond', ui-serif, Georgia, serif";
-const FONT_BODY = "'Karla', ui-sans-serif, system-ui, sans-serif";
+const FONT_DISPLAY = "'Playfair Display', ui-serif, Georgia, serif";
+const FONT_BODY = "'Inter', ui-sans-serif, system-ui, sans-serif";
 
 const EYEBROW_STYLE: React.CSSProperties = {
   color: GOLD_TEXT,
@@ -548,7 +548,7 @@ const Footer: React.FC = React.memo(() => {
                 textTransform: 'uppercase',
               }}
             >
-              © {new Date().getFullYear()} <span style={{ color: GOLD_TEXT }}>●</span> Cathedra <span style={{ color: GOLD_TEXT }}>·</span> Omnia ad maiorem Dei gloriam
+              © {new Date().getFullYear()} <span style={{ color: GOLD_TEXT }}>●</span> CATHEDRA <span style={{ color: GOLD_TEXT }}>·</span> Omnia ad maiorem Dei gloriam
             </p>
             <p
               className="flex items-center gap-2"
