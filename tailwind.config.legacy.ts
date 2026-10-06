@@ -163,14 +163,14 @@ export default {
         'xs': '420px',
       },
       fontFamily: {
-        display: ['Cinzel', 'serif'],
-        serif: ['Playfair Display', 'serif'],
-        reader: ['Merriweather', 'serif'],
-        ui: ['Inter', 'sans-serif'],
-        /* Stitch (R0) */
-        'stitch-display': ['EB Garamond', 'Cormorant Garamond', 'ui-serif', 'Georgia', 'serif'],
-        'stitch-body': ['EB Garamond', 'ui-serif', 'Georgia', 'serif'],
-        'stitch-label': ['Karla', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        display: ['var(--font-display)', 'ui-serif', 'Georgia', 'serif'],
+        serif: ['var(--font-serif)', 'ui-serif', 'Georgia', 'serif'],
+        reader: ['var(--font-reader)', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        ui: ['var(--font-ui)', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        /* Stitch (R0) — aliases mantidos por compatibilidade, sem fontes concorrentes */
+        'stitch-display': ['var(--font-display)', 'ui-serif', 'Georgia', 'serif'],
+        'stitch-body': ['var(--font-body)', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        'stitch-label': ['var(--font-ui)', 'ui-sans-serif', 'system-ui', 'sans-serif'],
       },
       fontWeight: {
         'light': 'var(--font-weight-light)',
