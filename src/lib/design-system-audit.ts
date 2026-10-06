@@ -71,7 +71,7 @@ export const runDesignSystemAudit = async (pageName: string): Promise<AuditResul
 
   // 1. Check Typography Tokens
   const elements = document.querySelectorAll('h1, h2, h3, h4, p, span, button');
-  const allowedFonts = ['Inter', 'Playfair Display', 'Cinzel', 'Merriweather', 'system-ui', 'serif', 'sans-serif', 'monospace', 'Courier'];
+  const allowedFonts = ['Karla', 'Cormorant Garamond', 'Cormorant Garamond', 'Karla', 'system-ui', 'serif', 'sans-serif', 'monospace', 'Courier'];
   const allowedWeights = ['400', '500', '600', '700', '800', '900'];
 
   elements.forEach((el) => {
