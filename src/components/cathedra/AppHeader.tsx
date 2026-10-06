@@ -100,10 +100,10 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
                     fontVariantLigatures: 'common-ligatures',
                   }}
                 >
-                  CATHEDRA
+                  CAT<span style={{ letterSpacing: '-0.02em' }}>TH</span>EDRA
                 </span>
-                <span className="hidden md:block text-[7px] text-gold uppercase tracking-[0.3em] font-bold">
-                  Mosteiro Digital
+                <span className="hidden md:block text-[7px] text-gold uppercase tracking-[0.32em] font-bold">
+                  DIGITAL
                 </span>
               </div>
             </div>
