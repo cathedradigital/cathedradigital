@@ -102,7 +102,7 @@ export function BiblePickerSheet({
       size="full"
     >
       {!book ? (
-        <div className="space-y-6 rounded-2xl border border-stitch-outline-variant/60 bg-stitch-surface p-3 shadow-sm text-stitch-on-surface">
+        <div className="space-y-4 rounded-2xl border border-stitch-outline-variant/60 bg-[#FAF9F6] p-3 shadow-sm text-[#1C1B1A]">
           {/* Testamento */}
           <div className="flex gap-2 border-b border-stitch-outline-variant/30">
             {(Object.keys(BIBLE_DATA) as Testament[]).map((t) => {
