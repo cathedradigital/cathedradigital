@@ -1850,7 +1850,7 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
                         </div>
                       </div>
                     ) : (
-                      <div className="space-y-0">
+                      <div className="bible-verse-stack space-y-0">
                         {verses.map((v, index) => {
 
 
@@ -1909,14 +1909,14 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
                             <p 
                               data-testid={`verse-text-${v.number}`}
                               className={cn(
-                                "leading-[1.48] font-serif text-primary/85 tracking-tight relative flex-1 min-w-0",
+                                "leading-[1.38] font-serif text-primary/85 tracking-tight relative flex-1 min-w-0",
                                 settings.fontSize === 'small' && "text-[16px]",
                                 settings.fontSize === 'medium' && "text-[19px]",
                                 settings.fontSize === 'large' && "text-[22px]",
                                 settings.fontSize === 'extra-large' && "text-[26px]",
-                                settings.lineSpacing === 'tight' && "leading-[1.42]",
-                                settings.lineSpacing === 'normal' && "leading-[1.48]",
-                                settings.lineSpacing === 'wide' && "leading-[1.58]",
+                                settings.lineSpacing === 'tight' && "leading-[1.34]",
+                                settings.lineSpacing === 'normal' && "leading-[1.38]",
+                                settings.lineSpacing === 'wide' && "leading-[1.48]",
                                 settings.contrast === 'soft' && "opacity-70",
                                 settings.contrast === 'high' && "text-primary font-bold"
                               )}
