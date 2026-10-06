@@ -813,22 +813,28 @@ const Catechism: React.FC = memo(() => {
                 <Button variant="ghost" onClick={() => { goBack(); setTimeout(() => { if (lastFocusedElement) document.getElementById(lastFocusedElement)?.focus(); }, 100); }} id="back-to-summary" className="text-[10px] font-bold uppercase tracking-widest text-primary/40 hover:text-primary" aria-label="Voltar para o sumário de seções">← Sumário</Button>
                 <div className="flex items-center gap-spacing-lg">
                   <Button
-                    disabled={selectedSection.id <= 1}
+                    disabled={selectedPart.sections.findIndex((section) => section.id === selectedSection.id) <= 0}
                     onClick={() => {
-                      const prev = selectedPart.sections.find(s => s.id === selectedSection.id - 1);
+                      const index = selectedPart.sections.findIndex((section) => section.id === selectedSection.id);
+                      const prev = index > 0 ? selectedPart.sections[index - 1] : null;
                       if (prev) {
-                        setSelectedSection(prev); setCurrentParagraph(prev.paragraphs[0]); window.scrollTo(0, 0);
+                        setSelectedSection(prev);
+                        setCurrentParagraph(prev.paragraphs[0]);
+                        window.scrollTo(0, 0);
                       }
                     }}
                     data-testid="catechism-section-prev"
                     variant="ghost" className="text-[10px] font-bold uppercase tracking-widest opacity-40 hover:opacity-100">Anterior</Button>
                   <span className="text-premium-xs font-serif italic text-primary/20">Seção {selectedSection.id}</span>
                   <Button
-                    disabled={selectedSection.id >= 10}
+                    disabled={selectedPart.sections.findIndex((section) => section.id === selectedSection.id) >= selectedPart.sections.length - 1}
                     onClick={() => {
-                      const next = selectedPart.sections.find(s => s.id === selectedSection.id + 1);
+                      const index = selectedPart.sections.findIndex((section) => section.id === selectedSection.id);
+                      const next = index >= 0 && index < selectedPart.sections.length - 1 ? selectedPart.sections[index + 1] : null;
                       if (next) {
-                        setSelectedSection(next); setCurrentParagraph(next.paragraphs[0]); window.scrollTo(0, 0);
+                        setSelectedSection(next);
+                        setCurrentParagraph(next.paragraphs[0]);
+                        window.scrollTo(0, 0);
                       }
                     }}
                     data-testid="catechism-section-next"
