@@ -980,7 +980,7 @@ const Catechism: React.FC = memo(() => {
           <h1
             className="leading-none"
             style={{
-              fontFamily: "'Playfair Display', serif",
+              fontFamily: var(--font-display),
               fontWeight: 500,
               fontSize: 'clamp(2.25rem, 6vw, 4rem)',
               letterSpacing: '0.01em',
@@ -991,7 +991,7 @@ const Catechism: React.FC = memo(() => {
           <p
             className="mx-auto"
             style={{
-              fontFamily: "'Playfair Display', serif",
+              fontFamily: var(--font-display),
               fontStyle: 'italic',
               fontSize: 'clamp(0.95rem, 1.5vw, 1.1rem)',
               color: 'hsl(var(--muted-foreground))',
@@ -1018,7 +1018,7 @@ const Catechism: React.FC = memo(() => {
               style={{
                 borderBottomColor: '#c9a84c',
                 borderBottomWidth: 1,
-                fontFamily: "'Playfair Display', serif",
+                fontFamily: var(--font-display),
                 fontStyle: 'italic',
                 fontSize: '1rem',
                 color: 'hsl(var(--foreground))',
@@ -1059,7 +1059,7 @@ const Catechism: React.FC = memo(() => {
                 <h2
                   className="leading-tight break-words"
                   style={{
-                    fontFamily: "'Playfair Display', serif",
+                    fontFamily: var(--font-display),
                     fontWeight: 400,
                     fontSize: 'clamp(1.35rem, 2.4vw, 1.75rem)',
                     color: 'hsl(var(--foreground))',
