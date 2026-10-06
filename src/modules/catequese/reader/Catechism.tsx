@@ -680,6 +680,7 @@ const Catechism: React.FC = memo(() => {
   };
 
   const jumpToParagraph = (p: number) => {
+    if (!isValidCatechismParagraph(p)) return;
     const part = CIC_SECTIONS.find(pt => pt.sections.some(s => p >= s.paragraphs[0] && p <= s.paragraphs[1]));
     if (part) {
       const section = part.sections.find(s => p >= s.paragraphs[0] && p <= s.paragraphs[1]);
@@ -687,6 +688,11 @@ const Catechism: React.FC = memo(() => {
       setSelectedSection(section || null);
       setCurrentParagraph(p);
       setViewMode('reading');
+      setSearchParams((prev) => {
+        const next = new URLSearchParams(prev);
+        next.set('p', String(p));
+        return next;
+      }, { replace: true });
       setTimeout(() => {
         document.getElementById(`p${p}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }, 300);
