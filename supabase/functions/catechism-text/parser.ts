@@ -37,6 +37,9 @@ const HTML_ENTITIES: Record<string, string> = {
   Iuml: "Ï", iuml: "ï",
   Ouml: "Ö", ouml: "ö",
   Uuml: "Ü", uuml: "ü",
+  shy: "",
+  ordf: "ª",
+  ordm: "º",
 };
 
 function decodeHtmlEntities(value: string): string {
