@@ -449,9 +449,10 @@ const LazyParagraph: React.FC<{
               variant="ghost"
               size="icon-sm"
               onClick={() => setIsContextualOpen(true)}
-              className="rounded-premium-full text-muted-foreground/50 hover:text-secondary hover:bg-secondary/5"
+              className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-secondary/35 bg-card text-secondary shadow-sm transition-all hover:border-secondary/60 hover:bg-secondary/10 hover:text-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2 md:h-9 md:w-9"
               aria-label={`Abrir Yá para o parágrafo ${p}`}
               title="Yá"
+              data-testid={`catechism-nexus-trigger-${p}`}
             >
               <Icons.Sparkles className="w-spacing-sm h-spacing-sm" />
             </Button>
