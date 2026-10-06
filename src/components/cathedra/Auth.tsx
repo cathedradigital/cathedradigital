@@ -139,7 +139,7 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
       <button
         onClick={() => navigate(AppRoute.HOME)}
         className="group absolute left-4 top-4 inline-flex min-h-11 items-center gap-2 px-2 text-premium-xs tracking-[0.28em] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary/50 focus-visible:ring-offset-2 md:left-10 md:top-8"
-        style={{ color: 'var(--noir-text-faint)', fontFamily: 'Inter, sans-serif' }}
+        style={{ color: 'var(--noir-text-faint)', fontFamily: 'var(--font-ui)' }}
         onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--gold)')}
         onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--noir-text-faint)')}
       >
@@ -152,7 +152,7 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
         <div data-rise className="mb-12 flex flex-col items-center text-center">
           <span
             className="mb-6 inline-block text-premium-xs font-medium uppercase tracking-[0.32em]"
-            style={{ color: 'var(--gold)', fontFamily: 'Inter, sans-serif' }}
+            style={{ color: 'var(--gold)', fontFamily: 'var(--font-ui)' }}
           >
             Sanctuarium Spiritus
           </span>
@@ -186,7 +186,7 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
               borderLeft: '2px solid #b06060',
               color: '#e8b0b0',
               background: 'rgba(176,96,96,0.08)',
-              fontFamily: 'Inter, sans-serif',
+              fontFamily: 'var(--font-ui)',
             }}
           >
             {error}
@@ -201,7 +201,7 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
               borderLeft: '2px solid var(--gold)',
               color: 'var(--gold-light)',
               background: 'rgba(201,168,76,0.06)',
-              fontFamily: 'Inter, sans-serif',
+              fontFamily: 'var(--font-ui)',
             }}
           >
             {success}
@@ -215,7 +215,7 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
               <label
                 htmlFor="auth-name"
                 className="text-premium-xs uppercase tracking-[0.28em]"
-                style={{ color: 'var(--noir-text-faint)', fontFamily: 'Inter, sans-serif' }}
+                style={{ color: 'var(--noir-text-faint)', fontFamily: 'var(--font-ui)' }}
               >
                 Nome
               </label>
@@ -236,7 +236,7 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
             <label
               htmlFor="auth-email"
               className="text-premium-xs uppercase tracking-[0.28em]"
-              style={{ color: 'var(--noir-text-faint)', fontFamily: 'Inter, sans-serif' }}
+              style={{ color: 'var(--noir-text-faint)', fontFamily: 'var(--font-ui)' }}
             >
               Email
             </label>
@@ -258,7 +258,7 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
               <label
                 htmlFor="auth-password"
                 className="text-premium-xs uppercase tracking-[0.28em]"
-                style={{ color: 'var(--noir-text-faint)', fontFamily: 'Inter, sans-serif' }}
+                style={{ color: 'var(--noir-text-faint)', fontFamily: 'var(--font-ui)' }}
               >
                 Senha
               </label>
@@ -284,7 +284,7 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
             style={{
               borderColor: 'var(--gold)',
               color: 'var(--gold)',
-              fontFamily: 'Inter, sans-serif',
+              fontFamily: 'var(--font-ui)',
               background: 'transparent',
             }}
             onMouseEnter={(e) => {
@@ -309,7 +309,7 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
             <div className="h-px flex-1" style={{ background: 'var(--noir-line)' }} />
             <span
               className="text-[10px] uppercase tracking-[0.32em]"
-              style={{ color: 'var(--noir-text-faint)', fontFamily: 'Inter, sans-serif' }}
+              style={{ color: 'var(--noir-text-faint)', fontFamily: 'var(--font-ui)' }}
             >
               ou
             </span>
@@ -345,7 +345,7 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
               style={{
                 borderColor: 'var(--noir-line-strong)',
                 color: 'var(--noir-text)',
-                fontFamily: 'Inter, sans-serif',
+                fontFamily: 'var(--font-ui)',
                 background: 'transparent',
               }}
               onMouseEnter={(e) => {
@@ -387,7 +387,7 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
               style={{
                 borderColor: 'var(--noir-line-strong)',
                 color: 'var(--noir-text)',
-                fontFamily: 'Inter, sans-serif',
+                fontFamily: 'var(--font-ui)',
                 background: 'transparent',
               }}
               onMouseEnter={(e) => {
@@ -414,7 +414,7 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
               type="button"
               onClick={() => switchMode('forgot')}
               className="text-xs tracking-widest transition-colors"
-              style={{ color: 'var(--noir-text-muted)', fontFamily: 'Inter, sans-serif' }}
+              style={{ color: 'var(--noir-text-muted)', fontFamily: 'var(--font-ui)' }}
               onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--gold-light)')}
               onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--noir-text-muted)')}
             >
@@ -440,7 +440,7 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
         {/* Rodapé leve */}
         <p
           className="mt-16 text-center text-premium-xs uppercase tracking-[0.32em]"
-          style={{ color: 'var(--noir-text-faint)', fontFamily: 'Inter, sans-serif' }}
+          style={{ color: 'var(--noir-text-faint)', fontFamily: 'var(--font-ui)' }}
         >
           Acesso essencial · 100% gratuito
         </p>
