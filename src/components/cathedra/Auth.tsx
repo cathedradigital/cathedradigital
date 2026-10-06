@@ -115,7 +115,7 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
     background: 'transparent',
     borderBottom: '1px solid var(--noir-line-strong)',
     color: 'var(--noir-text)',
-    fontFamily: "'Playfair Display', serif",
+    fontFamily: var(--font-display),
   };
 
   return (
@@ -159,7 +159,7 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
           <h1
             className="mb-4 leading-none"
             style={{
-              fontFamily: "'Playfair Display', serif",
+              fontFamily: var(--font-display),
               fontWeight: 500,
               fontSize: 'clamp(2.5rem, 8vw, 3.75rem)',
               color: 'var(--noir-text)',
@@ -170,7 +170,7 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
           </h1>
           <p
             className="max-w-sm text-base italic leading-relaxed"
-            style={{ fontFamily: "'Playfair Display', serif", color: 'var(--noir-text-muted)' }}
+            style={{ fontFamily: var(--font-display), color: 'var(--noir-text-muted)' }}
           >
             {subtitle}
           </p>
@@ -425,7 +425,7 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
             type="button"
             onClick={() => switchMode(mode === 'login' ? 'signup' : 'login')}
             className="text-sm tracking-wide transition-colors"
-            style={{ color: 'var(--gold)', fontFamily: "'Playfair Display', serif", fontStyle: 'italic' }}
+            style={{ color: 'var(--gold)', fontFamily: var(--font-display), fontStyle: 'italic' }}
             onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--gold-light)')}
             onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--gold)')}
           >
