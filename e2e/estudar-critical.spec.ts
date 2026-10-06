@@ -137,6 +137,20 @@ test('Catecismo: Conexo prioriza relação curada e mantém a referência naveg�
   expect(bad).toEqual([]);
 });
 
+
+test('Catecismo: leitor não exibe a barra duplicada Bíblia/Catecismo/Documentos no mobile', async ({ page }) => {
+  await login(page, '/catechism?p=10');
+  await expect(page.locator('#p10')).toBeVisible();
+  await expect(page.locator('nav[aria-label="Estudar modules"]')).toHaveCount(0);
+});
+
+test('Catecismo: texto oficial com entidades HTML é exibido como caracteres reais', async ({ page }) => {
+  await login(page, '/catechism?p=10');
+  await expect(page.locator('#p10')).toBeVisible();
+  await expect(page.getByText(/Não admira, pois/)).toBeVisible();
+  await expect(page.getByText(/&atilde;/)).toHaveCount(0);
+});
+
 test.describe('responsive critical flow', () => {
   test.use({ viewport: { width: 390, height: 844 } });
   test('Bíblia abre sem overflow horizontal no mobile', async ({ page }) => {
