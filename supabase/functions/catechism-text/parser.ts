@@ -72,15 +72,21 @@ export function htmlToBlocks(html: string): string[] {
 }
 
 function paragraphMarker(paragraph: number): RegExp {
-  return new RegExp("^" + paragraph + "\\.\\s+");
+  return new RegExp("(^|\\s)" + paragraph + "\\.\\s+");
 }
 
 function isNotesHeading(block: string): boolean {
   return /^(?:notas|notes)\b/i.test(block);
 }
 
+function markerIndex(block: string, paragraph: number): number {
+  const match = paragraphMarker(paragraph).exec(block);
+  return match ? match.index + match[1].length : -1;
+}
+
 function stripMarker(block: string, paragraph: number): string {
-  return block.replace(paragraphMarker(paragraph), "").trim();
+  const index = markerIndex(block, paragraph);
+  return index >= 0 ? block.slice(index + String(paragraph).length + 1).trim() : "";
 }
 
 export function extractParagraph(
@@ -89,17 +95,37 @@ export function extractParagraph(
   nextParagraph: number,
 ): string | null {
   const blocks = htmlToBlocks(html);
-  const startIndex = blocks.findIndex((block) => paragraphMarker(paragraph).test(block));
-  if (startIndex < 0) return null;
+
+  let startIndex = -1;
+  let startOffset = -1;
+
+  for (let index = 0; index < blocks.length; index += 1) {
+    if (isNotesHeading(blocks[index])) break;
+    const offset = markerIndex(blocks[index], paragraph);
+    if (offset >= 0) {
+      startIndex = index;
+      startOffset = offset;
+      break;
+    }
+  }
+
+  if (startIndex < 0 || startOffset < 0) return null;
 
   const collected: string[] = [];
   for (let index = startIndex; index < blocks.length; index += 1) {
     const block = blocks[index];
     if (index > startIndex && isNotesHeading(block)) break;
-    if (index > startIndex && paragraphMarker(nextParagraph).test(block)) break;
 
-    const content = index === startIndex ? stripMarker(block, paragraph) : block;
+    const from = index === startIndex ? startOffset : 0;
+    const tail = block.slice(from);
+    const nextOffset = markerIndex(tail, nextParagraph);
+
+    const content = nextOffset >= 0
+      ? tail.slice(0, nextOffset).trim()
+      : tail.trim();
+
     if (content) collected.push(content);
+    if (nextOffset >= 0) break;
   }
 
   const cleaned = collected
