@@ -72,7 +72,7 @@ export function htmlToBlocks(html: string): string[] {
 }
 
 function paragraphMarker(paragraph: number): RegExp {
-  return new RegExp(\`^\${paragraph}\\.\\s+\`);
+  return new RegExp("^" + paragraph + "\\.\\s+");
 }
 
 function isNotesHeading(block: string): boolean {
