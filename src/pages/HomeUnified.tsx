@@ -84,7 +84,7 @@ const HomeUnified: React.FC = () => {
       {opening && (
         <div className="fixed inset-0 z-[100] flex min-h-screen items-center justify-center bg-background" role="status" aria-label="Abrindo a Cathedra Digital">
           <div className="flex flex-col items-center px-6 text-center animate-[atrium-opening_1.8s_ease-out_forwards]">
-            <span className="relative flex h-32 w-32 items-center justify-center rounded-2xl border border-[#D4AF37]/35 bg-[#102A3A] p-5 shadow-[0_18px_50px_rgba(8,25,35,0.28)] md:h-40 md:w-40 md:p-6" aria-hidden="true"><span className="absolute inset-2 rounded-xl border border-[#D4AF37]/20" /><Icons.Logo className="relative h-24 w-24 md:h-32 md:w-32" /></span>
+            <span className="relative flex h-28 w-28 items-center justify-center rounded-2xl border border-[#D4AF37]/35 bg-[#102A3A] p-3 shadow-[0_18px_50px_rgba(8,25,35,0.28)] md:h-36 md:w-36 md:p-4" aria-hidden="true"><span className="absolute inset-2 rounded-xl border border-[#D4AF37]/20" /><Icons.Logo className="relative h-24 w-24 md:h-32 md:w-32" /></span>
             <span className="mt-5 font-display text-4xl tracking-tight md:text-6xl">Cátedra Digital</span>
             
             <span className="mt-8 text-[10px] font-semibold uppercase tracking-[0.32em] text-muted-foreground">Átrio · Estudar · Rezar · Formar-se</span>
@@ -105,7 +105,7 @@ const HomeUnified: React.FC = () => {
             <div className="grid items-end gap-10 lg:grid-cols-[1.15fr_.85fr]">
               <div>
                 <div className="mb-8 flex items-center gap-5 md:gap-6" aria-label="Cathedra Digital">
-                  <span className="flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl border border-[#D4AF37]/25 bg-[#102A3A] p-3 md:h-24 md:w-24 md:p-4"><Icons.Logo className="h-full w-full" /></span>
+                  <span className="flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl border border-[#D4AF37]/25 bg-[#102A3A] p-2 md:h-24 md:w-24 md:p-3"><Icons.Logo className="h-full w-full" /></span>
                   <div className="flex flex-col justify-center">
                     <span className="font-display text-3xl leading-none tracking-tight text-foreground md:text-5xl">Cátedra Digital</span>
                   </div>
