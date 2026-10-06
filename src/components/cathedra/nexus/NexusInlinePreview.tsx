@@ -124,14 +124,14 @@ const NexusInlinePreview: React.FC<Props> = ({ item, openHref, onOpen, ctaLabel 
   return (
     <div>
       {isLoading && (
-        <p className="font-serif italic text-primary/40 text-sm mb-spacing-md" aria-busy>
+        <p className="font-body italic text-primary/40 text-sm mb-spacing-md" aria-busy>
           Carregando trecho…
         </p>
       )}
 
       {!isLoading && previewText && (
         <p
-          className="font-serif italic text-primary/75 text-base leading-relaxed mb-spacing-sm whitespace-pre-line"
+          className="font-body italic text-primary/75 text-base leading-relaxed mb-spacing-sm whitespace-pre-line"
           data-testid="nexus-inline-preview"
         >
           {displayed}
