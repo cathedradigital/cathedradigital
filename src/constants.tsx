@@ -233,7 +233,7 @@ export const Logo = forwardRef<HTMLDivElement, { className?: string, variant?: '
         width="64"
         height="64"
         className={cn(
-          "w-full h-full object-contain transition-transform duration-300 group-hover:scale-105"
+          "w-full h-full object-contain transition-all duration-300 group-hover:scale-105 drop-shadow-[0_1px_2px_rgba(0,0,0,0.28)]"
         )}
       />
 
