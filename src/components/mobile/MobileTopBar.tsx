@@ -1,7 +1,6 @@
 import { ArrowLeft, Search, MoreVertical } from "lucide-react";
 import { useNavigate, Link } from '@/lib/rr-compat';
 import { cn } from "@/lib/utils";
-import { CATHEDRA_BRAND } from "@/constants";
 import cathedraLogo from "@/assets/cathedra-logo.webp";
 import { useLang } from "@/hooks/useLang";
 import type { ReactNode } from "react";
