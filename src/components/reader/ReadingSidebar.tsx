@@ -111,7 +111,7 @@ export const ReadingSidebar: React.FC<ReadingSidebarProps> = ({
             className="inline-flex h-11 w-11 shrink-0 items-center justify-center text-stitch-on-surface-variant hover:text-stitch-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stitch-secondary"
             aria-label="Expandir painel de leitura"
           >
-            <Menu className="h-5 w-5" aria-hidden="true" />
+            <PanelRight className="h-5 w-5" aria-hidden="true" />
           </button>
           {open && (
             <>
