@@ -1870,7 +1870,7 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
                             setIsHighlightMenuOpen(true);
                           }}
                           className={cn(
-                            "w-full flex items-start gap-2 sm:gap-3 group relative transition-all duration-200 cursor-pointer active:bg-primary/[0.05] px-2 py-0.5 sm:px-3 sm:py-1 rounded-lg border border-transparent hover:border-primary/5",
+                            "w-full flex items-start gap-2 sm:gap-3 group relative transition-all duration-200 cursor-pointer active:bg-primary/[0.05] px-1.5 py-0 sm:px-2.5 sm:py-0.5 rounded-lg border border-transparent hover:border-primary/5",
                             highlights[`${selectedBook.abbr}-${selectedChapter}-${v.number}`] === 'yellow' && "bg-yellow-200/40",
                             highlights[`${selectedBook.abbr}-${selectedChapter}-${v.number}`] === 'green' && "bg-green-200/40",
                             highlights[`${selectedBook.abbr}-${selectedChapter}-${v.number}`] === 'blue' && "bg-blue-200/40",
@@ -1878,7 +1878,7 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
                           )}
                         >
 
-                          <div className="flex flex-col items-center gap-1 mt-1 w-5 sm:w-6 shrink-0">
+                          <div className="flex flex-col items-center gap-0.5 mt-0.5 w-5 sm:w-6 shrink-0">
                             <span className="text-[10px] sm:text-[11px] font-serif font-bold text-secondary/40 tabular-nums">{v.number}</span>
                             {cicCitationMap.verses.has(`${selectedChapter}-${v.number}`) && (
                               <div
@@ -1909,14 +1909,14 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
                             <p 
                               data-testid={`verse-text-${v.number}`}
                               className={cn(
-                                "leading-[1.6] font-serif text-primary/85 tracking-tight relative flex-1 min-w-0",
+                                "leading-[1.48] font-serif text-primary/85 tracking-tight relative flex-1 min-w-0",
                                 settings.fontSize === 'small' && "text-[16px]",
                                 settings.fontSize === 'medium' && "text-[19px]",
                                 settings.fontSize === 'large' && "text-[22px]",
                                 settings.fontSize === 'extra-large' && "text-[26px]",
-                                settings.lineSpacing === 'tight' && "leading-[1.55]",
-                                settings.lineSpacing === 'normal' && "leading-[1.7]",
-                                settings.lineSpacing === 'wide' && "leading-[1.8]",
+                                settings.lineSpacing === 'tight' && "leading-[1.42]",
+                                settings.lineSpacing === 'normal' && "leading-[1.48]",
+                                settings.lineSpacing === 'wide' && "leading-[1.58]",
                                 settings.contrast === 'soft' && "opacity-70",
                                 settings.contrast === 'high' && "text-primary font-bold"
                               )}
