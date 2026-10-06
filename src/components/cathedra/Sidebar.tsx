@@ -266,7 +266,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                     role="text"
                     aria-label="Cathedra Digital — Mosteiro Digital"
                     style={{
-                      fontFamily: "'Playfair Display', serif",
+                      fontFamily: var(--font-display),
                       fontWeight: 600,
                       fontSize: '1.25rem',
                       letterSpacing: '0.08em',
