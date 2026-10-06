@@ -66,6 +66,7 @@ export const NexusPanel: React.FC<NexusPanelProps> = ({
   limitPerBucket = DEFAULT_LIMIT,
 }) => {
   const [isOffline, setIsOffline] = React.useState(false);
+  const [expandedBuckets, setExpandedBuckets] = React.useState<Record<string, boolean>>({});
 
   React.useEffect(() => {
     const handleUnreachable = () => setIsOffline(true);
@@ -99,7 +100,7 @@ export const NexusPanel: React.FC<NexusPanelProps> = ({
   const rootClass = [
     'w-full max-w-[68ch] mx-auto',
     'rounded-premium border border-primary/15 bg-card shadow-premium/10',
-    'p-spacing-lg space-y-spacing-md',
+    'p-4 sm:p-spacing-lg space-y-spacing-md min-w-0 overflow-x-hidden',
     'shadow-premium/10',
     className ?? '',
   ].join(' ');
@@ -122,7 +123,10 @@ export const NexusPanel: React.FC<NexusPanelProps> = ({
 
       <div className="space-y-spacing-lg">
         {buckets.map((bucket) => {
-          const nodes = (output.byBucket[bucket] ?? []).slice(0, limitPerBucket);
+          const allNodes = output.byBucket[bucket] ?? [];
+          const isExpanded = expandedBuckets[bucket] ?? false;
+          const nodes = isExpanded ? allNodes : allNodes.slice(0, limitPerBucket);
+          const hasMore = allNodes.length > limitPerBucket;
           const label = output.labels[bucket] ?? BUCKET_LABEL[bucket] ?? bucket;
           return (
             <section
@@ -138,11 +142,21 @@ export const NexusPanel: React.FC<NexusPanelProps> = ({
                   Conexo
                 </span>
               </div>
-              <ul className="space-y-spacing-xs">
+              <ul className="space-y-spacing-xs min-w-0">
                 {nodes.map((r) => (
                   <NexusItem key={r.node.id} node={r} bucket={bucket} />
                 ))}
               </ul>
+              {hasMore && (
+                <button
+                  type="button"
+                  aria-expanded={isExpanded}
+                  onClick={() => setExpandedBuckets((current) => ({ ...current, [bucket]: !isExpanded }))}
+                  className="mt-2 min-h-11 w-full rounded-premium border border-primary/15 px-3 py-2 text-left text-xs font-semibold text-primary transition-colors hover:bg-primary/5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                >
+                  {isExpanded ? 'Mostrar menos' : `Ver todas as ${allNodes.length} conexões`}
+                </button>
+              )}
             </section>
           );
         })}
@@ -199,7 +213,7 @@ const NexusItem: React.FC<NexusItemProps> = ({ node, bucket }) => {
 
   return (
     <li
-      className="flex gap-spacing-xs items-baseline"
+      className="flex min-w-0 gap-spacing-xs items-start"
       data-nexus-type={bucket}
     >
       <span
@@ -211,7 +225,7 @@ const NexusItem: React.FC<NexusItemProps> = ({ node, bucket }) => {
           <Link
             to={href}
             onClick={rememberReaderPosition}
-            className="group block focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary rounded-sm"
+            className="group block min-h-11 min-w-0 rounded-sm py-1 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
             aria-label={`Abrir ${label}`}
           >
             {body}
