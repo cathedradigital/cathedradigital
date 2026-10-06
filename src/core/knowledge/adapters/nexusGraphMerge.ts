@@ -30,6 +30,8 @@ export interface CuratedNexusEdge {
   /** Rótulo humano para exibição. */
   title?: string | null;
   note?: string | null;
+  /** Tipo semântico da relação curada no banco. */
+  relationType?: string | null;
   /** Grau de centralidade no grafo (nº de conexões). Ordena a curadoria. */
   weight?: number | null;
 }
@@ -50,6 +52,21 @@ export const NEXUS_KIND_TO_BUCKET: Record<string, ReaderNexusBucket> = {
   journey: 'journey',
   liturgy: 'liturgy',
 };
+
+function normalizeRelationKind(value: string | null | undefined): ResolvedNode['nexusRelationKind'] {
+  switch (value) {
+    case 'develops':
+    case 'cites':
+    case 'commented-by':
+    case 'defined-in':
+    case 'applies-to':
+    case 'prayed-as':
+    case 'related-to':
+      return value;
+    default:
+      return 'related-to';
+  }
+}
 
 function rebuildSuggestions(
   byBucket: Partial<Record<ReaderNexusBucket, ResolvedNode[]>>,
@@ -105,10 +122,17 @@ export function mergeCuratedEdges(
     if (!resolved?.url) continue;
     if (nodeId === base.selfId) continue;
 
+    const curatedResolved: ResolvedNode = {
+      ...resolved,
+      nexusEvidence: 'editorial',
+      nexusRelationKind: normalizeRelationKind(edge.relationType),
+      nexusExplanation: edge.note ?? 'Relação curada no grafo do Cátedra.',
+    };
+
     const arr = (byBucket[bucket] ??= []);
     const existing = arr.findIndex((r) => r.node.id === nodeId);
     if (existing >= 0) arr.splice(existing, 1);
-    (curated[bucket] ??= []).push(resolved); // ordem já é por centralidade
+    (curated[bucket] ??= []).push(curatedResolved); // ordem já é por centralidade
     centrality.set(nodeId, edge.weight ?? 0);
   }
 
