@@ -84,10 +84,10 @@ const HomeUnified: React.FC = () => {
       {opening && (
         <div className="fixed inset-0 z-[100] flex min-h-screen items-center justify-center bg-background" role="status" aria-label="Abrindo a Cathedra Digital">
           <div className="flex flex-col items-center px-6 text-center animate-[atrium-opening_1.8s_ease-out_forwards]">
-            <span className="relative flex h-32 w-32 items-center justify-center rounded-full border border-primary/30 bg-primary/[0.06] p-5 shadow-[0_0_0_10px_hsl(var(--primary)/0.04),0_14px_50px_hsl(var(--primary)/0.16)] md:h-40 md:w-40 md:p-6" aria-hidden="true"><span className="absolute inset-2 rounded-full border border-primary/15" /><Icons.Logo className="relative h-24 w-24 text-primary md:h-32 md:w-32" /></span>
-            <span className="mt-5 font-display text-4xl tracking-tight md:text-6xl">Cathedra</span>
-            <span className="mt-2 text-xs font-semibold uppercase tracking-[0.38em] text-primary/70 md:text-sm">Digital</span>
-            <span className="mt-8 text-[10px] font-semibold uppercase tracking-[0.32em] text-muted-foreground">Átrio · Estudo · Oração · Formação</span>
+            <span className="relative flex h-32 w-32 items-center justify-center rounded-2xl border border-[#D4AF37]/35 bg-[#102A3A] p-5 shadow-[0_18px_50px_rgba(8,25,35,0.28)] md:h-40 md:w-40 md:p-6" aria-hidden="true"><span className="absolute inset-2 rounded-xl border border-[#D4AF37]/20" /><Icons.Logo className="relative h-24 w-24 md:h-32 md:w-32" /></span>
+            <span className="mt-5 font-display text-4xl tracking-tight md:text-6xl">Cátedra Digital</span>
+            
+            <span className="mt-8 text-[10px] font-semibold uppercase tracking-[0.32em] text-muted-foreground">Átrio · Estudar · Rezar · Formar-se</span>
           </div>
         </div>
       )}
@@ -105,17 +105,16 @@ const HomeUnified: React.FC = () => {
             <div className="grid items-end gap-10 lg:grid-cols-[1.15fr_.85fr]">
               <div>
                 <div className="mb-8 flex items-center gap-5 md:gap-6" aria-label="Cathedra Digital">
-                  <Icons.Logo className="h-20 w-20 shrink-0 text-primary md:h-24 md:w-24" />
+                  <span className="flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl border border-[#D4AF37]/25 bg-[#102A3A] p-3 md:h-24 md:w-24 md:p-4"><Icons.Logo className="h-full w-full" /></span>
                   <div className="flex flex-col justify-center">
-                    <span className="font-display text-3xl leading-none tracking-tight text-foreground md:text-5xl">Cathedra</span>
-                    <span className="mt-1 text-xs font-semibold uppercase tracking-[0.3em] text-primary/70 md:text-sm">Digital</span>
+                    <span className="font-display text-3xl leading-none tracking-tight text-foreground md:text-5xl">Cátedra Digital</span>
                   </div>
                 </div>
                 <h1 className="max-w-4xl font-display text-5xl leading-[1.02] tracking-tight md:text-7xl lg:text-8xl">
-                  Um só lugar para <span className="text-primary">estudar, rezar e continuar.</span>
+                  Bíblia, Catecismo e Magistério <span className="text-primary">em um só lugar — conectados.</span>
                 </h1>
                 <p className="mt-7 max-w-2xl text-base leading-7 text-muted-foreground md:text-lg">
-                  {greeting} A Cathedra organiza fontes, oração, formação e descoberta em uma jornada única — sem fazer você se perder entre módulos.
+                  {greeting} Leia a Escritura, aprofunde-se no Catecismo e descubra as conexões com o Magistério e toda a Tradição Católica, sem sair do Cátedra Digital.
                 </p>
 
                 <form onSubmit={submitSearch} className="mt-9 flex max-w-2xl items-center gap-2 rounded-2xl border border-border bg-card p-2 shadow-sm">
