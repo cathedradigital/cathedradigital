@@ -115,7 +115,7 @@ export const NexusPanel: React.FC<NexusPanelProps> = ({
         )}
         {title && (
           <h2 className="font-serif text-premium-lg text-foreground">
-            "Por que isso está conectado?"
+            {title}
           </h2>
         )}
         <span className="block h-[1px] w-spacing-3xl bg-gradient-to-r from-secondary/60 to-transparent" />
