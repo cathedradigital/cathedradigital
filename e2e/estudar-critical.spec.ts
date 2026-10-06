@@ -127,6 +127,22 @@ test('Bíblia: deep-link por referência abre o capítulo e o versículo correto
   expect(page.url()).toContain('/bible?ref=');
 });
 
+test('Catecismo: alias paragraph mantém o deep-link canônico no leitor', async ({ page }) => {
+  await login(page, '/catechism?paragraph=2865');
+  await expect(page.locator('#p2865')).toBeVisible();
+  await expect(page.locator('#heading-p2865')).toBeVisible();
+  expect(page.url()).toContain('/catechism?paragraph=2865');
+});
+
+test('Catecismo: busca por § atualiza a URL canônica antes da navegação', async ({ page }) => {
+  await login(page, '/catechism');
+  const search = page.getByRole('textbox', { name: 'Buscar no Catecismo por parágrafo ou tema' });
+  await search.fill('2865');
+  await search.press('Enter');
+  await expect(page.locator('#p2865')).toBeVisible();
+  expect(page.url()).toContain('/catechism?p=2865');
+});
+
 test('Catecismo: deep-link de fronteira §2865 abre o último parágrafo sem perder a URL', async ({ page }) => {
   const bad = watchBrowserHealth(page);
   await login(page, '/catechism?p=2865');
