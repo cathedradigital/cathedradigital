@@ -119,6 +119,24 @@ test('Bíblia: deep-link por referência abre o capítulo e o versículo correto
   expect(page.url()).toContain('/bible?ref=');
 });
 
+test('Catecismo: deep-link de fronteira §2865 abre o último parágrafo sem perder a URL', async ({ page }) => {
+  const bad = watchBrowserHealth(page);
+  await login(page, '/catechism?p=2865');
+  await expect(page.locator('#p2865')).toBeVisible();
+  await expect(page.locator('#heading-p2865')).toBeVisible();
+  expect(page.url()).toContain('/catechism?p=2865');
+  expect(bad).toEqual([]);
+});
+
+test('Catecismo: Conexo prioriza relação curada e mantém a referência navegável', async ({ page }) => {
+  const bad = watchBrowserHealth(page);
+  await login(page, '/catechism?p=279');
+  await expect(page.locator('#p279')).toBeVisible();
+  await expect(page.getByText('Gn 1:1', { exact: true })).toBeVisible();
+  await expect(page.getByText('Referência editorial', { exact: true })).toBeVisible();
+  expect(bad).toEqual([]);
+});
+
 test.describe('responsive critical flow', () => {
   test.use({ viewport: { width: 390, height: 844 } });
   test('Bíblia abre sem overflow horizontal no mobile', async ({ page }) => {
