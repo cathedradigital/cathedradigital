@@ -76,7 +76,7 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
       >
         <div className={cn("flex items-center justify-between py-0 px-spacing-sm md:px-[var(--layout-padding)] max-w-spacing-4xl mx-auto", !isLanding || user ? "h-full" : "")}>
 
-          {/* Logo Section — assinatura editorial Playfair (Sprint Visual 3.0) */}
+          {/* Logo Section — assinatura institucional única CATHEDRA */}
           <button
             type="button"
             className="flex items-baseline gap-spacing-sm cursor-pointer group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20 focus-visible:ring-offset-2 rounded-premium-full"
@@ -95,8 +95,9 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
                   style={{
                     fontFamily: "'Playfair Display', serif",
                     fontWeight: 600,
-                    fontSize: 'clamp(1.5rem, 2.9vw, 2.05rem)',
-                    letterSpacing: '0.08em',
+                    fontSize: 'clamp(1.45rem, 2.7vw, 1.95rem)',
+                    letterSpacing: '0.06em',
+                    fontVariantLigatures: 'common-ligatures',
                   }}
                 >
                   CATHEDRA
