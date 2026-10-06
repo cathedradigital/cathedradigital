@@ -211,8 +211,8 @@
     --stitch-mobile-blur: saturate(180%) blur(14px);
 
     /* Stitch tipografia (mapeada às fontes já carregadas do projeto) */
-    --font-stitch-display: 'EB Garamond', 'Cormorant Garamond', ui-serif, Georgia, serif;
-    --font-stitch-body: 'EB Garamond', ui-serif, Georgia, serif;
+    --font-stitch-display: var(--font-display);
+    --font-stitch-body: var(--font-body);
     --font-stitch-label: 'Karla', ui-sans-serif, system-ui, sans-serif;
   }
 
@@ -340,7 +340,7 @@
 
 
   /* Typography System */
-  .font-display { font-family: 'Cinzel', serif; font-weight: 400; }
+  .font-display { font-family: var(--font-display); font-weight: 400; }
   .font-serif { font-family: var(--font-display); font-weight: 400; }
   .font-reader { font-family: var(--font-body); font-weight: 400; }
   .font-ui { font-family: var(--font-ui); }
@@ -361,8 +361,8 @@
     --noir-line-strong: rgba(255, 255, 255, 0.12);
     --gold: #c9a84c;
     --gold-light: #dfc17a;
-    --font-display: 'Cormorant Garamond', 'Playfair Display', serif;
-    --font-body: 'Karla', 'Inter', sans-serif;
+    --font-display: 'Cormorant Garamond', ui-serif, Georgia, serif;
+    --font-body: 'Karla', ui-sans-serif, system-ui, sans-serif;
     
     background-color: var(--noir-bg);
     color: var(--noir-text);
