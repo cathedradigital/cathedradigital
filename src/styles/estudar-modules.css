@@ -995,3 +995,15 @@
     margin-inline: auto;
   }
 }
+
+
+/* Bible desktop reading density — keep the sacred text visually continuous. */
+@media (min-width: 768px) {
+  [data-catedra-module="bible"] [id^="verse-"] {
+    padding-block: .125rem;
+  }
+
+  [data-catedra-module="bible"] [data-testid^="verse-text-"] {
+    line-height: 1.56;
+  }
+}

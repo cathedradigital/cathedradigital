@@ -98,14 +98,14 @@ const CatechismParagraphPreview: React.FC<{ paragraphId: string }> = ({ paragrap
 
   return (
     <div
-      className="rounded-xl border border-blue-500/15 bg-blue-500/[0.03] p-spacing-sm"
+      className="rounded-xl border border-blue-500/25 bg-card p-spacing-sm shadow-sm dark:bg-card"
       data-testid="catechism-preview"
       data-cic-paragraph={pNum}
     >
-      <p className="text-premium-xs font-bold uppercase tracking-[0.16em] text-blue-600 dark:text-blue-300">
+      <p className="text-premium-xs font-bold uppercase tracking-[0.16em] text-blue-700 dark:text-blue-200">
         Texto do Catecismo · §{pNum}
       </p>
-      <p className="mt-1 text-sm font-serif text-primary/80 leading-relaxed max-h-40 overflow-y-auto pr-2 scrollbar-thin">
+      <p className="mt-1 text-sm font-serif text-foreground leading-[1.6] max-h-40 overflow-y-auto pr-2 scrollbar-thin">
         {data.content}
       </p>
     </div>
@@ -1988,7 +1988,7 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
                                         data-testid="nexus-connection-popover"
                                         aria-labelledby={`nexus-popover-title-${v.number}-${idx}`}
                                         aria-describedby={`nexus-popover-desc-${v.number}-${idx}`}
-                                        className="w-[min(22rem,calc(100vw-24px))] z-[200] p-spacing-sm rounded-xl border border-primary/10 bg-card shadow-premium"
+                                        className="w-[min(22rem,calc(100vw-24px))] z-[200] p-spacing-sm rounded-xl border border-primary/15 bg-card shadow-premium opacity-100"
                                       >
                                         <div className="space-y-spacing-xs">
                                           <div className="flex items-start gap-spacing-xs">
