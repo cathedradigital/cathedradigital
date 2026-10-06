@@ -145,4 +145,11 @@ test.describe('responsive critical flow', () => {
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1);
     expect(overflow).toBe(false);
   });
+
+  test('Catecismo abre no último parágrafo sem overflow horizontal no mobile', async ({ page }) => {
+    await login(page, '/catechism?p=2865');
+    await expect(page.locator('#p2865')).toBeVisible();
+    const overflow = await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1);
+    expect(overflow).toBe(false);
+  });
 });
