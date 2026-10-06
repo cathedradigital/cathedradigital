@@ -98,7 +98,7 @@ export const NexusPanel: React.FC<NexusPanelProps> = ({
 
   const rootClass = [
     'w-full max-w-[68ch] mx-auto',
-    'rounded-premium border border-primary/15 bg-card/60 backdrop-blur-sm',
+    'rounded-premium border border-primary/15 bg-card shadow-premium/10',
     'p-spacing-lg space-y-spacing-md',
     'shadow-premium/10',
     className ?? '',
@@ -169,7 +169,7 @@ const NexusItem: React.FC<NexusItemProps> = ({ node, bucket }) => {
           {label}
         </span>
         {nexusExplanation && (
-          <p className="text-[10px] md:text-[11px] font-reader italic text-primary/80 leading-relaxed border-l-2 border-gold-text/40 pl-spacing-sm py-spacing-xs bg-gold/5 rounded-r-premium shadow-sm transition-all group-hover:bg-gold/10">
+          <p className="text-[10px] md:text-[11px] font-reader italic text-primary/80 leading-relaxed border-l-2 border-gold-text/40 pl-spacing-sm py-spacing-xs bg-card rounded-r-premium shadow-sm transition-all group-hover:bg-gold/10">
             {nexusExplanation}
           </p>
         )}

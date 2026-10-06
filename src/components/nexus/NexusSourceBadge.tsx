@@ -44,7 +44,7 @@ export function NexusSourceBadge({ node, sectionLabel }: Props) {
           type="button"
           aria-label={ariaLabel}
           title={description}
-          className="mt-2 inline-flex cursor-help items-center gap-1.5 rounded-full border border-stitch-outline-variant/40 bg-stitch-surface-container-lowest px-2 py-[2px] font-stitch-label text-[10px] uppercase tracking-[0.16em] text-stitch-on-surface-variant transition-colors hover:border-stitch-secondary/50 hover:text-stitch-on-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stitch-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-stitch-background"
+          className="mt-2 inline-flex cursor-help items-center gap-1.5 rounded-full border border-stitch-outline-variant/40 bg-card px-2 py-[2px] font-stitch-label text-[10px] uppercase tracking-[0.16em] text-stitch-on-surface-variant transition-colors hover:border-stitch-secondary/50 hover:text-stitch-on-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stitch-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-stitch-background"
         >
           <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-stitch-secondary" />
           <span>{node.kind}</span>
