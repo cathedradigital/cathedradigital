@@ -4,7 +4,6 @@ import { useRenderPerf } from '@/hooks/useRenderPerf';
 import { Button } from '@/components/ui/button';
 import { Icons } from '@/constants';
 import { supabase } from '@/lib/db';
-import Relatio from '@/components/cathedra/Relatio';
 import BibleVersePopover from '@/components/cathedra/BibleVersePopover';
 import MagisteriumPopover from '@/components/cathedra/MagisteriumPopover';
 import { useNavigate, useSearchParams } from '@/lib/rr-compat';
@@ -871,9 +870,6 @@ const Catechism: React.FC = memo(() => {
               <CatechismFurtherReading editorial={editorial} />
 
               <EditorialDivider variant="gold-fade" className="max-w-[240px] mx-auto mt-spacing-4xl mb-spacing-2xl" />
-              <div>
-                <Relatio context={{ type: 'catechism', paragraph: currentParagraph }} onNavigateToBible={handleNavigateToBible} onNavigateToCIC={jumpToParagraph} onNavigateToDoc={handleNavigateToDoc} />
-              </div>
 
             </div>
 
