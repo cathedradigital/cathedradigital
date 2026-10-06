@@ -2,7 +2,6 @@ import { ArrowLeft, Search, MoreVertical } from "lucide-react";
 import { useNavigate, Link } from '@/lib/rr-compat';
 import { cn } from "@/lib/utils";
 import { CATHEDRA_BRAND } from "@/constants";
-import { EnvironmentModuleNav } from "@/components/mobile/EnvironmentModuleNav";
 import { useLang } from "@/hooks/useLang";
 import type { ReactNode } from "react";
 
@@ -120,7 +119,6 @@ export function MobileTopBar({
       </div>
 
     </header>
-    <EnvironmentModuleNav />
     </div>
   );
 }

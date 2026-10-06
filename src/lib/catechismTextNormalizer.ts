@@ -17,6 +17,36 @@ const MULTI_SPACE_RE = /[ \t]{2,}/g;
 const CRLF_RE = /\r\n?/g;
 const TRAILING_WS_RE = /[ \t]+$/gm;
 const LEADING_WS_RE = /^[ \t]+/gm;
+
+// A extração HTML da fonte portuguesa preserva entidades como &atilde; e &#x2014;.
+// Decodificamos somente essas entidades para o leitor, sem alterar o texto doutrinal.
+const HTML_ENTITY_RE = /&(#(?:x[0-9a-fA-F]+|[0-9]+)|[a-zA-Z][a-zA-Z0-9]+);/g;
+const NAMED_HTML_ENTITIES: Record<string, string> = {
+  amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: '\u00A0',
+  laquo: '«', raquo: '»', lsquo: '‘', rsquo: '’', ldquo: '“', rdquo: '”',
+  ndash: '–', mdash: '—', hellip: '…', middot: '·', bull: '•',
+  agrave: 'à', aacute: 'á', acirc: 'â', atilde: 'ã', auml: 'ä',
+  egrave: 'è', eacute: 'é', ecirc: 'ê', euml: 'ë',
+  igrave: 'ì', iacute: 'í', icirc: 'î', iuml: 'ï',
+  ograve: 'ò', oacute: 'ó', ocirc: 'ô', otilde: 'õ', ouml: 'ö',
+  ugrave: 'ù', uacute: 'ú', ucirc: 'û', uuml: 'ü', ccedil: 'ç', ntilde: 'ñ',
+  Agrave: 'À', Aacute: 'Á', Acirc: 'Â', Atilde: 'Ã', Auml: 'Ä',
+  Egrave: 'È', Eacute: 'É', Ecirc: 'Ê', Euml: 'Ë',
+  Igrave: 'Ì', Iacute: 'Í', Icirc: 'Î', Iuml: 'Ï',
+  Ograve: 'Ò', Oacute: 'Ó', Ocirc: 'Ô', Otilde: 'Õ', Ouml: 'Ö',
+  Ugrave: 'Ù', Uacute: 'Ú', Ucirc: 'Û', Uuml: 'Ü', Ccedil: 'Ç', Ntilde: 'Ñ',
+};
+function decodeHtmlEntities(text: string): string {
+  return text.replace(HTML_ENTITY_RE, (entity, body: string) => {
+    const hex = body.startsWith('#x') || body.startsWith('#X');
+    if (hex || body.startsWith('#')) {
+      const codePoint = Number.parseInt(body.slice(hex ? 2 : 1), hex ? 16 : 10);
+      return Number.isFinite(codePoint) && codePoint > 0 && codePoint <= 0x10ffff
+        ? String.fromCodePoint(codePoint) : entity;
+    }
+    return NAMED_HTML_ENTITIES[body] ?? entity;
+  });
+}
 const EXCESS_BREAKS_RE = /\n{3,}/g;
 
 const BULLET_INLINE_RE = /([.;:])\s*([–•●▪·])\s+/g;
@@ -110,6 +140,8 @@ export function normalizeCatechismTextWithReport(
 
   changes.crlfReplaced = countMatches(text, CRLF_RE);
   text = text.replace(CRLF_RE, '\n');
+
+  text = decodeHtmlEntities(text);
 
   changes.invisibleCharsRemoved = countMatches(text, INVISIBLE_CHARS_RE);
   text = text.replace(INVISIBLE_CHARS_RE, '');
