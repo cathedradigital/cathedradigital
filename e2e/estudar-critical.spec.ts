@@ -177,6 +177,14 @@ test('Catecismo: gatilho do Nexus/Yá permanece visível e acionável no mobile'
   await expect(trigger).toHaveAttribute('aria-label', 'Abrir Yá para o parágrafo 10');
 });
 
+test('Catecismo: leitor usa um único bloco de Conexo e não mantém Relatio duplicado', async ({ page }) => {
+  await login(page, '/catechism?p=279');
+  await expect(page.locator('#p279')).toBeVisible();
+  await expect(page.locator('[data-nexus-panel]')).toHaveCount(1);
+  await expect(page.locator('#relatio-heading')).toHaveCount(0);
+});
+
+
 test('Catecismo: texto oficial com entidades HTML é exibido como caracteres reais', async ({ page }) => {
   await login(page, '/catechism?p=10');
   await expect(page.locator('#p10')).toBeVisible();
