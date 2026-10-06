@@ -13,8 +13,10 @@ import { supabase } from '@/lib/db';
 
 export type CatechismDiagStep =
   | 'cache_hit'
+  | 'cache_suspect'
   | 'official_query'
   | 'official_hit'
+  | 'official_suspect'
   | 'official_error'
   | 'local_hit'
   | 'edge_invoke'
