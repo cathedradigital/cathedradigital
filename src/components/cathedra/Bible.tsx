@@ -1762,7 +1762,17 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
               settings.theme === 'night' ? "bg-[#0A0B0D]/95" : "bg-[#FAF9F6]/95"
             )}>
               <div className="mx-auto flex min-h-16 w-full max-w-5xl items-center justify-between gap-spacing-sm px-4 sm:px-6 lg:px-8">
-                <button onClick={() => navigate(`/bible?book=${selectedBook.abbr}`)} aria-label="Voltar para lista de capítulos" className="min-h-11 min-w-11 flex items-center justify-center rounded-full text-primary/45 transition-colors hover:bg-primary/5 hover:text-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (window.history.length > 1) navigate(-1);
+                    else navigate('/bible');
+                  }}
+                  aria-label="Voltar para a tela anterior"
+                  title="Voltar para a tela anterior"
+                  data-testid="bible-reader-back"
+                  className="min-h-11 min-w-11 flex items-center justify-center rounded-full border border-primary/10 bg-background/80 text-primary/70 shadow-sm transition-colors hover:bg-primary/5 hover:text-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2"
+                >
                   <Icons.ChevronLeft className="w-5 h-5" aria-hidden="true" />
                 </button>
 
