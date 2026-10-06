@@ -8,6 +8,7 @@
 import React, { lazy, Suspense } from 'react';
 import { Helmet } from '@/lib/helmet-compat';
 import { Link, useSearchParams } from '@/lib/rr-compat';
+import { getParagraphParam } from '@/lib/queryParams';
 import { BookMarked, ArrowRight, Search as SearchIcon } from 'lucide-react';
 import { CIC_SECTIONS } from '@/data/catechism';
 import { AppRoute } from '@/types';
@@ -27,7 +28,7 @@ const PART_KICKERS: Record<string, string> = {
 
 const AtriumCatechismReader: React.FC = () => {
   const [sp] = useSearchParams();
-  const pParam = sp.get('p');
+  const pParam = getParagraphParam(sp);
 
   // Reader Template Master (COS §10 / Regra 11):
   // Quando há `?p=`, o próprio Catechism renderiza a cadeia canônica
