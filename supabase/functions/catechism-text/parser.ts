@@ -122,11 +122,11 @@ export function extractParagraph(
 
     const from = index === startIndex ? startOffset : 0;
     const tail = block.slice(from);
-    const nextOffset = markerIndex(tail, nextParagraph);
     const markerPrefix = index === startIndex
       ? new RegExp("^" + paragraph + "\\s*\\.\\s+")
       : null;
     const withoutMarker = markerPrefix ? tail.replace(markerPrefix, "").trim() : tail.trim();
+    const nextOffset = markerIndex(withoutMarker, nextParagraph);
 
     const content = nextOffset >= 0
       ? withoutMarker.slice(0, nextOffset).trim()
