@@ -98,14 +98,14 @@ const CatechismParagraphPreview: React.FC<{ paragraphId: string }> = ({ paragrap
 
   return (
     <div
-      className="rounded-xl border border-blue-500/25 bg-card p-spacing-sm shadow-sm dark:bg-card"
+      className="rounded-xl border border-[#B8CBE3] bg-[#F8FAFD] p-4 shadow-sm dark:border-[#3E5B78] dark:bg-[#121A22]"
       data-testid="catechism-preview"
       data-cic-paragraph={pNum}
     >
-      <p className="text-premium-xs font-bold uppercase tracking-[0.16em] text-blue-700 dark:text-blue-200">
+      <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-[#1F4F7A] dark:text-[#BFD8F2]">
         Texto do Catecismo · §{pNum}
       </p>
-      <p className="mt-1 text-sm font-serif text-foreground leading-[1.6] max-h-40 overflow-y-auto pr-2 scrollbar-thin">
+      <p className="mt-2 text-sm font-serif leading-[1.65] text-[#24313D] dark:text-[#E7EEF5] max-h-40 overflow-y-auto pr-2 scrollbar-thin">
         {data.content}
       </p>
     </div>
@@ -1156,7 +1156,7 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
       <button 
         onClick={() => setIsDiagnosticOpen(true)}
         aria-label="Abrir diagnóstico cirúrgico da Bíblia"
-        className="fixed top-20 right-4 z-[999] min-h-11 min-w-11 p-spacing-xs bg-primary/5 rounded-full opacity-100 sm:opacity-0 hover:opacity-100 focus-visible:opacity-100 transition-opacity flex items-center justify-center"
+        className="fixed top-20 right-4 z-[999] hidden min-h-11 min-w-11 p-spacing-xs bg-primary/5 rounded-full opacity-0"
       >
         <Icons.Activity className="w-4 h-4 text-primary/20" aria-hidden="true" />
       </button>
