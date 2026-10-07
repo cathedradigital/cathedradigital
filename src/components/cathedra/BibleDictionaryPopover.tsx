@@ -114,7 +114,7 @@ const BibleDictionaryPopover: React.FC<BibleDictionaryPopoverProps> = ({ term, c
         ) : (
           <div className="text-center py-spacing-md space-y-spacing-sm">
             <Icons.Info className="w-spacing-lg h-spacing-lg text-primary/10 mx-auto" />
-            <p className="text-premium-xs text-muted-foreground italic">Termo em catalogação nos arquivos da Cathedra.</p>
+            <p className="text-premium-xs leading-relaxed text-foreground/75 italic">Esta palavra está marcada porque possui uma entrada editorial no Glossário bíblico. Toque novamente para consultar a explicação disponível.</p>
           </div>
         )}
       </PopoverContent>
