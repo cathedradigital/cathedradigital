@@ -161,7 +161,7 @@ export function BiblePickerSheet({
           ))}
         </div>
       ) : (
-        <div className="space-y-4 rounded-2xl border border-stitch-outline-variant/60 bg-stitch-surface p-3 shadow-sm text-stitch-on-surface">
+        <div className="space-y-4 rounded-2xl border border-[#D8D1C7] bg-[#FAF9F6] p-3 shadow-sm text-[#1C1B1A]">
           <button
             type="button"
             onClick={() => setBook(null)}
@@ -182,8 +182,8 @@ export function BiblePickerSheet({
                 }}
                 className={cn(
                   "flex aspect-square items-center justify-center rounded-md border border-stitch-outline-variant/30",
-                  "bg-stitch-surface-container font-stitch-display text-[16px] text-stitch-primary",
-                  "transition-colors hover:border-stitch-secondary hover:bg-stitch-secondary-container",
+                  "bg-[#F1EEE8] font-stitch-display text-[16px] font-semibold text-[#2B211B]",
+                  "transition-colors hover:border-stitch-secondary hover:bg-[#E7E0D4] active:bg-[#DED5C8]",
                   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stitch-secondary",
                 )}
               >
