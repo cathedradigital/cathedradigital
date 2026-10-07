@@ -64,8 +64,9 @@ const BibleDictionaryPopover: React.FC<BibleDictionaryPopoverProps> = ({ term, c
       <PopoverTrigger asChild>
         <button 
           data-testid="bible-dictionary-popover-trigger"
-          className="underline decoration-primary/20 decoration-dotted underline-offset-4 hover:decoration-primary transition-all cursor-help text-left focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none rounded-sm"
-          aria-haspopup="true"
+          className="underline decoration-primary/45 decoration-dotted underline-offset-4 hover:decoration-secondary hover:decoration-2 transition-all cursor-help text-left focus-visible:ring-2 focus-visible:ring-secondary focus-visible:outline-none rounded-sm font-medium"
+          aria-haspopup="dialog"
+          aria-label={\`Explicar o termo bíblico “\${term}”\`}
         >
           {children}
         </button>
@@ -94,19 +95,20 @@ const BibleDictionaryPopover: React.FC<BibleDictionaryPopoverProps> = ({ term, c
               <Icons.Glossary className="w-spacing-md h-spacing-md text-primary/20" />
             </div>
 
-            <p className="text-premium-xs leading-relaxed text-muted-foreground italic">
+            <p className="mb-1 text-[9px] font-bold uppercase tracking-[0.16em] text-secondary/80">Por que esta palavra está destacada</p>
+            <p className="text-premium-xs leading-relaxed text-foreground/80 italic">
               {entry.definition}
             </p>
             {entry.deep_interpretation && (
               <div className="pt-spacing-sm border-t border-primary/5">
-                <p className="text-[10px] font-bold uppercase tracking-widest text-primary/40 mb-spacing-xs">Contexto Teológico</p>
+                <p className="text-[10px] font-bold uppercase tracking-widest text-secondary/80 mb-spacing-xs">Contexto teológico</p>
                 <p className="text-[11px] leading-relaxed text-muted-foreground">
                   {entry.deep_interpretation}
                 </p>
               </div>
             )}
             {entry.reference && (
-              <p className="text-[9px] text-primary/30 text-right italic">— {entry.reference}</p>
+              <p className="text-[10px] text-foreground/60 text-right italic">Fonte: {entry.reference}</p>
             )}
           </div>
         ) : (
