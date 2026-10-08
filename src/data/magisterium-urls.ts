@@ -62,7 +62,7 @@ export interface MagisteriumCategory {
 // ---------------------------------------------------------------------------
 export const MAGISTERIUM_URLS: Record<string, string> = {
   // Documentos conciliares e dogmáticos (chaves por nome — legado)
-  'Dei Filius': 'https://www.vatican.va/archive/hist_councils/i-vatican-council/documents/vat-i_const_18700424_dei-filius_la.html',
+  'Dei Filius': 'https://www.vatican.va/content/pius-ix/pt/documents/constitutio-dogmatica-dei-filius-24-aprilis-1870.html',
   'Ineffabilis Deus': 'https://www.vatican.va/content/pius-ix/pt/documents/18541208-costituzione-apostolica-ineffabilis-deus.html',
   'Munificentissimus Deus': 'https://www.vatican.va/content/pius-xii/pt/apost_constitutions/documents/hf_p-xii_apc_19501101_munificentissimus-deus.html',
   'Pastor Aeternus': 'https://www.vatican.va/archive/hist_councils/i-vatican-council/documents/vat-i_const_18700718_pastor-aeternus_la.html',
@@ -105,7 +105,7 @@ export const MAGISTERIUM_URLS: Record<string, string> = {
 
   // Aliases por slug para documentos que só tinham chave por nome — permitem
   // que o Viewer resolva `/magisterium/:slug` sem depender de nomes com espaço.
-  'dfil': 'https://www.vatican.va/archive/hist_councils/i-vatican-council/documents/vat-i_const_18700424_dei-filius_la.html',
+  'dfil': 'https://www.vatican.va/content/pius-ix/pt/documents/constitutio-dogmatica-dei-filius-24-aprilis-1870.html',
   'paet': 'https://www.vatican.va/archive/hist_councils/i-vatican-council/documents/vat-i_const_18700718_pastor-aeternus_la.html',
   'ideus': 'https://www.vatican.va/content/pius-ix/pt/documents/18541208-costituzione-apostolica-ineffabilis-deus.html',
   'mdeus': 'https://www.vatican.va/content/pius-xii/pt/apost_constitutions/documents/hf_p-xii_apc_19501101_munificentissimus-deus.html',
@@ -147,7 +147,7 @@ export const MAGISTERIUM_URLS: Record<string, string> = {
   'compendio-doutrina-social': 'https://www.vatican.va/roman_curia/pontifical_councils/justpeace/documents/rc_pc_justpeace_doc_20060526_compendio-dott-soc_po.html',
   'codex-iuris-canonici': 'https://www.vatican.va/archive/cod-iuris-canonici/portuguese/codex-iuris-canonici_po.pdf',
   'catecismo-igreja-catolica': 'https://www.vatican.va/archive/cathechism_po/index_po.htm',
-  'dei-filius': 'https://www.vatican.va/archive/hist_councils/i-vatican-council/documents/vat-i_const_18700424_dei-filius_la.html',
+  'dei-filius': 'https://www.vatican.va/content/pius-ix/pt/documents/constitutio-dogmatica-dei-filius-24-aprilis-1870.html',
   'pastor-aeternus': 'https://www.vatican.va/archive/hist_councils/i-vatican-council/documents/vat-i_const_18700718_pastor-aeternus_la.html',
   'ineffabilis-deus': 'https://www.vatican.va/content/pius-ix/pt/documents/18541208-costituzione-apostolica-ineffabilis-deus.html',
   'munificentissimus-deus': 'https://www.vatican.va/content/pius-xii/pt/apost_constitutions/documents/hf_p-xii_apc_19501101_munificentissimus-deus.html',
