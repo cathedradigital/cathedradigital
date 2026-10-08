@@ -41,8 +41,15 @@ async function openStudyJournal(page: Page, marker: string) {
 test('auth redirect preserves protected destination', async ({ page }) => {
   await page.context().clearCookies();
   await page.goto('/diario');
-  await expect.poll(() => page.url()).toContain('/auth?next=');
-  await expect.poll(() => page.url()).toContain('diario');
+  await expect.poll(() => new URL(page.url()).pathname).toBe('/auth');
+  await expect.poll(() => new URL(page.url()).searchParams.get('next')).toBe('/diario');
+});
+
+test('legacy /login redirect preserves the complete deep-link', async ({ page }) => {
+  const destination = '/bible?book=joao&chapter=1&v=1';
+  await page.goto('/login?next=' + encodeURIComponent(destination));
+  await expect.poll(() => new URL(page.url()).pathname).toBe('/auth');
+  await expect.poll(() => new URL(page.url()).searchParams.get('next')).toBe(destination);
 });
 
 test('Bíblia: anotação → Diário → retorno exato ao versículo', async ({ page }) => {
