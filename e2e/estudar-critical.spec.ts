@@ -236,3 +236,4 @@ test.describe('responsive critical flow', () => {
     expect(overflow).toBe(false);
   });
 });
+// Catecismo P0 validation trigger: test-only marker.
