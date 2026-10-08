@@ -1399,15 +1399,24 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             className={cn(
-              "px-spacing-lg pt-10 pb-32 max-w-lg mx-auto transition-colors duration-1000",
+              "px-5 sm:px-8 pt-12 sm:pt-14 pb-32 max-w-2xl mx-auto transition-colors duration-1000",
               settings.theme === 'night' && "bg-[#0D0E10] text-stone-400"
             )}
 
           >
             {/* Minimal Header */}
-            <header className="mb-spacing-xl flex items-center justify-between">
-              <div className="w-10" /> {/* Spacer */}
-              <div className="flex flex-col items-center">
+            <header className="mb-spacing-xl flex items-center justify-between gap-spacing-sm">
+              <button
+                type="button"
+                onClick={() => navigate('/')}
+                aria-label="Voltar para o Átrio"
+                title="Voltar para o Átrio"
+                data-testid="bible-home-back"
+                className="min-h-11 min-w-11 flex items-center justify-center rounded-full border border-primary/10 bg-background/80 text-primary/65 shadow-sm transition-colors hover:bg-primary/5 hover:text-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2"
+              >
+                <Icons.ChevronLeft className="w-5 h-5" aria-hidden="true" />
+              </button>
+              <div className="flex min-w-0 flex-1 flex-col items-center">
                 <Icons.BookOpen className="w-8 h-8 text-secondary/40 mb-spacing-sm" />
                 <h1 className="font-display text-2xl tracking-[0.2em] uppercase text-primary/80">Bíblia Sagrada</h1>
               </div>
@@ -1473,7 +1482,7 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
 
             {/* Vertical Book List */}
             <div
-              className="space-y-spacing-2xl"
+              className="space-y-spacing-2xl mt-spacing-lg"
               data-testid="book-list"
               onKeyDown={(e) => {
                 if (!['ArrowUp','ArrowDown','Home','End'].includes(e.key)) return;
@@ -1544,7 +1553,7 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
                             aria-current={isActive ? 'page' : undefined}
 
                             className={cn(
-                              "w-full h-14 flex items-center justify-between transition-colors px-spacing-sm rounded-lg group",
+                              "w-full min-h-14 flex items-center justify-between transition-colors px-3 sm:px-4 rounded-lg group",
                               "hover:bg-primary/[0.03] active:bg-primary/[0.05] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary/60",
                               isActive
                                 ? "bg-secondary/10 border-l-2 border-secondary shadow-sm"
