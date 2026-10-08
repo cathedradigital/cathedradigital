@@ -156,9 +156,9 @@ const MagisteriumViewer: React.FC = () => {
     if (id && knownSourceLanguages[id]) return knownSourceLanguages[id];
 
     const url = docMeta?.url ?? '';
-    const pathMatch = url.match(/\\/((?:pt|en|es|it|la|fr|de))\\//i);
+    const pathMatch = url.match(/\/((?:pt|en|es|it|la|fr|de))\//i);
     if (pathMatch) return pathMatch[1].toLowerCase() as Language;
-    const suffixMatch = url.match(/_(po|la|en|es|it|fr|de)(?:\\.|-|_)/i);
+    const suffixMatch = url.match(/_(po|la|en|it|fr|de)(?:\.|-|_)/i);
     if (suffixMatch?.[1]?.toLowerCase() === 'po') return 'pt';
     return (suffixMatch?.[1]?.toLowerCase() as Language) || 'pt';
   }, [docMeta?.url, id]);
@@ -179,11 +179,6 @@ const MagisteriumViewer: React.FC = () => {
       if (cached) setTranslatedText(cached);
     } catch { /* cache unavailable */ }
   }, [translationCacheKey, sourceLanguage, lang]);
-
-  useEffect(() => {
-    if (!content?.text || sourceLanguage === lang || translatedText || translationLoading) return;
-    void translateDocument();
-  }, [content?.text, sourceLanguage, lang, translatedText, translationLoading, translateDocument]);
 
   const translateDocument = useCallback(async () => {
     if (!content?.text || sourceLanguage === lang || translationLoading) return;
@@ -211,6 +206,11 @@ const MagisteriumViewer: React.FC = () => {
       setTranslationProgress(null);
     }
   }, [content?.text, sourceLanguage, lang, translationLoading, translationCacheKey]);
+
+  useEffect(() => {
+    if (!content?.text || sourceLanguage === lang || translatedText || translationLoading) return;
+    void translateDocument();
+  }, [content?.text, sourceLanguage, lang, translatedText, translationLoading, translateDocument]);
 
 
   useEffect(() => {
