@@ -1,73 +1,51 @@
 # Publicação do Cátedra no Cloudflare Workers
 
-## Objetivo
+## Fonte única de verdade
 
-Usar o mesmo repositório GitHub como fonte única e publicar o Cátedra no Cloudflare Workers para termos uma segunda URL de visualização enquanto o Vercel estiver sujeito ao limite de build.
+O repositório oficial é `cathedradigital/cathedradigital`.
 
-O Cátedra usa TanStack Start com SSR, portanto a publicação deve ser feita como **Cloudflare Worker**, não como um site estático simples.
+A cadeia oficial é:
 
-## Conexão GitHub → Cloudflare
+**GitHub `main` → GitHub Actions → build/validação → Cloudflare Worker → domínios oficiais**
 
-1. Abrir o painel da Cloudflare.
-2. Entrar em **Workers & Pages**.
-3. Selecionar **Create application**.
-4. Escolher **Import a repository**.
-5. Autorizar a conta/organização GitHub quando solicitado.
-6. Selecionar `cathedradigital/digital-cathedral`.
-7. Escolher a branch `main` como produção.
-8. Salvar e fazer o primeiro deploy.
-9. Confirmar a URL `workers.dev` gerada.
-10. Depois, em **Settings → Builds**, conferir se o repositório está conectado.
+Não manter uma segunda publicação de produção em Vercel nem uma cadeia paralela de código.
 
-A integração do Cloudflare pode criar builds automaticamente a cada push e também publicar URLs de Preview para branches/PRs.
+## Worker e domínios
 
-## Configuração do projeto
+O projeto usa TanStack Start com SSR e o plugin oficial do Cloudflare para Vite. A configuração de produção está em `wrangler.jsonc`.
 
-A documentação atual do Cloudflare possui autoconfiguração para projetos existentes. Como o repositório ainda não contém `wrangler.jsonc`, é preferível deixar o primeiro import gerar a configuração oficial e o PR correspondente, em vez de criar manualmente uma configuração incompleta.
+Domínios que devem ser validados após cada publicação:
 
-Depois do PR de autoconfiguração:
-
-- revisar o `wrangler.jsonc`;
-- conferir o nome do Worker;
-- conferir `compatibility_date`;
-- conferir `nodejs_compat`;
-- conferir o plugin do Cloudflare no Vite;
-- executar a validação/build;
-- só então mesclar.
-
-## Regra de publicação do Cátedra
-
-GitHub = fonte única do código.
-
-Vercel = produção atual.
-
-Cloudflare = segunda publicação/visualização e previews.
-
-Não serão mantidas duas versões de código.
-
-## Auditoria
-
-As correções funcionais continuam sendo feitas no GitHub. O Cloudflare só passa a publicar o estado consolidado quando a integração estiver autorizada e o primeiro build estiver validado.
-
+- `https://cathedradigital.com.br`
+- `https://www.cathedradigital.com.br`
+- `https://cathedradigital.cathedradigital.workers.dev`
 
 ## Deploy automático pelo GitHub Actions
 
-O repositório agora possui o workflow `.github/workflows/cloudflare-deploy.yml`.
+O workflow `.github/workflows/cloudflare-deploy.yml` publica somente após as validações.
 
-- Pull requests continuam usando o workflow de qualidade para validar o código, sem publicar.
-- Cada push/merge em `main` executa as validações e, somente depois, publica o Worker no Cloudflare.
-- Execuções concorrentes de produção são canceladas para evitar builds/deploys duplicados.
-- O workflow não contém credenciais no código.
+- Pull requests validam o código, sem deploy de produção.
+- Push/merge em `main` executa typecheck, lint, links, build e deploy.
+- Execuções concorrentes de produção são canceladas para evitar deploys duplicados.
+- Credenciais ficam somente nos GitHub Secrets.
 
-### Credenciais necessárias uma única vez
+### Credenciais
 
-Em **GitHub → Settings → Secrets and variables → Actions**, cadastrar:
+Em **GitHub → Settings → Secrets and variables → Actions**:
 
 - `CLOUDFLARE_API_TOKEN`
 - `CLOUDFLARE_ACCOUNT_ID`
 
-O token deve ter apenas as permissões necessárias para publicar Workers. Nunca colocar o token em arquivos, commits ou variáveis públicas.
+Nunca colocar credenciais em arquivos, commits, logs ou variáveis públicas.
 
-### Proteção de custo durante o desenvolvimento
+## Regra operacional
 
-A publicação automática fica limitada a `main`; PRs não fazem deploy. Como o repositório é público, os runners padrão do GitHub Actions não consomem a franquia mensal de minutos da conta. No Cloudflare Workers Free, o limite atual é de 100.000 requisições por dia; ultrapassar o limite do plano Free faz as operações falharem, em vez de gerar cobrança por excesso. Antes de habilitar qualquer plano pago, manteremos o projeto no Free enquanto o Cátedra estiver em desenvolvimento.
+Uma alteração só é considerada entregue quando:
+
+1. está no `main`;
+2. o build passa;
+3. o Worker é publicado;
+4. as três URLs acima são verificadas;
+5. o fluxo crítico alterado é validado em produção.
+
+Se algum estágio falhar, a entrega fica **bloqueada**, e o próximo passo deve tratar a falha antes de declarar a funcionalidade pronta.

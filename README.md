@@ -21,6 +21,8 @@ A proposta não é apenas oferecer uma coleção de conteúdos católicos. É aj
 - Segurança no backend; guards de frontend não substituem autorização.
 - Privacidade por padrão.
 - Qualidade contínua em mobile, acessibilidade, SEO e testes.
+- **GitHub → main → Cloudflare Workers** é a cadeia oficial de publicação.
+- Vercel e Lovable não são ambientes oficiais de produção deste projeto.
 
 ## Documentação
 
@@ -34,15 +36,18 @@ A proposta não é apenas oferecer uma coleção de conteúdos católicos. É aj
 - `docs/architecture/overview.md` — arquitetura
 - `docs/security/security.md` — segurança
 - `docs/quality/testing.md` — qualidade
-- `docs/ai/logos.md` — princípios do Logos
+- `docs/ai/logos.md` — princípios do assistente
 
 ## Desenvolvimento
 
-O projeto é conectado ao Lovable. Não reescreva histórico já publicado. Mantenha o branch conectado em estado funcional.
+O código é mantido no GitHub e publicado no Cloudflare Workers. Não criar uma segunda cadeia de deploy nem reintroduzir dependência de plataforma de geração de código para publicação.
 
 Antes de considerar uma mudança pronta:
 1. valide tipos, lint e testes relevantes;
-2. teste fluxos críticos em mobile;
-3. verifique acessibilidade em mudanças de interface;
-4. nunca comite segredos;
-5. documente decisões relevantes de produto, arquitetura e segurança.
+2. teste fluxos críticos em mobile e desktop;
+3. verifique acessibilidade nas mudanças de interface;
+4. valide dados e autorização no backend;
+5. nunca comite segredos;
+6. confirme o build e a publicação no Cloudflare;
+7. valide as URLs de produção depois do deploy;
+8. documente decisões relevantes de produto, arquitetura e segurança.

@@ -38,7 +38,7 @@ export const APP_ROUTES: RouteConfig[] = [
   { path: '/oracao', label: 'Orações', icon: Icons.Prayer, showInMenu: true, category: 'content' },
   { path: '/rosary', label: 'Rosário', icon: Icons.Rosary, showInMenu: true, category: 'content' },
   { path: '/viacrucis', label: 'Via Sacra', icon: Icons.ViaCrucis, showInMenu: true, category: 'content' },
-  { path: '/bible-recovery', label: 'Recovery Bíblia', icon: Icons.Stethoscope, showInMenu: true, category: 'content' },
+  { path: '/bible-recovery', label: 'Recovery Bíblia', icon: Icons.Stethoscope, showInMenu: false, category: 'content' },
   { path: '/glossario', label: 'Glossário', icon: Icons.Glossary, showInMenu: true, category: 'content' },
 
   // Órfãs catalogadas (rota real existe, showInMenu:false — decisão editorial futura)
