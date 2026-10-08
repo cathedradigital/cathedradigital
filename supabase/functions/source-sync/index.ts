@@ -93,12 +93,14 @@ function parsePage(text:string,from:number,to:number){
     const chosen=candidates[0];
     if(!chosen) continue;
     const nextCandidates=(markers.get(n+1)??[]).filter(x=>x.index>chosen.index);
-    const end=nextCandidates[0]?.index??text.length;
-    const content=text.slice(chosen.index+chosen.length,end).replace(/\\s+/g," ").trim();
-    if(content.length>=20){
-      out.push({paragraph:n,content});
-      cursor=end;
+    let end=nextCandidates[0]?.index??text.length;
+    if(!nextCandidates.length){
+      const notesIndex=text.search(/\n\s*Notas\b/i);
+      if(notesIndex>chosen.index) end=notesIndex;
     }
+    const content=text.slice(chosen.index+chosen.length,end).replace(/\s+/g," ").trim();
+    out.push({paragraph:n,content});
+    cursor=end;
   }
   return out;
 }
