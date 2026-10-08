@@ -131,7 +131,7 @@ test('Catecismo: alias paragraph mantém o deep-link canônico no leitor', async
   await login(page, '/catechism?paragraph=2865');
   await expect(page.locator('#p2865')).toBeVisible();
   await expect(page.locator('#heading-p2865')).toBeVisible();
-  await expect(page).toHaveURL(/\\/catechism\\?p=2865$/);
+  await expect(page).toHaveURL(/\/catechism\?p=2865$/);
 });
 
 test('Catecismo: busca por § atualiza a URL canônica antes da navegação', async ({ page }) => {
