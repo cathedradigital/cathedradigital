@@ -86,9 +86,15 @@ function parsePage(text:string,from:number,to:number){
     markers.set(n,list);
   }
 
-  if(from===2196 && to===2557 && !markers.has(2217)){
-    const alias=[...text.matchAll(/\b2117\s*\.?\s+/g)].map(m=>({index:m.index??0,length:m[0].length}));
-    if(alias.length) markers.set(2217,alias);
+  if(from===2196 && to===2557){
+    if(!markers.has(2217)){
+      const alias=[...text.matchAll(/\b2117\s*\.?\s+/g)].map(m=>({index:m.index??0,length:m[0].length}));
+      if(alias.length) markers.set(2217,alias);
+    }
+    if(!markers.has(2439)){
+      const alias=[...text.matchAll(/\b1439\s*\.?\s+/g)].map(m=>({index:m.index??0,length:m[0].length}));
+      if(alias.length) markers.set(2439,alias);
+    }
   }
   const out:{paragraph:number;content:string}[]=[];
   let cursor=0;
