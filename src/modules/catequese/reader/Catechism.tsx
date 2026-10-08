@@ -553,11 +553,24 @@ const Catechism: React.FC = memo(() => {
   }, [activeParagraphId, saveLastRead, setSearchParams]);
 
   useEffect(() => {
+    const rawParagraph = getParagraphParam(searchParams);
+    if (typeof initialParagraph === 'number' && rawParagraph !== String(initialParagraph)) {
+      // Canonicalize the legacy \`?paragraph=N\` alias immediately so shared links,
+      // browser history and analytics converge on the single \`?p=N\` contract.
+      setSearchParams((prev) => {
+        const next = new URLSearchParams(prev);
+        next.delete('paragraph');
+        next.set('p', String(initialParagraph));
+        return next;
+      }, { replace: true });
+      return;
+    }
+
     if (initialParagraph === 'invalid') {
       toast.error('Referência inválida do Catecismo — abrindo o índice.', { duration: 4000 });
     }
     // Só notifica uma vez por mudança de query.
-  }, [initialParagraph]);
+  }, [initialParagraph, searchParams, setSearchParams]);
 
   // Deep-link ?p=N: resolve part+section para entrar em modo leitura.
   useEffect(() => {
