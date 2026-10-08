@@ -76,18 +76,31 @@ function stripHtml(html:string){
     .replace(/\n{3,}/g,"\n\n").trim());
 }
 function parsePage(text:string,from:number,to:number){
-  const m=[...text.matchAll(/(?:^|\n)\s*(\d{1,4})\.\s+/g)];
-  const byParagraph=new Map<number,string>();
-  for(let i=0;i<m.length;i++){
-    const n=Number(m[i][1]); if(n<from||n>to) continue;
-    const start=(m[i].index??0)+(m[i][0].startsWith("\n")?1:0);
-    const end=i+1<m.length?(m[i+1].index??text.length):text.length;
-    const content=text.slice(start,end).replace(/^\s*\d{1,4}\.\s+/,"").replace(/\s+/g," ").trim();
-    if(content.length<20) continue;
-    const previous=byParagraph.get(n);
-    if(!previous || content.length>previous.length) byParagraph.set(n,content);
+  const markers=new Map<number,{index:number;length:number}[]>();
+  const pattern=/\\b(\\d{1,4})(?:\\s*\\.)?\\s+/g;
+  for(const match of text.matchAll(pattern)){
+    const n=Number(match[1]);
+    if(n<from||n>to) continue;
+    const list=markers.get(n)??[];
+    list.push({index:match.index??0,length:match[0].length});
+    markers.set(n,list);
   }
-  return [...byParagraph.entries()].map(([paragraph,content])=>({paragraph,content}));
+
+  const out:{paragraph:number;content:string}[]=[];
+  let cursor=0;
+  for(let n=from;n<=to;n++){
+    const candidates=(markers.get(n)??[]).filter(x=>x.index>=cursor);
+    const chosen=candidates[0];
+    if(!chosen) continue;
+    const nextCandidates=(markers.get(n+1)??[]).filter(x=>x.index>chosen.index);
+    const end=nextCandidates[0]?.index??text.length;
+    const content=text.slice(chosen.index+chosen.length,end).replace(/\\s+/g," ").trim();
+    if(content.length>=20){
+      out.push({paragraph:n,content});
+      cursor=end;
+    }
+  }
+  return out;
 }
 
 async function syncBible(db:any,limit:number){
