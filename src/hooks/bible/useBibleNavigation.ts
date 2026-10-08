@@ -102,11 +102,23 @@ export function useBibleNavigation(): UseBibleNavigation {
 
   useEffect(() => {
     const needsBookNormalization = Boolean(selectedBook && bookParam !== selectedBook.abbr);
-    if (!needsBookNormalization && !legacyChapterParam && !legacyVerseParam) return;
+    const parsedChapter = effectiveChapterParam ? Number.parseInt(effectiveChapterParam, 10) : null;
+    const normalizedChapter = selectedBook && parsedChapter && Number.isFinite(parsedChapter)
+      ? Math.min(Math.max(parsedChapter, 1), selectedBook.chapters)
+      : null;
+    const needsChapterNormalization = Boolean(
+      selectedBook &&
+      effectiveChapterParam &&
+      normalizedChapter !== null &&
+      String(normalizedChapter) !== effectiveChapterParam,
+    );
+
+    if (!needsBookNormalization && !needsChapterNormalization && !legacyChapterParam && !legacyVerseParam) return;
     setSearchParams((prev) => {
       const next = new URLSearchParams(prev);
       if (selectedBook) next.set('book', selectedBook.abbr);
       if (!next.get('ch') && legacyChapterParam) next.set('ch', legacyChapterParam);
+      if (needsChapterNormalization && normalizedChapter !== null) next.set('ch', String(normalizedChapter));
       if (!next.get('v') && legacyVerseParam) next.set('v', legacyVerseParam);
       next.delete('chapter');
       next.delete('verse');
