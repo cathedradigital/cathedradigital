@@ -12,6 +12,7 @@ on:
     - cron: "*/15 * * * *"
   workflow_dispatch:
   # Kickoff rastreável do sincronismo oficial após cada alteração de infraestrutura do sync.
+  # Catecismo P1: executar também após a correção do parser oficial.
 
 concurrency:
   group: official-source-sync
