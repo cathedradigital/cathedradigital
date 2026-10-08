@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useMemo, useRef, useCallback, useContext } from 'react';
 import { useParams, useNavigate, useSearchParams } from '@/lib/rr-compat';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
@@ -34,6 +34,10 @@ import { CatechismPopover } from '@/components/cathedra/CatechismPopover';
 import { parseTheologicalReferences } from '@/lib/theologicalRefs';
 import { EditorialDivider } from '@/components/editorial';
 import { HighlightMenu } from './HighlightMenu';
+import { LangContext } from '@/contexts/LangContext';
+import { getLocaleDefinition } from '@/lib/i18n/locales';
+import type { Language } from '@/types';
+import { callColloquium } from '@/services/aiService';
 
 
 function ReferenceAwareParagraph({ text }: { text: string }) {
@@ -75,6 +79,7 @@ const MIN_DOC_LEN = 500;
 
 const MagisteriumViewer: React.FC = () => {
   const { settings, updateSettings } = useReadingSettings();
+  const { lang } = useContext(LangContext);
   useReadingAutoHide(settings.visualSilence);
   const { id } = useParams<{ id: string }>();
 
@@ -94,6 +99,10 @@ const MagisteriumViewer: React.FC = () => {
   const [activeHighlight, setActiveHighlight] = useState<UserNote | null>(null);
   const [activeParagraphId, setActiveParagraphId] = useState<string | null>(null);
   const [contextualPassage, setContextualPassage] = useState<{ index: number; text: string } | null>(null);
+  const [translatedText, setTranslatedText] = useState<string | null>(null);
+  const [translationLoading, setTranslationLoading] = useState(false);
+  const [translationProgress, setTranslationProgress] = useState<{ current: number; total: number } | null>(null);
+  const [translationError, setTranslationError] = useState<string | null>(null);
 
   const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
   // STAB-004.3.2 — busca interna do documento
@@ -134,6 +143,83 @@ const MagisteriumViewer: React.FC = () => {
     () => (id ? MAGISTERIUM_DOCUMENTS.find((d) => d.id === id) : undefined),
     [id]
   );
+
+  const sourceLanguage = useMemo<Language>(() => {
+    const url = docMeta?.url ?? '';
+    const pathMatch = url.match(/\/((?:pt|en|es|it|la|fr|de))\//i);
+    if (pathMatch) return pathMatch[1].toLowerCase() as Language;
+    const suffixMatch = url.match(/_(po|la|en|es|it|fr|de)(?:\.|-|_)/i);
+    if (suffixMatch?.[1]?.toLowerCase() === 'po') return 'pt';
+    return (suffixMatch?.[1]?.toLowerCase() as Language) || 'pt';
+  }, [docMeta?.url]);
+
+  const sourceLanguageName = getLocaleDefinition(sourceLanguage).nativeName;
+  const targetLanguageName = getLocaleDefinition(lang).nativeName;
+  const showingTranslation = translatedText !== null && sourceLanguage !== lang;
+
+  const translationCacheKey = id ? `cathedra_magisterium_translation_${id}_${lang}_v1` : null;
+
+  useEffect(() => {
+    setTranslatedText(null);
+    setTranslationError(null);
+    setTranslationProgress(null);
+    if (!translationCacheKey || sourceLanguage === lang) return;
+    try {
+      const cached = localStorage.getItem(translationCacheKey);
+      if (cached) setTranslatedText(cached);
+    } catch { /* cache unavailable */ }
+  }, [translationCacheKey, sourceLanguage, lang]);
+
+  const translateDocument = useCallback(async () => {
+    if (!content?.text || sourceLanguage === lang || translationLoading) return;
+    setTranslationLoading(true);
+    setTranslationError(null);
+
+    try {
+      const paragraphs = content.text.split(/\n{2,}/).filter(Boolean);
+      const chunks: string[] = [];
+      let current = '';
+      for (const paragraph of paragraphs) {
+        const candidate = current ? `${current}\n\n${paragraph}` : paragraph;
+        if (current && candidate.length > 7000) {
+          chunks.push(current);
+          current = paragraph;
+        } else {
+          current = candidate;
+        }
+      }
+      if (current) chunks.push(current);
+
+      const translated: string[] = [];
+      setTranslationProgress({ current: 0, total: chunks.length });
+
+      for (let index = 0; index < chunks.length; index += 1) {
+        const prompt = [
+          `Traduza fielmente o texto abaixo do ${sourceLanguageName} para ${targetLanguageName}.`,
+          'É um documento oficial do Magistério católico. Faça tradução integral, não resumo e não comentário.',
+          'Preserve títulos, numeração, parágrafos, notas, referências bíblicas, referências ao Catecismo, citações entre aspas e a marcação Markdown.',
+          'Não invente, não omita e não modernize o conteúdo. Retorne somente a tradução.',
+          '',
+          chunks[index],
+        ].join('\n');
+        const response = await callColloquium([{ role: 'user', content: prompt }], 'document_translation');
+        if (!response.content) throw new Error(response.error || 'A tradução não retornou conteúdo.');
+        translated.push(response.content.trim());
+        setTranslationProgress({ current: index + 1, total: chunks.length });
+      }
+
+      const result = translated.join('\n\n');
+      setTranslatedText(result);
+      if (translationCacheKey) {
+        try { localStorage.setItem(translationCacheKey, result); } catch { /* cache unavailable */ }
+      }
+    } catch (err: any) {
+      setTranslationError(err?.message || 'Não foi possível traduzir este documento agora.');
+    } finally {
+      setTranslationLoading(false);
+      setTranslationProgress(null);
+    }
+  }, [content?.text, sourceLanguage, lang, sourceLanguageName, targetLanguageName, translationLoading, translationCacheKey]);
 
 
   useEffect(() => {
@@ -519,13 +605,9 @@ const MagisteriumViewer: React.FC = () => {
 
   const processedText = useMemo(() => {
     if (!content?.text) return '';
-    if (!highlight) return content.text;
-
-    // We don't want to break markdown by highlighting inside tags, 
-    // but for simple text highlighting in the viewer, this is a challenge with ReactMarkdown.
-    // Instead of modifying the markdown, we'll rely on the scrollIntoView logic above.
+    if (showingTranslation) return translatedText || '';
     return content.text;
-  }, [content, highlight]);
+  }, [content, translatedText, showingTranslation]);
 
   if (loading) {
     return (
@@ -621,8 +703,8 @@ const MagisteriumViewer: React.FC = () => {
         <EditorialHero
           kicker={`Magistério${docMeta?.category ? ` · ${docMeta.category}` : ''}`}
           title={docMeta?.title ?? content.title}
-          subtitle={requestedParagraph !== null ? `Leitura em foco · §${Number(requestedParagraph) + 1}` : (docMeta ? [docMeta.type, docMeta.author].filter(Boolean).join(' · ') : undefined)}
-          meta={docMeta?.year ? String(docMeta.year) : undefined}
+          subtitle={requestedParagraph !== null ? `Leitura em foco · §${Number(requestedParagraph) + 1}` : (docMeta ? [docMeta.type, docMeta.author, docMeta.year ? String(docMeta.year) : undefined].filter(Boolean).join(' · ') : undefined)}
+          meta={undefined}
         />
       }
       nexus={<NexusPanel output={magisteriumNexus} kicker={`Conexões · ${content.title}`} />}
@@ -704,6 +786,42 @@ const MagisteriumViewer: React.FC = () => {
 
             {/* STAB-004.2: Ficha rica do documento (só renderiza campos existentes) */}
             {docMeta && <MagisteriumDocumentHeader doc={docMeta} />}
+
+            {sourceLanguage !== lang && (
+              <section
+                aria-label="Idioma e tradução do documento"
+                className="w-full max-w-[70ch] mx-auto px-spacing-md md:px-0 mb-spacing-xl"
+              >
+                <div className="border border-primary/10 bg-primary/[0.025] px-spacing-md py-spacing-sm md:px-spacing-lg md:py-spacing-md rounded-xl flex flex-col gap-spacing-sm sm:flex-row sm:items-center sm:justify-between">
+                  <div className="min-w-0">
+                    <p className="text-[10px] font-black uppercase tracking-[0.16em] text-muted-foreground">
+                      Idioma original · {sourceLanguageName}
+                    </p>
+                    <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+                      {showingTranslation ? `Tradução de apoio para ${targetLanguageName}. A fonte oficial permanece vinculada ao Vaticano.` : `O texto carregado está em ${sourceLanguageName}. Você pode lê-lo em ${targetLanguageName} sem sair do Cátedra.`}
+                    </p>
+                  </div>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={translateDocument}
+                    disabled={translationLoading}
+                    className="shrink-0 rounded-full min-h-10 px-4 text-xs font-semibold"
+                    data-testid="magisterium-translate"
+                  >
+                    {translationLoading ? 'Traduzindo…' : showingTranslation ? 'Atualizar tradução' : `Traduzir para ${targetLanguageName}`}
+                  </Button>
+                </div>
+                {translationLoading && translationProgress && (
+                  <p className="mt-2 text-center text-[10px] text-muted-foreground" aria-live="polite">
+                    Traduzindo bloco {translationProgress.current} de {translationProgress.total}…
+                  </p>
+                )}
+                {translationError && (
+                  <p className="mt-2 text-center text-xs text-destructive" role="alert">{translationError}</p>
+                )}
+              </section>
+            )}
 
 
             {/* Visual Indicator for Keyboard Shortcuts */}
