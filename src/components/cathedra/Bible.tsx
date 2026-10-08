@@ -5,6 +5,7 @@ import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react'
  */
 import html2canvas from 'html2canvas';
 import { BIBLE_DATA, BibleBook } from '@/data/bible-books';
+import { BIBLE_TO_CIC } from '@/data/cross-references';
 import { Helmet } from '@/lib/helmet-compat';
 import { Link, useNavigate, useSearchParams } from '@/lib/rr-compat';
 import { useBibleNavigation } from '@/hooks/bible/useBibleNavigation';
@@ -1009,11 +1010,22 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
     };
   }, [KNOWLEDGE_CONNECTIONS]);
 
-  // Map of CIC catechism citations per book → { chapters: Set, verses: Set("ch-v") }
+  // CIC indicators combine two sources without inventing verse-level links:
+  // 1) the curated Nexus graph drives exact verse dots;
+  // 2) the existing editorial chapter map drives chapter dots when it has a CIC reference.
+  // Chapter-only entries are deliberately not converted into fake verse relations.
   const cicCitationMap = useMemo(() => {
     const chapters = new Set<number>();
     const verses = new Set<string>();
     if (!selectedBook) return { chapters, verses };
+
+    Object.entries(BIBLE_TO_CIC).forEach(([ref]) => {
+      const [abbr, chapterRaw] = ref.split(':');
+      if (abbr !== selectedBook.abbr) return;
+      const chapter = Number(chapterRaw);
+      if (Number.isFinite(chapter)) chapters.add(chapter);
+    });
+
     const mergedConnections = { ...KNOWLEDGE_CONNECTIONS, ...dynamicConnections };
     Object.entries(mergedConnections).forEach(([key, conns]) => {
       if (key === 'all') return;
@@ -1025,8 +1037,9 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
       if (!Number.isNaN(chNum)) chapters.add(chNum);
       if (v) verses.add(`${ch}-${v}`);
     });
+
     return { chapters, verses };
-  }, [KNOWLEDGE_CONNECTIONS, selectedBook]);
+  }, [KNOWLEDGE_CONNECTIONS, dynamicConnections, selectedBook]);
 
 
   // Pre-fetch all connections for the selected book (powers gold-dot indicators on the chapter grid)

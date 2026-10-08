@@ -57,10 +57,34 @@ async function fetchRetry(url:string){
   for(let i=1;i<=3;i++){try{const r=await fetch(url,{headers:{Accept:"application/json,text/html","User-Agent":"CathedraDigital/1.0"}});if(r.ok||r.status===404)return r;last=r.status;if(r.status<500||i===3)return r;}catch{if(i===3)break;}await new Promise(r=>setTimeout(r,150*i));}
   return new Response(null,{status:last});
 }
-function stripHtml(html:string){return html.replace(/<script[\s\S]*?<\/script>/gi," ").replace(/<style[\s\S]*?<\/style>/gi," ").replace(/<br\s*\/?>/gi," ").replace(/<\/p>/gi," ").replace(/<\/div>/gi," ").replace(/<\/li>/gi," ").replace(/<[^>]+>/g," ").replace(/&nbsp;/gi," ").replace(/&quot;/gi,'"').replace(/&#39;/gi,"'").replace(/&amp;/gi,"&").replace(/\s+/g," ").trim();}
+function decodeEntities(text:string){
+  return text.replace(/&nbsp;/gi," ").replace(/&quot;/gi,'"').replace(/&#39;/gi,"'")
+    .replace(/&amp;/gi,"&").replace(/&laquo;/gi,"«").replace(/&raquo;/gi,"»")
+    .replace(/&mdash;/gi,"—").replace(/&ndash;/gi,"–")
+    .replace(/&#x([0-9a-f]+);/gi,(_,hex)=>String.fromCodePoint(parseInt(hex,16)))
+    .replace(/&#(\d+);/g,(_,n)=>String.fromCodePoint(Number(n)));
+}
+function stripHtml(html:string){
+  return decodeEntities(html
+    .replace(/<script[\s\S]*?<\/script>/gi," ")
+    .replace(/<style[\s\S]*?<\/style>/gi," ")
+    .replace(/<br\s*\/?>/gi,"\n")
+    .replace(/<\/(?:p|div|li|blockquote|h[1-6])\s*>/gi,"\n")
+    .replace(/<[^>]+>/g," ")
+    .replace(/[ \t]+/g," ")
+    .replace(/\n[ \t]+/g,"\n")
+    .replace(/\n{3,}/g,"\n\n").trim());
+}
 function parsePage(text:string,from:number,to:number){
-  const m=[...text.matchAll(/(?:^|\s)(\d{1,4})(?:\.)?\s+/g)];const out:{paragraph:number;content:string}[]=[];
-  for(let i=0;i<m.length;i++){const n=Number(m[i][1]);if(n<from||n>to)continue;const start=(m[i].index??0)+(m[i][0].startsWith(" ")?1:0);const end=i+1<m.length?(m[i+1].index??text.length):text.length;const content=text.slice(start,end).replace(/^\d{1,4}\.\s+/,"").trim();if(content.length>=5)out.push({paragraph:n,content});}
+  const m=[...text.matchAll(/(?:^|\n)\s*(\d{1,4})\.\s+/g)];
+  const out:{paragraph:number;content:string}[]=[];
+  for(let i=0;i<m.length;i++){
+    const n=Number(m[i][1]); if(n<from||n>to) continue;
+    const start=(m[i].index??0)+(m[i][0].startsWith("\n")?1:0);
+    const end=i+1<m.length?(m[i+1].index??text.length):text.length;
+    const content=text.slice(start,end).replace(/^\s*\d{1,4}\.\s+/,"").replace(/\s+/g," ").trim();
+    if(content.length>=20) out.push({paragraph:n,content});
+  }
   return out;
 }
 

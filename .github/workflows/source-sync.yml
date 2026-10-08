@@ -7,6 +7,7 @@ on:
       - ".github/workflows/source-sync.yml"
       - "scripts/sync-official-sources.mjs"
       - "supabase/functions/source-import/**"
+      - "supabase/functions/source-sync/**"
   schedule:
     - cron: "*/15 * * * *"
   workflow_dispatch:
