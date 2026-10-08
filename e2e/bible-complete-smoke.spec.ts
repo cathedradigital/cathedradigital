@@ -94,6 +94,14 @@ test.describe('Bíblia — catálogo completo', () => {
     await expect(verse).toHaveClass(/bg-secondary\\/20/);
   });
 
+  test('ref de intervalo navega para o início e destaca todo o intervalo', async ({ page }) => {
+    await page.goto('/bible?ref=' + encodeURIComponent('1 Cor 13,4-7'));
+    await expect(page.locator('[data-testid="verse-text-4"]')).toBeVisible({ timeout: 30_000 });
+    for (const verse of [4, 5, 6, 7]) {
+      await expect(page.locator(`#verse-${verse}`)).toHaveClass(/bg-secondary\\/20/);
+    }
+  });
+
   test('deep-link com capítulo fora do limite é normalizado para o último capítulo', async ({ page }) => {
     await page.goto('/bible?book=Ap&ch=999');
     await expect(page.locator('[data-testid="verse-text-1"]')).toBeVisible({ timeout: 30_000 });
