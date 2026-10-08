@@ -254,7 +254,7 @@ export const MAGISTERIUM_CATEGORIES: MagisteriumCategory[] = [
  * Esta tabela é explícita: o idioma não é inferido da URL do Vaticano.
  */
 export const MAGISTERIUM_SOURCE_LANGUAGES: Record<string, MagisteriumLanguage> = {
-  dfil: 'la', paet: 'la', bdeus: 'la',
+  dfil: 'pt', paet: 'la', bdeus: 'la',
   sc: 'pt', lg: 'pt', dv: 'pt', gs: 'pt', ideus: 'pt', mdeus: 'pt',
   rn: 'pt', mcorp: 'pt', hv: 'pt', rh: 'pt', vs: 'pt', ev: 'pt', fr: 'pt',
   dce: 'pt', ss: 'pt', civ: 'pt', lf: 'pt', ls: 'pt', ft: 'pt',
