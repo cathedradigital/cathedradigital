@@ -66,6 +66,27 @@ test.describe('Bíblia — catálogo completo', () => {
     }
   });
 
+  test('parser resolve abreviações católicas e intervalos de versículos', async () => {
+    const { parseBibleReferences } = await import('../src/lib/bibleRefParser');
+
+    const cases = [
+      ['1 Cor 13,4-7', '1Co', 13, 4, 7],
+      ['1 Pe 3:15-16', '1Pe', 3, 15, 16],
+      ['Esd 1,1-3', 'Ed', 1, 1, 3],
+      ['Hab 2,4', 'Hc', 2, 4, undefined],
+      ['2 Mac 7,13-14', '2Mc', 7, 13, 14],
+    ] as const;
+
+    for (const [input, abbr, chapter, verse, endVerse] of cases) {
+      const ref = parseBibleReferences(input).find((segment) => segment.type === 'bibleRef');
+      expect(ref, input).toBeDefined();
+      expect(ref?.abbr, input).toBe(abbr);
+      expect(ref?.chapter, input).toBe(chapter);
+      expect(ref?.verse, input).toBe(verse);
+      expect(ref?.endVerse, input).toBe(endVerse);
+    }
+  });
+
   test('deep-link destaca o versículo solicitado', async ({ page }) => {
     await page.goto('/bible?book=Jo&ch=3&v=16');
     const verse = page.locator('#verse-16');
