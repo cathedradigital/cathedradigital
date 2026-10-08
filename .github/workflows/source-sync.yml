@@ -43,3 +43,5 @@ jobs:
         env:
           OIDC_TOKEN: ${{ steps.oidc.outputs.token }}
         run: node scripts/sync-official-sources.mjs
+
+# Sync trigger: keep official Catechism source repair runnable after parser fixes.
