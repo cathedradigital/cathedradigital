@@ -22,6 +22,12 @@ A cadeia oficial permanece GitHub → Cloudflare Workers → domínio próprio. 
 - O teste foi ajustado para reportar a mensagem de autenticação da interface ou o caminho final sem expor credenciais. O nome da etapa do workflow agora descreve honestamente o pré-requisito que ela verifica.
 - Ainda é necessário corrigir a causa real do login falho: a mensagem capturada pelo teste deve distinguir credencial inválida, conta indisponível, erro de rede e falha no redirecionamento. Não se deve contornar isso desativando o teste.
 
+
+### 3. Cabeçalho: breadcrumb não era um controle de navegação acessível
+
+- Os itens de breadcrumb do cabeçalho eram `span` com `onClick`, sem semântica de botão/link nem estado atual acessível por teclado/leitor de tela.
+- Foram convertidos em botões nativos, mantendo a navegação e indicando o item atual com `aria-current="page"`. O build/CI deve validar a alteração.
+
 ## Próximas etapas obrigatórias da varredura
 
 1. Executar CI, typecheck, lint e os testes E2E desta branch; não integrar enquanto a autenticação de teste falhar.
