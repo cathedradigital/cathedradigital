@@ -58,9 +58,16 @@ async function fetchRetry(url:string){
   return new Response(null,{status:last});
 }
 function decodeEntities(text:string){
-  return text.replace(/&nbsp;/gi," ").replace(/&quot;/gi,'"').replace(/&#39;/gi,"'")
-    .replace(/&amp;/gi,"&").replace(/&laquo;/gi,"«").replace(/&raquo;/gi,"»")
-    .replace(/&mdash;/gi,"—").replace(/&ndash;/gi,"–")
+  const named:Record<string,string>={
+    nbsp:" ",quot:'"',apos:"'",amp:"&",lt:"<",gt:">",laquo:"«",raquo:"»",mdash:"—",ndash:"–",
+    atilde:"ã",ccedil:"ç",eacute:"é",iacute:"í",aacute:"á",oacute:"ó",agrave:"à",ecirc:"ê",otilde:"õ",
+    uacute:"ú",acirc:"â",ocirc:"ô",Eacute:"É",Atilde:"Ã",Ccedil:"Ç",ordf:"ª",sect:"§",Aacute:"Á",
+    Iacute:"Í",Oacute:"Ó",Uacute:"Ú",Ecirc:"Ê",Agrave:"À",Otilde:"Õ",egrave:"è",uuml:"ü",Acirc:"Â",
+    ograve:"ò",icirc:"î",deg:"°",ucirc:"û",iuml:"ï",yacute:"ý",Ocirc:"Ô",euml:"ë",igrave:"ì",
+    auml:"ä",ordm:"º",shy:""
+  };
+  return text
+    .replace(/&([A-Za-z][A-Za-z0-9]+);/g,(_,name)=>named[name]??("&"+name+";"))
     .replace(/&#x([0-9a-f]+);/gi,(_,hex)=>String.fromCodePoint(parseInt(hex,16)))
     .replace(/&#(\d+);/g,(_,n)=>String.fromCodePoint(Number(n)));
 }
