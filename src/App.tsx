@@ -125,7 +125,7 @@ const Auth = lazy(() => import('./components/cathedra/Auth'));
 
 function LoginRedirect() {
   const location = useLocation();
-  return <Navigate to={{ pathname: '/auth', search: location.search }} replace />;
+  return <Navigate to={`/auth${location.search}${location.hash}`} replace />;
 }
 const OAuthConsent = lazy(() => import('./pages/OAuthConsent'));
 const ProfilePage = lazy(() => import('./components/cathedra/ProfilePage'));
