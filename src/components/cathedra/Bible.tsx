@@ -604,63 +604,6 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
     }
   }, [notes]);
 
-  const handleExportData = () => {
-    const data = {
-      notes,
-      highlights,
-      lastRead,
-      dailyStatus: {} as any
-    };
-    
-    // Get all daily reading keys from localStorage
-    for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i);
-      if (key?.startsWith('cathedra_bible_daily_')) {
-        data.dailyStatus[key] = localStorage.getItem(key);
-      }
-    }
-    
-    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `cathedra-bible-backup-${new Date().toISOString().split('T')[0]}.json`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
-    toast.success('Dados exportados com sucesso');
-  };
-
-  const handleImportData = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    
-    const reader = new FileReader();
-    reader.onload = async (event) => {
-      try {
-        const data = JSON.parse(event.target?.result as string);
-        if (data.highlights) {
-          setHighlights(data.highlights);
-          localStorage.setItem('cathedra_bible_highlights', JSON.stringify(data.highlights));
-        }
-        if (data.lastRead) {
-          setLastRead(data.lastRead);
-          localStorage.setItem('cathedra_bible_last_read', JSON.stringify(data.lastRead));
-        }
-        if (data.dailyStatus) {
-          Object.entries(data.dailyStatus).forEach(([key, value]) => {
-            localStorage.setItem(key, value as string);
-          });
-        }
-        toast.success('Dados importados com sucesso');
-      } catch (err) {
-        toast.error('Erro ao importar arquivo');
-      }
-    };
-    reader.readAsText(file);
-  };
-
   const share = useShare();
   const handleShareVerse = useCallback(() => {
     if (!activeVerse || !selectedBook) return;
@@ -1527,22 +1470,6 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
 
 
             </header>
-
-            <div className="flex gap-spacing-md mb-spacing-2xl">
-              <button 
-                onClick={handleExportData}
-                className="flex-1 flex items-center justify-center gap-spacing-xs p-spacing-sm bg-white border border-primary/5 rounded-xl text-premium-xs font-bold uppercase tracking-widest text-primary/40 shadow-sm"
-              >
-                <Icons.Download className="w-3 h-3" /> Exportar
-              </button>
-              <label className="flex-1 flex items-center justify-center gap-spacing-xs p-spacing-sm bg-white border border-primary/5 rounded-xl text-premium-xs font-bold uppercase tracking-widest text-primary/40 cursor-pointer shadow-sm">
-                <Icons.Upload className="w-3 h-3" /> Importar
-                <input type="file" className="hidden" accept=".json" onChange={handleImportData} />
-              </label>
-            </div>
-
-
-
 
             {/* Vertical Book List */}
             <div
