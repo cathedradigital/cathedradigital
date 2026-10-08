@@ -341,10 +341,10 @@ const Index = () => {
           { name: "Home", path: "/" }
         ]}
         faqs={[
-          { question: "O Cathedra é gratuito?", answer: "Sim! O acesso à Bíblia, Catecismo, Santos, Liturgia e Orações é totalmente gratuito. Recursos avançados como o Logos IA e análises aprofundadas estão disponíveis no plano Premium." },
+          { question: "O CATHEDRA é gratuito?", answer: "Sim! O acesso à Bíblia, Catecismo, Santos, Liturgia e Orações é totalmente gratuito. Recursos avançados como o Logos IA e análises aprofundadas estão disponíveis no plano Premium." },
           { question: "Preciso ser católico para usar?", answer: "Não. Embora o conteúdo seja baseado na tradição católica, qualquer pessoa interessada em estudar a Bíblia, a história dos santos ou a teologia cristã é bem-vinda." },
-          { question: "Posso usar offline?", answer: "Sim! O Cathedra é um Progressive Web App (PWA). Após o primeiro acesso, grande parte do conteúdo fica disponível mesmo sem conexão à internet." },
-          { question: "Como funciona o Logos IA?", answer: "É um assistente de inteligência artificial para consulta teológica que recupera fontes da Cátedra e apresenta as referências usadas. Ele auxilia os estudos e não é uma autoridade eclesial." }
+          { question: "Posso usar offline?", answer: "Sim! O CATHEDRA é um Progressive Web App (PWA). Após o primeiro acesso, grande parte do conteúdo fica disponível mesmo sem conexão à internet." },
+          { question: "Como funciona o Logos IA?", answer: "É um assistente de inteligência artificial para consulta teológica que recupera fontes da CATHEDRA e apresenta as referências usadas. Ele auxilia os estudos e não é uma autoridade eclesial." }
         ]}
       />
 
