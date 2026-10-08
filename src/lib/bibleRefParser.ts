@@ -1,4 +1,6 @@
 // Map of common Bible book names/abbreviations in Portuguese to API abbreviations
+import { findBookByAbbr } from '@/lib/bibleCanon';
+
 const BIBLE_BOOK_MAP: Record<string, string> = {
   'Gn': 'gn', 'Gên': 'gn', 'Gênesis': 'gn',
   'Ex': 'ex', 'Êx': 'ex', 'Êxodo': 'ex',
@@ -77,11 +79,19 @@ const BIBLE_BOOK_MAP: Record<string, string> = {
 
 function lookupAbbr(raw: string): string | null {
   const trimmed = raw.trim();
-  if (BIBLE_BOOK_MAP[trimmed]) return BIBLE_BOOK_MAP[trimmed];
-  for (const [key, val] of Object.entries(BIBLE_BOOK_MAP)) {
-    if (key.toLowerCase() === trimmed.toLowerCase()) return val;
-  }
-  return null;
+
+  // Primeiro tenta a forma canônica única (inclui aliases católicos/legados).
+  const direct = findBookByAbbr(trimmed);
+  if (direct) return direct.abbr;
+
+  const mapped = BIBLE_BOOK_MAP[trimmed] ??
+    Object.entries(BIBLE_BOOK_MAP).find(([key]) => key.toLowerCase() === trimmed.toLowerCase())?.[1];
+
+  if (!mapped) return null;
+
+  // O mapa histórico usa IDs minúsculos (ex.: "1co", "job", "esd").
+  // Repassá-los pelo cânon elimina a divergência entre parser, catálogo e URL.
+  return findBookByAbbr(mapped)?.abbr ?? null;
 }
 
 export interface ParsedSegment {
@@ -90,6 +100,8 @@ export interface ParsedSegment {
   abbr?: string;
   chapter?: number;
   verse?: number;
+  /** Último versículo quando a referência é um intervalo no mesmo capítulo. */
+  endVerse?: number;
 }
 
 // Full reference pattern: (Book) (Chapter)[, (Verse)[-(EndVerse)]]
@@ -132,11 +144,12 @@ export function parseBibleReferences(text: string): ParsedSegment[] {
       const bookRaw = match[1];
       const chapter = parseInt(match[2]);
       const verse = match[3] ? parseInt(match[3]) : undefined;
+      const endVerse = match[4] ? parseInt(match[4]) : undefined;
       const abbr = lookupAbbr(bookRaw);
 
       if (abbr) {
         currentBookAbbr = abbr;
-        segments.push({ type: 'bibleRef', value: match[0], abbr, chapter, verse });
+        segments.push({ type: 'bibleRef', value: match[0], abbr, chapter, verse, endVerse });
       } else {
         segments.push({ type: 'text', value: match[0] });
       }
@@ -154,8 +167,9 @@ export function parseBibleReferences(text: string): ParsedSegment[] {
         
         const chapter = parseInt(match[1]);
         const verse = match[2] ? parseInt(match[2]) : undefined;
+        const endVerse = match[3] ? parseInt(match[3]) : undefined;
         
-        segments.push({ type: 'bibleRef', value: match[0], abbr: currentBookAbbr, chapter, verse });
+        segments.push({ type: 'bibleRef', value: match[0], abbr: currentBookAbbr, chapter, verse, endVerse });
         lastIndex = match.index + match[0].length;
       }
     }
