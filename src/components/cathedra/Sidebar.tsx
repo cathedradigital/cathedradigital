@@ -264,7 +264,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                 <div className="flex flex-col leading-none gap-1">
                   <span
                     role="text"
-                    aria-label="Cathedra Digital — Mosteiro Digital"
+                    aria-label="CATHEDRA Digital — Mosteiro Digital"
                     style={{
                       fontFamily: "'Playfair Display', serif",
                       fontWeight: 600,
@@ -273,7 +273,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                       color: 'hsl(var(--foreground))',
                     }}
                   >
-                    Cathedra Digital
+                    CATHEDRA Digital
                   </span>
                   <span
                     style={{
