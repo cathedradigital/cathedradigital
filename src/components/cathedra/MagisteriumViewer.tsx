@@ -16,7 +16,6 @@ import AudioButton from './AudioButton';
 import ReadingControlPanel from './ReadingControlPanel';
 import ReadingMark from './ReadingMark';
 import NotesPanel from './NotesPanel';
-import Relatio from './Relatio';
 import ChapterNotesList from './ChapterNotesList';
 import { useNotes, UserNote } from '@/hooks/useNotes';
 import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
@@ -836,16 +835,6 @@ const MagisteriumViewer: React.FC = () => {
           />
 
           <EditorialDivider variant="gold-fade" className="max-w-[240px] mx-auto" />
-          <Relatio 
-
-            context={{
-              type: 'magisterium',
-              id: id,
-              tags: [content.title, 'Magisterio', 'Tradicao', 'Igreja']
-            }}
-            onNavigateToBible={(abbr, ch) => navigate(`/bible?book=${abbr}&chapter=${ch}`)}
-            onNavigateToCIC={(p) => navigate(`/catechism?p=${p}`)}
-            onNavigateToDoc={(docId) => navigate(`/magisterium/${docId}`)}/>
         </div>
       )}
 
