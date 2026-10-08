@@ -278,7 +278,7 @@ const Footer: React.FC = React.memo(() => {
                     lineHeight: 1,
                   }}
                 >
-                  CAT<span style={{ letterSpacing: '-0.02em' }}>TH</span>EDRA
+                  CATHEDRA
                 </span>
               </div>
               <span
@@ -548,7 +548,7 @@ const Footer: React.FC = React.memo(() => {
                 textTransform: 'uppercase',
               }}
             >
-              © {new Date().getFullYear()} <span style={{ color: GOLD_TEXT }}>●</span> CAT<span style={{ letterSpacing: '-0.02em' }}>TH</span>EDRA <span style={{ color: GOLD_TEXT }}>·</span> Omnia ad maiorem Dei gloriam
+              © {new Date().getFullYear()} <span style={{ color: GOLD_TEXT }}>●</span> CATHEDRA <span style={{ color: GOLD_TEXT }}>·</span> Omnia ad maiorem Dei gloriam
             </p>
             <p
               className="flex items-center gap-2"
