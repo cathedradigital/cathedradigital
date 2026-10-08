@@ -6,6 +6,8 @@
  * divergence (e.g. /biblia vs /bible, ?chapter= vs ?ch=, ?verse= vs ?v=).
  */
 
+import { normalizeAbbr } from '@/lib/bibleCanon';
+
 export const BIBLE_ROUTE = '/bible';
 
 export interface BibleUrlInput {
@@ -18,7 +20,7 @@ export interface BibleUrlInput {
 
 export function buildBibleUrl({ abbr, chapter, verse, extra }: BibleUrlInput): string {
   const params = new URLSearchParams();
-  params.set('book', String(abbr));
+  params.set('book', normalizeAbbr(String(abbr)));
   params.set('ch', String(chapter));
   if (verse !== undefined && verse !== null && verse !== '' && Number(verse) > 0) {
     params.set('v', String(verse));
