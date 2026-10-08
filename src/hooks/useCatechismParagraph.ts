@@ -13,6 +13,9 @@ export interface CatechismParagraph extends Partial<DeepContent> {
   content: string;
   language: string;
   status?: string;
+  sourceName?: string | null;
+  sourceUrl?: string | null;
+  sourceRetrievedAt?: string | null;
   explicacao?: string;
   interpretacaoProfunda?: string;
   aplicacaoPratica?: string;
@@ -91,6 +94,9 @@ export const fetchCatechismParagraph = async (paragraph: number, forceGenerate =
         content: officialData.content,
         language: 'pt',
         status: 'official',
+        sourceName: officialData.source_name ?? null,
+        sourceUrl: officialData.source_url ?? null,
+        sourceRetrievedAt: officialData.source_retrieved_at ?? null,
         textoBase: officialData.texto_base,
         explicacao: officialData.explicacao,
         interpretacaoProfunda: officialData.interpretacao_profunda,
