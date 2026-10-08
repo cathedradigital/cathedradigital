@@ -47,10 +47,11 @@ jobs:
       - name: Build PR HEAD
         run: npm run build
 
-      - name: Verify authenticated E2E account exists
+      - name: Verify authenticated E2E credentials are configured
         run: |
           test -n "$E2E_TEST_EMAIL" || { echo "::error::Missing E2E_TEST_EMAIL — authenticated E2E is blocked"; exit 1; }
           test -n "$E2E_TEST_PASSWORD" || { echo "::error::Missing E2E_TEST_PASSWORD — authenticated E2E is blocked"; exit 1; }
+          echo "Credential variables are present; the browser tests verify whether login succeeds."
 
       - name: Run critical Estudar E2E
         run: npx playwright test e2e/estudar-critical.spec.ts
