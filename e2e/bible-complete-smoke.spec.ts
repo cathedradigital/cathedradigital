@@ -58,4 +58,20 @@ test.describe('Bíblia — catálogo completo', () => {
       await expect(page.locator('body')).toContainText(target.marker);
     }
   });
+  test('aceita as abreviações canônicas dos livros católicos no leitor', async ({ page }) => {
+    for (const target of [
+      { book: 'Tb', chapter: 1 },
+      { book: 'Ab', chapter: 1 },
+      { book: 'Hc', chapter: 1 },
+      { book: '1Mc', chapter: 1 },
+      { book: '1Co', chapter: 1 },
+      { book: '1Pe', chapter: 1 },
+      { book: 'Ap', chapter: 22 },
+    ]) {
+      await page.goto(`/bible?book=${encodeURIComponent(target.book)}&ch=${target.chapter}`);
+      await expect(page.locator('[data-testid="verse-text-1"]')).toBeVisible({ timeout: 30_000 });
+      await expect(page.locator('[data-testid="verse-text-1"]')).not.toHaveText(/^\s*$/);
+    }
+  });
+
 });
