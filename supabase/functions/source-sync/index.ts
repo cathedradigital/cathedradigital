@@ -140,3 +140,5 @@ Deno.serve(async(req:Request)=>{
   try{const [bible,catechism]=await Promise.all([syncBible(db,bibleLimit),syncCatechism(db,catechismPages)]);return json({ok:true,bible,catechism,limits:{bibleLimit,catechismPages},at:new Date().toISOString()});}
   catch(error){const message=error instanceof Error?error.message:String(error);console.error("[source-sync] failed",message);return json({ok:false,error:message},502);}
 });
+
+// Catechism P0: sequential parser repair validated against Vatican page structure.
