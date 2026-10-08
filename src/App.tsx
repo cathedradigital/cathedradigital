@@ -596,7 +596,7 @@ const AppLayout: React.FC = () => {
 
         <Suspense fallback={null}><ScrollToTop /></Suspense>
         <Suspense fallback={null}><AppErrorBoundary>
-          {(!settings.immersiveMode || !location.pathname.startsWith('/bible')) && !location.pathname.startsWith('/prototype-2.0') && location.pathname !== '/' && location.pathname !== '/auth' && location.pathname !== '/login' && location.pathname !== '/atlas' && !isAccountArea && (
+          {!settings.immersiveMode && !location.pathname.startsWith('/prototype-2.0') && location.pathname !== '/' && location.pathname !== '/auth' && location.pathname !== '/login' && location.pathname !== '/atlas' && !isAccountArea && (
             <Suspense fallback={null}>
               <AppHeader 
                 user={authUserAdapter} 
@@ -611,7 +611,7 @@ const AppLayout: React.FC = () => {
             </Suspense>
           )}
         
-        {(!settings.immersiveMode || !location.pathname.startsWith('/bible')) && !location.pathname.startsWith('/prototype-2.0') && !isAccountArea && (
+        {!settings.immersiveMode && !location.pathname.startsWith('/prototype-2.0') && !isAccountArea && (
           <Suspense fallback={null}>
             <CathedralSidebar 
               isOpen={isSidebarOpen}
