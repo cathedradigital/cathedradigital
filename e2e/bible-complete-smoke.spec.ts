@@ -91,14 +91,14 @@ test.describe('Bíblia — catálogo completo', () => {
     await page.goto('/bible?book=Jo&ch=3&v=16');
     const verse = page.locator('#verse-16');
     await expect(verse).toBeVisible({ timeout: 30_000 });
-    await expect(verse).toHaveClass(/bg-secondary\\/20/);
+    await expect(verse).toHaveClass(/bg-secondary\/20/);
   });
 
   test('ref de intervalo navega para o início e destaca todo o intervalo', async ({ page }) => {
     await page.goto('/bible?ref=' + encodeURIComponent('1 Cor 13,4-7'));
     await expect(page.locator('[data-testid="verse-text-4"]')).toBeVisible({ timeout: 30_000 });
     for (const verse of [4, 5, 6, 7]) {
-      await expect(page.locator(`#verse-${verse}`)).toHaveClass(/bg-secondary\\/20/);
+      await expect(page.locator(`#verse-${verse}`)).toHaveClass(/bg-secondary\/20/);
     }
   });
 
