@@ -303,12 +303,14 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
   // Isso também cobre retorno do Diário sem recarregar o capítulo (somente ?v muda)
   // e cache local, que antes retornava de fetchVerses antes do scroll.
   const referenceVerseParam = searchParams.get('ref');
-  const referenceVerseNumber = useMemo(() => {
+  const parsedReference = useMemo(() => {
     if (!referenceVerseParam) return null;
-    const parsed = parseBibleReferences(referenceVerseParam).find((segment) => segment.type === 'bibleRef');
-    return parsed?.verse ? String(parsed.verse) : null;
+    return parseBibleReferences(referenceVerseParam).find((segment) => segment.type === 'bibleRef') ?? null;
   }, [referenceVerseParam]);
+  const referenceVerseNumber = parsedReference?.verse ? String(parsedReference.verse) : null;
+  const referenceEndVerseNumber = parsedReference?.endVerse ? String(parsedReference.endVerse) : null;
   const requestedVerse = searchParams.get('v') ?? referenceVerseNumber;
+  const requestedVerseEnd = searchParams.get('vEnd') ?? referenceEndVerseNumber;
 
   useEffect(() => {
     if (viewMode !== 'reading' || isLoading || verses.length === 0) return;
@@ -327,11 +329,26 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
         const headerHeight = 56;
         const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
         const offsetPosition = elementPosition - headerHeight - 20;
+        const start = Number(requestedVerse);
+        const end = Number(requestedVerseEnd);
+        const rangeEnd = Number.isFinite(start) && Number.isFinite(end) && end >= start ? end : start;
+        const highlighted: HTMLElement[] = [];
+
+        if (Number.isFinite(start)) {
+          for (let verseNumber = start; verseNumber <= rangeEnd; verseNumber += 1) {
+            const rangeElement = document.getElementById(`verse-${verseNumber}`);
+            if (rangeElement) {
+              rangeElement.classList.add('bg-secondary/20', 'scale-[1.02]');
+              highlighted.push(rangeElement);
+            }
+          }
+        }
 
         window.scrollTo({ top: Math.max(0, offsetPosition), behavior: 'smooth' });
-        element.classList.add('bg-secondary/20', 'scale-[1.02]');
         window.setTimeout(() => {
-          if (!cancelled) element.classList.remove('bg-secondary/20', 'scale-[1.02]');
+          if (!cancelled) {
+            highlighted.forEach((rangeElement) => rangeElement.classList.remove('bg-secondary/20', 'scale-[1.02]'));
+          }
         }, 3000);
         return;
       }
