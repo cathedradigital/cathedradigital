@@ -37,41 +37,41 @@ import { HighlightMenu } from './HighlightMenu';
 import { LangContext } from '@/contexts/LangContext';
 import { getLocaleDefinition } from '@/lib/i18n/locales';
 import type { Language } from '@/types';
-import { callColloquium } from '@/services/aiService';
 
+
+function renderTheologicalInline(text: string): React.ReactNode {
+  const segments = parseTheologicalReferences(text);
+  return segments.map((segment, index) => {
+    if (segment.type === 'bibleRef' && segment.abbr && segment.chapter) {
+      return (
+        <BibleVersePopover
+          key={`bible-${index}`}
+          abbr={segment.abbr}
+          chapter={segment.chapter}
+          verse={segment.verse}
+          label={segment.value}
+        />
+      );
+    }
+    if (segment.type === 'catechismRef' && segment.paragraph) {
+      return <CatechismPopover key={`cic-${index}`} paragraph={segment.paragraph} />;
+    }
+    return <React.Fragment key={`text-${index}`}>{segment.value}</React.Fragment>;
+  });
+}
 
 function ReferenceAwareParagraph({ text }: { text: string }) {
-  const segments = parseTheologicalReferences(text);
-  if (segments.length === 1 && segments[0].type === 'text') {
-    return <ReactMarkdown>{text}</ReactMarkdown>;
-  }
-
   return (
-    <>
-      {segments.map((segment, index) => {
-        if (segment.type === 'bibleRef' && segment.abbr && segment.chapter) {
-          return (
-            <BibleVersePopover
-              key={`bible-${index}`}
-              abbr={segment.abbr}
-              chapter={segment.chapter}
-              verse={segment.verse}
-              label={segment.value}
-            />
-          );
-        }
-
-        if (segment.type === 'catechismRef' && segment.paragraph) {
-          return <CatechismPopover key={`cic-${index}`} paragraph={segment.paragraph} />;
-        }
-
-        return (
-          <ReactMarkdown key={`text-${index}`}>
-            {segment.value}
-          </ReactMarkdown>
-        );
-      })}
-    </>
+    <ReactMarkdown
+      components={{
+        text: ({ children }) => {
+          const value = Array.isArray(children) ? children.join('') : String(children ?? '');
+          return <>{renderTheologicalInline(value)}</>;
+        },
+      }}
+    >
+      {text}
+    </ReactMarkdown>
   );
 }
 
@@ -148,13 +148,20 @@ const MagisteriumViewer: React.FC = () => {
   );
 
   const sourceLanguage = useMemo<Language>(() => {
+    const knownSourceLanguages: Record<string, Language> = {
+      dfil: 'la',
+      paet: 'la',
+      bdeus: 'la',
+    };
+    if (id && knownSourceLanguages[id]) return knownSourceLanguages[id];
+
     const url = docMeta?.url ?? '';
-    const pathMatch = url.match(/\/((?:pt|en|es|it|la|fr|de))\//i);
+    const pathMatch = url.match(/\\/((?:pt|en|es|it|la|fr|de))\\//i);
     if (pathMatch) return pathMatch[1].toLowerCase() as Language;
-    const suffixMatch = url.match(/_(po|la|en|es|it|fr|de)(?:\.|-|_)/i);
+    const suffixMatch = url.match(/_(po|la|en|es|it|fr|de)(?:\\.|-|_)/i);
     if (suffixMatch?.[1]?.toLowerCase() === 'po') return 'pt';
     return (suffixMatch?.[1]?.toLowerCase() as Language) || 'pt';
-  }, [docMeta?.url]);
+  }, [docMeta?.url, id]);
 
   const sourceLanguageName = getLocaleDefinition(sourceLanguage).nativeName;
   const targetLanguageName = getLocaleDefinition(lang).nativeName;
@@ -173,45 +180,26 @@ const MagisteriumViewer: React.FC = () => {
     } catch { /* cache unavailable */ }
   }, [translationCacheKey, sourceLanguage, lang]);
 
+  useEffect(() => {
+    if (!content?.text || sourceLanguage === lang || translatedText || translationLoading) return;
+    void translateDocument();
+  }, [content?.text, sourceLanguage, lang, translatedText, translationLoading, translateDocument]);
+
   const translateDocument = useCallback(async () => {
     if (!content?.text || sourceLanguage === lang || translationLoading) return;
     setTranslationLoading(true);
     setTranslationError(null);
-
     try {
-      const paragraphs = content.text.split(/\n{2,}/).filter(Boolean);
-      const chunks: string[] = [];
-      let current = '';
-      for (const paragraph of paragraphs) {
-        const candidate = current ? `${current}\n\n${paragraph}` : paragraph;
-        if (current && candidate.length > 7000) {
-          chunks.push(current);
-          current = paragraph;
-        } else {
-          current = candidate;
-        }
-      }
-      if (current) chunks.push(current);
-
-      const translated: string[] = [];
-      setTranslationProgress({ current: 0, total: chunks.length });
-
-      for (let index = 0; index < chunks.length; index += 1) {
-        const prompt = [
-          `Traduza fielmente o texto abaixo do ${sourceLanguageName} para ${targetLanguageName}.`,
-          'É um documento oficial do Magistério católico. Faça tradução integral, não resumo e não comentário.',
-          'Preserve títulos, numeração, parágrafos, notas, referências bíblicas, referências ao Catecismo, citações entre aspas e a marcação Markdown.',
-          'Não invente, não omita e não modernize o conteúdo. Retorne somente a tradução.',
-          '',
-          chunks[index],
-        ].join('\n');
-        const response = await callColloquium([{ role: 'user', content: prompt }], 'document_translation');
-        if (!response.content) throw new Error(response.error || 'A tradução não retornou conteúdo.');
-        translated.push(response.content.trim());
-        setTranslationProgress({ current: index + 1, total: chunks.length });
-      }
-
-      const result = translated.join('\n\n');
+      const { data, error } = await supabase.functions.invoke('document-translate', {
+        body: {
+          text: content.text,
+          source_language: sourceLanguage,
+          target_language: lang,
+        },
+      });
+      if (error) throw error;
+      const result = typeof data?.text === 'string' ? data.text.trim() : '';
+      if (!result) throw new Error('O tradutor não retornou conteúdo.');
       setTranslatedText(result);
       if (translationCacheKey) {
         try { localStorage.setItem(translationCacheKey, result); } catch { /* cache unavailable */ }
@@ -222,7 +210,7 @@ const MagisteriumViewer: React.FC = () => {
       setTranslationLoading(false);
       setTranslationProgress(null);
     }
-  }, [content?.text, sourceLanguage, lang, sourceLanguageName, targetLanguageName, translationLoading, translationCacheKey]);
+  }, [content?.text, sourceLanguage, lang, translationLoading, translationCacheKey]);
 
 
   useEffect(() => {
@@ -850,8 +838,10 @@ const MagisteriumViewer: React.FC = () => {
               className={`w-full max-w-[70ch] mx-auto px-spacing-md md:px-spacing-0
                 py-spacing-lg md:py-spacing-2xl prose prose-slate dark:prose-invert reader-text
                 font-size-${settings.fontSize} font-family-${settings.fontFamily}
-                prose-p:leading-[1.72] prose-p:mb-spacing-md
-                prose-headings:font-serif prose-headings:text-primary prose-headings:mb-spacing-md
+                text-[1.08rem] md:text-[1.15rem] prose-p:leading-[1.78] prose-p:mb-spacing-lg
+                prose-headings:font-serif prose-headings:text-primary prose-headings:mt-spacing-2xl prose-headings:mb-spacing-md
+                prose-li:leading-[1.72] prose-li:mb-spacing-xs
+                prose-p:first-child:mt-0
                 prose-blockquote:border-primary/10 prose-blockquote:bg-primary/[0.01] prose-blockquote:p-spacing-md prose-blockquote:rounded-premium prose-blockquote:italic
                 prose-strong:text-primary prose-strong:font-bold transition-all duration-300`}
             >
@@ -860,7 +850,7 @@ const MagisteriumViewer: React.FC = () => {
                 const note = currentDocNotes.find(n => n.content_id === `${id}:${idx}` && n.highlight_color);
                 
                 return (
-                  <div key={idx} className="group relative mb-spacing-sm" id={`para-${idx}`}>
+                  <div key={idx} className="group relative mb-spacing-xs" id={`para-${idx}`}>
                     <div className={cn(note ? `highlight-${note.highlight_color} px-spacing-2xs rounded-premium-sm cursor-pointer` : '')}
                          onClick={() => note && setActiveHighlight(note)}>
                       <ReferenceAwareParagraph text={para} />
