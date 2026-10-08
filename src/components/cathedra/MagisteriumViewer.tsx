@@ -29,9 +29,9 @@ import { logMagisteriumDiag } from '@/lib/magisteriumDiagnostics';
 import { ReaderContinuation } from '@/components/shared/ReaderContinuation';
 import { resolveMagisteriumAutoNexus } from '@/core/knowledge/adapters/magisteriumAutoNexus';
 import { NexusPanel, ReaderShell, EditorialHero } from '@/components/reader';
-import { BibleVersePopover } from '@/components/cathedra/BibleVersePopover';
-import { CatechismPopover } from '@/components/cathedra/CatechismPopover';
-import { parseTheologicalReferences } from '@/lib/theologicalRefs';
+import BibleVersePopover from '@/components/cathedra/BibleVersePopover';
+import CatechismPopover from '@/components/cathedra/CatechismPopover';
+import { parseTheologicalReferences } from '@/lib/theologicalRefParser';
 import { EditorialDivider } from '@/components/editorial';
 import { HighlightMenu } from './HighlightMenu';
 import { LangContext } from '@/contexts/LangContext';
@@ -41,35 +41,38 @@ import { callColloquium } from '@/services/aiService';
 
 
 function ReferenceAwareParagraph({ text }: { text: string }) {
-  const refs = parseTheologicalReferences(text);
-  if (refs.length === 0) return <ReactMarkdown>{text}</ReactMarkdown>;
+  const segments = parseTheologicalReferences(text);
+  if (segments.length === 1 && segments[0].type === 'text') {
+    return <ReactMarkdown>{text}</ReactMarkdown>;
+  }
 
-  let cursor = 0;
-  const nodes: React.ReactNode[] = [];
-  refs.forEach((ref, i) => {
-    const index = text.indexOf(ref.raw, cursor);
-    if (index < 0) return;
-    if (index > cursor) nodes.push(<ReactMarkdown key={`text-${i}`}>{text.slice(cursor, index)}</ReactMarkdown>);
+  return (
+    <>
+      {segments.map((segment, index) => {
+        if (segment.type === 'bibleRef' && segment.abbr && segment.chapter) {
+          return (
+            <BibleVersePopover
+              key={`bible-${index}`}
+              abbr={segment.abbr}
+              chapter={segment.chapter}
+              verse={segment.verse}
+              label={segment.value}
+            />
+          );
+        }
 
-    if (ref.type === 'bible') {
-      nodes.push(
-        <BibleVersePopover key={`bible-${i}`} reference={ref.reference}>
-          <button type="button" className="underline decoration-primary/40 underline-offset-2 hover:decoration-primary">{ref.raw}</button>
-        </BibleVersePopover>,
-      );
-    } else if (ref.type === 'catechism') {
-      nodes.push(
-        <CatechismPopover key={`cic-${i}`} paragraph={ref.paragraph}>
-          <button type="button" className="underline decoration-primary/40 underline-offset-2 hover:decoration-primary">{ref.raw}</button>
-        </CatechismPopover>,
-      );
-    } else {
-      nodes.push(<ReactMarkdown key={`ref-${i}`}>{ref.raw}</ReactMarkdown>);
-    }
-    cursor = index + ref.raw.length;
-  });
-  if (cursor < text.length) nodes.push(<ReactMarkdown key="tail">{text.slice(cursor)}</ReactMarkdown>);
-  return <>{nodes}</>;
+        if (segment.type === 'catechismRef' && segment.paragraph) {
+          return <CatechismPopover key={`cic-${index}`} paragraph={segment.paragraph} />;
+        }
+
+        return (
+          <ReactMarkdown key={`text-${index}`}>
+            {segment.value}
+          </ReactMarkdown>
+        );
+      })}
+    </>
+  );
 }
 
 const MIN_DOC_LEN = 500;
