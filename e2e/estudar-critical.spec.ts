@@ -152,6 +152,42 @@ test('Catecismo: deep-link de fronteira §2865 abre o último parágrafo sem per
   expect(bad).toEqual([]);
 });
 
+test('Catecismo: navegação por parágrafo atravessa a fronteira de seção', async ({ page }) => {
+  await login(page, '/catechism?p=25');
+  await expect(page.locator('#p25')).toBeVisible();
+
+  const next = page.getByTestId('catechism-paragraph-next');
+  await expect(next).toBeEnabled();
+  await next.click();
+
+  await expect(page.locator('#p26')).toBeVisible();
+  expect(page.url()).toContain('/catechism?p=26');
+
+  const previous = page.getByTestId('catechism-paragraph-prev');
+  await expect(previous).toBeEnabled();
+  await previous.click();
+  await expect(page.locator('#p25')).toBeVisible();
+  expect(page.url()).toContain('/catechism?p=25');
+});
+
+test('Catecismo: fronteiras desabilitam anterior em §1 e próximo em §2865', async ({ page }) => {
+  await login(page, '/catechism?p=1');
+  await expect(page.locator('#p1')).toBeVisible();
+  await expect(page.getByTestId('catechism-paragraph-prev')).toBeDisabled();
+
+  await page.goto('/catechism?p=2865');
+  await expect(page.locator('#p2865')).toBeVisible();
+  await expect(page.getByTestId('catechism-paragraph-next')).toBeDisabled();
+});
+
+test('Catecismo: proveniência do texto oficial fica visível e navegável', async ({ page }) => {
+  await login(page, '/catechism?p=1');
+  await expect(page.locator('#p1')).toBeVisible();
+  const source = page.getByText('Santa Sé · vatican.va', { exact: true });
+  await expect(source).toBeVisible();
+  await expect(source).toHaveAttribute('href', /vatican\.va/);
+});
+
 test('Catecismo: Conexo prioriza relação curada e mantém a referência navegável', async ({ page }) => {
   const bad = watchBrowserHealth(page);
   await login(page, '/catechism?p=279');
