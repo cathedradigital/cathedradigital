@@ -113,7 +113,9 @@ function parsePage(text:string,from:number,to:number){
     let end=nextCandidates[0]?.index??text.length;
     if(!nextCandidates.length){
       const notesIndex=text.search(/\n\s*Notas\b/i);
-      if(notesIndex>chosen.index) end=notesIndex;
+      const footnotesIndex=text.search(/\s1\.?\s+Cf\.\s/i);
+      if(notesIndex>chosen.index) end=Math.min(end,notesIndex);
+      if(footnotesIndex>chosen.index) end=Math.min(end,footnotesIndex);
     }
     const content=text.slice(chosen.index+chosen.length,end).replace(/\s+/g," ").trim();
     out.push({paragraph:n,content});
