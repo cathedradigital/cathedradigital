@@ -596,7 +596,11 @@ const Magisterium: React.FC = () => {
               </span>
             </div>
 
-            <div className="grid grid-cols-2 gap-x-3 gap-y-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+            <div
+              className="flex snap-x snap-mandatory gap-3 overflow-x-auto pb-2 scrollbar-none md:grid md:grid-cols-3 md:gap-3 md:overflow-visible lg:grid-cols-4 xl:grid-cols-5"
+              role="group"
+              aria-label="Carrossel de temas do Magistério"
+            >
               {MAGISTERIUM_THEMES.map(theme => {
                 const active = selectedThemes.includes(theme);
                 const count = MAGISTERIUM_DOCUMENTS.filter(doc => doc.themes.includes(theme)).length;
@@ -608,26 +612,33 @@ const Magisterium: React.FC = () => {
                     title={active ? `Remover tema: ${theme}` : `Filtrar por tema: ${theme}`}
                     onClick={() => toggleTheme(theme)}
                     className={cn(
-                      'group flex min-h-10 items-center justify-between gap-2 border-b px-2 py-2 text-left transition-colors',
+                      'group relative flex min-h-[88px] w-[min(72vw,220px)] shrink-0 snap-start flex-col items-start justify-between overflow-hidden rounded-xl border p-3 text-left transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 md:min-h-[96px] md:w-auto',
                       active
-                        ? 'border-primary bg-primary/[0.07] text-primary'
-                        : 'border-primary/[0.06] text-foreground/65 hover:border-primary/25 hover:bg-primary/[0.035] hover:text-primary',
+                        ? 'border-primary/55 bg-primary/[0.075] text-primary shadow-sm'
+                        : 'border-primary/[0.12] bg-background/70 text-foreground/75 hover:border-primary/35 hover:bg-primary/[0.025]',
                     )}
                   >
-                    <span className="min-w-0 truncate text-[11px] font-medium md:text-xs">{theme}</span>
                     <span
+                      aria-hidden="true"
                       className={cn(
-                        'shrink-0 text-[9px] tabular-nums transition-colors',
-                        active ? 'text-primary/70' : 'text-muted-foreground/45 group-hover:text-primary/60',
+                        'absolute inset-x-0 top-0 h-[2px] transition-colors',
+                        active ? 'bg-primary' : 'bg-primary/10 group-hover:bg-primary/35',
                       )}
-                      aria-label={`${count} documentos`}
-                    >
-                      {count}
+                    />
+                    <span className="line-clamp-2 text-xs font-semibold leading-snug md:text-sm">{theme}</span>
+                    <span className={cn(
+                      'mt-3 text-[10px] font-medium tabular-nums',
+                      active ? 'text-primary/80' : 'text-muted-foreground/65',
+                    )}>
+                      {count} {count === 1 ? 'documento' : 'documentos'}
                     </span>
                   </button>
                 );
               })}
             </div>
+            <p className="mt-1 text-[10px] text-muted-foreground/60 md:hidden">
+              Deslize para o lado para explorar todos os temas
+            </p>
           </section>
 
           {/* Ordenação + reset */}
