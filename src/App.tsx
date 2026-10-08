@@ -122,6 +122,11 @@ const Magisterium = lazy(() => import('./components/cathedra/Magisterium'));
 const MagisteriumViewer = lazy(() => import('./components/cathedra/MagisteriumViewer'));
 const EstudarHubPage = lazy(() => import('./pages/EstudarHubPage'));
 const Auth = lazy(() => import('./components/cathedra/Auth'));
+
+function LoginRedirect() {
+  const location = useLocation();
+  return <Navigate to={`/auth${location.search}${location.hash}`} replace />;
+}
 const OAuthConsent = lazy(() => import('./pages/OAuthConsent'));
 const ProfilePage = lazy(() => import('./components/cathedra/ProfilePage'));
 const ProfileFavoritesPage = lazy(() => import('./pages/ProfileFavoritesPage'));
@@ -591,7 +596,7 @@ const AppLayout: React.FC = () => {
 
         <Suspense fallback={null}><ScrollToTop /></Suspense>
         <Suspense fallback={null}><AppErrorBoundary>
-          {(!settings.immersiveMode || !location.pathname.startsWith('/bible')) && !location.pathname.startsWith('/prototype-2.0') && location.pathname !== '/' && location.pathname !== '/auth' && location.pathname !== '/login' && location.pathname !== '/atlas' && !isAccountArea && (
+          {!settings.immersiveMode && !location.pathname.startsWith('/prototype-2.0') && location.pathname !== '/' && location.pathname !== '/auth' && location.pathname !== '/login' && location.pathname !== '/atlas' && !isAccountArea && (
             <Suspense fallback={null}>
               <AppHeader 
                 user={authUserAdapter} 
@@ -606,7 +611,7 @@ const AppLayout: React.FC = () => {
             </Suspense>
           )}
         
-        {(!settings.immersiveMode || !location.pathname.startsWith('/bible')) && !location.pathname.startsWith('/prototype-2.0') && !isAccountArea && (
+        {!settings.immersiveMode && !location.pathname.startsWith('/prototype-2.0') && !isAccountArea && (
           <Suspense fallback={null}>
             <CathedralSidebar 
               isOpen={isSidebarOpen}
@@ -683,7 +688,7 @@ const AppLayout: React.FC = () => {
               <Route path="/chat" element={<Navigate to="/logos" replace />} />
               <Route path="/auth" element={<Suspense fallback={<LoadingFallback />}><Auth onSuccess={() => navigate(resolveAuthHome(), { replace: true })} /></Suspense>} />
               <Route path="/.lovable/oauth/consent" element={<Suspense fallback={<LoadingFallback />}><OAuthConsent /></Suspense>} />
-              <Route path="/login" element={<Navigate to="/auth" replace />} />
+              <Route path="/login" element={<LoginRedirect />} />
               <Route path="/reset-password" element={<Suspense fallback={<LoadingFallback />}><ResetPasswordPage /></Suspense>} />
               <Route path="/profile" element={<Suspense fallback={<LoadingFallback />}><AuthGuard><ProfilePage /></AuthGuard></Suspense>} />
               <Route path="/settings" element={<Navigate to="/conta/configuracoes" replace />} />

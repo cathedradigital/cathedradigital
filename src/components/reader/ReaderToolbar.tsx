@@ -76,7 +76,7 @@ export const ReaderToolbar: React.FC<ReaderToolbarProps> = ({
       aria-label="Barra editorial do leitor"
       data-reader-toolbar
     >
-      <div className="mx-auto flex w-full max-w-[1120px] items-center gap-3 px-4 py-2 md:px-8">
+      <div className="mx-auto flex w-full max-w-[1120px] items-center gap-1.5 px-2 py-1.5 sm:gap-3 sm:px-4 sm:py-2 md:px-8">
         {backHref && (
           <Link
             to={backHref}
@@ -144,7 +144,7 @@ const ToolbarButton = React.forwardRef<
     title={label}
     aria-pressed={active}
     className={cn(
-      'inline-flex h-11 w-11 items-center justify-center rounded-full border transition-colors',
+      'inline-flex h-11 w-11 items-center justify-center rounded-full border transition-colors touch-manipulation',
       'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background',
       active
         ? 'border-stitch-secondary/60 bg-stitch-secondary/10 text-stitch-secondary'
