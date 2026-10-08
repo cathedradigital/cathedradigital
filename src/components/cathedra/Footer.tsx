@@ -336,7 +336,7 @@ const Footer: React.FC = React.memo(() => {
 
           {/* Coluna 2 — Navegação principal */}
           <FooterSection
-            title={lang === 'pt' ? 'Cátedra' : 'Cathedra'}
+            title={lang === 'pt' ? 'CATHEDRA' : 'CATHEDRA'}
             id="navigation"
             isMobile={isMobile}
             openId={openId}
