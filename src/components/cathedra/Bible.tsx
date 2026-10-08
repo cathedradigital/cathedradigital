@@ -1502,10 +1502,6 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
                       <Icons.Activity className="w-4 h-4 mr-2" />
                       Auditoria Estratégica
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => navigate('/bible-recovery')}>
-                      <Icons.Stethoscope className="w-4 h-4 mr-2" />
-                      Recovery Bíblia
-                    </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </div>
