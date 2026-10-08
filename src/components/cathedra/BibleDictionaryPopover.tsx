@@ -66,7 +66,7 @@ const BibleDictionaryPopover: React.FC<BibleDictionaryPopoverProps> = ({ term, c
           data-testid="bible-dictionary-popover-trigger"
           className="underline decoration-primary/45 decoration-dotted underline-offset-4 hover:decoration-secondary hover:decoration-2 transition-all cursor-help text-left focus-visible:ring-2 focus-visible:ring-secondary focus-visible:outline-none rounded-sm font-medium"
           aria-haspopup="dialog"
-          aria-label={\`Explicar o termo bíblico “\${term}”\`}
+          aria-label={`Explicar o termo bíblico “${term}”`}
         >
           {children}
         </button>
