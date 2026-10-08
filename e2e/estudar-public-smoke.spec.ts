@@ -32,6 +32,31 @@ test('Documentos e Catecismo abrem sem erro de navegação', async ({ page }) =>
     expect(errors, `${route}: console errors`).toEqual([]);
   }
 });
+test('Documentos: leitor canônico, fonte oficial e Conexo sem duplicação', async ({ page }) => {
+  const errors: string[] = [];
+  const badResponses: string[] = [];
+  page.on('console', message => {
+    if (message.type() === 'error') errors.push(message.text());
+  });
+  page.on('response', response => {
+    if (response.status() >= 400) badResponses.push(`${response.status()}: ${response.url()}`);
+  });
+
+  const response = await page.goto('/magisterium/dce');
+  expect(response?.ok(), `/magisterium/dce: HTTP ${response?.status()}`).toBeTruthy();
+  await expect(page.locator('body')).not.toContainText(/Application error|Something went wrong/i);
+  await expect(page.getByRole('heading', { name: /Deus Caritas Est/i }).first()).toBeVisible();
+  await expect(page.getByText('Fonte oficial').first()).toBeVisible();
+  await expect(page.getByText('vatican.va').first()).toBeVisible();
+  await expect(page.locator('[id^="para-"]').first()).toBeVisible();
+
+  const nexusKicker = page.getByText('Conexões · Deus Caritas Est', { exact: true });
+  await expect(nexusKicker).toHaveCount(1);
+
+  expect(errors, 'Magistério: console errors').toEqual([]);
+  expect(badResponses, 'Magistério: HTTP errors').toEqual([]);
+});
+
 
 test('Bíblia abre e renderiza conteúdo real', async ({ page }) => {
   const errors: string[] = [];
