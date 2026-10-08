@@ -71,7 +71,7 @@ export const READER_MODULES: readonly ReaderModule[] = [
     id: 'magisterium',
     label: 'Magistério',
     entry: 'src/components/cathedra/MagisteriumViewer.tsx',
-    sampleRoutes: ['/magisterio'],
+    sampleRoutes: ['/magisterium/dce'],
     targetScore: 80,
     status: 'certified',
     blocking: false,
