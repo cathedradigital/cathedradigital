@@ -107,29 +107,16 @@ export const BIBLE_CANON: readonly BibleBook[] = [
 
 /** Aliases comuns aceitos em URLs/imports antigos. */
 const ABBR_ALIASES: Record<string, string> = {
+  // Legacy/common spellings.
   Job: 'Jó',
-  Abd: 'Ab',
   Jon: 'Jn',
   Mi: 'Mq',
-  Hab: 'Hc',
   Sof: 'Sf',
   Ageu: 'Ag',
   Zac: 'Zc',
   Mal: 'Ml',
-  // Aliases UI ↔ canon — `bible-books.ts` usa formas curtas/longas diferentes.
-  // Resolvem 9 livros que estavam 404 no audit (compact-lowercase do input
-  // bate em uma destas chaves via BY_ABBR_LOWER).
-  Esd: 'Ed',
-  Est: 'Et',
-  Pr: 'Pv',
-  Ecl: 'Ec',
-  '1Cor': '1Co',
-  '2Cor': '2Co',
-  Fl: 'Fp',
-  '1Pd': '1Pe',
-  '2Pd': '2Pe',
+
   // Equivalências completas do catálogo local (src/data/bible-books.ts).
-  // Mantêm uma única forma canônica nas rotas sem quebrar referências legadas.
   '1 Sm': '1Sm',
   '2 Sm': '2Sm',
   '1 Rs': '1Rs',
@@ -140,8 +127,8 @@ const ABBR_ALIASES: Record<string, string> = {
   Est: 'Et',
   Pr: 'Pv',
   Ecl: 'Ec',
-  Hab: 'Hc',
   Abd: 'Ab',
+  Hab: 'Hc',
   '1 Mc': '1Mc',
   '2 Mc': '2Mc',
   '1 Cor': '1Co',
@@ -156,6 +143,12 @@ const ABBR_ALIASES: Record<string, string> = {
   '1 Jo': '1Jo',
   '2 Jo': '2Jo',
   '3 Jo': '3Jo',
+
+  // Compact legacy forms.
+  '1Cor': '1Co',
+  '2Cor': '2Co',
+  '1Pd': '1Pe',
+  '2Pd': '2Pe',
 };
 
 const BY_ABBR: Record<string, BibleBook> = (() => {
