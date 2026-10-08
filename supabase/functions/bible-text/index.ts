@@ -40,6 +40,18 @@ const API_BOOK_MAP: Record<string, string> = {
   "3 Jo":"3jo","Jd":"jd","Ap":"ap",
 };
 
+const CANONICAL_ALIASES: Record<string, string> = {
+  "1Sm": "1 Sm", "2Sm": "2 Sm", "1Rs": "1 Rs", "2Rs": "2 Rs",
+  "1Cr": "1 Cr", "2Cr": "2 Cr", "Ed": "Esd", "Pv": "Pr", "Ec": "Ecl",
+  "Ab": "Abd", "Hc": "Hab", "1Mc": "1 Mc", "2Mc": "2 Mc",
+  "1Co": "1 Cor", "2Co": "2 Cor", "Fp": "Fl",
+  "1Ts": "1 Ts", "2Ts": "2 Ts", "1Tm": "1 Tm", "2Tm": "2 Tm",
+  "1Pe": "1 Pd", "2Pe": "2 Pd", "1Jo": "1 Jo", "2Jo": "2 Jo", "3Jo": "3 Jo",
+};
+
+const canonicalAbbrev = (abbr: string) =>
+  BOOK_MAP[abbr] ? abbr : (CANONICAL_ALIASES[abbr] ?? abbr);
+
 const cors = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-correlation-id, if-none-match",
@@ -82,7 +94,13 @@ async function loadStoredBibleChapter(abbrev: string, chapter: number) {
   const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
   if (!supabaseUrl || !serviceRoleKey) return null;
   const db = createClient(supabaseUrl, serviceRoleKey, { auth: { persistSession: false, autoRefreshToken: false } });
-  const { data: book, error: bookError } = await db.from("bible_books").select("id,name").eq("abbrev", abbrev).maybeSingle();
+  const storageAbbrevs = [abbrev, CANONICAL_ALIASES[abbrev]].filter(Boolean);
+  const { data: book, error: bookError } = await db
+    .from("bible_books")
+    .select("id,name,abbrev")
+    .in("abbrev", storageAbbrevs)
+    .limit(1)
+    .maybeSingle();
   if (bookError || !book?.id) return null;
   const { data: chapterRow, error: chapterError } = await db.from("bible_chapters").select("id,source_name,source_url").eq("book_id", book.id).eq("number", chapter).maybeSingle();
   if (chapterError || !chapterRow?.id) return null;
@@ -112,10 +130,12 @@ async function persistBibleChapter(
   });
   const retrievedAt = new Date().toISOString();
 
+  const storageAbbrevs = [abbrev, CANONICAL_ALIASES[abbrev]].filter(Boolean);
   const { data: book, error: bookError } = await db
     .from("bible_books")
-    .select("id")
-    .eq("abbrev", abbrev)
+    .select("id,abbrev")
+    .in("abbrev", storageAbbrevs)
+    .limit(1)
     .maybeSingle();
 
   if (bookError || !book?.id) {
@@ -220,15 +240,16 @@ Deno.serve(async (req: Request) => {
     return errorPayload("Parâmetros inválidos: abbrev e chapter são obrigatórios.", abbrev, Number.isFinite(chapter) ? chapter : 1, correlation, 400);
   }
 
-  const bookName = BOOK_MAP[abbrev];
+  const lookupAbbrev = canonicalAbbrev(abbrev);
+  const bookName = BOOK_MAP[lookupAbbrev];
   if (!bookName) return errorPayload("Abreviação não reconhecida.", abbrev, chapter, correlation, 404);
 
-  const candidates = [API_BOOK_MAP[abbrev], bookName].filter(Boolean) as string[];
+  const candidates = [API_BOOK_MAP[lookupAbbrev], bookName].filter(Boolean) as string[];
   let upstream: Response | null = null;
   let lastStatus = 502;
 
   try {
-    const stored = await loadStoredBibleChapter(abbrev, chapter);
+    const stored = await loadStoredBibleChapter(lookupAbbrev, chapter);
     if (stored) {
       const contentHash = await sha256Hex(JSON.stringify({ book: stored.book, chapter, verses: stored.verses }));
       const etag = `"${contentHash}"`;
