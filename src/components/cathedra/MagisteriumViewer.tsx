@@ -158,7 +158,7 @@ const MagisteriumViewer: React.FC = () => {
     const url = docMeta?.url ?? '';
     const pathMatch = url.match(/\/((?:pt|en|es|it|la|fr|de))\//i);
     if (pathMatch) return pathMatch[1].toLowerCase() as Language;
-    const suffixMatch = url.match(/_(po|la|en|it|fr|de)(?:\.|-|_)/i);
+    const suffixMatch = url.match(/_(po|la|en|es|it|fr|de)(?:\.|-|_)/i);
     if (suffixMatch?.[1]?.toLowerCase() === 'po') return 'pt';
     return (suffixMatch?.[1]?.toLowerCase() as Language) || 'pt';
   }, [docMeta?.url, id]);
