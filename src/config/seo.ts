@@ -6,7 +6,7 @@ export const SEO_CONFIG = {
   SEARCH_PARAM: 'q',
   DEFAULT_OG_IMAGE: 'https://isojguvcnfncokoxoauk.supabase.co/storage/v1/object/public/public-assets/og-home.png',
   ORGANIZATION: {
-    name: 'Cathedra Digital',
+    name: 'CATHEDRA Digital',
     logo: CATHEDRA_BRAND.logoUrl,
     instagram: 'https://instagram.com/cathedradigital',
     twitter: 'https://twitter.com/cathedradigital'
