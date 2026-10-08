@@ -48,8 +48,8 @@ export const ReaderToolbar: React.FC<ReaderToolbarProps> = ({
   }, [settings.fontSize, updateSettings]);
 
   const toggleFocus = useCallback(() => {
-    updateSettings({ immersiveMode: !settings.immersiveMode });
-  }, [settings.immersiveMode, updateSettings]);
+    updateSettings({ focusMode: !settings.focusMode });
+  }, [settings.focusMode, updateSettings]);
 
   const share = useCallback(async () => {
     const url = shareUrl ?? (typeof window !== 'undefined' ? window.location.href : '');
@@ -76,7 +76,7 @@ export const ReaderToolbar: React.FC<ReaderToolbarProps> = ({
       aria-label="Barra editorial do leitor"
       data-reader-toolbar
     >
-      <div className="mx-auto flex w-full max-w-[1120px] items-center gap-3 px-4 py-2 md:px-8">
+      <div className="mx-auto flex w-full max-w-[1120px] items-center gap-1.5 px-2 py-1.5 sm:gap-3 sm:px-4 sm:py-2 md:px-8">
         {backHref && (
           <Link
             to={backHref}
@@ -110,9 +110,9 @@ export const ReaderToolbar: React.FC<ReaderToolbarProps> = ({
             icon={<Type className="h-4 w-4" />}
           />
           <ToolbarButton
-            label={settings.immersiveMode ? 'Sair do modo foco' : 'Modo foco'}
+            label={settings.focusMode ? 'Sair do modo foco' : 'Modo foco'}
             onClick={toggleFocus}
-            active={settings.immersiveMode}
+            active={settings.focusMode}
             icon={<Focus className="h-4 w-4" />}
           />
           <ToolbarButton
@@ -144,7 +144,7 @@ const ToolbarButton = React.forwardRef<
     title={label}
     aria-pressed={active}
     className={cn(
-      'inline-flex h-11 w-11 items-center justify-center rounded-full border transition-colors',
+      'inline-flex h-11 w-11 items-center justify-center rounded-full border transition-colors touch-manipulation',
       'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background',
       active
         ? 'border-stitch-secondary/60 bg-stitch-secondary/10 text-stitch-secondary'
