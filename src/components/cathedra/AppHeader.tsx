@@ -115,12 +115,17 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
             <nav className="hidden md:flex items-center gap-2 text-[10px] uppercase tracking-widest text-primary/30 ml-4 overflow-hidden truncate">
               {breadcrumbs.map((crumb, idx) => (
                 <React.Fragment key={crumb.path}>
-                  <span className={cn(
-                    "min-h-[44px] px-2 inline-flex items-center hover:text-primary transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20 focus-visible:ring-offset-2 rounded-premium-full",
-                    idx === breadcrumbs.length - 1 && "text-primary/60 font-bold"
-                  )} onClick={() => navigate(crumb.path)}>
+                  <button
+                    type="button"
+                    className={cn(
+                      "min-h-[44px] px-2 inline-flex items-center hover:text-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20 focus-visible:ring-offset-2 rounded-premium-full",
+                      idx === breadcrumbs.length - 1 && "text-primary/60 font-bold"
+                    )}
+                    onClick={() => navigate(crumb.path)}
+                    aria-current={idx === breadcrumbs.length - 1 ? 'page' : undefined}
+                  >
                     {crumb.label}
-                  </span>
+                  </button>
                   {idx < breadcrumbs.length - 1 && <span className="opacity-20">/</span>}
                 </React.Fragment>
               ))}
