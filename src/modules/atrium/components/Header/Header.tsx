@@ -11,7 +11,7 @@ const Header: React.FC = () => {
   return (
     <header data-atrium-block="HEADER" className="catedra-surface mt-4 flex items-center justify-between gap-4 px-4 py-3 sm:px-5">
       <div className="min-w-0">
-        <p className="text-base font-serif font-semibold tracking-tight">Cathedra Digital</p>
+        <p className="text-base font-serif font-semibold tracking-tight">CATHEDRA Digital</p>
         <p className="mt-1 truncate text-xs text-muted-foreground">{today}{user.displayName && <> · <span className="text-foreground/80">{user.displayName}</span></>}</p>
       </div>
       <div className="flex shrink-0 items-center gap-1">
