@@ -12,7 +12,21 @@ async function login(page: Page, destination: string) {
   await page.getByLabel('Email').fill(email!);
   await page.getByLabel('Senha').fill(password!);
   await page.getByRole('button', { name: 'Entrar', exact: true }).click();
-  expect(page.url()).toContain(destination.split('?')[0]);
+
+  // Report the real authentication feedback instead of a misleading URL assertion.
+  // Credentials are never included in the error message or CI output.
+  try {
+    await expect.poll(() => page.url()).toContain(destination.split('?')[0], { timeout: 15000 });
+  } catch {
+    const authMessage = await page.getByRole('alert').textContent().catch(() => null);
+    const currentUrl = new URL(page.url());
+    const safePath = currentUrl.pathname + currentUrl.search;
+    throw new Error(
+      authMessage?.trim()
+        ? `E2E login did not reach the requested destination. Authentication reported: ${authMessage.trim()}`
+        : `E2E login did not reach the requested destination. Current path: ${safePath}`,
+    );
+  }
 }
 
 function watchBrowserHealth(page: Page) {
