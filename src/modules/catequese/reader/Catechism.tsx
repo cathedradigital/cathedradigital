@@ -831,34 +831,30 @@ const Catechism: React.FC = memo(() => {
               {/* Unified Reading Navigation */}
               <div className="flex items-center justify-between gap-spacing-md py-spacing-xs border-b border-primary/5 mb-spacing-md">
                 <Button variant="ghost" onClick={() => { goBack(); setTimeout(() => { if (lastFocusedElement) document.getElementById(lastFocusedElement)?.focus(); }, 100); }} id="back-to-summary" className="text-[10px] font-bold uppercase tracking-widest text-primary/40 hover:text-primary" aria-label="Voltar para o sumário de seções">← Sumário</Button>
-                <div className="flex items-center gap-spacing-lg">
+                <div className="flex items-center gap-spacing-xs md:gap-spacing-sm">
                   <Button
-                    disabled={selectedPart.sections.findIndex((section) => section.id === selectedSection.id) <= 0}
-                    onClick={() => {
-                      const index = selectedPart.sections.findIndex((section) => section.id === selectedSection.id);
-                      const prev = index > 0 ? selectedPart.sections[index - 1] : null;
-                      if (prev) {
-                        setSelectedSection(prev);
-                        setCurrentParagraph(prev.paragraphs[0]);
-                        window.scrollTo(0, 0);
-                      }
-                    }}
-                    data-testid="catechism-section-prev"
-                    variant="ghost" className="text-[10px] font-bold uppercase tracking-widest opacity-40 hover:opacity-100">Anterior</Button>
-                  <span className="text-premium-xs font-serif italic text-primary/20">Seção {selectedSection.id}</span>
+                    disabled={currentParagraph <= 1}
+                    onClick={() => jumpToParagraph(currentParagraph - 1)}
+                    data-testid="catechism-paragraph-prev"
+                    variant="ghost"
+                    className="text-[9px] md:text-[10px] font-bold uppercase tracking-widest opacity-60 hover:opacity-100"
+                    aria-label="Parágrafo anterior"
+                  >
+                    Anterior
+                  </Button>
+                  <span className="text-[9px] md:text-premium-xs font-serif italic text-primary/30 whitespace-nowrap">
+                    §{currentParagraph}
+                  </span>
                   <Button
-                    disabled={selectedPart.sections.findIndex((section) => section.id === selectedSection.id) >= selectedPart.sections.length - 1}
-                    onClick={() => {
-                      const index = selectedPart.sections.findIndex((section) => section.id === selectedSection.id);
-                      const next = index >= 0 && index < selectedPart.sections.length - 1 ? selectedPart.sections[index + 1] : null;
-                      if (next) {
-                        setSelectedSection(next);
-                        setCurrentParagraph(next.paragraphs[0]);
-                        window.scrollTo(0, 0);
-                      }
-                    }}
-                    data-testid="catechism-section-next"
-                    variant="ghost" className="text-[10px] font-bold uppercase tracking-widest opacity-40 hover:opacity-100">Próxima</Button>
+                    disabled={currentParagraph >= 2865}
+                    onClick={() => jumpToParagraph(currentParagraph + 1)}
+                    data-testid="catechism-paragraph-next"
+                    variant="ghost"
+                    className="text-[9px] md:text-[10px] font-bold uppercase tracking-widest opacity-60 hover:opacity-100"
+                    aria-label="Próximo parágrafo"
+                  >
+                    Próximo
+                  </Button>
                 </div>
                 <ReadingControlPanel />
               </div>
