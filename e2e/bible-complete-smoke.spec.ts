@@ -47,6 +47,25 @@ test.describe('Bíblia — catálogo completo', () => {
     }
   });
 
+  test('as 73 abreviações do catálogo local equivalem ao cânon único', async () => {
+    const { BIBLE_CANON, findBookByAbbr, normalizeAbbr } = await import('../src/lib/bibleCanon');
+
+    expect(BIBLE_CANON).toHaveLength(73);
+    expect(books).toHaveLength(73);
+
+    for (const book of books) {
+      const canonical = findBookByAbbr(book.abbr);
+      expect(canonical, `Catálogo → cânon: ${book.name} [${book.abbr}]`).toBeDefined();
+      expect(canonical?.name, `Nome divergente: ${book.name} [${book.abbr}]`).toBe(book.name);
+      expect(normalizeAbbr(book.abbr), `Abreviação não normalizada: ${book.abbr}`).toBe(canonical?.abbr);
+    }
+
+    for (const canonical of BIBLE_CANON) {
+      expect(findBookByAbbr(canonical.abbr)?.name).toBe(canonical.name);
+      expect(normalizeAbbr(canonical.abbr)).toBe(canonical.abbr);
+    }
+  });
+
   test('Gênesis 1 e Apocalipse 22 aparecem no navegador', async ({ page }) => {
     for (const target of [
       { book: 'Gn', chapter: 1, marker: /No princípio|No principio/i },
