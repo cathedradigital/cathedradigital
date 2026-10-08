@@ -77,7 +77,7 @@ function stripHtml(html:string){
 }
 function parsePage(text:string,from:number,to:number){
   const markers=new Map<number,{index:number;length:number}[]>();
-  const pattern=/\\b(\\d{1,4})(?:\\s*\\.)?\\s+/g;
+  const pattern=from===1 ? /\b(\d{1,4})\s*\.\s+/g : /\b(\d{1,4})(?:\s*\.)?\s+/g;
   for(const match of text.matchAll(pattern)){
     const n=Number(match[1]);
     if(n<from||n>to) continue;
