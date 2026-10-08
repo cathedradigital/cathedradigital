@@ -118,6 +118,10 @@ export const NexusPanel: React.FC<NexusPanelProps> = ({
           </h2>
         )}
         <span className="block h-[1px] w-spacing-3xl bg-gradient-to-r from-secondary/60 to-transparent" />
+        <p className="pt-spacing-xs text-[10px] leading-relaxed text-muted-foreground/75 font-reader">
+          O Conexo separa <strong className="font-semibold text-foreground/80">referências editoriais</strong> de
+          <strong className="font-semibold text-foreground/80"> correspondências temáticas</strong>. Sugestões automáticas não são apresentadas como relações oficiais.
+        </p>
       </header>
 
       <div className="space-y-spacing-lg">
