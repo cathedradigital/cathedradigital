@@ -125,6 +125,7 @@ const MagisteriumViewer: React.FC = () => {
   const [translationLoading, setTranslationLoading] = useState(false);
   const [translationProgress, setTranslationProgress] = useState<{ current: number; total: number } | null>(null);
   const [translationError, setTranslationError] = useState<string | null>(null);
+  const [readingMode, setReadingMode] = useState<'original' | 'translation'>('original');
 
   const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
   // STAB-004.3.2 — busca interna do documento
@@ -166,25 +167,11 @@ const MagisteriumViewer: React.FC = () => {
     [id]
   );
 
-  const sourceLanguage = useMemo<Language>(() => {
-    const knownSourceLanguages: Record<string, Language> = {
-      dfil: 'la',
-      paet: 'la',
-      bdeus: 'la',
-    };
-    if (id && knownSourceLanguages[id]) return knownSourceLanguages[id];
-
-    const url = docMeta?.url ?? '';
-    const pathMatch = url.match(/\/((?:pt|en|es|it|la|fr|de))\//i);
-    if (pathMatch) return pathMatch[1].toLowerCase() as Language;
-    const suffixMatch = url.match(/_(po|la|en|es|it|fr|de)(?:\.|-|_)/i);
-    if (suffixMatch?.[1]?.toLowerCase() === 'po') return 'pt';
-    return (suffixMatch?.[1]?.toLowerCase() as Language) || 'pt';
-  }, [docMeta?.url, id]);
+  const sourceLanguage = (docMeta?.sourceLanguage ?? 'pt') as Language;
 
   const sourceLanguageName = getLocaleDefinition(sourceLanguage).nativeName;
   const targetLanguageName = getLocaleDefinition(lang).nativeName;
-  const showingTranslation = translatedText !== null && sourceLanguage !== lang;
+  const showingTranslation = readingMode === 'translation' && translatedText !== null && sourceLanguage !== lang;
 
   const translationCacheKey = id ? `cathedra_magisterium_translation_${id}_${lang}_v1` : null;
 
@@ -192,6 +179,7 @@ const MagisteriumViewer: React.FC = () => {
     setTranslatedText(null);
     setTranslationError(null);
     setTranslationProgress(null);
+    setReadingMode(sourceLanguage === lang ? 'original' : 'translation');
     if (!translationCacheKey || sourceLanguage === lang) return;
     try {
       const cached = localStorage.getItem(translationCacheKey);
@@ -802,34 +790,50 @@ const MagisteriumViewer: React.FC = () => {
                 aria-label="Idioma e tradução do documento"
                 className="w-full max-w-[70ch] mx-auto px-spacing-md md:px-0 mb-spacing-xl"
               >
-                <div className="border border-primary/10 bg-primary/[0.025] px-spacing-md py-spacing-sm md:px-spacing-lg md:py-spacing-md rounded-xl flex flex-col gap-spacing-sm sm:flex-row sm:items-center sm:justify-between">
-                  <div className="min-w-0">
-                    <p className="text-[10px] font-black uppercase tracking-[0.16em] text-muted-foreground">
-                      Idioma original · {sourceLanguageName}
-                    </p>
-                    <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-                      {showingTranslation ? `Tradução de apoio para ${targetLanguageName}. A fonte oficial permanece vinculada ao Vaticano.` : `O texto carregado está em ${sourceLanguageName}. Você pode lê-lo em ${targetLanguageName} sem sair do Cátedra.`}
-                    </p>
+                <div className="border border-primary/10 bg-primary/[0.025] px-spacing-md py-spacing-sm md:px-spacing-lg md:py-spacing-md rounded-xl flex flex-col gap-spacing-sm">
+                  <div className="flex flex-col gap-spacing-sm sm:flex-row sm:items-center sm:justify-between">
+                    <div className="min-w-0">
+                      <p className="text-[10px] font-black uppercase tracking-[0.16em] text-muted-foreground">
+                        Leitura · {showingTranslation ? targetLanguageName : sourceLanguageName}
+                      </p>
+                      <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+                        Original em {sourceLanguageName}. A tradução é de apoio e o texto original permanece disponível.
+                      </p>
+                    </div>
+                    <div className="flex flex-wrap items-center gap-2 shrink-0" role="group" aria-label="Idioma de leitura">
+                      <Button
+                        type="button"
+                        variant={readingMode === 'original' ? 'default' : 'outline'}
+                        onClick={() => setReadingMode('original')}
+                        className="rounded-full min-h-9 px-3 text-xs font-semibold"
+                        data-testid="magisterium-original"
+                      >
+                        Original · {sourceLanguageName}
+                      </Button>
+                      <Button
+                        type="button"
+                        variant={readingMode === 'translation' ? 'default' : 'outline'}
+                        onClick={() => {
+                          setReadingMode('translation');
+                          if (!translatedText) void translateDocument();
+                        }}
+                        disabled={translationLoading && !translatedText}
+                        className="rounded-full min-h-9 px-3 text-xs font-semibold"
+                        data-testid="magisterium-translation"
+                      >
+                        {translationLoading ? 'Traduzindo…' : (lang === 'pt' ? 'Português' : targetLanguageName)}
+                      </Button>
+                    </div>
                   </div>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={translateDocument}
-                    disabled={translationLoading}
-                    className="shrink-0 rounded-full min-h-10 px-4 text-xs font-semibold"
-                    data-testid="magisterium-translate"
-                  >
-                    {translationLoading ? 'Traduzindo…' : showingTranslation ? 'Atualizar tradução' : `Traduzir para ${targetLanguageName}`}
-                  </Button>
+                  {translationLoading && translationProgress && (
+                    <p className="text-center text-[10px] text-muted-foreground" aria-live="polite">
+                      Traduzindo bloco {translationProgress.current} de {translationProgress.total}…
+                    </p>
+                  )}
+                  {translationError && (
+                    <p className="text-center text-xs text-destructive" role="alert">{translationError}</p>
+                  )}
                 </div>
-                {translationLoading && translationProgress && (
-                  <p className="mt-2 text-center text-[10px] text-muted-foreground" aria-live="polite">
-                    Traduzindo bloco {translationProgress.current} de {translationProgress.total}…
-                  </p>
-                )}
-                {translationError && (
-                  <p className="mt-2 text-center text-xs text-destructive" role="alert">{translationError}</p>
-                )}
               </section>
             )}
 
