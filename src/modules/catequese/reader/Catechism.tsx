@@ -371,7 +371,24 @@ const CatechismContent: React.FC<{
         );
       })}
       {data?.content && (
-        <div className="mt-spacing-md pt-spacing-sm border-t border-primary/[0.06]">
+        <div className="mt-spacing-md pt-spacing-sm border-t border-primary/[0.06] space-y-spacing-xs">
+          {data.sourceName && (
+            <div className="flex flex-wrap items-center gap-x-spacing-xs gap-y-0.5 text-[9px] uppercase tracking-[0.12em] text-muted-foreground/55">
+              <span>Fonte</span>
+              {data.sourceUrl ? (
+                <a
+                  href={data.sourceUrl}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="font-semibold text-primary/70 hover:text-primary hover:underline underline-offset-2"
+                >
+                  {data.sourceName}
+                </a>
+              ) : (
+                <span className="font-semibold text-primary/70">{data.sourceName}</span>
+              )}
+            </div>
+          )}
           <p className="text-[9px] font-medium uppercase tracking-[0.16em] text-muted-foreground/45">
             Toque no ✨ ao lado do parágrafo para abrir a Yá.
           </p>
