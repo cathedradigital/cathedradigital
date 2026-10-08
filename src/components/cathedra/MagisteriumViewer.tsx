@@ -77,6 +77,25 @@ function ReferenceAwareParagraph({ text }: { text: string }) {
 
 const MIN_DOC_LEN = 500;
 
+function normalizeDocumentText(value: string): string {
+  return value
+    .replace(/\u00a0/g, ' ')
+    .replace(/\r\n?/g, '\n')
+    .split(/\n{2,}/)
+    .map((block) => block
+      .replace(/\s+/g, ' ')
+      .replace(/\s+([,.;:!?])/g, '$1')
+      .replace(/([,;:])(?=\S)/g, '$1 ')
+      .trim()
+    )
+    .filter(Boolean)
+    .join('\n\n');
+}
+
+function splitDocumentParagraphs(value: string): string[] {
+  return normalizeDocumentText(value).split(/\n{2,}/).filter(Boolean);
+}
+
 
 
 
@@ -596,8 +615,8 @@ const MagisteriumViewer: React.FC = () => {
 
   const processedText = useMemo(() => {
     if (!content?.text) return '';
-    if (showingTranslation) return translatedText || '';
-    return content.text;
+    if (showingTranslation) return normalizeDocumentText(translatedText || '');
+    return normalizeDocumentText(content.text);
   }, [content, translatedText, showingTranslation]);
 
   if (loading) {
@@ -730,8 +749,8 @@ const MagisteriumViewer: React.FC = () => {
             <Icons.ArrowLeft className="w-spacing-md h-spacing-md" aria-hidden="true" />
           </Button>
           <div className="min-w-spacing-0">
-            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary truncate leading-none mb-spacing-2xs">{content.title}</p>
-            <p className="text-[8px] text-muted-foreground uppercase tracking-widest font-bold">Magistério</p>
+            <p className="text-[12px] md:text-[13px] font-semibold tracking-[0.03em] text-primary truncate leading-tight mb-spacing-2xs">{content.title}</p>
+            <p className="text-[9px] md:text-[10px] text-muted-foreground uppercase tracking-[0.14em] font-semibold">Magistério</p>
           </div>
         </div>
         
@@ -838,7 +857,7 @@ const MagisteriumViewer: React.FC = () => {
               className={`w-full max-w-[70ch] mx-auto px-spacing-md md:px-spacing-0
                 py-spacing-lg md:py-spacing-2xl prose prose-slate dark:prose-invert reader-text
                 font-size-${settings.fontSize} font-family-${settings.fontFamily}
-                text-[1.08rem] md:text-[1.15rem] prose-p:leading-[1.78] prose-p:mb-spacing-lg
+                text-[1.12rem] md:text-[1.18rem] prose-p:leading-[1.68] prose-p:mb-spacing-md
                 prose-headings:font-serif prose-headings:text-primary prose-headings:mt-spacing-2xl prose-headings:mb-spacing-md
                 prose-li:leading-[1.72] prose-li:mb-spacing-xs
                 prose-p:first-child:mt-0
@@ -846,7 +865,7 @@ const MagisteriumViewer: React.FC = () => {
                 prose-strong:text-primary prose-strong:font-bold transition-all duration-300`}
             >
 
-              {processedText.split('\n\n').map((para, idx) => {
+              {splitDocumentParagraphs(processedText).map((para, idx) => {
                 const note = currentDocNotes.find(n => n.content_id === `${id}:${idx}` && n.highlight_color);
                 
                 return (
