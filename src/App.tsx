@@ -80,6 +80,16 @@ const MagisterioLegacyRedirect = () => {
   return <Navigate to={`/magisterium/${id ?? ''}`} replace />;
 };
 
+const LegacyLoginRedirect = () => {
+  React.useEffect(() => {
+    // Use the browser's actual URL because the compatibility router can expose
+    // stale search state while resolving the legacy /login redirect.
+    const base = ROUTER_BASENAME === '/' ? '' : ROUTER_BASENAME;
+    window.location.replace(`${base}/auth${window.location.search}${window.location.hash}`);
+  }, []);
+  return null;
+};
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -683,7 +693,7 @@ const AppLayout: React.FC = () => {
               <Route path="/chat" element={<Navigate to="/logos" replace />} />
               <Route path="/auth" element={<Suspense fallback={<LoadingFallback />}><Auth onSuccess={() => navigate(resolveAuthHome(), { replace: true })} /></Suspense>} />
               <Route path="/.lovable/oauth/consent" element={<Suspense fallback={<LoadingFallback />}><OAuthConsent /></Suspense>} />
-              <Route path="/login" element={<Navigate to={`/auth${window.location.search}`} replace />} />
+              <Route path="/login" element={<LegacyLoginRedirect />} />
               <Route path="/reset-password" element={<Suspense fallback={<LoadingFallback />}><ResetPasswordPage /></Suspense>} />
               <Route path="/profile" element={<Suspense fallback={<LoadingFallback />}><AuthGuard><ProfilePage /></AuthGuard></Suspense>} />
               <Route path="/settings" element={<Navigate to="/conta/configuracoes" replace />} />
