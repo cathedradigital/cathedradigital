@@ -77,15 +77,17 @@ function stripHtml(html:string){
 }
 function parsePage(text:string,from:number,to:number){
   const m=[...text.matchAll(/(?:^|\n)\s*(\d{1,4})\.\s+/g)];
-  const out:{paragraph:number;content:string}[]=[];
+  const byParagraph=new Map<number,string>();
   for(let i=0;i<m.length;i++){
     const n=Number(m[i][1]); if(n<from||n>to) continue;
     const start=(m[i].index??0)+(m[i][0].startsWith("\n")?1:0);
     const end=i+1<m.length?(m[i+1].index??text.length):text.length;
     const content=text.slice(start,end).replace(/^\s*\d{1,4}\.\s+/,"").replace(/\s+/g," ").trim();
-    if(content.length>=20) out.push({paragraph:n,content});
+    if(content.length<20) continue;
+    const previous=byParagraph.get(n);
+    if(!previous || content.length>previous.length) byParagraph.set(n,content);
   }
-  return out;
+  return [...byParagraph.entries()].map(([paragraph,content])=>({paragraph,content}));
 }
 
 async function syncBible(db:any,limit:number){
