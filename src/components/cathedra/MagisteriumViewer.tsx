@@ -856,13 +856,16 @@ const MagisteriumViewer: React.FC = () => {
               }}
               className={`w-full max-w-[70ch] mx-auto px-spacing-md md:px-spacing-0
                 py-spacing-lg md:py-spacing-2xl prose prose-slate dark:prose-invert reader-text
-                font-size-${settings.fontSize} font-family-${settings.fontFamily}
+                font-family-${settings.fontFamily}
                 text-[1.12rem] md:text-[1.18rem] prose-p:leading-[1.68] prose-p:mb-spacing-md
                 prose-headings:font-serif prose-headings:text-primary prose-headings:mt-spacing-2xl prose-headings:mb-spacing-md
                 prose-li:leading-[1.72] prose-li:mb-spacing-xs
                 prose-p:first-child:mt-0
                 prose-blockquote:border-primary/10 prose-blockquote:bg-primary/[0.01] prose-blockquote:p-spacing-md prose-blockquote:rounded-premium prose-blockquote:italic
                 prose-strong:text-primary prose-strong:font-bold transition-all duration-300`}
+              style={{
+                fontSize: settings.fontSize === 'small' ? '1rem' : settings.fontSize === 'large' ? '1.28rem' : settings.fontSize === 'extra-large' ? '1.45rem' : '1.12rem',
+              }}
             >
 
               {splitDocumentParagraphs(processedText).map((para, idx) => {
