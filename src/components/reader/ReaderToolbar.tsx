@@ -48,8 +48,8 @@ export const ReaderToolbar: React.FC<ReaderToolbarProps> = ({
   }, [settings.fontSize, updateSettings]);
 
   const toggleFocus = useCallback(() => {
-    updateSettings({ focusMode: !settings.focusMode });
-  }, [settings.focusMode, updateSettings]);
+    updateSettings({ immersiveMode: !settings.immersiveMode });
+  }, [settings.immersiveMode, updateSettings]);
 
   const share = useCallback(async () => {
     const url = shareUrl ?? (typeof window !== 'undefined' ? window.location.href : '');
@@ -110,9 +110,9 @@ export const ReaderToolbar: React.FC<ReaderToolbarProps> = ({
             icon={<Type className="h-4 w-4" />}
           />
           <ToolbarButton
-            label={settings.focusMode ? 'Sair do modo foco' : 'Modo foco'}
+            label={settings.immersiveMode ? 'Sair do modo foco' : 'Modo foco'}
             onClick={toggleFocus}
-            active={settings.focusMode}
+            active={settings.immersiveMode}
             icon={<Focus className="h-4 w-4" />}
           />
           <ToolbarButton
