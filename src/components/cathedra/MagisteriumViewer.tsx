@@ -76,6 +76,36 @@ function ReferenceAwareParagraph({ text }: { text: string }) {
 }
 
 const MIN_DOC_LEN = 500;
+const MAX_TRANSLATION_BATCH_CHARS = 45_000;
+
+/** Divide documentos longos em lotes abaixo do limite da Edge Function, preservando parágrafos. */
+function splitTranslationBatches(value: string, maxChars = MAX_TRANSLATION_BATCH_CHARS): string[] {
+  const paragraphs = value.split(/\n{2,}/).map((part) => part.trim()).filter(Boolean);
+  const batches: string[] = [];
+  let current = "";
+
+  for (const paragraph of paragraphs) {
+    if (paragraph.length > maxChars) {
+      if (current) batches.push(current);
+      current = "";
+      for (let offset = 0; offset < paragraph.length; offset += maxChars) {
+        batches.push(paragraph.slice(offset, offset + maxChars));
+      }
+      continue;
+    }
+
+    const candidate = current ? current + "\n\n" + paragraph : paragraph;
+    if (current && candidate.length > maxChars) {
+      batches.push(current);
+      current = paragraph;
+    } else {
+      current = candidate;
+    }
+  }
+
+  if (current) batches.push(current);
+  return batches;
+}
 
 function normalizeDocumentText(value: string): string {
   return value
@@ -192,22 +222,36 @@ const MagisteriumViewer: React.FC = () => {
     setTranslationLoading(true);
     setTranslationError(null);
     try {
-      const { data, error } = await supabase.functions.invoke('document-translate', {
-        body: {
-          text: content.text,
-          source_language: sourceLanguage,
-          target_language: lang,
-        },
-      });
-      if (error) throw error;
-      const result = typeof data?.text === 'string' ? data.text.trim() : '';
+      const batches = splitTranslationBatches(content.text);
+      const translatedBatches: string[] = [];
+      setTranslationProgress({ current: 0, total: batches.length });
+
+      for (let index = 0; index < batches.length; index += 1) {
+        setTranslationProgress({ current: index + 1, total: batches.length });
+        const { data, error } = await supabase.functions.invoke('document-translate', {
+          body: {
+            text: batches[index],
+            source_language: sourceLanguage,
+            target_language: lang,
+          },
+        });
+        if (error) throw error;
+        const translatedBatch = typeof data?.text === 'string' ? data.text.trim() : '';
+        if (!translatedBatch) {
+          throw new Error(`O tradutor não retornou conteúdo no bloco ${index + 1} de ${batches.length}.`);
+        }
+        translatedBatches.push(translatedBatch);
+      }
+
+      // Só disponibiliza e armazena a tradução quando todos os lotes terminarem.
+      const result = translatedBatches.join('\n\n').trim();
       if (!result) throw new Error('O tradutor não retornou conteúdo.');
       setTranslatedText(result);
       if (translationCacheKey) {
         try { localStorage.setItem(translationCacheKey, result); } catch { /* cache unavailable */ }
       }
     } catch (err: any) {
-      setTranslationError(err?.message || 'Não foi possível traduzir este documento agora.');
+      setTranslationError(err?.message || 'Não foi possível concluir a tradução deste documento. Tente novamente.');
     } finally {
       setTranslationLoading(false);
       setTranslationProgress(null);
