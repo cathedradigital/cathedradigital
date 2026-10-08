@@ -56,6 +56,7 @@ jobs:
         run: npm run build
 
       - name: Run public browser smoke
+        timeout-minutes: 8
         run: npx playwright test e2e/catechism-p0-public-smoke.spec.ts
 
       - name: Verify authenticated E2E account exists
