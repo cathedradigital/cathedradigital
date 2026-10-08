@@ -66,6 +66,19 @@ test.describe('Bíblia — catálogo completo', () => {
     }
   });
 
+  test('deep-link destaca o versículo solicitado', async ({ page }) => {
+    await page.goto('/bible?book=Jo&ch=3&v=16');
+    const verse = page.locator('#verse-16');
+    await expect(verse).toBeVisible({ timeout: 30_000 });
+    await expect(verse).toHaveClass(/bg-secondary\\/20/);
+  });
+
+  test('deep-link com capítulo fora do limite é normalizado para o último capítulo', async ({ page }) => {
+    await page.goto('/bible?book=Ap&ch=999');
+    await expect(page.locator('[data-testid="verse-text-1"]')).toBeVisible({ timeout: 30_000 });
+    await expect(page).toHaveURL(/book=Ap.*ch=22/);
+  });
+
   test('Gênesis 1 e Apocalipse 22 aparecem no navegador', async ({ page }) => {
     for (const target of [
       { book: 'Gn', chapter: 1, marker: /No princípio|No principio/i },
