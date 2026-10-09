@@ -512,7 +512,7 @@ const Footer: React.FC = React.memo(() => {
                     aria-label={lang === 'pt' ? 'Boletim informativo em preparação' : 'Newsletter coming soon'}
                     className="inline-flex items-center justify-center min-w-[44px] min-h-[44px] px-3 rounded-none transition-colors disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c9a84c]"
                     style={{ border: `1px solid ${GOLD}`, color: GOLD_TEXT, background: 'transparent' }}
-                    onMouseEnter={(e) => { if (!isSubmitting) { e.currentTarget.style.background = GOLD; e.currentTarget.style.color = '#0a0a0a'; } }}
+                    onMouseEnter={(e) => { e.currentTarget.style.background = GOLD; e.currentTarget.style.color = '#0a0a0a'; }}
                     onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = GOLD; }}
                   >
                     <Icons.ArrowDown className="-rotate-90 w-4 h-4" />
