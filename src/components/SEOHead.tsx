@@ -41,7 +41,7 @@ const SEOHead = ({ title, description, path, keywords, type = 'website', breadcr
     const encodedTitle = encodeURIComponent(pageTitle);
     const cacheKey = new Date().toISOString().split('T')[0].substring(0, 7);
     
-    return `https://placehold.jp/40/1a1a1a/ffffff/1200x630.png?text=${encodedTitle}%0A%0ACátedra%20Digital&css=%7B%22font-family%22%3A%22serif%22%7D&v=${cacheKey}`;
+    return `https://placehold.jp/40/1a1a1a/ffffff/1200x630.png?text=${encodedTitle}%0A%0AC%C3%A1tedra%20Digital&css=%7B%22font-family%22%3A%22serif%22%7D&v=${cacheKey}`;
   };
 
   const displayImage = getDynamicImage(title);
