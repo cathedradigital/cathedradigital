@@ -91,7 +91,7 @@ A cadeia oficial permanece GitHub → Cloudflare Workers → domínio próprio. 
 ### 13. Magistério — validação de links e limites
 
 - O catálogo local de URLs do Magistério foi inspecionado estaticamente; as entradas analisadas usam HTTPS e host oficial `vatican.va`. Isso não confirma disponibilidade HTTP de cada página nem prova que todos os documentos têm texto integral local.
-- O leitor inclui caminhos de abrir/consultar a fonte oficial; a validação de cada documento no navegador e a disponibilidade de traduções continuam pendentes do E2E e de verificação de rede. Não declarar a biblioteca inteira validada apenas pela lista de URLs.
+- O leitor inclui caminhos de abrir/consultar a fonte oficial. Verificação externa direta confirmou que as páginas oficiais de Dei Filius, do Catecismo (parágrafos 198–421) e de Laudato si' respondem e apresentam conteúdo. O texto oficial de Dei Filius aparece em latim apesar do caminho conter `/pt/`; o leitor já contém a exceção explícita `dfil: 'la'`, evitando rotulá-lo incorretamente como português. Isso valida apenas a amostra consultada: a checagem de cada documento e o fluxo completo de tradução dentro do Cátedra continuam pendentes do E2E.
 
 ### 14. Correção preventiva de conteúdo premium de Formação
 
