@@ -36,6 +36,23 @@ A cadeia oficial permanece GitHub → Cloudflare Workers → domínio próprio. 
 - Os itens de breadcrumb do cabeçalho eram `span` com `onClick`, sem semântica de botão/link nem estado atual acessível por teclado/leitor de tela.
 - Foram convertidos em botões nativos, mantendo a navegação e indicando o item atual com `aria-current="page"`. O build/CI deve validar a alteração.
 
+### 6. Sidebar: estados ativos e ícones não cobriam todos os IDs canônicos
+
+- A comparação entre `MODULE_NAVIGATION` e o mapa de ícones da sidebar encontrou IDs canônicos sem entrada correspondente (`documents`, `prayers`, `breviary`, `missal`, `litanies` e `examination`), que caíam no ícone genérico.
+- A condição de rota ativa usava `startsWith(item.path)` sem limite de segmento, permitindo que caminhos como `/bible-legacy` também marcassem `/bible` como ativo.
+- Corrigi o mapa e limitei a correspondência ao caminho exato ou a um segmento descendente. O CI da revisão atual ainda precisa confirmar a compilação e os testes.
+
+### 7. Rodapé: inscrição no boletim afirmava sucesso sem persistência
+
+- `Footer.tsx` simulava uma espera de 1,5 s, disparava apenas um evento de analytics e mostrava “cadastrado com sucesso”, sem chamar serviço nem persistir o e-mail.
+- Corrigi o comportamento para informar que o boletim está em preparação e que nenhum cadastro foi feito. O campo não apaga o endereço informado e a métrica de inscrição falsa foi removida. A integração real do boletim continua pendente e não foi inventado um endpoint.
+
+### 8. Guardas de acesso — primeira leitura estática
+
+- As rotas `/hoje`, `/diario`, `/conta/*`, `/jornadas/*`, `/favorites`, `/achievements`, `/profile` e `/checkout` estão envolvidas por `AuthGuard`; as ferramentas administrativas principais estão sob `AdminGuard`.
+- A seção `/conta/admin` também verifica `isAdmin` dentro do componente e redireciona usuários comuns para `/conta/perfil`. Esta revisão estática não substitui testes reais com sessão autenticada e anônima.
+- A conexão Supabase disponível não autorizou a leitura de Security Advisors nem do catálogo de tabelas nesta execução. Portanto, RLS, permissões e segurança de dados em produção ainda não foram validados; isso permanece bloqueio explícito, não uma aprovação presumida.
+
 ### 5. Navegação mobile: componente disponível, mas sem integração global comprovada
 
 - A busca por referências de `MobileBottomNav` encontrou o próprio componente e a página de demonstração; não encontrou uso de produção. O comentário de `DevocionalMobileShell` diz que o shell inclui `MobileTopBar + MobileBottomNav`, mas o código do shell importa e renderiza apenas `MobileTopBar`.
