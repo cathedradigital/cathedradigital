@@ -7,7 +7,6 @@ Disallow: /admin/visual-audit
 Disallow: /admin/visual-regression
 Disallow: /az-faith
 Disallow: /bible-legacy
-Disallow: /biblia
 Disallow: /biblioteca-legacy
 Disallow: /buscar-legacy
 Disallow: /cache-manager
@@ -15,7 +14,6 @@ Disallow: /catechism-legacy
 Disallow: /catechism/health
 Disallow: /catechism/integrity
 Disallow: /catechism/verify
-Disallow: /catecismo
 Disallow: /chat
 Disallow: /checkout
 Disallow: /checkout/result
