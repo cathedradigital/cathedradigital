@@ -134,6 +134,13 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
       rosary: Icons.Rosary,
       viacrucis: Icons.ViaCrucis,
       novenas: Icons.Calendar,
+      // IDs da navegação canônica (moduleNavigation.ts).
+      documents: Icons.ScrollText,
+      prayers: Icons.Prayer,
+      breviary: Icons.Liturgy,
+      missal: Icons.BookOpen,
+      litanies: Icons.Prayer,
+      examination: Icons.Heart,
       journeys: Icons.Journeys,
       themes: Icons.Themes,
       search: Icons.Search,
@@ -329,7 +336,8 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                     >
                       <ul className="space-y-0.5 mt-0.5">
                         {section.items.map((item, idx) => {
-                          const isActive = currentPath === item.path || (item.path !== '/' && currentPath.startsWith(item.path));
+                          // Match whole route segments: /bible must not activate /bible-legacy.
+                          const isActive = currentPath === item.path || (item.path !== '/' && currentPath.startsWith(item.path + '/'));
                           return (
                             <li key={idx}>
                               <Button
