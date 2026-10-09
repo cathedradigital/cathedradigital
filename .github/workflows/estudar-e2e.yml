@@ -54,7 +54,7 @@ jobs:
           echo "Credential variables are present; the browser tests verify whether login succeeds."
 
       - name: Run critical Estudar E2E
-        run: npx playwright test e2e/estudar-critical.spec.ts
+        run: npx playwright test e2e/estudar-public-smoke.spec.ts e2e/estudar-critical.spec.ts
 
       - name: Upload Playwright evidence
         if: ${{ !cancelled() }}
