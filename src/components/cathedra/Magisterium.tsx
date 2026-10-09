@@ -541,56 +541,105 @@ const Magisterium: React.FC = () => {
             />
           </div>
 
-          {/* Categoria (autoridade canônica) */}
-          <div className="estudar-doc-filter-row flex items-center justify-center gap-spacing-xs flex-wrap py-spacing-xs">
-            <BubbleHint kind="category" label="Mostrar documentos de todas as categorias">
-              <Button
-                variant="ghost"
-                className={`rounded-premium-full px-3 py-2 text-[10px] font-semibold tracking-normal transition-all duration-700 md:px-spacing-lg md:py-spacing-xs md:text-[9px] md:font-black md:uppercase md:tracking-[0.2em] ${selectedCategory === null ? 'bg-primary text-white shadow-premium scale-[1.05]' : 'text-primary/70 hover:text-primary'}`}
-                onClick={() => setSelectedCategory(null)}
-              >
-                Todas as Categorias
-              </Button>
-            </BubbleHint>
+          {/* Categoria — navegação editorial, sem bolhas/overlays sobre os filtros. */}
+          <div
+            className="estudar-doc-filter-row flex items-center justify-start gap-1.5 overflow-x-auto border-b border-primary/[0.08] py-1 scrollbar-none"
+            aria-label="Filtrar por categoria"
+          >
+            <Button
+              variant="ghost"
+              title="Mostrar documentos de todas as categorias"
+              aria-pressed={selectedCategory === null}
+              className={cn(
+                'shrink-0 rounded-none border-b-2 px-2.5 py-2 text-[10px] font-semibold tracking-normal transition-colors md:px-3 md:text-[9px] md:font-black md:uppercase md:tracking-[0.16em]',
+                selectedCategory === null
+                  ? 'border-primary text-primary'
+                  : 'border-transparent text-primary/55 hover:border-primary/30 hover:text-primary',
+              )}
+              onClick={() => setSelectedCategory(null)}
+            >
+              Todas
+            </Button>
             {MAGISTERIUM_CATEGORIES.map(cat => (
-              <BubbleHint
+              <Button
                 key={cat.name}
-                kind="category"
-                label={selectedCategory === cat.name ? `Remover filtro de categoria: ${cat.name}` : `Filtrar por categoria: ${cat.name}`}
+                variant="ghost"
+                title={selectedCategory === cat.name ? `Remover filtro: ${cat.name}` : `Filtrar por categoria: ${cat.name}`}
+                aria-pressed={selectedCategory === cat.name}
+                className={cn(
+                  'shrink-0 rounded-none border-b-2 px-2.5 py-2 text-[10px] font-semibold tracking-normal transition-colors md:px-3 md:text-[9px] md:font-black md:uppercase md:tracking-[0.16em]',
+                  selectedCategory === cat.name
+                    ? 'border-primary text-primary'
+                    : 'border-transparent text-primary/55 hover:border-primary/30 hover:text-primary',
+                )}
+                onClick={() => setSelectedCategory(cat.name)}
               >
-                <Button
-                  variant="ghost"
-                  className={`rounded-premium-full px-3 py-2 text-[10px] font-semibold tracking-normal transition-all duration-700 md:px-spacing-lg md:py-spacing-xs md:text-[9px] md:font-black md:uppercase md:tracking-[0.2em] ${selectedCategory === cat.name ? 'bg-primary text-white shadow-premium scale-[1.05]' : 'text-primary/70 hover:text-primary'}`}
-                  onClick={() => setSelectedCategory(cat.name)}
-                >
-                  {cat.name}
-                </Button>
-              </BubbleHint>
+                {cat.name}
+              </Button>
             ))}
           </div>
 
-          {/* Temas (multi-seleção) */}
-          <div className="estudar-doc-theme-row flex items-center justify-start gap-spacing-xs flex-nowrap overflow-x-auto py-spacing-xs scrollbar-none">
-            {MAGISTERIUM_THEMES.map(theme => {
-              const active = selectedThemes.includes(theme);
-              return (
-                <BubbleHint
-                  key={theme}
-                  kind="theme-bar"
-                  label={active ? `Remover tema: ${theme}` : `Adicionar tema: ${theme}`}
-                >
-                  <Button
-                    variant="ghost"
+          {/* Temas — exploração organizada, sem nuvem de palavras nem círculos decorativos. */}
+          <section
+            className="rounded-premium-lg border border-primary/[0.08] bg-primary/[0.015] p-spacing-md md:p-spacing-lg"
+            aria-labelledby="magisterium-theme-heading"
+          >
+            <div className="mb-spacing-sm flex items-end justify-between gap-spacing-md">
+              <div>
+                <p className="text-[9px] font-black uppercase tracking-[0.22em] text-primary/45">Explorar por tema</p>
+                <h2 id="magisterium-theme-heading" className="mt-1 text-sm font-medium text-foreground/80 md:text-base">
+                  Temas do Magistério
+                </h2>
+              </div>
+              <span className="hidden text-[9px] uppercase tracking-[0.16em] text-muted-foreground md:block">
+                Selecione um ou mais
+              </span>
+            </div>
+
+            <div
+              className="flex snap-x snap-mandatory gap-3 overflow-x-auto pb-2 scrollbar-none md:grid md:grid-cols-3 md:gap-3 md:overflow-visible lg:grid-cols-4 xl:grid-cols-5"
+              role="group"
+              aria-label="Carrossel de temas do Magistério"
+            >
+              {MAGISTERIUM_THEMES.map(theme => {
+                const active = selectedThemes.includes(theme);
+                const count = MAGISTERIUM_DOCUMENTS.filter(doc => doc.themes.includes(theme)).length;
+                return (
+                  <button
+                    key={theme}
+                    type="button"
                     aria-pressed={active}
-                    className={`rounded-premium-full px-3 py-2 text-[10px] font-semibold tracking-normal transition-all duration-500 md:px-spacing-md md:py-spacing-2xs md:text-[9px] md:font-black md:uppercase md:tracking-[0.2em] ${active ? 'bg-primary text-white shadow-premium' : 'text-primary/70 hover:text-primary border border-primary/10'}`}
+                    title={active ? `Remover tema: ${theme}` : `Filtrar por tema: ${theme}`}
                     onClick={() => toggleTheme(theme)}
+                    className={cn(
+                      'group relative flex min-h-[88px] w-[min(72vw,220px)] shrink-0 snap-start flex-col items-start justify-between overflow-hidden rounded-xl border p-3 text-left transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 md:min-h-[96px] md:w-auto',
+                      active
+                        ? 'border-primary/55 bg-primary/[0.075] text-primary shadow-sm'
+                        : 'border-primary/[0.12] bg-background/70 text-foreground/75 hover:border-primary/35 hover:bg-primary/[0.025]',
+                    )}
                   >
-                    {theme}
-                  </Button>
-                </BubbleHint>
-              );
-            })}
-          </div>
+                    <span
+                      aria-hidden="true"
+                      className={cn(
+                        'absolute inset-x-0 top-0 h-[2px] transition-colors',
+                        active ? 'bg-primary' : 'bg-primary/10 group-hover:bg-primary/35',
+                      )}
+                    />
+                    <span className="line-clamp-2 text-xs font-semibold leading-snug md:text-sm">{theme}</span>
+                    <span className={cn(
+                      'mt-3 text-[10px] font-medium tabular-nums',
+                      active ? 'text-primary/80' : 'text-muted-foreground/65',
+                    )}>
+                      {count} {count === 1 ? 'documento' : 'documentos'}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+            <p className="mt-1 text-[10px] text-muted-foreground/60 md:hidden">
+              Deslize para o lado para explorar todos os temas
+            </p>
+          </section>
 
           {/* Ordenação + reset */}
           <div className="estudar-doc-sort-row flex items-center justify-between gap-spacing-md">
