@@ -12,7 +12,22 @@ async function login(page: Page, destination: string) {
   await page.getByLabel('Email').fill(email!);
   await page.getByLabel('Senha').fill(password!);
   await page.getByRole('button', { name: 'Entrar', exact: true }).click();
-  await expect.poll(() => page.url()).toContain(destination.split('?')[0]);
+
+  // Fail with the actual Supabase auth error instead of timing out on a URL
+  // assertion when the configured test account is rejected.
+  await Promise.race([
+    page.waitForURL(url => new URL(url).pathname !== '/auth', { timeout: 15_000 }).then(() => 'redirected'),
+    page.getByRole('alert').waitFor({ state: 'visible', timeout: 15_000 }).then(() => 'rejected'),
+  ]);
+
+  if (new URL(page.url()).pathname === '/auth') {
+    const message = (await page.getByRole('alert').textContent().catch(() => null))?.trim();
+    throw new Error(
+      `E2E authentication was rejected before destination validation. Check E2E_TEST_EMAIL and E2E_TEST_PASSWORD against the app's Supabase project. Supabase response: ${message || 'no visible error'}`,
+    );
+  }
+
+  await expect.poll(() => new URL(page.url()).pathname + new URL(page.url()).search).toContain(destination);
 }
 
 function watchBrowserHealth(page: Page) {
@@ -37,6 +52,19 @@ async function openStudyJournal(page: Page, marker: string) {
   await expect(note).toBeVisible();
   return note;
 }
+
+test('responsive critical flow: protected and legacy redirects preserve deep-links', async ({ page }) => {
+  await page.context().clearCookies();
+
+  await page.goto('/diario');
+  await expect.poll(() => new URL(page.url()).pathname).toBe('/auth');
+  await expect.poll(() => new URL(page.url()).searchParams.get('next')).toBe('/diario');
+
+  const destination = '/bible?book=joao&chapter=1&v=1';
+  await page.goto('/login?next=' + encodeURIComponent(destination));
+  await expect.poll(() => new URL(page.url()).pathname).toBe('/auth');
+  await expect.poll(() => new URL(page.url()).searchParams.get('next')).toBe(destination);
+});
 
 test('auth redirect preserves protected destination', async ({ page }) => {
   await page.context().clearCookies();
