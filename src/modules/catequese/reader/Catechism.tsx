@@ -844,6 +844,26 @@ const Catechism: React.FC = memo(() => {
               </div>
             }
           >
+            {bibleReturnContext && (
+              <div
+                className="mx-auto mb-spacing-lg flex w-full max-w-3xl flex-col gap-spacing-xs rounded-xl border border-secondary/25 bg-secondary/5 p-spacing-md sm:flex-row sm:items-center sm:justify-between"
+                data-testid="bible-study-return"
+              >
+                <div className="min-w-0">
+                  <p className="text-xs font-semibold uppercase tracking-wider text-secondary">Retorno de estudo</p>
+                  <p className="mt-1 text-sm text-foreground/80">{bibleReturnContext.label}</p>
+                </div>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={returnToBible}
+                  className="min-h-11 shrink-0"
+                  aria-label="Voltar à passagem bíblica"
+                >
+                  Voltar à passagem
+                </Button>
+              </div>
+            )}
             <div className="w-full editorial-column editorial-section" data-testid={`secao-${selectedSection.id}-conteudo`}>
               {/* Unified Reading Navigation */}
               <div className="flex items-center justify-between gap-spacing-md py-spacing-xs border-b border-primary/5 mb-spacing-md">
