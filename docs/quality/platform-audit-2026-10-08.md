@@ -99,13 +99,21 @@ A cadeia oficial permanece GitHub → Cloudflare Workers → domínio próprio. 
 - A policy pública anterior foi substituída por `journey_steps_free_read`: visitantes anônimos só podem ler etapas gratuitas de jornadas ativas.
 - Foi criada `journey_steps_premium_read`: usuários autenticados veem etapas gratuitas e só veem etapas pagas se o próprio perfil tiver `is_premium = true`; a policy administrativa existente permanece intacta.
 - Consulta posterior confirmou RLS habilitada em `journey_steps` e as três policies esperadas: leitura gratuita pública, leitura premium autenticada e administração restrita a admin.
-- Limite: como a base atual não contém etapas não gratuitas, ainda não foi possível demonstrar um caso real de conteúdo pago ocultado. A proteção da policy foi verificada no catálogo; o teste de acesso com conta autenticada continua pendente.
+- Validação posterior: um teste transacional com etapa gratuita/paga sintética confirmou os quatro casos (anônimo lê gratuita; anônimo não lê paga; autenticado não premium não lê paga; autenticado premium lê paga). A transação foi revertida e uma consulta confirmou zero linhas de teste remanescentes.
 
 ### 15. Verificação estática adicional dos destinos de navegação
 
 - Comparação automatizada dos caminhos de `MODULE_NAVIGATION` com os metadados de rotas e declarações em `src/App.tsx`: 31 caminhos canônicos, nenhum sem destino declarado.
 - Comparação dos caminhos internos em `src/config/footer-links.ts`: 10 destinos internos únicos, nenhum sem declaração de rota.
 - Isso valida correspondência estática, não substitui o teste de clique no navegador para cada link nem verifica disponibilidade de URLs externas.
+
+### 16. Bloqueio de permissões no helper de RLS — corrigido e testado
+
+- A simulação de leitura autenticada revelou erro `permission denied for function has_role`, apesar das policies de etapas premium estarem presentes.
+- A causa era dupla: o schema `auth_internal` não concedia `USAGE` a `authenticated`, embora várias policies chamassem `auth_internal.has_role(uuid, app_role)`; e as policies de perfil chamavam o helper não qualificado `public.has_role`, cuja execução estava corretamente restrita a `service_role`.
+- Aplicada no Supabase e registrada nesta branch a migração `20261009013000_fix_auth_internal_rls_helper_permissions.sql`: concede `USAGE` do schema a `authenticated`, revoga execução pública dos helpers internos, permite a execução autenticada somente de `auth_internal.has_role(uuid, app_role)` e corrige as três policies de perfil para usar o helper interno. Não ampliou o acesso a `public.has_role` nem concedeu acesso ao schema a `anon`.
+- Teste transacional após a correção: os quatro cenários de leitura gratuita/paga passaram. Verificações finais confirmaram `authenticated_schema_usage=true`, `authenticated_helper_execute=true`, `anon_helper_execute=false`, `authenticated_public_helper_execute=false`; contagem final de linhas de teste: zero jornadas, zero perfis e zero etapas.
+- Limite restante: isso valida a política RLS e as permissões SQL, mas não substitui o teste com sessão real do aplicativo; o workflow E2E atual continua falhando em verificações de interface/rotas e precisa ser corrigido antes de liberar.
 
 ## Próximas etapas obrigatórias da varredura
 
