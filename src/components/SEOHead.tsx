@@ -28,7 +28,7 @@ interface SEOHeadProps {
 const SEOHead = ({ title, description, path, keywords, type = 'website', breadcrumbs, faqs, image }: SEOHeadProps) => {
   const { data: seoSettings } = useSEO();
   
-  const siteTitle = seoSettings?.site_title || 'Cathedra Digital';
+  const siteTitle = seoSettings?.site_title || 'Cátedra Digital';
   const displayTitle = title ? `${title} — ${siteTitle}` : siteTitle;
   const displayDescription = description || seoSettings?.site_description || 'Aprofunde sua fé católica com Bíblia Sagrada, Catecismo da Igreja, vidas dos santos, liturgia diária e IA teológica.';
   const displayKeywords = keywords || seoSettings?.site_keywords || '';
@@ -41,7 +41,7 @@ const SEOHead = ({ title, description, path, keywords, type = 'website', breadcr
     const encodedTitle = encodeURIComponent(pageTitle);
     const cacheKey = new Date().toISOString().split('T')[0].substring(0, 7);
     
-    return `https://placehold.jp/40/1a1a1a/ffffff/1200x630.png?text=${encodedTitle}%0A%0ACathedra%20Digital&css=%7B%22font-family%22%3A%22serif%22%7D&v=${cacheKey}`;
+    return `https://placehold.jp/40/1a1a1a/ffffff/1200x630.png?text=${encodedTitle}%0A%0ACátedra%20Digital&css=%7B%22font-family%22%3A%22serif%22%7D&v=${cacheKey}`;
   };
 
   const displayImage = getDynamicImage(title);
@@ -165,7 +165,7 @@ const SEOHead = ({ title, description, path, keywords, type = 'website', breadcr
 
       <meta property="og:type" content={type} />
       <meta property="og:url" content={url} />
-      <meta property="og:site_name" content="Cathedra Digital" />
+      <meta property="og:site_name" content="Cátedra Digital" />
       <meta property="og:title" content={displayTitle} />
       <meta property="og:description" content={displayDescription} />
       <meta property="og:image" content={displayImage} />
