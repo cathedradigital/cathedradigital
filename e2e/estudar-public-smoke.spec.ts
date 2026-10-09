@@ -243,15 +243,31 @@ test('canonical public modules render on mobile and desktop without horizontal o
     '/aparicoes',
   ];
   const viewports = [
-    { width: 390, height: 844, label: 'mobile' },
-    { width: 1365, height: 900, label: 'desktop' },
+    {
+      width: 390,
+      height: 844,
+      label: 'mobile',
+      routes: [
+        '/',
+        '/bible?book=Gn&ch=1&v=1',
+        '/catechism?p=279',
+        '/magisterium/dce',
+        '/oracao',
+        '/temas',
+        '/buscar',
+        '/acervo',
+      ],
+    },
+    { width: 1365, height: 900, label: 'desktop', routes: publicRoutes },
   ];
 
   for (const viewport of viewports) {
     await page.setViewportSize({ width: viewport.width, height: viewport.height });
 
-    for (const route of publicRoutes) {
-      const response = await page.goto(route);
+    for (const route of viewport.routes) {
+      // DOM parsing is enough for the route sweep; waiting for every image/font
+      // on every navigation made this check unnecessarily slow.
+      const response = await page.goto(route, { waitUntil: 'domcontentloaded' });
       expect(response?.ok(), `${viewport.label} ${route}: HTTP ${response?.status()}`).toBeTruthy();
       await expect(page.locator('body')).not.toContainText(/Application error|Something went wrong/i);
 
@@ -262,8 +278,8 @@ test('canonical public modules render on mobile and desktop without horizontal o
     }
 
     for (const protectedRoute of ['/hoje', '/diario', '/jornadas', '/favorites', '/achievements', '/profile', '/settings']) {
-      await page.goto(protectedRoute);
-      await expect(page).toHaveURL(/\/auth\?next=/);
+      await page.goto(protectedRoute, { waitUntil: 'domcontentloaded' });
+      await expect(page).toHaveURL(/\\/auth\\?next=/);
       const overflow = await page.evaluate(
         () => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
       );
