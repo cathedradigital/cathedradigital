@@ -68,7 +68,7 @@ test('Bíblia abre e renderiza conteúdo real', async ({ page }) => {
     if (response.status() >= 400) badResponses.push(`${response.status()}: ${response.url()}`);
   });
 
-  const response = await page.goto('/bible?book=Gen&ch=1');
+  const response = await page.goto('/bible?book=Gn&ch=1');
   expect(response?.ok(), `/bible: HTTP ${response?.status()}`).toBeTruthy();
   await expect(page.locator('body')).not.toContainText(/Application error|Something went wrong/i);
   await expect(page.locator('body')).toContainText(/Gênesis|Genesis/i);
