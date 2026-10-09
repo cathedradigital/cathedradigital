@@ -255,3 +255,22 @@ test('canonical public modules render on mobile and desktop without horizontal o
     }
   }
 });
+
+
+test('mobile sidebar and institutional footer links reach canonical destinations', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/catechism?p=279');
+
+  await page.getByRole('button', { name: 'Abrir menu de navegação' }).click();
+  const sidebar = page.getByRole('dialog', { name: /navegação/i });
+  await expect(sidebar).toBeVisible();
+  await sidebar.getByRole('button', { name: /^Bíblia(?:,|$)/i }).click();
+  await expect(page).toHaveURL(/\/bible(?:\?.*)?$/);
+
+  await page.goto('/about');
+  const footer = page.getByTestId('footer-public-nav');
+  const privacyLink = footer.getByRole('button', { name: 'Privacidade' });
+  await privacyLink.scrollIntoViewIfNeeded();
+  await privacyLink.click();
+  await expect(page).toHaveURL(/\/privacy$/);
+});
