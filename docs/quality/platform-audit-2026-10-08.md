@@ -47,6 +47,18 @@ A cadeia oficial permanece GitHub → Cloudflare Workers → domínio próprio. 
 - `Footer.tsx` simulava uma espera de 1,5 s, disparava apenas um evento de analytics e mostrava “cadastrado com sucesso”, sem chamar serviço nem persistir o e-mail.
 - Corrigi o comportamento para informar que o boletim está em preparação e que nenhum cadastro foi feito. O campo não apaga o endereço informado e a métrica de inscrição falsa foi removida. A integração real do boletim continua pendente e não foi inventado um endpoint.
 
+### 9. Shell devocional e navegação inferior mobile — divergência de implementação
+
+- O comentário de `DevocionalMobileShell.tsx` descreve `MobileTopBar + MobileBottomNav`, mas o componente renderiza apenas `MobileTopBar`. A navegação inferior existe e é exportada, porém a busca de usos encontrou apenas o showcase de desenvolvimento e a referência no próprio comentário.
+- Outras páginas, como o hub Estudar e a pesquisa, reservam espaço inferior para a barra por meio de `--stitch-mobile-bottomnav-h`; isso sugere que o padrão móvel foi planejado, mas não comprova que a barra deva ser global.
+- Não integrei a barra de forma global nesta etapa: a decisão afeta a navegação e a área útil de todos os módulos e precisa ser consistente com a preferência de interface limpa, sem navegação duplicada. A discrepância fica registrada para decisão após mapear as telas móveis.
+
+### 10. Conexo nos leitores — cobertura de referências explícitas a comprovar
+
+- Os adapters automáticos da Bíblia e do Catecismo chamam `buildBucketedSuggestions` com `refs: {}`. As sugestões podem vir de relações do grafo e de busca textual temática, mas esses adapters não fornecem referências editoriais específicas na chamada.
+- O motor diferencia relações do grafo, referências editoriais e correspondências temáticas; portanto, a ausência de refs explícitas nesses dois adapters não prova que todos os resultados estejam errados, mas significa que a exatidão de cada vínculo não pode ser presumida.
+- Próxima verificação: testes com passagens e parágrafos conhecidos para conferir se as conexões exibidas levam ao versículo/parágrafo certo, permanecem dentro do Cátedra e rotulam corretamente a evidência. Não alterei o ranking teológico sem fixtures e dados verificáveis.
+
 ### 8. Guardas de acesso — primeira leitura estática
 
 - As rotas `/hoje`, `/diario`, `/conta/*`, `/jornadas/*`, `/favorites`, `/achievements`, `/profile` e `/checkout` estão envolvidas por `AuthGuard`; as ferramentas administrativas principais estão sob `AdminGuard`.
