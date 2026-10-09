@@ -209,3 +209,49 @@ test('Documentos: Dei Filius organiza cabeçalho, idioma original e tradução',
   await expect(page.getByText('Temas', { exact: true })).toHaveCount(0);
   expect(errors, 'Dei Filius: console errors').toEqual([]);
 });
+
+
+test('canonical public modules render on mobile and desktop without horizontal overflow', async ({ page }) => {
+  const publicRoutes = [
+    '/',
+    '/bible?book=Gn&ch=1&v=1',
+    '/catechism?p=279',
+    '/magisterium/dce',
+    '/oracao',
+    '/liturgia',
+    '/breviary',
+    '/temas',
+    '/buscar',
+    '/nexus',
+    '/acervo',
+    '/santos',
+  ];
+  const viewports = [
+    { width: 390, height: 844, label: 'mobile' },
+    { width: 1365, height: 900, label: 'desktop' },
+  ];
+
+  for (const viewport of viewports) {
+    await page.setViewportSize({ width: viewport.width, height: viewport.height });
+
+    for (const route of publicRoutes) {
+      const response = await page.goto(route);
+      expect(response?.ok(), `${viewport.label} ${route}: HTTP ${response?.status()}`).toBeTruthy();
+      await expect(page.locator('body')).not.toContainText(/Application error|Something went wrong/i);
+
+      const overflow = await page.evaluate(
+        () => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
+      );
+      expect(overflow, `${viewport.label} ${route}: horizontal overflow`).toBe(false);
+    }
+
+    for (const protectedRoute of ['/hoje', '/diario', '/jornadas']) {
+      await page.goto(protectedRoute);
+      await expect(page).toHaveURL(/\\/login\\?next=/);
+      const overflow = await page.evaluate(
+        () => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
+      );
+      expect(overflow, `${viewport.label} ${protectedRoute} login redirect: horizontal overflow`).toBe(false);
+    }
+  }
+});
