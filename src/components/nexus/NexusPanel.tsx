@@ -109,7 +109,7 @@ export const NexusPanel: React.FC<NexusPanelProps> = ({
       <header className="space-y-spacing-2xs">
         {kicker && (
           <p className="font-stitch-label text-stitch-label-sm uppercase tracking-[0.24em] text-secondary">
-            NEXUS
+            {kicker}
           </p>
         )}
         {title && (
