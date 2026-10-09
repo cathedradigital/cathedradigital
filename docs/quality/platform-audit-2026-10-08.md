@@ -79,7 +79,7 @@ A cadeia oficial permanece GitHub → Cloudflare Workers → domínio próprio. 
 - Aplicada a migração `create_profile_on_signup`: cria a linha privada do perfil pelo trigger de `auth.users`, sem exigir que o navegador tenha permissão de inserir perfil. As duas migrações também foram registradas nesta branch do GitHub.
 - Teste transacional de segurança tentou criar um perfil com role admin e premium ativo: os valores foram neutralizados e uma tentativa posterior de autopromoção foi rejeitada; a transação foi revertida e uma consulta confirmou que não restou linha de teste.
 - Limite da evidência: o projeto Supabase consultado tinha zero linhas em `auth.users`, `profiles` e `user_roles` no momento da verificação. Isso não comprova a conta E2E de produção e impede testar uma sessão real existente. O workflow só verifica se os secrets não estão vazios, não se as credenciais correspondem a uma conta válida.
-- As tabelas bíblicas e o Catecismo têm políticas públicas de leitura e políticas de escrita para admin; isso é compatível com leitores públicos. As políticas de jornadas permitem leitura de etapas de jornadas ativas; a consulta ao banco não encontrou atualmente etapas de jornadas ativas premium ou não gratuitas, mas a policy precisa ser reavaliada antes de inserir conteúdo pago real, para que conteúdo premium não dependa apenas de blur no cliente.
+- As tabelas bíblicas e o Catecismo têm políticas públicas de leitura e políticas de escrita para admin; isso é compatível com leitores públicos. Na leitura inicial, a policy pública de `journey_steps` permitia ler todas as colunas de etapas em jornadas ativas, o que poderia expor o JSON de etapas pagas no futuro. A consulta de estado encontrou 2 jornadas ativas, nenhuma marcada premium, e 13 etapas atuais — todas gratuitas. A policy foi corrigida preventivamente na seção 14.
 
 ### 12. Corpus e referência de Conexo — consulta ao banco
 
@@ -92,6 +92,20 @@ A cadeia oficial permanece GitHub → Cloudflare Workers → domínio próprio. 
 
 - O catálogo local de URLs do Magistério foi inspecionado estaticamente; as entradas analisadas usam HTTPS e host oficial `vatican.va`. Isso não confirma disponibilidade HTTP de cada página nem prova que todos os documentos têm texto integral local.
 - O leitor inclui caminhos de abrir/consultar a fonte oficial; a validação de cada documento no navegador e a disponibilidade de traduções continuam pendentes do E2E e de verificação de rede. Não declarar a biblioteca inteira validada apenas pela lista de URLs.
+
+### 14. Correção preventiva de conteúdo premium de Formação
+
+- Aplicada ao Supabase a migração `restrict_premium_journey_content`, também registrada em `supabase/migrations/20261009002600_restrict_premium_journey_content.sql`.
+- A policy pública anterior foi substituída por `journey_steps_free_read`: visitantes anônimos só podem ler etapas gratuitas de jornadas ativas.
+- Foi criada `journey_steps_premium_read`: usuários autenticados veem etapas gratuitas e só veem etapas pagas se o próprio perfil tiver `is_premium = true`; a policy administrativa existente permanece intacta.
+- Consulta posterior confirmou RLS habilitada em `journey_steps` e as três policies esperadas: leitura gratuita pública, leitura premium autenticada e administração restrita a admin.
+- Limite: como a base atual não contém etapas não gratuitas, ainda não foi possível demonstrar um caso real de conteúdo pago ocultado. A proteção da policy foi verificada no catálogo; o teste de acesso com conta autenticada continua pendente.
+
+### 15. Verificação estática adicional dos destinos de navegação
+
+- Comparação automatizada dos caminhos de `MODULE_NAVIGATION` com os metadados de rotas e declarações em `src/App.tsx`: 31 caminhos canônicos, nenhum sem destino declarado.
+- Comparação dos caminhos internos em `src/config/footer-links.ts`: 10 destinos internos únicos, nenhum sem declaração de rota.
+- Isso valida correspondência estática, não substitui o teste de clique no navegador para cada link nem verifica disponibilidade de URLs externas.
 
 ## Próximas etapas obrigatórias da varredura
 
