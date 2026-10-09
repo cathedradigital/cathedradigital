@@ -28,6 +28,8 @@ export type MagisteriumType =
  */
 export type MagisteriumTheme = string;
 
+export type MagisteriumLanguage = 'pt' | 'en' | 'es' | 'it' | 'la' | 'fr' | 'de';
+
 export interface MagisteriumDocument {
   /** Slug estável usado nas rotas (`/magisterium/:id`) e no lookup de URL. */
   id: string;
@@ -47,6 +49,8 @@ export interface MagisteriumDocument {
   themes: MagisteriumTheme[];
   url: string;
   summary: string;
+  /** Idioma real do conteúdo original; não depende da URL do Vaticano. */
+  sourceLanguage?: MagisteriumLanguage;
 }
 
 export interface MagisteriumCategory {
@@ -245,12 +249,26 @@ export const MAGISTERIUM_CATEGORIES: MagisteriumCategory[] = [
   },
 ];
 
+/**
+ * Idioma canônico do conteúdo original usado pelo leitor.
+ * Esta tabela é explícita: o idioma não é inferido da URL do Vaticano.
+ */
+export const MAGISTERIUM_SOURCE_LANGUAGES: Record<string, MagisteriumLanguage> = {
+  dfil: 'pt', paet: 'la', bdeus: 'la',
+  sc: 'pt', lg: 'pt', dv: 'pt', gs: 'pt', ideus: 'pt', mdeus: 'pt',
+  rn: 'pt', mcorp: 'pt', hv: 'pt', rh: 'pt', vs: 'pt', ev: 'pt', fr: 'pt',
+  dce: 'pt', ss: 'pt', civ: 'pt', lf: 'pt', ls: 'pt', ft: 'pt',
+  al: 'pt', ge: 'pt', cv: 'pt', sd: 'pt', md: 'pt', dd: 'pt', rvm: 'pt', mm: 'pt', pc: 'pt',
+  di: 'pt', cic: 'pt', cdsi: 'pt', cdc: 'pt',
+};
+
 /** Lista plana em ordem canônica: categoria (`order`) → data cronológica. */
 export const MAGISTERIUM_DOCUMENTS: MagisteriumDocument[] = MAGISTERIUM_CATEGORIES
   .slice()
   .sort((a, b) => a.order - b.order)
   .flatMap(cat =>
     cat.documents.slice().sort((a, b) => (a.date ?? `${a.year}`).localeCompare(b.date ?? `${b.year}`))
+      .map((doc) => ({ ...doc, sourceLanguage: MAGISTERIUM_SOURCE_LANGUAGES[doc.id] ?? 'pt' }))
   );
 
 /** Universo de temas para os chips de filtro (ordenado alfabeticamente). */
