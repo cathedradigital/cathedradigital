@@ -217,14 +217,30 @@ test('canonical public modules render on mobile and desktop without horizontal o
     '/bible?book=Gn&ch=1&v=1',
     '/catechism?p=279',
     '/magisterium/dce',
+    // Rezar
     '/oracao',
+    '/oracao/rosario',
+    '/oracao/exame-de-consciencia',
     '/liturgia',
     '/breviary',
+    '/lectio',
+    '/viacrucis',
+    '/litanies',
+    '/novenas',
+    '/missal',
+    // Formar-se
     '/temas',
+    // Pesquisar
     '/buscar',
     '/nexus',
     '/acervo',
     '/santos',
+    '/glossario',
+    '/atlas',
+    '/aquinas',
+    '/dogmas',
+    '/papas',
+    '/aparicoes',
   ];
   const viewports = [
     { width: 390, height: 844, label: 'mobile' },
@@ -245,7 +261,7 @@ test('canonical public modules render on mobile and desktop without horizontal o
       expect(overflow, `${viewport.label} ${route}: horizontal overflow`).toBe(false);
     }
 
-    for (const protectedRoute of ['/hoje', '/diario', '/jornadas']) {
+    for (const protectedRoute of ['/hoje', '/diario', '/jornadas', '/favorites', '/achievements', '/profile', '/settings']) {
       await page.goto(protectedRoute);
       await expect(page).toHaveURL(/\/auth\?next=/);
       const overflow = await page.evaluate(
