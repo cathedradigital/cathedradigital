@@ -1,7 +1,6 @@
 import React from 'react';
 import { Navigate, useLocation } from '@/lib/rr-compat';
 import { useAuth } from '@/hooks/useAuth';
-import { AppRoute } from '@/types';
 
 interface AuthGuardProps {
   children: React.ReactNode;
@@ -22,7 +21,7 @@ const AuthGuard = React.forwardRef<HTMLDivElement, AuthGuardProps>(({ children }
   if (!user) {
     // Carry the full internal destination through the login screen.
     const next = `${location.pathname}${location.search ?? ''}${location.hash ?? ''}`;
-    const loginPath = `${AppRoute.LOGIN}?next=${encodeURIComponent(next)}`;
+    const loginPath = `/auth?next=${encodeURIComponent(next)}`;
     return <Navigate to={loginPath} replace />;
   }
 

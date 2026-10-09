@@ -134,6 +134,13 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
       rosary: Icons.Rosary,
       viacrucis: Icons.ViaCrucis,
       novenas: Icons.Calendar,
+      // IDs da navegação canônica (moduleNavigation.ts).
+      documents: Icons.ScrollText,
+      prayers: Icons.Prayer,
+      breviary: Icons.Liturgy,
+      missal: Icons.BookOpen,
+      litanies: Icons.Prayer,
+      examination: Icons.Heart,
       journeys: Icons.Journeys,
       themes: Icons.Themes,
       search: Icons.Search,
@@ -197,6 +204,17 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
     ];
   }, [isAdmin, t]);
 
+  // Keep only the most specific matching destination active (e.g. Rosário, not
+  // both the /oracao parent and /oracao/rosario child).
+  const activeNavPath = useMemo(() => {
+    const candidates = sections
+      .flatMap((section) => section.items)
+      .filter((item) =>
+        currentPath === item.path ||
+        (item.path !== '/' && currentPath.startsWith(item.path + '/')),
+      );
+    return candidates.sort((a, b) => b.path.length - a.path.length)[0]?.path;
+  }, [sections, currentPath]);
 
   const handleNav = useCallback((target: string | { path: string; onClick?: () => void }, event?: React.MouseEvent | React.KeyboardEvent | React.TouchEvent) => {
     if (event && !isLegitimateClick(event)) return;
@@ -329,7 +347,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                     >
                       <ul className="space-y-0.5 mt-0.5">
                         {section.items.map((item, idx) => {
-                          const isActive = currentPath === item.path || (item.path !== '/' && currentPath.startsWith(item.path));
+                          const isActive = activeNavPath === item.path;
                           return (
                             <li key={idx}>
                               <Button

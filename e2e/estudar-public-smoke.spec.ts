@@ -68,7 +68,7 @@ test('Bíblia abre e renderiza conteúdo real', async ({ page }) => {
     if (response.status() >= 400) badResponses.push(`${response.status()}: ${response.url()}`);
   });
 
-  const response = await page.goto('/bible?book=Gen&ch=1');
+  const response = await page.goto('/bible?book=Gn&ch=1');
   expect(response?.ok(), `/bible: HTTP ${response?.status()}`).toBeTruthy();
   await expect(page.locator('body')).not.toContainText(/Application error|Something went wrong/i);
   await expect(page.locator('body')).toContainText(/Gênesis|Genesis/i);
@@ -208,4 +208,101 @@ test('Documentos: Dei Filius organiza cabeçalho, idioma original e tradução',
   await expect(page.getByTestId('magisterium-translate')).toBeVisible();
   await expect(page.getByText('Temas', { exact: true })).toHaveCount(0);
   expect(errors, 'Dei Filius: console errors').toEqual([]);
+});
+
+
+test('canonical public modules render on mobile and desktop without horizontal overflow', async ({ page }) => {
+  const publicRoutes = [
+    '/',
+    '/bible?book=Gn&ch=1&v=1',
+    '/catechism?p=279',
+    '/magisterium/dce',
+    // Rezar
+    '/oracao',
+    '/oracao/rosario',
+    '/oracao/exame-de-consciencia',
+    '/liturgia',
+    '/breviary',
+    '/lectio',
+    '/viacrucis',
+    '/litanies',
+    '/novenas',
+    '/missal',
+    // Formar-se
+    '/temas',
+    // Pesquisar
+    '/buscar',
+    '/nexus',
+    '/acervo',
+    '/santos',
+    '/glossario',
+    '/atlas',
+    '/aquinas',
+    '/dogmas',
+    '/papas',
+    '/aparicoes',
+  ];
+  const viewports = [
+    {
+      width: 390,
+      height: 844,
+      label: 'mobile',
+      routes: [
+        '/',
+        '/bible?book=Gn&ch=1&v=1',
+        '/catechism?p=279',
+        '/magisterium/dce',
+        '/oracao',
+        '/temas',
+        '/buscar',
+        '/acervo',
+      ],
+    },
+    { width: 1365, height: 900, label: 'desktop', routes: publicRoutes },
+  ];
+
+  for (const viewport of viewports) {
+    await page.setViewportSize({ width: viewport.width, height: viewport.height });
+
+    for (const route of viewport.routes) {
+      // DOM parsing is enough for the route sweep; waiting for every image/font
+      // on every navigation made this check unnecessarily slow.
+      const response = await page.goto(route, { waitUntil: 'domcontentloaded' });
+      expect(response?.ok(), `${viewport.label} ${route}: HTTP ${response?.status()}`).toBeTruthy();
+      await expect(page.locator('body')).not.toContainText(/Application error|Something went wrong/i);
+
+      const overflow = await page.evaluate(
+        () => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
+      );
+      expect(overflow, `${viewport.label} ${route}: horizontal overflow`).toBe(false);
+    }
+
+    for (const protectedRoute of ['/hoje', '/diario', '/jornadas', '/favorites', '/achievements', '/profile', '/settings']) {
+      await page.goto(protectedRoute, { waitUntil: 'domcontentloaded' });
+      await expect(page).toHaveURL(/\/auth\?next=/);
+      const overflow = await page.evaluate(
+        () => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
+      );
+      expect(overflow, `${viewport.label} ${protectedRoute} login redirect: horizontal overflow`).toBe(false);
+    }
+  }
+});
+
+
+test('mobile sidebar and institutional footer links reach canonical destinations', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/catechism?p=279');
+
+  await page.getByRole('button', { name: 'Abrir menu de navegação' }).click();
+  const sidebar = page.getByRole('dialog', { name: /navegação/i });
+  await expect(sidebar).toBeVisible();
+  await sidebar.getByRole('button', { name: /^Bíblia(?:,|$)/i }).click();
+  await expect(page).toHaveURL(/\/bible(?:\?.*)?$/);
+
+  await page.goto('/about');
+  const footer = page.getByTestId('footer-public-nav');
+  const privacyLink = footer.getByRole('button', { name: 'Privacidade' });
+  await privacyLink.scrollIntoViewIfNeeded();
+  await privacyLink.click();
+  await expect(page).toHaveURL(/\/privacy$/);
 });
