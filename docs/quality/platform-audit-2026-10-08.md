@@ -29,12 +29,17 @@ A cadeia oficial permanece GitHub → Cloudflare Workers → domínio próprio. 
 - Antes da correção, seis caminhos da navegação canônica não tinham metadados próprios para breadcrumb: `/liturgia`, `/buscar`, `/acervo`, `/hoje`, `/oracao/rosario` e `/oracao/exame-de-consciencia`. Em rotas aninhadas, o cabeçalho podia cair no metadado do pai ou não mostrar um rótulo específico.
 - Foram adicionados registros de metadados para esses caminhos sem promovê-los a um menu paralelo; a navegação pública continua sendo definida por `MODULE_NAVIGATION`.
 - Uma verificação estática posterior confirmou: 54 caminhos em `APP_ROUTES`, nenhum caminho duplicado nesse registro, todos os 31 caminhos canônicos presentes nos metadados e todos com declaração literal de rota no `App.tsx`.
-- A busca também encontrou declarações literais repetidas para `/`, `/telemetry`, `/security`, `/admin/glossario` e `/admin/glossary`. Elas podem estar em escopos de roteamento diferentes; não foram removidas. Próximo passo: inspecionar o contexto de cada declaração e confirmar se é duplicação real ou composição aninhada intencional.
+- A inspeção dos contextos confirmou que as declarações repetidas para `/`, `/telemetry`, `/security`, `/admin/glossario` e `/admin/glossary` estão em escopos diferentes: Home pública vs. raiz administrativa aninhada; aliases públicos que redirecionam vs. páginas administrativas; e rota editorial protegida vs. rota equivalente dentro de `/admin/*`. Não são duplicações comprovadas no mesmo escopo e foram preservadas.
 
 ### 3. Cabeçalho: breadcrumb não era um controle de navegação acessível
 
 - Os itens de breadcrumb do cabeçalho eram `span` com `onClick`, sem semântica de botão/link nem estado atual acessível por teclado/leitor de tela.
 - Foram convertidos em botões nativos, mantendo a navegação e indicando o item atual com `aria-current="page"`. O build/CI deve validar a alteração.
+
+### 5. Navegação mobile: componente disponível, mas sem integração global comprovada
+
+- A busca por referências de `MobileBottomNav` encontrou o próprio componente e a página de demonstração; não encontrou uso de produção. O comentário de `DevocionalMobileShell` diz que o shell inclui `MobileTopBar + MobileBottomNav`, mas o código do shell importa e renderiza apenas `MobileTopBar`.
+- Não integrei uma barra inferior global automaticamente: isso mudaria a navegação visual em todos os módulos e poderia contrariar a diretriz de interface limpa. A próxima validação deve comparar o padrão mobile real por rota e decidir se a navegação primária será o menu lateral, uma barra inferior, ou uma combinação consistente — sem manter padrões contraditórios por acidente.
 
 ## Próximas etapas obrigatórias da varredura
 
