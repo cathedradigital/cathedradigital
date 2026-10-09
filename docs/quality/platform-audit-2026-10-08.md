@@ -63,16 +63,39 @@ A cadeia oficial permanece GitHub → Cloudflare Workers → domínio próprio. 
 
 - As rotas `/hoje`, `/diario`, `/conta/*`, `/jornadas/*`, `/favorites`, `/achievements`, `/profile` e `/checkout` estão envolvidas por `AuthGuard`; as ferramentas administrativas principais estão sob `AdminGuard`.
 - A seção `/conta/admin` também verifica `isAdmin` dentro do componente e redireciona usuários comuns para `/conta/perfil`. Esta revisão estática não substitui testes reais com sessão autenticada e anônima.
-- A conexão Supabase disponível não autorizou a leitura de Security Advisors nem do catálogo de tabelas nesta execução. Portanto, RLS, permissões e segurança de dados em produção ainda não foram validados; isso permanece bloqueio explícito, não uma aprovação presumida.
+- A conexão Supabase não autorizou a leitura de Security Advisors, mas consultas SQL diretas ao catálogo permitiram verificar políticas RLS, grants e os gatilhos de perfil descritos na seção 11. A análise do Security Advisor permanece pendente.
 
 ### 5. Navegação mobile: componente disponível, mas sem integração global comprovada
 
 - A busca por referências de `MobileBottomNav` encontrou o próprio componente e a página de demonstração; não encontrou uso de produção. O comentário de `DevocionalMobileShell` diz que o shell inclui `MobileTopBar + MobileBottomNav`, mas o código do shell importa e renderiza apenas `MobileTopBar`.
 - Não integrei uma barra inferior global automaticamente: isso mudaria a navegação visual em todos os módulos e poderia contrariar a diretriz de interface limpa. A próxima validação deve comparar o padrão mobile real por rota e decidir se a navegação primária será o menu lateral, uma barra inferior, ou uma combinação consistente — sem manter padrões contraditórios por acidente.
 
+### 11. Supabase — verificação direta de RLS, grants e perfil
+
+- A consulta SQL ao catálogo de políticas confirmou RLS habilitada nas tabelas de dados consultadas: Bíblia, Catecismo, Conexo, perfis, notas, histórico, marcações de leitura, diário espiritual, progresso e etapas/jornadas.
+- As tabelas pessoais têm políticas de linha para o próprio `user_id`; `journey_progress`, `reading_marks`, `spiritual_journal`, `user_history` e `user_notes` não expõem linhas via uma policy pública. O papel anônimo ainda tem grants de tabela em algumas dessas tabelas, mas RLS está habilitada e não há policy pública de leitura para esses dados; manter o princípio de privilégio mínimo é preferível.
+- `profiles` tinha RLS e políticas de seleção/atualização do próprio perfil, mas o usuário autenticado também tinha permissão de inserir sua própria linha. Isso tornava essencial proteger os campos privilegiados no banco, e não confiar no formulário.
+- Aplicada no projeto Supabase a migração `protect_profile_privileged_fields`: bloqueia alterações não administrativas em role, is_premium, premium_status, premium_expires_at, mercado_pago_subscription_id e email; em inserções de usuário, neutraliza role e dados premium. Foi confirmado no catálogo que o papel `anon` não pode selecionar, inserir nem atualizar `profiles`.
+- Aplicada a migração `create_profile_on_signup`: cria a linha privada do perfil pelo trigger de `auth.users`, sem exigir que o navegador tenha permissão de inserir perfil. As duas migrações também foram registradas nesta branch do GitHub.
+- Teste transacional de segurança tentou criar um perfil com role admin e premium ativo: os valores foram neutralizados e uma tentativa posterior de autopromoção foi rejeitada; a transação foi revertida e uma consulta confirmou que não restou linha de teste.
+- Limite da evidência: o projeto Supabase consultado tinha zero linhas em `auth.users`, `profiles` e `user_roles` no momento da verificação. Isso não comprova a conta E2E de produção e impede testar uma sessão real existente. O workflow só verifica se os secrets não estão vazios, não se as credenciais correspondem a uma conta válida.
+- As tabelas bíblicas e o Catecismo têm políticas públicas de leitura e políticas de escrita para admin; isso é compatível com leitores públicos. As políticas de jornadas permitem leitura de etapas de jornadas ativas; a consulta ao banco não encontrou atualmente etapas de jornadas ativas premium ou não gratuitas, mas a policy precisa ser reavaliada antes de inserir conteúdo pago real, para que conteúdo premium não dependa apenas de blur no cliente.
+
+### 12. Corpus e referência de Conexo — consulta ao banco
+
+- Contagens diretas: 73 livros bíblicos, 1.334 capítulos, 35.816 versículos e 2.865 parágrafos do Catecismo.
+- A verificação estrutural encontrou zero capítulos ausentes, zero capítulos fora do intervalo, zero números de versículo duplicados, zero versículos vazios/inválidos, zero parágrafos duplicados, zero parágrafos ausentes no intervalo 1–2865 e zero parágrafos sem conteúdo.
+- A relação editorial publicada de Gênesis 1,1 para o Catecismo §279 existe como `cites`, confiança 1,0; §290 aparece adicionalmente como `see_also`. A navegação bidirecional precisa continuar coberta pelo Playwright, incluindo retorno exato para `/bible?book=Gn&ch=1&v=1`.
+- A existência de relações e contagens corretas não substitui validar o comportamento real do navegador e a qualidade teológica de cada sugestão.
+
+### 13. Magistério — validação de links e limites
+
+- O catálogo local de URLs do Magistério foi inspecionado estaticamente; as entradas analisadas usam HTTPS e host oficial `vatican.va`. Isso não confirma disponibilidade HTTP de cada página nem prova que todos os documentos têm texto integral local.
+- O leitor inclui caminhos de abrir/consultar a fonte oficial; a validação de cada documento no navegador e a disponibilidade de traduções continuam pendentes do E2E e de verificação de rede. Não declarar a biblioteca inteira validada apenas pela lista de URLs.
+
 ## Próximas etapas obrigatórias da varredura
 
-1. Executar CI, typecheck, lint e os testes E2E desta branch; não integrar enquanto a autenticação de teste falhar.
+1. Aguardar CI, typecheck, lint e Playwright E2E desta branch. A auditoria estática passou; o build e o fluxo de navegador ainda estão em execução, e a conta de teste não foi validada.
 2. Inventariar rotas públicas, aliases, redirects, shells e guards; diferenciar alias intencional de tela duplicada.
 3. Mapear todas as fontes de navegação e os componentes globais (cabeçalho, sidebar, rodapé, busca, controles flutuantes) e consolidar somente depois de verificar todos os consumidores.
 4. Auditar componentes e arquivos sem referência, dependências, CSS/tokens duplicados, feature flags antigas e código de demonstração/teste; gerar evidência antes de cada remoção.
