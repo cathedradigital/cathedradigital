@@ -28,7 +28,10 @@ interface SEOHeadProps {
 const SEOHead = ({ title, description, path, keywords, type = 'website', breadcrumbs, faqs, image }: SEOHeadProps) => {
   const { data: seoSettings } = useSEO();
   
-  const siteTitle = seoSettings?.site_title || 'Cátedra Digital';
+  const configuredSiteTitle = seoSettings?.site_title
+    ?.replace(/CATHEDRA/g, 'CÁTEDRA')
+    .replace(/Cathedra/g, 'Cátedra');
+  const siteTitle = configuredSiteTitle || 'Cátedra Digital';
   const displayTitle = title ? `${title} — ${siteTitle}` : siteTitle;
   const displayDescription = description || seoSettings?.site_description || 'Aprofunde sua fé católica com Bíblia Sagrada, Catecismo da Igreja, vidas dos santos, liturgia diária e IA teológica.';
   const displayKeywords = keywords || seoSettings?.site_keywords || '';
