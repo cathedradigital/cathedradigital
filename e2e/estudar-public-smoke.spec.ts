@@ -279,7 +279,7 @@ test('canonical public modules render on mobile and desktop without horizontal o
 
     for (const protectedRoute of ['/hoje', '/diario', '/jornadas', '/favorites', '/achievements', '/profile', '/settings']) {
       await page.goto(protectedRoute, { waitUntil: 'domcontentloaded' });
-      await expect(page).toHaveURL(/\\/auth\\?next=/);
+      await expect(page).toHaveURL(/\/auth\?next=/);
       const overflow = await page.evaluate(
         () => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
       );
