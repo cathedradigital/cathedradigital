@@ -19,6 +19,11 @@ const AuthGuard = React.forwardRef<HTMLDivElement, AuthGuardProps>(({ children }
   }
 
   if (!user) {
+    // AnimatePresence can keep the outgoing protected route mounted briefly after
+    // the URL has already changed. Do not let that stale guard wrap the canonical
+    // auth URL inside another `next` parameter during the exit transition.
+    if (location.pathname === '/auth' || location.pathname === '/login') return null;
+
     // Redirect directly to the canonical auth route. The /login alias is public,
     // but its extra client-side navigation can race the outgoing protected route
     // and wrap the original destination inside another next parameter.
