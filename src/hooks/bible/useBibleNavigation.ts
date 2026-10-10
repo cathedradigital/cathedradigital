@@ -47,7 +47,7 @@ function normalizeBookToken(value: string): string {
   // diacríticos e caixa antes de comparar nomes e abreviações do cânon.
   return value
     .normalize('NFD')
-    .replace(/[\\u0300-\\u036f]/g, '')
+    .replace(/[\u0300-\u036f]/g, '')
     .trim()
     .toLocaleLowerCase('pt-BR');
 }
