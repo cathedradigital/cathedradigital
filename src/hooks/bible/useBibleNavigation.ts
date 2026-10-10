@@ -42,14 +42,29 @@ const ALL_BOOKS: BibleBook[] = Object.values(BIBLE_DATA)
   .flat()
   .flatMap((cat) => cat.books);
 
+function normalizeBookToken(value: string): string {
+  // URLs legadas aparecem sem acentos (por exemplo, "joao"). Normalize
+  // diacríticos e caixa antes de comparar nomes e abreviações do cânon.
+  return value
+    .normalize('NFD')
+    .replace(/[\\u0300-\\u036f]/g, '')
+    .trim()
+    .toLocaleLowerCase('pt-BR');
+}
+
 function findBook(rawAbbr: string | null): BibleBook | null {
   if (!rawAbbr) return null;
-  const decoded = decodeURIComponent(rawAbbr).trim();
-  const lower = decoded.toLocaleLowerCase('pt-BR');
+  let decoded = rawAbbr;
+  try {
+    decoded = decodeURIComponent(rawAbbr);
+  } catch {
+    // Keep the raw token; malformed percent encoding must not crash the reader.
+  }
+  const normalized = normalizeBookToken(decoded);
   return (
     ALL_BOOKS.find((b) =>
-      b.abbr.toLocaleLowerCase('pt-BR') === lower ||
-      b.name.toLocaleLowerCase('pt-BR') === lower,
+      normalizeBookToken(b.abbr) === normalized ||
+      normalizeBookToken(b.name) === normalized,
     ) ?? null
   );
 }
