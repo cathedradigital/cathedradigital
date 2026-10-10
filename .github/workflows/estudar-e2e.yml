@@ -59,7 +59,8 @@ jobs:
         run: npx playwright test e2e/estudar-critical.spec.ts --reporter=list,json
 
       - name: Upload Playwright evidence
-        if: ${{ !cancelled() }}
+        if: ${{ always() }}
+        timeout-minutes: 5
         uses: actions/upload-artifact@v5
         with:
           name: estudar-e2e-evidence
