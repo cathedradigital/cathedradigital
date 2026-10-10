@@ -486,7 +486,7 @@ const Magisterium: React.FC = () => {
 
   return (
     <ContemplativeLayout>
-      <MobileTopBar kicker="Cátedra" title="Documentos" transparent />
+      <MobileTopBar kicker="Cátedra Digital" title="Documentos" transparent />
       <div data-catedra-module="documents" className="estudar-module-landing min-w-0 w-full overflow-x-hidden">
       <SEOHead 
         title="Magistério da Igreja | Cátedra Digital" 
@@ -595,7 +595,7 @@ const Magisterium: React.FC = () => {
 
           {/* Ordenação + reset */}
           <div className="estudar-doc-sort-row flex items-center justify-between gap-spacing-md">
-            <div className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/70">
+            <div className="text-[12px] font-semibold uppercase tracking-[0.1em] text-primary/70">
               {pagination.totalItems === 0 ? (
                 <>0 documentos</>
               ) : (
@@ -617,7 +617,7 @@ const Magisterium: React.FC = () => {
                   aria-pressed={groupBy === 'category'}
                   onClick={() => setGroupBy(groupBy === 'category' ? null : 'category')}
                   className={cn(
-                    'text-[9px] font-black uppercase tracking-[0.2em] text-primary/80 hover:text-primary',
+                    'text-[11px] font-black uppercase tracking-[0.2em] text-primary/80 hover:text-primary',
                     groupBy === 'category' && 'bg-primary/10 text-primary',
                   )}
                 >
@@ -632,7 +632,7 @@ const Magisterium: React.FC = () => {
                   aria-pressed={groupBy === 'pope'}
                   onClick={() => setGroupBy(groupBy === 'pope' ? null : 'pope')}
                   className={cn(
-                    'text-[9px] font-black uppercase tracking-[0.2em] text-primary/80 hover:text-primary',
+                    'text-[11px] font-black uppercase tracking-[0.2em] text-primary/80 hover:text-primary',
                     groupBy === 'pope' && 'bg-primary/10 text-primary',
                   )}
                 >
@@ -653,7 +653,7 @@ const Magisterium: React.FC = () => {
                           : 'canonical',
                     )
                   }
-                  className="text-[9px] font-black uppercase tracking-[0.2em] text-primary/80 hover:text-primary"
+                  className="text-[11px] font-black uppercase tracking-[0.2em] text-primary/80 hover:text-primary"
                 >
                   <Icons.ArrowDown
                     className={cn(
@@ -674,7 +674,7 @@ const Magisterium: React.FC = () => {
                     variant="ghost"
                     size="sm"
                     onClick={clearFilters}
-                    className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground"
+                    className="text-[11px] font-black uppercase tracking-[0.2em] text-muted-foreground"
                   >
                     Limpar
                   </Button>
@@ -690,7 +690,7 @@ const Magisterium: React.FC = () => {
               role="region"
               aria-label="Filtros ativos"
             >
-              <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary/70 mr-spacing-2xs">
+              <span className="text-[11px] font-black uppercase tracking-[0.2em] text-primary/70 mr-spacing-2xs">
                 Filtros ativos:
               </span>
 
@@ -700,7 +700,7 @@ const Magisterium: React.FC = () => {
                     type="button"
                     onClick={() => setSearchQuery('')}
                     aria-label={`Remover busca: ${searchQuery}`}
-                    className="inline-flex items-center gap-spacing-3xs rounded-premium-full bg-primary/10 hover:bg-primary/20 text-primary px-spacing-sm py-spacing-3xs text-[9px] font-black uppercase tracking-[0.15em] transition-colors"
+                    className="inline-flex items-center gap-spacing-3xs rounded-premium-full bg-primary/10 hover:bg-primary/20 text-primary px-spacing-sm py-spacing-3xs text-[11px] font-black uppercase tracking-[0.15em] transition-colors"
                   >
                     <span className="normal-case tracking-normal">“{searchQuery}”</span>
                     <Icons.X className="w-spacing-xs h-spacing-xs" strokeWidth={2} />
@@ -714,7 +714,7 @@ const Magisterium: React.FC = () => {
                     type="button"
                     onClick={() => setSelectedCategory(null)}
                     aria-label={`Remover categoria: ${selectedCategory}`}
-                    className="inline-flex items-center gap-spacing-3xs rounded-premium-full bg-primary text-white hover:bg-primary/80 px-spacing-sm py-spacing-3xs text-[9px] font-black uppercase tracking-[0.15em] transition-colors"
+                    className="inline-flex items-center gap-spacing-3xs rounded-premium-full bg-primary text-white hover:bg-primary/80 px-spacing-sm py-spacing-3xs text-[11px] font-black uppercase tracking-[0.15em] transition-colors"
                   >
                     {selectedCategory}
                     <Icons.X className="w-spacing-xs h-spacing-xs" strokeWidth={2} />
@@ -728,7 +728,7 @@ const Magisterium: React.FC = () => {
                     type="button"
                     onClick={() => toggleTheme(theme)}
                     aria-label={`Remover tema: ${theme}`}
-                    className="inline-flex items-center gap-spacing-3xs rounded-premium-full bg-secondary/20 hover:bg-secondary/30 text-primary px-spacing-sm py-spacing-3xs text-[9px] font-black uppercase tracking-[0.15em] transition-colors"
+                    className="inline-flex items-center gap-spacing-3xs rounded-premium-full bg-secondary/20 hover:bg-secondary/30 text-primary px-spacing-sm py-spacing-3xs text-[11px] font-black uppercase tracking-[0.15em] transition-colors"
                   >
                     {theme}
                     <Icons.X className="w-spacing-xs h-spacing-xs" strokeWidth={2} />
@@ -740,7 +740,7 @@ const Magisterium: React.FC = () => {
                 <button
                   type="button"
                   onClick={clearFilters}
-                  className="inline-flex items-center gap-spacing-3xs rounded-premium-full border border-primary/20 hover:border-primary/40 text-primary/80 hover:text-primary px-spacing-sm py-spacing-3xs text-[9px] font-black uppercase tracking-[0.15em] transition-colors ml-spacing-xs"
+                  className="inline-flex items-center gap-spacing-3xs rounded-premium-full border border-primary/20 hover:border-primary/40 text-primary/80 hover:text-primary px-spacing-sm py-spacing-3xs text-[11px] font-black uppercase tracking-[0.15em] transition-colors ml-spacing-xs"
                 >
                   <Icons.XCircle className="w-spacing-xs h-spacing-xs" strokeWidth={1.5} />
                   Limpar tudo
@@ -785,19 +785,19 @@ const Magisterium: React.FC = () => {
                     <div className="w-spacing-xl h-spacing-xl rounded-premium bg-primary/[0.02] border border-primary/5 flex items-center justify-center text-primary/60 group-hover:text-primary transition-colors">
                       {doc.type === 'Encíclica' ? <Icons.Scroll className="w-spacing-md h-spacing-md" strokeWidth={1} /> : <Icons.FileText className="w-spacing-md h-spacing-md" strokeWidth={1} />}
                     </div>
-                    <span className="text-[8px] font-black text-secondary tracking-widest">{doc.year}</span>
+                    <span className="text-[11px] font-black text-secondary tracking-widest">{doc.year}</span>
                   </div>
 
                   <div className="space-y-spacing-xs flex-1">
                     <h3 className="text-[16px] md:text-premium-lg font-display font-light text-foreground/80 group-hover:text-primary transition-colors leading-snug break-words">
                       {renderHighlighted(doc.title, searchQuery)}
                       {doc.abbr && (
-                        <span className="ml-spacing-2xs text-[9px] font-black text-primary/70 tracking-[0.2em] align-middle">
+                        <span className="ml-spacing-2xs text-[11px] font-black text-primary/70 tracking-[0.2em] align-middle">
                           ({renderHighlighted(doc.abbr, searchQuery)})
                         </span>
                       )}
                     </h3>
-                    <p className="text-[8px] font-black text-primary/70 uppercase tracking-[0.2em]">
+                    <p className="text-[11px] font-black text-primary/70 uppercase tracking-[0.2em]">
                       {renderHighlighted(doc.author, searchQuery)}
                     </p>
                     <p className="text-[10px] text-muted-foreground italic line-clamp-spacing-xs leading-relaxed">
@@ -833,7 +833,7 @@ const Magisterium: React.FC = () => {
                     <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/60">
                       {key}
                     </h3>
-                    <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary/30">
+                    <span className="text-[11px] font-black uppercase tracking-[0.2em] text-primary/30">
                       {docs.length} {docs.length === 1 ? 'documento' : 'documentos'}
                     </span>
                   </header>
@@ -858,7 +858,7 @@ const Magisterium: React.FC = () => {
               disabled={pagination.page <= 1}
               onClick={() => setPage(p => Math.max(1, p - 1))}
               aria-label="Página anterior"
-              className="text-[9px] font-black uppercase tracking-[0.2em] text-primary/80 hover:text-primary"
+              className="text-[11px] font-black uppercase tracking-[0.2em] text-primary/80 hover:text-primary"
             >
               <Icons.ArrowLeft className="w-spacing-sm h-spacing-sm mr-spacing-2xs" />
               Anterior
@@ -876,7 +876,7 @@ const Magisterium: React.FC = () => {
               disabled={pagination.page >= pagination.totalPages}
               onClick={() => setPage(p => Math.min(pagination.totalPages, p + 1))}
               aria-label="Próxima página"
-              className="text-[9px] font-black uppercase tracking-[0.2em] text-primary/80 hover:text-primary"
+              className="text-[11px] font-black uppercase tracking-[0.2em] text-primary/80 hover:text-primary"
             >
               Próxima
               <Icons.ArrowRight className="w-spacing-sm h-spacing-sm ml-spacing-2xs" />
