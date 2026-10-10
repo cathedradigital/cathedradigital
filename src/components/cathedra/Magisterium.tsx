@@ -486,10 +486,10 @@ const Magisterium: React.FC = () => {
 
   return (
     <ContemplativeLayout>
-      <MobileTopBar kicker="Cathedra" title="Documentos" transparent />
+      <MobileTopBar kicker="Cátedra" title="Documentos" transparent />
       <div data-catedra-module="documents" className="estudar-module-landing min-w-0 w-full overflow-x-hidden">
       <SEOHead 
-        title="Magistério da Igreja | Cathedra" 
+        title="Magistério da Igreja | Cátedra Digital" 
         description="Acesse os documentos fundamentais da Igreja Católica em uma experiência premium." 
         path="/magisterium"
         type="collection"
@@ -502,7 +502,7 @@ const Magisterium: React.FC = () => {
           "description": "Coleção de encíclicas, constituições e documentos oficiais da Igreja.",
           "publisher": {
             "@type": "Organization",
-            "name": "Cathedra Digital"
+            "name": "Cátedra Digital"
           }
         })}
       </script>
@@ -521,7 +521,7 @@ const Magisterium: React.FC = () => {
           />
         }
         kicker="Magisterium Ecclesiae"
-        kickerClassName="text-[8px] md:text-[10px] font-semibold uppercase text-primary/70 tracking-premium-widest md:tracking-[1.2em] mb-spacing-sm md:mb-spacing-lg"
+        kickerClassName="text-[10px] md:text-xs font-semibold uppercase text-primary/75 tracking-[0.18em] md:tracking-[0.28em] mb-spacing-sm md:mb-spacing-md"
         title="Magistério"
         titleClassName="mb-spacing-md max-w-none"
       />
@@ -535,6 +535,7 @@ const Magisterium: React.FC = () => {
             <Icons.Search className="absolute left-spacing-lg top-spacing-2xs/2 -translate-y-1/2 w-spacing-md h-spacing-md text-primary/20 group-focus-within:text-primary transition-all duration-700" />
             <input
               placeholder="Buscar documento, autor ou tema..." 
+              aria-label="Buscar documentos do Magistério por título, autor ou tema"
               className="search-input-premium pl-spacing-3xl"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -546,7 +547,7 @@ const Magisterium: React.FC = () => {
             <BubbleHint kind="category" label="Mostrar documentos de todas as categorias">
               <Button
                 variant="ghost"
-                className={`rounded-premium-full px-3 py-2 text-[10px] font-semibold tracking-normal transition-all duration-700 md:px-spacing-lg md:py-spacing-xs md:text-[9px] md:font-black md:uppercase md:tracking-[0.2em] ${selectedCategory === null ? 'bg-primary text-white shadow-premium scale-[1.05]' : 'text-primary/70 hover:text-primary'}`}
+                className={`rounded-premium-full px-3 py-2 text-[11px] font-medium tracking-normal transition-colors duration-200 md:px-spacing-md md:py-spacing-xs md:text-xs ${selectedCategory === null ? 'bg-primary text-white shadow-premium scale-[1.05]' : 'text-primary/70 hover:text-primary'}`}
                 onClick={() => setSelectedCategory(null)}
               >
                 Todas as Categorias
@@ -560,7 +561,7 @@ const Magisterium: React.FC = () => {
               >
                 <Button
                   variant="ghost"
-                  className={`rounded-premium-full px-3 py-2 text-[10px] font-semibold tracking-normal transition-all duration-700 md:px-spacing-lg md:py-spacing-xs md:text-[9px] md:font-black md:uppercase md:tracking-[0.2em] ${selectedCategory === cat.name ? 'bg-primary text-white shadow-premium scale-[1.05]' : 'text-primary/70 hover:text-primary'}`}
+                  className={`rounded-premium-full px-3 py-2 text-[11px] font-medium tracking-normal transition-colors duration-200 md:px-spacing-md md:py-spacing-xs md:text-xs ${selectedCategory === cat.name ? 'bg-primary text-white shadow-premium scale-[1.05]' : 'text-primary/70 hover:text-primary'}`}
                   onClick={() => setSelectedCategory(cat.name)}
                 >
                   {cat.name}
@@ -570,7 +571,7 @@ const Magisterium: React.FC = () => {
           </div>
 
           {/* Temas (multi-seleção) */}
-          <div className="estudar-doc-theme-row flex items-center justify-start gap-spacing-xs flex-nowrap overflow-x-auto py-spacing-xs scrollbar-none">
+          <div className="estudar-doc-theme-row flex items-center justify-start gap-spacing-xs flex-wrap py-spacing-xs">
             {MAGISTERIUM_THEMES.map(theme => {
               const active = selectedThemes.includes(theme);
               return (
@@ -582,7 +583,7 @@ const Magisterium: React.FC = () => {
                   <Button
                     variant="ghost"
                     aria-pressed={active}
-                    className={`rounded-premium-full px-3 py-2 text-[10px] font-semibold tracking-normal transition-all duration-500 md:px-spacing-md md:py-spacing-2xs md:text-[9px] md:font-black md:uppercase md:tracking-[0.2em] ${active ? 'bg-primary text-white shadow-premium' : 'text-primary/70 hover:text-primary border border-primary/10'}`}
+                    className={`rounded-premium-full px-3 py-2 text-[11px] font-medium tracking-normal transition-colors duration-200 md:px-spacing-md md:py-spacing-xs md:text-xs ${active ? 'bg-primary text-white shadow-premium' : 'text-primary/70 hover:text-primary border border-primary/10'}`}
                     onClick={() => toggleTheme(theme)}
                   >
                     {theme}
