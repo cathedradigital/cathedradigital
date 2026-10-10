@@ -85,7 +85,7 @@ test('Catecismo: anotação → Diário → retorno exato ao parágrafo', async 
   const marker = 'E2E-CATECHISM-' + Date.now();
   await login(page, '/catechism?p=1');
   await expect(page.getByRole('button', { name: /Adicionar anotação ao parágrafo 1/i })).toBeVisible();
-  await page.getByRole('button', { name: /Anotar/i }).first().click();
+  await page.getByRole('button', { name: /Adicionar anotação ao parágrafo 1/i }).click();
   await saveReflection(page, marker);
   const note = await openStudyJournal(page, marker);
   await note.getByRole('button', { name: /Ver Contexto/i }).click();
