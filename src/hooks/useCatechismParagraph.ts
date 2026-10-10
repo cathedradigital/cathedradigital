@@ -46,6 +46,7 @@ function isSuspiciousStoredCatechismContent(content: unknown, paragraph: number)
   // marker itself instead of the paragraph prose.
   if (/^(?:cf\.?|ibid\.?|idem\.?|\d+\s*\.?\s*(?:cf\.?|\(|$))/i.test(text)) return true;
   if (new RegExp('^' + paragraph + '\\s*\\.\\s+').test(text)) return true;
+  if (paragraph === 2262 && !/No sermão da montanha, o Senhor lembra o preceito/i.test(text)) return true;
   if (paragraph !== 2865 && text.length < 40) return true;
 
   return false;
@@ -129,6 +130,8 @@ export const fetchCatechismParagraph = async (paragraph: number, forceGenerate =
       language: 'pt',
       status: 'static',
       textoBase: localData.textoBase,
+      sourceName: localData.sourceName ?? null,
+      sourceUrl: localData.sourceUrl ?? null,
     };
     logCatechismDiag({ paragraph, step: 'local_hit' });
     cacheCatechismParagraph(paragraph, result);
