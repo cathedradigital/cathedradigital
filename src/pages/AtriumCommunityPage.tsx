@@ -162,7 +162,7 @@ const AtriumCommunityPage: React.FC = () => {
     <>
       <MobileTopBar kicker="Cátedra Digital" title="Igreja Viva" />
       <Helmet>
-        <title>Comunidade — Cathedra</title>
+        <title>Comunidade — Cátedra Digital</title>
         <meta
           name="description"
           content="Discussões, testemunhos e partilhas entre irmãos na fé."
@@ -181,19 +181,19 @@ const AtriumCommunityPage: React.FC = () => {
         <section className="mt-8 mb-12">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="p-4 border border-border/20 bg-accent rounded-premium text-center">
-              <span className="flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-widest text-gold-text mb-2"><Sparkles className="w-3 h-3" /> SANTO DO DIA</span>
+              <span className="flex items-center justify-center gap-2 text-[12px] font-semibold uppercase tracking-[0.1em] text-gold-text mb-2"><Sparkles className="w-3 h-3" /> SANTO DO DIA</span>
               <p className="font-display text-sm italic text-primary">{church.todaySaint?.name ?? 'Santos do dia'}</p>
             </div>
             <div className="p-4 border border-border/20 bg-accent rounded-premium text-center">
-              <span className="flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-widest text-gold-text mb-2"><User className="w-3 h-3" /> PAPA ATUAL</span>
+              <span className="flex items-center justify-center gap-2 text-[12px] font-semibold uppercase tracking-[0.1em] text-gold-text mb-2"><User className="w-3 h-3" /> PAPA ATUAL</span>
               <p className="font-display text-sm italic text-primary">{church.currentPope?.name ?? 'Leão XIV'}</p>
             </div>
             <div className="p-4 border border-border/20 bg-accent rounded-premium text-center">
-              <span className="flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-widest text-gold-text mb-2"><BookOpen className="w-3 h-3" /> LITURGIA</span>
+              <span className="flex items-center justify-center gap-2 text-[12px] font-semibold uppercase tracking-[0.1em] text-gold-text mb-2"><BookOpen className="w-3 h-3" /> LITURGIA</span>
               <p className="font-display text-sm italic text-primary">{church.celebration ?? 'Féria'}</p>
             </div>
             <div className="p-4 border border-border/20 bg-accent rounded-premium text-center">
-              <span className="flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-widest text-gold-text mb-2"><Calendar className="w-3 h-3" /> CALENDÁRIO</span>
+              <span className="flex items-center justify-center gap-2 text-[12px] font-semibold uppercase tracking-[0.1em] text-gold-text mb-2"><Calendar className="w-3 h-3" /> CALENDÁRIO</span>
               <p className="font-display text-sm italic text-primary">{todayLabel}</p>
             </div>
           </div>
@@ -293,7 +293,7 @@ const AtriumCommunityPage: React.FC = () => {
           ) : emptyState ? (
             <div className="text-center py-20 space-y-5 max-w-lg mx-auto" role="status" aria-live="polite">
               <Sparkles className="w-8 h-8 mx-auto text-primary/50" aria-hidden />
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-primary/15 bg-primary/5 text-[10px] uppercase tracking-[0.3em] text-primary font-semibold">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-primary/15 bg-primary/5 text-[12px] uppercase tracking-[0.1em] text-primary font-semibold">
                 Silentium
               </div>
               <h2 className="font-serif text-2xl md:text-3xl leading-snug text-foreground">
@@ -343,7 +343,7 @@ const AtriumCommunityPage: React.FC = () => {
                       </Link>
                       <span>·</span>
                       <span>{timeAgo(p.created_at)}</span>
-                      <span className="ml-auto uppercase tracking-widest text-[10px] font-bold text-primary">
+                      <span className="ml-auto uppercase tracking-widest text-[12px] font-semibold text-primary">
                         {CATEGORIES.find((c) => c.id === p.category)?.label ||
                           p.category}
                       </span>
@@ -365,7 +365,7 @@ const AtriumCommunityPage: React.FC = () => {
                         {p.replies_count}
                       </span>
                       {p.status !== 'approved' && (
-                        <span className="ml-auto text-[10px] uppercase tracking-widest text-amber-600">
+                        <span className="ml-auto text-[12px] uppercase tracking-[0.1em] text-amber-600">
                           Aguardando moderação
                         </span>
                       )}
