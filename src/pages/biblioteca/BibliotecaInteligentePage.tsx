@@ -70,11 +70,11 @@ const BibliotecaInteligentePage: React.FC = () => {
   return (
     <div className="min-h-screen bg-background">
       <Helmet>
-        <title>{q ? `“${q}” — Biblioteca Inteligente` : 'Biblioteca Inteligente · Cathedra'}</title>
+        <title>{q ? `“${q}” — Biblioteca Inteligente` : 'Biblioteca Inteligente · Cátedra Digital'}</title>
       </Helmet>
 
       <EditorialHero
-        kicker="Cérebro do Cathedra"
+        kicker="Inteligência da Cátedra Digital"
         title="Biblioteca Inteligente"
         subtitle="Encontre conexões entre a Bíblia, Tradição e Magistério em um só lugar."
         parchment
