@@ -41,12 +41,12 @@ async function openStudyJournal(page: Page, marker: string) {
 test('auth redirect preserves protected destination without nesting login URLs', async ({ page }) => {
   await page.context().clearCookies();
   await page.goto('/diario');
-  await expect(page).toHaveURL(/\\/auth\\?next=%2Fdiario$/);
+  await expect.poll(() => new URL(page.url()).pathname).toBe('/auth');
   expect(new URL(page.url()).searchParams.get('next')).toBe('/diario');
 
   // URL antiga/aninhada deve ser normalizada para o destino original.
   await page.goto('/login?next=%2Flogin%3Fnext%3D%252Fdiario');
-  await expect(page).toHaveURL(/\\/auth\\?next=%2Fdiario$/);
+  await expect.poll(() => new URL(page.url()).pathname).toBe('/auth');
   expect(new URL(page.url()).searchParams.get('next')).toBe('/diario');
 });
 
