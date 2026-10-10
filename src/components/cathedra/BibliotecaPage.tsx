@@ -373,7 +373,7 @@ const BibliotecaPage: React.FC = () => {
                   >
                     <span>{t.label}</span>
                     {count !== undefined && count > 0 && (
-                      <span className="text-[9px] text-primary/40">{count}</span>
+                      <span className="text-[11px] text-primary/50">{count}</span>
                     )}
                   </button>
                 </li>
@@ -559,7 +559,7 @@ const BookCover: React.FC<{
             </h3>
           </div>
           <span
-            className="text-[8px] uppercase tracking-[0.24em] text-center truncate"
+            className="text-[11px] uppercase tracking-[0.12em] text-center truncate"
             style={{ color: palette.accent, opacity: 0.75 }}
           >
             {spine}
