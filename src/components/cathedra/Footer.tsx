@@ -139,9 +139,9 @@ const FONT_BODY = 'var(--font-body)';
 const EYEBROW_STYLE: React.CSSProperties = {
   color: GOLD_TEXT,
   fontFamily: FONT_BODY,
-  fontSize: '10px',
-  fontWeight: 500,
-  letterSpacing: '0.34em',
+  fontSize: '12px',
+  fontWeight: 600,
+  letterSpacing: '0.14em',
   textTransform: 'uppercase',
 };
 
@@ -286,9 +286,9 @@ const Footer: React.FC = React.memo(() => {
                 style={{
                   color: GOLD_TEXT,
                   fontFamily: FONT_BODY,
-                  fontSize: 10,
+                  fontSize: 12,
                   fontWeight: 500,
-                  letterSpacing: '0.4em',
+                  letterSpacing: '0.18em',
                   textTransform: 'uppercase',
                 }}
               >
