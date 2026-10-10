@@ -356,7 +356,7 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                       text={g.definition ?? ''}
                       reference={g.term}
                       url={`${window.location.origin}/glossario#${encodeURIComponent(g.term)}`}
-                      title={`Cathedra — ${g.term}`}
+                      title={`Cátedra Digital — ${g.term}`}
                     />
                   }
                 />
@@ -382,7 +382,7 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                       text={p.content}
                       reference={p.title || 'Discussão da comunidade'}
                       url={`${window.location.origin}/comunidade#${p.id}`}
-                      title={`Cathedra — ${p.title || 'Comunidade'}`}
+                      title={`Cátedra Digital — ${p.title || 'Comunidade'}`}
                     />
                   }
                 />
