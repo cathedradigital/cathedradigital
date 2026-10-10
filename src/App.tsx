@@ -83,7 +83,19 @@ const MagisterioLegacyRedirect = () => {
 // Preserva o destino solicitado ao normalizar /login para a rota canônica /auth.
 const LoginRedirect = () => {
   const location = useLocation();
-  return <Navigate to={`/auth${location.search}${location.hash}`} replace />;
+  const params = new URLSearchParams(location.search);
+  let next = params.get('next');
+
+  // Corrige URLs antigas/aninhadas como /auth?next=%2Flogin%3Fnext%3D%252Fdiario.
+  // O destino deve ser sempre a rota interna original, nunca outra tela de login.
+  for (let depth = 0; depth < 2 && next?.startsWith('/login?'); depth += 1) {
+    const nestedQuery = next.slice(next.indexOf('?') + 1);
+    next = new URLSearchParams(nestedQuery).get('next');
+  }
+
+  const safeNext = next && next.startsWith('/') && !next.startsWith('//') ? next : null;
+  const query = safeNext ? `?next=${encodeURIComponent(safeNext)}` : '';
+  return <Navigate to={`/auth${query}${location.hash}`} replace />;
 };
 
 const queryClient = new QueryClient({
