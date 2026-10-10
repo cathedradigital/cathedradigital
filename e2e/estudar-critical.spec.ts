@@ -115,7 +115,7 @@ test('Bíblia: leitor oferece retorno para a tela anterior', async ({ page }) =>
 });
 
 test('Bíblia: reload → back → forward preservam o deep-link do versículo', async ({ page }) => {
-  await login(page, '/bible?book=Jo&ch=1&v=1');
+  await login(page, '/bible?book=joao&chapter=1&v=1');
   await expect(page.locator('#verse-1')).toBeVisible();
   await page.reload();
   await expect(page.locator('#verse-1')).toBeVisible();
@@ -252,7 +252,7 @@ test('Catecismo: texto oficial com entidades HTML é exibido como caracteres rea
 test.describe('responsive critical flow', () => {
   test.use({ viewport: { width: 390, height: 844 } });
   test('Bíblia abre sem overflow horizontal no mobile', async ({ page }) => {
-    await login(page, '/bible?book=Jo&ch=1&v=1');
+    await login(page, '/bible?book=joao&chapter=1&v=1');
     await expect(page.locator('#verse-1')).toBeVisible();
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1);
     expect(overflow).toBe(false);
