@@ -38,11 +38,16 @@ async function openStudyJournal(page: Page, marker: string) {
   return note;
 }
 
-test('auth redirect preserves protected destination', async ({ page }) => {
+test('auth redirect preserves protected destination without nesting login URLs', async ({ page }) => {
   await page.context().clearCookies();
   await page.goto('/diario');
-  await expect(page).toHaveURL(/\/login\?next=/);
-  await expect(page).toHaveURL(/diario/);
+  await expect(page).toHaveURL(/\\/auth\\?next=%2Fdiario$/);
+  expect(new URL(page.url()).searchParams.get('next')).toBe('/diario');
+
+  // URL antiga/aninhada deve ser normalizada para o destino original.
+  await page.goto('/login?next=%2Flogin%3Fnext%3D%252Fdiario');
+  await expect(page).toHaveURL(/\\/auth\\?next=%2Fdiario$/);
+  expect(new URL(page.url()).searchParams.get('next')).toBe('/diario');
 });
 
 test('Bíblia: anotação → Diário → retorno exato ao versículo', async ({ page }) => {
@@ -189,12 +194,13 @@ test('Catecismo: §2262 preserva o texto oficial e abre a referência bíblica',
   await expect(page).toHaveURL(/\/bible\?book=Mt&ch=5&v=21/);
 });
 
-test('Catecismo: proveniência do texto oficial fica visível e navegável', async ({ page }) => {
-  await login(page, '/catechism?p=1');
-  await expect(page.locator('#p1')).toBeVisible();
-  const source = page.getByText('Santa Sé · vatican.va', { exact: true });
+test('Catecismo: §2262 mostra proveniência oficial visível e navegável', async ({ page }) => {
+  await page.goto('/catechism?p=2262');
+  await expect(page.locator('#p2262')).toBeVisible();
+  await expect(page.locator('#p2262')).toContainText('No sermão da montanha, o Senhor lembra o preceito');
+  const source = page.getByRole('link', { name: 'Santa Sé · vatican.va', exact: true });
   await expect(source).toBeVisible();
-  await expect(source).toHaveAttribute('href', /vatican\.va/);
+  await expect(source).toHaveAttribute('href', /^https:\/\/www\.vatican\.va\//);
 });
 
 test('Catecismo: Conexo prioriza relação curada e mantém a referência navegável', async ({ page }) => {
