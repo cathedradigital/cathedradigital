@@ -266,7 +266,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                     role="text"
                     aria-label="CATHEDRA Digital — Mosteiro Digital"
                     style={{
-                      fontFamily: "'Playfair Display', serif",
+                      fontFamily: 'var(--font-display)',
                       fontWeight: 600,
                       fontSize: '1.25rem',
                       letterSpacing: '0.08em',
@@ -277,7 +277,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                   </span>
                   <span
                     style={{
-                      fontFamily: 'Inter, sans-serif',
+                      fontFamily: 'var(--font-body)',
                       fontSize: '0.68rem',
                       fontWeight: 500,
                       letterSpacing: '0.18em',
@@ -316,7 +316,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                 >
                   <CollapsibleTrigger asChild>
                     <button className="w-full min-h-10 flex items-center justify-between py-1.5 px-2.5 group/trigger hover:bg-[#c9a84c]/[0.05] rounded-lg transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c9a84c]/40 focus-visible:ring-offset-2">
-                      <h3 style={{ color: 'var(--gold-text)', fontFamily: 'Inter, sans-serif', fontSize: '0.74rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase' }}>— {section.label}</h3>
+                      <h3 style={{ color: 'var(--gold-text)', fontFamily: 'var(--font-body)', fontSize: '0.74rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase' }}>— {section.label}</h3>
                       <Icons.ChevronDown className="w-3 h-3 transition-all group-data-[state=open]:rotate-180" strokeWidth={1.5} style={{ color: 'var(--gold-text)' }} />
                     </button>
                   </CollapsibleTrigger>
