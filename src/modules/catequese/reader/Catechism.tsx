@@ -373,7 +373,7 @@ const CatechismContent: React.FC<{
       {data?.content && (
         <div className="mt-spacing-md pt-spacing-sm border-t border-primary/[0.06] space-y-spacing-xs">
           {data.sourceName && (
-            <div className="flex flex-wrap items-center gap-x-spacing-xs gap-y-0.5 text-[9px] uppercase tracking-[0.12em] text-muted-foreground/55">
+            <div className="flex flex-wrap items-center gap-x-spacing-xs gap-y-0.5 text-[11px] uppercase tracking-[0.12em] text-muted-foreground/55">
               <span>Fonte</span>
               {data.sourceUrl ? (
                 <a
@@ -389,7 +389,7 @@ const CatechismContent: React.FC<{
               )}
             </div>
           )}
-          <p className="text-[9px] font-medium uppercase tracking-[0.16em] text-muted-foreground/45">
+          <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground/45">
             Toque no ✨ ao lado do parágrafo para abrir a Yá.
           </p>
         </div>
@@ -854,12 +854,12 @@ const Catechism: React.FC = memo(() => {
                     onClick={() => jumpToParagraph(currentParagraph - 1)}
                     data-testid="catechism-paragraph-prev"
                     variant="ghost"
-                    className="text-[9px] md:text-[10px] font-bold uppercase tracking-widest opacity-60 hover:opacity-100"
+                    className="text-[11px] md:text-[11px] font-bold uppercase tracking-widest opacity-60 hover:opacity-100"
                     aria-label="Parágrafo anterior"
                   >
                     Anterior
                   </Button>
-                  <span className="text-[9px] md:text-premium-xs font-serif italic text-primary/30 whitespace-nowrap">
+                  <span className="text-[11px] md:text-premium-xs font-serif italic text-primary/30 whitespace-nowrap">
                     §{currentParagraph}
                   </span>
                   <Button
@@ -867,7 +867,7 @@ const Catechism: React.FC = memo(() => {
                     onClick={() => jumpToParagraph(currentParagraph + 1)}
                     data-testid="catechism-paragraph-next"
                     variant="ghost"
-                    className="text-[9px] md:text-[10px] font-bold uppercase tracking-widest opacity-60 hover:opacity-100"
+                    className="text-[11px] md:text-[11px] font-bold uppercase tracking-widest opacity-60 hover:opacity-100"
                     aria-label="Próximo parágrafo"
                   >
                     Próximo
@@ -906,7 +906,7 @@ const Catechism: React.FC = memo(() => {
             <section className="mt-10 border-t border-primary/[0.06] pt-5" aria-label="Anotações desta seção">
               <div className="flex items-center justify-between gap-4 mb-3">
                 <div>
-                  <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-primary/40">Caderno de estudo</p>
+                  <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-primary/40">Caderno de estudo</p>
                   <h3 className="font-display text-lg text-primary">Anotações desta seção</h3>
                 </div>
                 <Button variant="outline" size="sm" onClick={() => openNoteForParagraph(currentParagraph)} className="rounded-full text-[10px] uppercase tracking-wider">
@@ -919,7 +919,7 @@ const Catechism: React.FC = memo(() => {
                     <button key={note.id} type="button"
                       onClick={() => { setActiveHighlight(note); setNoteParagraph(note.paragraph ?? currentParagraph); setIsNoteModalOpen(true); }}
                       className="rounded-xl border border-primary/10 bg-primary/[0.02] p-3 text-left transition-colors hover:bg-primary/[0.05]">
-                      <span className="text-[9px] font-bold uppercase tracking-wider text-secondary">{note.paragraph ? `§${note.paragraph}` : 'Seção'}</span>
+                      <span className="text-[11px] font-bold uppercase tracking-wider text-secondary">{note.paragraph ? `§${note.paragraph}` : 'Seção'}</span>
                       <p className="mt-1 line-clamp-3 text-sm leading-relaxed text-foreground">{note.note_text}</p>
                     </button>
                   ))}
@@ -963,7 +963,7 @@ const Catechism: React.FC = memo(() => {
 
 
           <div className="flex justify-center">
-            <Button variant="ghost" onClick={goBack} className="px-spacing-xl py-spacing-sm h-auto rounded-premium-full text-[9px] font-black uppercase tracking-[0.3em] text-primary/40 hover:text-primary border border-primary/5 transition-all">
+            <Button variant="ghost" onClick={goBack} className="px-spacing-xl py-spacing-sm h-auto rounded-premium-full text-[11px] font-black uppercase tracking-[0.3em] text-primary/40 hover:text-primary border border-primary/5 transition-all">
               <Icons.ChevronLeft className="w-spacing-sm h-spacing-sm mr-spacing-xs" /> Voltar às Partes
             </Button>
           </div>
@@ -972,9 +972,9 @@ const Catechism: React.FC = memo(() => {
               <CathedraCard key={sec.id} id={`section-card-${sec.id}`} data-testid={`secao-${sec.id}`} variant="interactive" padding="none" role="button" tabIndex={0} aria-label={`Seção ${sec.id}: ${sec.title}`} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { setLastFocusedElement(`section-card-${sec.id}`); setSelectedSection(sec); setViewMode('reading'); setCurrentParagraph(sec.paragraphs[0]); window.scrollTo(0,0); } }} onClick={() => { setLastFocusedElement(`section-card-${sec.id}`); setSelectedSection(sec); setViewMode('reading'); setCurrentParagraph(sec.paragraphs[0]); window.scrollTo(0,0); }} className="group focus-within:ring-2 focus-within:ring-primary focus-within:outline-none">
                 <div className="p-spacing-lg flex items-center justify-between h-full">
                   <div className="space-y-spacing-xs text-left">
-                    <span className="text-[8px] font-black uppercase tracking-widest text-primary/30">Seção {sec.id}</span>
+                    <span className="text-[11px] font-black uppercase tracking-widest text-primary/30">Seção {sec.id}</span>
                     <h3 className="text-premium-base font-display font-light text-foreground/80 group-hover:text-primary transition-colors leading-snug">{sec.title}</h3>
-                    <p className="text-[9px] text-muted-foreground/50 italic tracking-wider uppercase">§{sec.paragraphs[0]} — §{sec.paragraphs[1]}</p>
+                    <p className="text-[11px] text-muted-foreground/50 italic tracking-wider uppercase">§{sec.paragraphs[0]} — §{sec.paragraphs[1]}</p>
                   </div>
                   <Icons.ChevronRight className="w-spacing-sm h-spacing-sm text-primary/10 group-hover:text-primary group-hover:translate-x-0.5 transition-all shrink-0" />
                 </div>
@@ -996,7 +996,7 @@ const Catechism: React.FC = memo(() => {
           <div className="flex items-center justify-center gap-3" aria-hidden="true">
             <span className="h-px w-10 md:w-16" style={{ backgroundColor: '#c9a84c' }} />
             <span
-              className="text-[9px] md:text-[10px] uppercase"
+              className="text-[11px] md:text-[11px] uppercase"
               style={{ color: 'var(--gold-text)', fontFamily: 'var(--font-body)', letterSpacing: '0.32em' }}
             >
               Sacra Doctrina
