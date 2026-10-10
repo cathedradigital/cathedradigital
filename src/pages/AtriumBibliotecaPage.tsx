@@ -80,7 +80,7 @@ const AtriumBibliotecaPage: React.FC = () => {
         <meta property="og:title" content="Cathedra — Biblioteca" />
       </Helmet>
 
-      <MobileTopBar kicker="Cathedra" title="Biblioteca" transparent />
+      <MobileTopBar kicker="Cátedra Digital" title="Biblioteca" transparent />
 
       <SpaceLayout>
         <EditorialHero density="minimal">

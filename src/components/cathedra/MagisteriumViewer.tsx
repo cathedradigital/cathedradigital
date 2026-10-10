@@ -750,7 +750,7 @@ const MagisteriumViewer: React.FC = () => {
           </Button>
           <div className="min-w-spacing-0">
             <p className="text-[12px] md:text-[13px] font-semibold tracking-[0.03em] text-primary truncate leading-tight mb-spacing-2xs">{content.title}</p>
-            <p className="text-[9px] md:text-[10px] text-muted-foreground uppercase tracking-[0.14em] font-semibold">Magistério</p>
+            <p className="text-[11px] md:text-[12px] text-muted-foreground uppercase tracking-[0.1em] font-semibold">Magistério</p>
           </div>
         </div>
         
@@ -804,7 +804,7 @@ const MagisteriumViewer: React.FC = () => {
               >
                 <div className="border border-primary/10 bg-primary/[0.025] px-spacing-md py-spacing-sm md:px-spacing-lg md:py-spacing-md rounded-xl flex flex-col gap-spacing-sm sm:flex-row sm:items-center sm:justify-between">
                   <div className="min-w-0">
-                    <p className="text-[10px] font-black uppercase tracking-[0.16em] text-muted-foreground">
+                    <p className="text-[12px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">
                       Idioma original · {sourceLanguageName}
                     </p>
                     <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
@@ -823,7 +823,7 @@ const MagisteriumViewer: React.FC = () => {
                   </Button>
                 </div>
                 {translationLoading && translationProgress && (
-                  <p className="mt-2 text-center text-[10px] text-muted-foreground" aria-live="polite">
+                  <p className="mt-2 text-center text-[12px] text-muted-foreground" aria-live="polite">
                     Traduzindo bloco {translationProgress.current} de {translationProgress.total}…
                   </p>
                 )}
@@ -839,7 +839,7 @@ const MagisteriumViewer: React.FC = () => {
               <motion.div 
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="fixed bottom-spacing-4xl left-spacing-2xs/2 -translate-x-1/2 z-[160] px-spacing-md py-spacing-xs bg-primary/80 backdrop-blur-md text-primary-foreground rounded-premium-full text-[9px] font-black uppercase tracking-widest flex items-center gap-spacing-sm border border-white/10 shadow-premium"
+                className="fixed bottom-spacing-4xl left-spacing-2xs/2 -translate-x-1/2 z-[160] px-spacing-md py-spacing-xs bg-primary/80 backdrop-blur-md text-primary-foreground rounded-premium-full text-[11px] font-semibold uppercase tracking-[0.1em] flex items-center gap-spacing-sm border border-white/10 shadow-premium"
               >
                 <span className="flex items-center gap-spacing-2xs"><kbd className="bg-white/20 px-spacing-2xs py-spacing-3xs rounded">{settings.shortcuts?.highlight?.toUpperCase() || 'H'}</kbd> Destacar</span>
                 <div className="w-px h-spacing-sm bg-white/20" />

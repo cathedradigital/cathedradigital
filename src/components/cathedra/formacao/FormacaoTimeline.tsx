@@ -160,7 +160,7 @@ const FormacaoTimeline: React.FC = () => {
                       ? 'text-2xl md:text-3xl text-foreground'
                       : 'text-xl md:text-2xl text-foreground/90 group-hover:text-foreground'
                   }`}
-                  style={{ fontFamily: "'Cormorant Garamond', serif" }}
+                  
                 >
                   {step.title}
                 </h3>

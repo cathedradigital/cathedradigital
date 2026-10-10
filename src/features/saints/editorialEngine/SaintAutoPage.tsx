@@ -88,7 +88,7 @@ export const SaintAutoPage: React.FC<Props> = ({ descriptor }) => {
 
   return (
     <>
-      <MobileTopBar kicker="Cathedra" title={header.name} transparent />
+      <MobileTopBar kicker="Cátedra Digital" title={header.name} transparent />
 
     <div className="min-w-0 w-full overflow-x-hidden" data-catedra-module-root data-catedra-module="saints">
     <ReaderShell

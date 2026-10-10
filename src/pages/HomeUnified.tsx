@@ -35,7 +35,7 @@ const envCopy: Record<string, { eyebrow: string; action: string }> = {
 };
 
 const Eyebrow: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <span className="text-[10px] font-semibold uppercase tracking-[0.22em] text-primary/60">{children}</span>
+  <span className="text-[12px] font-semibold uppercase tracking-[0.14em] text-primary/60">{children}</span>
 );
 
 const HomeUnified: React.FC = () => {
@@ -69,7 +69,7 @@ const HomeUnified: React.FC = () => {
 
   const greeting = useMemo(() => {
     const name = profile?.name?.split(' ')[0];
-    return name ? `Olá, ${name}.` : 'Bem-vindo à CATHEDRA Digital.';
+    return name ? `Olá, ${name}.` : 'Bem-vindo à Cátedra Digital.';
   }, [profile?.name]);
 
   const submitSearch = (e: React.FormEvent) => {
@@ -82,17 +82,17 @@ const HomeUnified: React.FC = () => {
   return (
     <div className="min-h-screen bg-background text-foreground">
       {opening && (
-        <div className="fixed inset-0 z-[100] flex min-h-screen items-center justify-center bg-background" role="status" aria-label="Abrindo a CATHEDRA Digital">
+        <div className="fixed inset-0 z-[100] flex min-h-screen items-center justify-center bg-background" role="status" aria-label="Abrindo a Cátedra Digital">
           <div className="flex flex-col items-center px-6 text-center animate-[atrium-opening_1.8s_ease-out_forwards]">
             <span className="relative flex h-28 w-28 items-center justify-center rounded-2xl border border-[#D4AF37]/35 bg-[#102A3A] p-3 shadow-[0_18px_50px_rgba(8,25,35,0.28)] md:h-36 md:w-36 md:p-4" aria-hidden="true"><span className="absolute inset-2 rounded-xl border border-[#D4AF37]/20" /><Icons.Logo className="relative h-24 w-24 md:h-32 md:w-32" /></span>
-            <span className="mt-5 font-display text-4xl tracking-tight md:text-6xl">CATHEDRA Digital</span>
+            <span className="mt-5 font-display text-4xl tracking-tight md:text-6xl">Cátedra Digital</span>
             
             <span className="mt-8 text-[10px] font-semibold uppercase tracking-[0.32em] text-muted-foreground">Átrio · Estudar · Rezar · Formar-se</span>
           </div>
         </div>
       )}
       <Helmet>
-        <title>CATHEDRA Digital — sua jornada de estudo, oração e formação</title>
+        <title>Cátedra Digital — sua jornada de estudo, oração e formação</title>
         <meta name="description" content="Estude, reze, forme-se e descubra a tradição cristã em uma única plataforma." />
         <link rel="canonical" href="/" />
       </Helmet>
@@ -104,17 +104,17 @@ const HomeUnified: React.FC = () => {
           <div className="relative mx-auto max-w-7xl px-5 pb-16 pt-16 md:px-10 md:pb-24 md:pt-24">
             <div className="grid items-end gap-10 lg:grid-cols-[1.15fr_.85fr]">
               <div>
-                <div className="mb-8 flex items-center gap-5 md:gap-6" aria-label="CATHEDRA Digital">
+                <div className="mb-8 flex items-center gap-5 md:gap-6" aria-label="Cátedra Digital">
                   <span className="flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl border border-[#D4AF37]/25 bg-[#102A3A] p-2 md:h-24 md:w-24 md:p-3"><Icons.Logo className="h-full w-full" /></span>
                   <div className="flex flex-col justify-center">
-                    <span className="font-display text-3xl leading-none tracking-tight text-foreground md:text-5xl">CATHEDRA Digital</span>
+                    <span className="font-display text-3xl leading-none tracking-tight text-foreground md:text-5xl">Cátedra Digital</span>
                   </div>
                 </div>
                 <h1 className="max-w-4xl font-display text-5xl leading-[1.02] tracking-tight md:text-7xl lg:text-8xl">
                   Bíblia, Catecismo e Magistério <span className="text-primary">em um só lugar — conectados.</span>
                 </h1>
                 <p className="mt-7 max-w-2xl text-base leading-7 text-muted-foreground md:text-lg">
-                  {greeting} Leia a Escritura, aprofunde-se no Catecismo e descubra as conexões com o Magistério e toda a Tradição Católica, sem sair do CATHEDRA Digital.
+                  {greeting} Leia a Escritura, aprofunde-se no Catecismo e descubra as conexões com o Magistério e toda a Tradição Católica, sem sair da Cátedra Digital.
                 </p>
 
                 <form onSubmit={submitSearch} className="mt-9 flex max-w-2xl items-center gap-2 rounded-2xl border border-border bg-card p-2 shadow-sm">
@@ -124,7 +124,7 @@ const HomeUnified: React.FC = () => {
                     onChange={(e) => setQuery(e.target.value)}
                     placeholder="O que você quer estudar ou descobrir?"
                     className="min-w-0 flex-1 bg-transparent px-2 py-3 text-sm outline-none placeholder:text-muted-foreground/70 md:text-base"
-                    aria-label="Buscar na CATHEDRA"
+                    aria-label="Buscar na Cátedra"
                   />
                   <button type="submit" className="min-h-11 rounded-xl bg-primary px-5 py-3 text-xs font-semibold uppercase tracking-wider text-primary-foreground transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
                     Buscar
@@ -149,7 +149,7 @@ const HomeUnified: React.FC = () => {
                   </div>
                   <div>
                     <Eyebrow>Seu ponto de continuidade</Eyebrow>
-                    <h2 className="mt-1 font-display text-xl">Hoje na CATHEDRA</h2>
+                    <h2 className="mt-1 font-display text-xl">Hoje na Cátedra</h2>
                   </div>
                 </div>
                 <div className="mt-6 space-y-3">
@@ -301,13 +301,13 @@ const HomeUnified: React.FC = () => {
         <footer className="border-t border-border/60 bg-muted/20">
           <div className="mx-auto max-w-7xl px-5 py-14 md:px-10 md:py-20">
             <div className="max-w-3xl">
-              <span className="text-[10px] font-semibold uppercase tracking-[0.24em] text-primary/70">Entenda a CATHEDRA</span>
+              <span className="text-[10px] font-semibold uppercase tracking-[0.24em] text-primary/70">Entenda a Cátedra</span>
               <h2 className="mt-3 font-display text-3xl md:text-4xl">Um pequeno guia para entrar e saber onde você está.</h2>
               <p className="mt-4 text-sm leading-7 text-muted-foreground md:text-base">Os nomes da plataforma não são apenas nomes de menu. Eles explicam a lógica da experiência: um lugar para entrar, encontrar fontes, aprender, rezar e continuar uma jornada.</p>
             </div>
             <div className="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-              <div className="rounded-2xl border border-border bg-card p-6"><h3 className="font-display text-xl">Átrio</h3><p className="mt-3 text-sm leading-6 text-muted-foreground">É a entrada da CATHEDRA. Como o átrio de uma igreja, é o espaço de acolhida, orientação e passagem para os diferentes ambientes.</p></div>
-              <div className="rounded-2xl border border-border bg-card p-6"><h3 className="font-display text-xl">CATHEDRA</h3><p className="mt-3 text-sm leading-6 text-muted-foreground">É a cadeira ou lugar do ensinamento. Na tradição cristã, a cathedra também expressa a missão de ensinar com responsabilidade e fidelidade.</p></div>
+              <div className="rounded-2xl border border-border bg-card p-6"><h3 className="font-display text-xl">Átrio</h3><p className="mt-3 text-sm leading-6 text-muted-foreground">É a entrada da Cátedra Digital. Como o átrio de uma igreja, é o espaço de acolhida, orientação e passagem para os diferentes ambientes.</p></div>
+              <div className="rounded-2xl border border-border bg-card p-6"><h3 className="font-display text-xl">Cátedra</h3><p className="mt-3 text-sm leading-6 text-muted-foreground">É a cadeira ou lugar do ensinamento. Na tradição cristã, a cathedra também expressa a missão de ensinar com responsabilidade e fidelidade.</p></div>
               <div className="rounded-2xl border border-border bg-card p-6"><h3 className="font-display text-xl">Biblioteca</h3><p className="mt-3 text-sm leading-6 text-muted-foreground">É o espaço das fontes: livros, documentos, textos e referências que ajudam o visitante a estudar, pesquisar e voltar à fonte original.</p></div>
               <div className="rounded-2xl border border-border bg-card p-6"><h3 className="font-display text-xl">Os ambientes</h3><p className="mt-3 text-sm leading-6 text-muted-foreground">Estudar, Rezar, Formar-se, Pesquisar e Minha Jornada organizam a experiência sem separar conhecimento e vida espiritual.</p></div>
             </div>

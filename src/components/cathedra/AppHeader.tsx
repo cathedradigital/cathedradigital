@@ -91,19 +91,19 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
               <Icons.Logo className="w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 text-primary transition-all duration-300 group-hover:scale-105 shrink-0" />
               <div className="flex flex-col leading-none gap-0.5">
                 <span
-                  className="text-primary/90 group-hover:text-primary transition-colors"
+                  className="font-display text-primary/90 group-hover:text-primary transition-colors"
                   style={{
-                    fontFamily: "'Playfair Display', serif",
+                    /* Uses the shared Cátedra display-font token. */
                     fontWeight: 600,
                     fontSize: 'clamp(1.45rem, 2.7vw, 1.95rem)',
                     letterSpacing: '0.06em',
                     fontVariantLigatures: 'common-ligatures',
                   }}
                 >
-                  CATHEDRA
+                  Cátedra
                 </span>
                 <span className="hidden md:block text-[7px] text-gold uppercase tracking-[0.32em] font-bold">
-                  DIGITAL
+                  Digital
                 </span>
               </div>
             </div>
@@ -192,7 +192,7 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
                       onClick={(e) => isLegitimateClick(e) && navigate(AppRoute.LOGIN)} 
                       variant="ghost"
                       className="h-[44px] md:h-spacing-2xl px-spacing-md md:px-spacing-xl rounded-none border text-[9px] md:text-[10px] uppercase tracking-[0.28em] md:tracking-[0.32em] transition-all bg-transparent hover:bg-[#c9a84c] hover:text-[#0a0a0a]"
-                      style={{ borderColor: '#c9a84c', color: 'var(--gold-text)', fontFamily: 'Inter, sans-serif' }}
+                      style={{ borderColor: '#c9a84c', color: 'var(--gold-text)', fontFamily: 'var(--font-body)' }}
                     >
                       {t('enter')}
                     </Button>
