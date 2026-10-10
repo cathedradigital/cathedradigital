@@ -660,7 +660,7 @@ const ContinueReadingHero: React.FC<{
         <BookCover
           kicker={kind}
           title={title}
-          spine="Cathedra Digital"
+          spine="Cátedra Digital"
           palette={DEFAULT_PALETTE}
           to={path}
           size="lg"
