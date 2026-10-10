@@ -133,8 +133,8 @@ const GOLD = '#c9a84c';
 const GOLD_TEXT = '#8a7020';
 const GOLD_SOFT = 'rgba(201,168,76,0.35)';
 const GOLD_HAIR = 'rgba(201,168,76,0.18)';
-const FONT_DISPLAY = "'Playfair Display', ui-serif, Georgia, serif";
-const FONT_BODY = "'Inter', ui-sans-serif, system-ui, sans-serif";
+const FONT_DISPLAY = 'var(--font-display)';
+const FONT_BODY = 'var(--font-body)';
 
 const EYEBROW_STYLE: React.CSSProperties = {
   color: GOLD_TEXT,
@@ -278,7 +278,7 @@ const Footer: React.FC = React.memo(() => {
                     lineHeight: 1,
                   }}
                 >
-                  CATHEDRA
+                  Cátedra
                 </span>
               </div>
               <span
@@ -292,7 +292,7 @@ const Footer: React.FC = React.memo(() => {
                   textTransform: 'uppercase',
                 }}
               >
-                Digital Sanctuarium
+                Digital
               </span>
             </div>
 
@@ -336,7 +336,7 @@ const Footer: React.FC = React.memo(() => {
 
           {/* Coluna 2 — Navegação principal */}
           <FooterSection
-            title={lang === 'pt' ? 'CATHEDRA' : 'CATHEDRA'}
+            title={lang === 'pt' ? 'Cátedra' : 'Cátedra'}
             id="navigation"
             isMobile={isMobile}
             openId={openId}
