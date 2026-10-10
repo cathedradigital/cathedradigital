@@ -37,11 +37,13 @@ jobs:
           node-version: "22.x"
 
       - name: Install application dependencies
-        run: npm install
+        timeout-minutes: 15
+        run: npm install --no-audit --no-fund --prefer-offline --progress=false
 
       - name: Install Playwright for this CI run only
+        timeout-minutes: 15
         run: |
-          npm install --no-save @playwright/test@1.55.0
+          npm install --no-save --no-audit --no-fund --prefer-offline --progress=false @playwright/test@1.55.0
           npx playwright install --with-deps chromium
 
       - name: Build PR HEAD
@@ -53,10 +55,14 @@ jobs:
           test -n "$E2E_TEST_PASSWORD" || { echo "::error::Missing E2E_TEST_PASSWORD — authenticated E2E is blocked"; exit 1; }
 
       - name: Run critical Estudar E2E
-        run: npx playwright test e2e/estudar-critical.spec.ts
+        timeout-minutes: 30
+        env:
+          PLAYWRIGHT_JSON_OUTPUT_NAME: test-results/results.json
+        run: npx playwright test e2e/estudar-critical.spec.ts --reporter=list,json
 
       - name: Upload Playwright evidence
-        if: ${{ !cancelled() }}
+        if: ${{ always() }}
+        timeout-minutes: 5
         uses: actions/upload-artifact@v5
         with:
           name: estudar-e2e-evidence
