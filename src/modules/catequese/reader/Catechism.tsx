@@ -538,7 +538,7 @@ const Catechism: React.FC = memo(() => {
 
   // Explicit ?p=N deep-links temporarily outrank the generic IntersectionObserver.
   // This prevents restoration from being overwritten by the first visible paragraph.
-  const deepLinkRestorePendingRef = useRef(false);
+  const deepLinkRestorePendingRef = useRef(typeof initialParagraph === 'number');
 
   // O parágrafo ativo é o ponto de continuidade do Catecismo.
   useEffect(() => {
@@ -606,8 +606,16 @@ const Catechism: React.FC = memo(() => {
   // R1.2.3 — restaura o parágrafo exato do deep-link depois que a seção foi renderizada.
   // Isso fecha o retorno do Diário mesmo quando o Catecismo já está montado.
   useEffect(() => {
-    if (typeof initialParagraph !== 'number' || viewMode !== 'reading' || !selectedSection) {
+    if (typeof initialParagraph !== 'number' || viewMode !== 'reading') {
       deepLinkRestorePendingRef.current = false;
+      return;
+    }
+
+    // Keep the guard active while the deep-linked section is being resolved.
+    // The scroll observer must not replace ?p=N with a stale visible paragraph
+    // during this intermediate render.
+    if (!selectedSection) {
+      deepLinkRestorePendingRef.current = true;
       return;
     }
 

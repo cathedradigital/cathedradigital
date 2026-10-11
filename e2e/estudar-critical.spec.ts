@@ -14,6 +14,17 @@ async function login(page: Page, destination: string) {
   await page.getByRole('button', { name: 'Entrar', exact: true }).click();
   const expectedPath = new URL(destination, page.url()).pathname;
   await page.waitForURL(url => url.pathname === expectedPath, { timeout: 20_000 });
+
+  // Every Playwright test gets a fresh browser context, so the first-access
+  // dialog is shown again for the authenticated test user. Dismiss it before
+  // interacting with the requested study content; otherwise it intercepts
+  // pointer events and makes unrelated tests wait for the full test timeout.
+  const welcomeDialog = page.getByRole('dialog', { name: 'Bem-vindo à Cathedra' });
+  await welcomeDialog.waitFor({ state: 'visible', timeout: 5_000 }).catch(() => {});
+  if (await welcomeDialog.isVisible().catch(() => false)) {
+    await welcomeDialog.getByRole('button', { name: 'Fechar boas-vindas' }).click();
+    await expect(welcomeDialog).toBeHidden();
+  }
 }
 
 function watchBrowserHealth(page: Page) {
@@ -65,8 +76,8 @@ test('Catecismo: anotação → Diário → retorno exato ao parágrafo', async 
   const bad = watchBrowserHealth(page);
   const marker = 'E2E-CATECHISM-' + Date.now();
   await login(page, '/catechism?p=1');
-  await expect(page.getByRole('button', { name: /Anotar/i }).first()).toBeVisible();
-  await page.getByRole('button', { name: /Anotar/i }).first().click();
+  await expect(page.getByRole('button', { name: /(anotar|anotaç)/i }).first()).toBeVisible();
+  await page.getByRole('button', { name: /(anotar|anotaç)/i }).first().click();
   await saveReflection(page, marker);
   const note = await openStudyJournal(page, marker);
   await note.getByRole('button', { name: /Ver Contexto/i }).click();
@@ -79,7 +90,7 @@ test('Magistério: anotação → Diário → retorno ao documento/parágrafo', 
   const marker = 'E2E-MAGISTERIUM-' + Date.now();
   await login(page, '/magisterium/dce?p=1');
   await expect(page.getByRole('main')).toBeVisible();
-  await page.getByRole('button', { name: /Anotar/i }).first().click();
+  await page.getByRole('button', { name: /(anotar|anotaç)/i }).first().click();
   await saveReflection(page, marker);
   const note = await openStudyJournal(page, marker);
   await note.getByRole('button', { name: /Ver Contexto/i }).click();
@@ -193,7 +204,7 @@ test('Catecismo: §2262 preserva o texto oficial e abre a referência bíblica',
 test('Catecismo: proveniência do texto oficial fica visível e navegável', async ({ page }) => {
   await login(page, '/catechism?p=1');
   await expect(page.locator('#p1')).toBeVisible();
-  const source = page.getByText('Santa Sé · vatican.va', { exact: true });
+  const source = page.locator('#p1').getByRole('link', { name: 'Santa Sé · vatican.va' });
   await expect(source).toBeVisible();
   await expect(source).toHaveAttribute('href', /vatican\.va/);
 });
