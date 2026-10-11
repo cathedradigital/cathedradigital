@@ -12,7 +12,8 @@ async function login(page: Page, destination: string) {
   await page.getByLabel('Email').fill(email!);
   await page.getByLabel('Senha').fill(password!);
   await page.getByRole('button', { name: 'Entrar', exact: true }).click();
-  expect(page.url()).toContain(destination.split('?')[0]);
+  const expectedPath = new URL(destination, page.url()).pathname;
+  await page.waitForURL(url => url.pathname === expectedPath, { timeout: 20_000 });
 }
 
 function watchBrowserHealth(page: Page) {
@@ -41,8 +42,8 @@ async function openStudyJournal(page: Page, marker: string) {
 test('auth redirect preserves protected destination', async ({ page }) => {
   await page.context().clearCookies();
   await page.goto('/diario');
-  expect(page.url()).toContain('/login?next=');
-  expect(page.url()).toContain('diario');
+  await page.waitForURL(url => url.pathname === '/auth' && url.searchParams.has('next'), { timeout: 15_000 });
+  expect(decodeURIComponent(new URL(page.url()).searchParams.get('next') ?? '')).toContain('/diario');
 });
 
 test('Bíblia: anotação → Diário → retorno exato ao versículo', async ({ page }) => {
