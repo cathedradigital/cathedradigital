@@ -538,7 +538,11 @@ const Catechism: React.FC = memo(() => {
 
   // Explicit ?p=N deep-links temporarily outrank the generic IntersectionObserver.
   // This prevents restoration from being overwritten by the first visible paragraph.
-  const deepLinkRestorePendingRef = useRef(false);
+  // Start guarded on first render when a deep-link is present. The IntersectionObserver
+  // can emit an initial entry before passive effects restore the requested paragraph;
+  // without this initial guard it can overwrite ?p=N with whichever paragraph is visible
+  // during the first paint.
+  const deepLinkRestorePendingRef = useRef(typeof initialParagraph === 'number');
 
   // O parágrafo ativo é o ponto de continuidade do Catecismo.
   useEffect(() => {
