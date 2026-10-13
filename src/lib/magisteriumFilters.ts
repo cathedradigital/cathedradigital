@@ -13,6 +13,11 @@ export const MAGISTERIUM_PAGE_SIZE = 12;
 export interface MagisteriumFilterState {
   search: string;
   category: string | null;
+  type: string | null;
+  author: string | null;
+  pontificate: string | null;
+  period: string | null;
+  year: string | null;
   themes: string[];
   sort: MagisteriumSort;
   /** Página 1-indexada. */
@@ -22,12 +27,30 @@ export interface MagisteriumFilterState {
 export const DEFAULT_FILTER_STATE: MagisteriumFilterState = {
   search: '',
   category: null,
+  type: null,
+  author: null,
+  pontificate: null,
+  period: null,
+  year: null,
   themes: [],
   sort: 'canonical',
   page: 1,
 };
 
 const dateKey = (d: MagisteriumDocument): string => d.date ?? `${d.year}`;
+
+export const MAGISTERIUM_PERIODS = [
+  { value: 'before-1500', label: 'Até 1500', min: Number.NEGATIVE_INFINITY, max: 1500 },
+  { value: '1501-1799', label: '1501–1799', min: 1501, max: 1799 },
+  { value: '1800-1899', label: '1800–1899', min: 1800, max: 1899 },
+  { value: '1900-1999', label: '1900–1999', min: 1900, max: 1999 },
+  { value: '2000-plus', label: '2000 em diante', min: 2000, max: Number.POSITIVE_INFINITY },
+] as const;
+
+function matchesPeriod(year: number, period: string): boolean {
+  const selected = MAGISTERIUM_PERIODS.find((item) => item.value === period);
+  return selected ? year >= selected.min && year <= selected.max : true;
+}
 
 export function matchesSearch(doc: MagisteriumDocument, query: string): boolean {
   const q = query.trim().toLowerCase();
@@ -48,6 +71,11 @@ export function filterAndSortDocuments(
 ): MagisteriumDocument[] {
   const filtered = docs.filter(doc => {
     if (state.category && doc.category !== state.category) return false;
+    if (state.type && doc.type !== state.type) return false;
+    if (state.author && doc.author !== state.author) return false;
+    if (state.pontificate && (doc.pontificate ?? '') !== state.pontificate) return false;
+    if (state.year && String(doc.year) !== state.year) return false;
+    if (state.period && !matchesPeriod(doc.year, state.period)) return false;
     if (state.themes.length > 0 && !state.themes.every(t => doc.themes.includes(t))) return false;
     return matchesSearch(doc, state.search);
   });
@@ -68,13 +96,22 @@ export function filterAndSortDocuments(
 // URL persistence
 // ---------------------------------------------------------------------------
 
-const PARAM_KEYS = { q: 'q', cat: 'cat', theme: 'theme', sort: 'sort', page: 'page' } as const;
+const PARAM_KEYS = {
+  q: 'q', cat: 'cat', type: 'type', author: 'author',
+  pontificate: 'pontificate', period: 'period', year: 'year',
+  theme: 'theme', sort: 'sort', page: 'page',
+} as const;
 const VALID_SORTS: MagisteriumSort[] = ['canonical', 'chronological-asc', 'chronological-desc'];
 
 export function stateToSearchParams(state: MagisteriumFilterState): URLSearchParams {
   const params = new URLSearchParams();
   if (state.search) params.set(PARAM_KEYS.q, state.search);
   if (state.category) params.set(PARAM_KEYS.cat, state.category);
+  if (state.type) params.set(PARAM_KEYS.type, state.type);
+  if (state.author) params.set(PARAM_KEYS.author, state.author);
+  if (state.pontificate) params.set(PARAM_KEYS.pontificate, state.pontificate);
+  if (state.period) params.set(PARAM_KEYS.period, state.period);
+  if (state.year) params.set(PARAM_KEYS.year, state.year);
   for (const t of state.themes) params.append(PARAM_KEYS.theme, t);
   if (state.sort !== 'canonical') params.set(PARAM_KEYS.sort, state.sort);
   if (state.page > 1) params.set(PARAM_KEYS.page, String(state.page));
@@ -91,6 +128,11 @@ export function searchParamsToState(params: URLSearchParams): MagisteriumFilterS
   return {
     search: params.get(PARAM_KEYS.q) ?? '',
     category: params.get(PARAM_KEYS.cat),
+    type: params.get(PARAM_KEYS.type),
+    author: params.get(PARAM_KEYS.author),
+    pontificate: params.get(PARAM_KEYS.pontificate),
+    period: params.get(PARAM_KEYS.period),
+    year: params.get(PARAM_KEYS.year),
     themes: params.getAll(PARAM_KEYS.theme),
     sort,
     page,

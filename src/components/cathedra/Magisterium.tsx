@@ -83,6 +83,7 @@ import {
   MAGISTERIUM_DOCUMENTS,
   MAGISTERIUM_CATEGORIES,
   MAGISTERIUM_THEMES,
+  MAGISTERIUM_TYPES,
   type MagisteriumDocument,
 } from '@/data/magisterium-urls';
 import {
@@ -92,6 +93,7 @@ import {
   paginate,
   searchParamsToState,
   MAGISTERIUM_PAGE_SIZE,
+  MAGISTERIUM_PERIODS,
   type MagisteriumSort,
 } from '@/lib/magisteriumFilters';
 
@@ -192,6 +194,14 @@ const CATEGORY_ORDER: Record<string, number> = MAGISTERIUM_CATEGORIES.reduce(
   {} as Record<string, number>,
 );
 
+const MAGISTERIUM_AUTHORS = Array.from(new Set(MAGISTERIUM_DOCUMENTS.map((doc) => doc.author)))
+  .sort((a, b) => a.localeCompare(b, 'pt-BR'));
+const MAGISTERIUM_PONTIFICATES = Array.from(
+  new Set(MAGISTERIUM_DOCUMENTS.map((doc) => doc.pontificate).filter((value): value is string => Boolean(value))),
+).sort((a, b) => a.localeCompare(b, 'pt-BR'));
+const MAGISTERIUM_YEARS = Array.from(new Set(MAGISTERIUM_DOCUMENTS.map((doc) => doc.year)))
+  .sort((a, b) => b - a);
+
 /** Renderiza um texto com trechos que casam a query destacados no card. */
 const renderHighlighted = (text: string, query: string): React.ReactNode =>
   highlightSegments(text, query).map((seg, i) =>
@@ -217,7 +227,11 @@ const Magisterium: React.FC = () => {
   // A URL é a única fonte de verdade dos filtros. Derivamos o state a cada
   // render — assim back/forward, deep-links e edições internas sempre coincidem.
   const urlFilterState = useMemo(() => searchParamsToState(searchParams), [searchParams]);
-  const { search: searchQuery, category: selectedCategory, themes: selectedThemes, sort: sortBy, page } = urlFilterState;
+  const {
+    search: searchQuery, category: selectedCategory, type: selectedType,
+    author: selectedAuthor, pontificate: selectedPontificate, period: selectedPeriod,
+    year: selectedYear, themes: selectedThemes, sort: sortBy, page,
+  } = urlFilterState;
 
   // Setter unificado — escreve no `searchParams` preservando `topic`/`doc`.
   const updateFilters = useCallback(
@@ -229,6 +243,11 @@ const Magisterium: React.FC = () => {
       const merged = mergeFilterParams(searchParams, {
         search: next.search,
         category: next.category,
+        type: next.type,
+        author: next.author,
+        pontificate: next.pontificate,
+        period: next.period,
+        year: next.year,
         themes: next.themes,
         sort: next.sort,
         page: next.page,
@@ -344,7 +363,7 @@ const Magisterium: React.FC = () => {
     () =>
       filterAndSortDocuments(
         MAGISTERIUM_DOCUMENTS,
-        { search: searchQuery, category: selectedCategory, themes: selectedThemes, sort: sortBy, page },
+        { search: searchQuery, category: selectedCategory, type: selectedType, author: selectedAuthor, pontificate: selectedPontificate, period: selectedPeriod, year: selectedYear, themes: selectedThemes, sort: sortBy, page },
         CATEGORY_ORDER,
       ),
     [searchQuery, selectedCategory, selectedThemes, sortBy, page],
@@ -433,7 +452,7 @@ const Magisterium: React.FC = () => {
 
 
   // Detecta mudanças de filtro (não paginação) para rolar ao topo.
-  const filtersKey = `${searchQuery}::${selectedCategory ?? ''}::${selectedThemes.join('|')}::${sortBy}`;
+  const filtersKey = `${searchQuery}::${selectedCategory ?? ''}::${selectedType ?? ''}::${selectedAuthor ?? ''}::${selectedPontificate ?? ''}::${selectedPeriod ?? ''}::${selectedYear ?? ''}::${selectedThemes.join('|')}::${sortBy}`;
   const prevFiltersKey = useRef(filtersKey);
   useEffect(() => {
     if (prevFiltersKey.current !== filtersKey) {
@@ -459,6 +478,11 @@ const Magisterium: React.FC = () => {
       search: '',
       themes: [],
       category: null,
+      type: null,
+      author: null,
+      pontificate: null,
+      period: null,
+      year: null,
       sort: 'canonical',
       page: 1,
     });
@@ -542,60 +566,68 @@ const Magisterium: React.FC = () => {
             />
           </div>
 
-          {/* Categoria (autoridade canônica) */}
-          <div className="estudar-doc-filter-row flex items-center justify-center gap-spacing-xs flex-wrap py-spacing-xs">
-            <BubbleHint kind="category" label="Mostrar documentos de todas as categorias">
-              <Button
-                variant="ghost"
-                className={`rounded-premium-full px-3 py-2 text-[11px] font-medium tracking-normal transition-colors duration-200 md:px-spacing-md md:py-spacing-xs md:text-xs ${selectedCategory === null ? 'bg-primary text-white shadow-premium scale-[1.05]' : 'text-primary/70 hover:text-primary'}`}
-                onClick={() => setSelectedCategory(null)}
-              >
-                Todas as Categorias
-              </Button>
-            </BubbleHint>
-            {MAGISTERIUM_CATEGORIES.map(cat => (
-              <BubbleHint
-                key={cat.name}
-                kind="category"
-                label={selectedCategory === cat.name ? `Remover filtro de categoria: ${cat.name}` : `Filtrar por categoria: ${cat.name}`}
-              >
-                <Button
-                  variant="ghost"
-                  className={`rounded-premium-full px-3 py-2 text-[11px] font-medium tracking-normal transition-colors duration-200 md:px-spacing-md md:py-spacing-xs md:text-xs ${selectedCategory === cat.name ? 'bg-primary text-white shadow-premium scale-[1.05]' : 'text-primary/70 hover:text-primary'}`}
-                  onClick={() => setSelectedCategory(cat.name)}
-                >
-                  {cat.name}
-                </Button>
-              </BubbleHint>
-            ))}
-          </div>
+          {/* Filtros estruturados: categoria/concílio, autor, pontificado, tipo, período e ano. */}
+          <section aria-label="Filtros do acervo" className="grid grid-cols-1 gap-spacing-sm rounded-xl border border-primary/10 bg-primary/[0.025] p-spacing-md sm:grid-cols-2 lg:grid-cols-3">
+            <label className="flex min-w-0 flex-col gap-1.5 text-sm font-medium text-foreground">
+              <span>Categoria / concílio</span>
+              <select aria-label="Filtrar por categoria ou concílio" value={selectedCategory ?? ''} onChange={(e) => setSelectedCategory(e.target.value || null)} className="min-h-11 w-full rounded-lg border border-primary/15 bg-background px-3 py-2 text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40">
+                <option value="">Todas as categorias</option>
+                {MAGISTERIUM_CATEGORIES.map((cat) => <option key={cat.name} value={cat.name}>{cat.name}</option>)}
+              </select>
+            </label>
+            <label className="flex min-w-0 flex-col gap-1.5 text-sm font-medium text-foreground">
+              <span>Autor / organismo</span>
+              <select aria-label="Filtrar por autor ou organismo" value={selectedAuthor ?? ''} onChange={(e) => updateFilters({ author: e.target.value || null, page: 1 })} className="min-h-11 w-full rounded-lg border border-primary/15 bg-background px-3 py-2 text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40">
+                <option value="">Todos os autores</option>
+                {MAGISTERIUM_AUTHORS.map((author) => <option key={author} value={author}>{author}</option>)}
+              </select>
+            </label>
+            <label className="flex min-w-0 flex-col gap-1.5 text-sm font-medium text-foreground">
+              <span>Pontificado</span>
+              <select aria-label="Filtrar por pontificado" value={selectedPontificate ?? ''} onChange={(e) => updateFilters({ pontificate: e.target.value || null, page: 1 })} className="min-h-11 w-full rounded-lg border border-primary/15 bg-background px-3 py-2 text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40">
+                <option value="">Todos os pontificados</option>
+                {MAGISTERIUM_PONTIFICATES.map((pontificate) => <option key={pontificate} value={pontificate}>{pontificate}</option>)}
+              </select>
+            </label>
+            <label className="flex min-w-0 flex-col gap-1.5 text-sm font-medium text-foreground">
+              <span>Tipo de documento</span>
+              <select aria-label="Filtrar por tipo de documento" value={selectedType ?? ''} onChange={(e) => updateFilters({ type: e.target.value || null, page: 1 })} className="min-h-11 w-full rounded-lg border border-primary/15 bg-background px-3 py-2 text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40">
+                <option value="">Todos os tipos</option>
+                {MAGISTERIUM_TYPES.map((type) => <option key={type} value={type}>{type}</option>)}
+              </select>
+            </label>
+            <label className="flex min-w-0 flex-col gap-1.5 text-sm font-medium text-foreground">
+              <span>Período</span>
+              <select aria-label="Filtrar por período histórico" value={selectedPeriod ?? ''} onChange={(e) => updateFilters({ period: e.target.value || null, page: 1 })} className="min-h-11 w-full rounded-lg border border-primary/15 bg-background px-3 py-2 text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40">
+                <option value="">Todos os períodos</option>
+                {MAGISTERIUM_PERIODS.map((period) => <option key={period.value} value={period.value}>{period.label}</option>)}
+              </select>
+            </label>
+            <label className="flex min-w-0 flex-col gap-1.5 text-sm font-medium text-foreground">
+              <span>Ano de publicação</span>
+              <select aria-label="Filtrar por ano de publicação" value={selectedYear ?? ''} onChange={(e) => updateFilters({ year: e.target.value || null, page: 1 })} className="min-h-11 w-full rounded-lg border border-primary/15 bg-background px-3 py-2 text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40">
+                <option value="">Todos os anos</option>
+                {MAGISTERIUM_YEARS.map((year) => <option key={year} value={String(year)}>{year}</option>)}
+              </select>
+            </label>
+          </section>
 
-          {/* Temas (multi-seleção) */}
-          <div className="estudar-doc-theme-row flex items-center justify-start gap-spacing-xs flex-wrap py-spacing-xs">
-            {MAGISTERIUM_THEMES.map(theme => {
-              const active = selectedThemes.includes(theme);
-              return (
-                <BubbleHint
-                  key={theme}
-                  kind="theme-bar"
-                  label={active ? `Remover tema: ${theme}` : `Adicionar tema: ${theme}`}
-                >
-                  <Button
-                    variant="ghost"
-                    aria-pressed={active}
-                    className={`rounded-premium-full px-3 py-2 text-[11px] font-medium tracking-normal transition-colors duration-200 md:px-spacing-md md:py-spacing-xs md:text-xs ${active ? 'bg-primary text-white shadow-premium' : 'text-primary/70 hover:text-primary border border-primary/10'}`}
-                    onClick={() => toggleTheme(theme)}
-                  >
-                    {theme}
-                  </Button>
-                </BubbleHint>
-              );
-            })}
-          </div>
+          <details open={selectedThemes.length > 0} className="rounded-xl border border-primary/10 px-spacing-md py-spacing-sm">
+            <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-3 text-sm font-semibold text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40">
+              <span>Temas de estudo</span>
+              <span className="text-xs font-medium text-muted-foreground">{selectedThemes.length ? `${selectedThemes.length} selecionado(s)` : `${MAGISTERIUM_THEMES.length} temas disponíveis`}</span>
+            </summary>
+            <div className="mt-spacing-sm flex flex-wrap gap-2">
+              {MAGISTERIUM_THEMES.map((theme) => {
+                const active = selectedThemes.includes(theme);
+                return <Button key={theme} type="button" variant={active ? 'default' : 'outline'} size="sm" aria-pressed={active} className="min-h-9 rounded-full px-3 text-xs font-medium tracking-normal" onClick={() => toggleTheme(theme)}>{theme}</Button>;
+              })}
+            </div>
+          </details>
 
           {/* Ordenação + reset */}
-          <div className="estudar-doc-sort-row flex items-center justify-between gap-spacing-md">
-            <div className="text-[12px] font-semibold uppercase tracking-[0.1em] text-primary/70">
+          <div className="estudar-doc-sort-row flex flex-col items-stretch justify-between gap-spacing-sm sm:flex-row sm:items-center sm:gap-spacing-md">
+            <div className="text-sm font-semibold text-foreground" aria-live="polite">
               {pagination.totalItems === 0 ? (
                 <>0 documentos</>
               ) : (
@@ -608,7 +640,7 @@ const Magisterium: React.FC = () => {
                 </>
               )}
             </div>
-            <div className="flex items-center gap-spacing-xs">
+            <div className="flex flex-wrap items-center gap-2">
               {/* STAB-004.1: toggle de agrupamento visual (sem alterar filtros) */}
               <BubbleHint kind="group" label="Agrupar visualmente os documentos por categoria">
                 <Button
@@ -617,7 +649,7 @@ const Magisterium: React.FC = () => {
                   aria-pressed={groupBy === 'category'}
                   onClick={() => setGroupBy(groupBy === 'category' ? null : 'category')}
                   className={cn(
-                    'text-[11px] font-black uppercase tracking-[0.2em] text-primary/80 hover:text-primary',
+                    'text-xs font-semibold tracking-normal text-primary/80 hover:text-primary',
                     groupBy === 'category' && 'bg-primary/10 text-primary',
                   )}
                 >
@@ -632,7 +664,7 @@ const Magisterium: React.FC = () => {
                   aria-pressed={groupBy === 'pope'}
                   onClick={() => setGroupBy(groupBy === 'pope' ? null : 'pope')}
                   className={cn(
-                    'text-[11px] font-black uppercase tracking-[0.2em] text-primary/80 hover:text-primary',
+                    'text-xs font-semibold tracking-normal text-primary/80 hover:text-primary',
                     groupBy === 'pope' && 'bg-primary/10 text-primary',
                   )}
                 >
@@ -653,7 +685,7 @@ const Magisterium: React.FC = () => {
                           : 'canonical',
                     )
                   }
-                  className="text-[11px] font-black uppercase tracking-[0.2em] text-primary/80 hover:text-primary"
+                  className="text-xs font-semibold tracking-normal text-primary/80 hover:text-primary"
                 >
                   <Icons.ArrowDown
                     className={cn(
@@ -668,29 +700,17 @@ const Magisterium: React.FC = () => {
                       : 'Cronológica ↓'}
                 </Button>
               </BubbleHint>
-              {(searchQuery || selectedThemes.length > 0 || selectedCategory) && (
-                <BubbleHint kind="clear" label="Remover todos os filtros ativos">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={clearFilters}
-                    className="text-[11px] font-black uppercase tracking-[0.2em] text-muted-foreground"
-                  >
-                    Limpar
-                  </Button>
-                </BubbleHint>
-              )}
             </div>
           </div>
 
           {/* Chips de filtros ativos (removíveis) */}
-          {(selectedCategory || selectedThemes.length > 0 || searchQuery) && (
+          {(selectedCategory || selectedType || selectedAuthor || selectedPontificate || selectedPeriod || selectedYear || selectedThemes.length > 0 || searchQuery) && (
             <div
               className="flex items-center flex-wrap gap-spacing-2xs pt-spacing-2xs"
               role="region"
               aria-label="Filtros ativos"
             >
-              <span className="text-[11px] font-black uppercase tracking-[0.2em] text-primary/70 mr-spacing-2xs">
+              <span className="text-xs font-semibold text-primary/80 mr-spacing-2xs">
                 Filtros ativos:
               </span>
 
@@ -700,7 +720,7 @@ const Magisterium: React.FC = () => {
                     type="button"
                     onClick={() => setSearchQuery('')}
                     aria-label={`Remover busca: ${searchQuery}`}
-                    className="inline-flex items-center gap-spacing-3xs rounded-premium-full bg-primary/10 hover:bg-primary/20 text-primary px-spacing-sm py-spacing-3xs text-[11px] font-black uppercase tracking-[0.15em] transition-colors"
+                    className="inline-flex min-h-9 items-center gap-2 rounded-full bg-primary/10 px-3 py-1.5 text-xs font-medium normal-case tracking-normal text-primary transition-colors hover:bg-primary/20"
                   >
                     <span className="normal-case tracking-normal">“{searchQuery}”</span>
                     <Icons.X className="w-spacing-xs h-spacing-xs" strokeWidth={2} />
@@ -708,13 +728,18 @@ const Magisterium: React.FC = () => {
                 </BubbleHint>
               )}
 
+              {selectedType && <button type="button" onClick={() => updateFilters({ type: null, page: 1 })} className="inline-flex min-h-9 items-center gap-2 rounded-full bg-primary/10 px-3 py-1.5 text-xs text-primary" aria-label={`Remover tipo: ${selectedType}`}>{selectedType}<Icons.X className="h-3 w-3" aria-hidden="true" /></button>}
+              {selectedAuthor && <button type="button" onClick={() => updateFilters({ author: null, page: 1 })} className="inline-flex min-h-9 items-center gap-2 rounded-full bg-primary/10 px-3 py-1.5 text-xs text-primary" aria-label={`Remover autor: ${selectedAuthor}`}>{selectedAuthor}<Icons.X className="h-3 w-3" aria-hidden="true" /></button>}
+              {selectedPontificate && <button type="button" onClick={() => updateFilters({ pontificate: null, page: 1 })} className="inline-flex min-h-9 items-center gap-2 rounded-full bg-primary/10 px-3 py-1.5 text-xs text-primary" aria-label={`Remover pontificado: ${selectedPontificate}`}>{selectedPontificate}<Icons.X className="h-3 w-3" aria-hidden="true" /></button>}
+              {selectedPeriod && <button type="button" onClick={() => updateFilters({ period: null, page: 1 })} className="inline-flex min-h-9 items-center gap-2 rounded-full bg-primary/10 px-3 py-1.5 text-xs text-primary" aria-label={`Remover período: ${selectedPeriod}`}>{MAGISTERIUM_PERIODS.find((item) => item.value === selectedPeriod)?.label ?? selectedPeriod}<Icons.X className="h-3 w-3" aria-hidden="true" /></button>}
+              {selectedYear && <button type="button" onClick={() => updateFilters({ year: null, page: 1 })} className="inline-flex min-h-9 items-center gap-2 rounded-full bg-primary/10 px-3 py-1.5 text-xs text-primary" aria-label={`Remover ano: ${selectedYear}`}>{selectedYear}<Icons.X className="h-3 w-3" aria-hidden="true" /></button>}
               {selectedCategory && (
                 <BubbleHint kind="chip-category" label={`Remover categoria: ${selectedCategory}`}>
                   <button
                     type="button"
                     onClick={() => setSelectedCategory(null)}
                     aria-label={`Remover categoria: ${selectedCategory}`}
-                    className="inline-flex items-center gap-spacing-3xs rounded-premium-full bg-primary text-white hover:bg-primary/80 px-spacing-sm py-spacing-3xs text-[11px] font-black uppercase tracking-[0.15em] transition-colors"
+                    className="inline-flex min-h-9 items-center gap-2 rounded-full bg-primary px-3 py-1.5 text-xs font-medium normal-case tracking-normal text-white transition-colors hover:bg-primary/80"
                   >
                     {selectedCategory}
                     <Icons.X className="w-spacing-xs h-spacing-xs" strokeWidth={2} />
@@ -728,7 +753,7 @@ const Magisterium: React.FC = () => {
                     type="button"
                     onClick={() => toggleTheme(theme)}
                     aria-label={`Remover tema: ${theme}`}
-                    className="inline-flex items-center gap-spacing-3xs rounded-premium-full bg-secondary/20 hover:bg-secondary/30 text-primary px-spacing-sm py-spacing-3xs text-[11px] font-black uppercase tracking-[0.15em] transition-colors"
+                    className="inline-flex min-h-9 items-center gap-2 rounded-full bg-secondary/20 px-3 py-1.5 text-xs font-medium normal-case tracking-normal text-primary transition-colors hover:bg-secondary/30"
                   >
                     {theme}
                     <Icons.X className="w-spacing-xs h-spacing-xs" strokeWidth={2} />
@@ -740,7 +765,7 @@ const Magisterium: React.FC = () => {
                 <button
                   type="button"
                   onClick={clearFilters}
-                  className="inline-flex items-center gap-spacing-3xs rounded-premium-full border border-primary/20 hover:border-primary/40 text-primary/80 hover:text-primary px-spacing-sm py-spacing-3xs text-[11px] font-black uppercase tracking-[0.15em] transition-colors ml-spacing-xs"
+                  className="inline-flex min-h-9 items-center gap-2 rounded-full border border-primary/20 px-3 py-1.5 text-xs font-medium normal-case tracking-normal text-primary/80 transition-colors hover:border-primary/40 hover:text-primary ml-spacing-xs"
                 >
                   <Icons.XCircle className="w-spacing-xs h-spacing-xs" strokeWidth={1.5} />
                   Limpar tudo
@@ -785,7 +810,7 @@ const Magisterium: React.FC = () => {
                     <div className="w-spacing-xl h-spacing-xl rounded-premium bg-primary/[0.02] border border-primary/5 flex items-center justify-center text-primary/60 group-hover:text-primary transition-colors">
                       {doc.type === 'Encíclica' ? <Icons.Scroll className="w-spacing-md h-spacing-md" strokeWidth={1} /> : <Icons.FileText className="w-spacing-md h-spacing-md" strokeWidth={1} />}
                     </div>
-                    <span className="text-[11px] font-black text-secondary tracking-widest">{doc.year}</span>
+                    <span className="rounded-full bg-secondary/10 px-2.5 py-1 text-xs font-semibold text-secondary">{doc.year}</span>
                   </div>
 
                   <div className="space-y-spacing-xs flex-1">
@@ -797,21 +822,23 @@ const Magisterium: React.FC = () => {
                         </span>
                       )}
                     </h3>
-                    <p className="text-[11px] font-black text-primary/70 uppercase tracking-[0.2em]">
+                    <p className="text-xs font-medium text-primary/80">
                       {renderHighlighted(doc.author, searchQuery)}
                     </p>
-                    <p className="text-[10px] text-muted-foreground italic line-clamp-spacing-xs leading-relaxed">
+                    <p className="text-xs text-muted-foreground">{doc.type} · {doc.category}</p>
+                    <p className="text-sm text-muted-foreground line-clamp-3 leading-relaxed">
                       {renderHighlighted(doc.summary, searchQuery)}
                     </p>
                   </div>
 
-                  <div className="flex flex-wrap gap-spacing-2xs pt-spacing-sm border-t border-primary/[0.03] opacity-0 group-hover:opacity-100 transition-all">
-                    {doc.themes.map(t => (
-                      <span key={t} className="text-[6px] font-black text-primary/70 uppercase tracking-[0.1em] bg-primary/[0.01] px-spacing-2xs py-spacing-3xs rounded-premium-full">
-                        {t}
-                      </span>
-                    ))}
-                  </div>
+                  {doc.themes.length > 0 && (
+                    <div className="flex flex-wrap gap-1.5 border-t border-primary/10 pt-3">
+                      {doc.themes.slice(0, 3).map((theme) => (
+                        <span key={theme} className="rounded-full bg-primary/[0.06] px-2.5 py-1 text-[11px] font-medium text-primary/80">{theme}</span>
+                      ))}
+                      {doc.themes.length > 3 && <span className="rounded-full border border-primary/10 px-2.5 py-1 text-[11px] text-muted-foreground">+{doc.themes.length - 3}</span>}
+                    </div>
+                  )}
                 </div>
               </CathedraCard>
             </Link>
@@ -830,10 +857,10 @@ const Magisterium: React.FC = () => {
               {groupedDocs.map(({ key, docs }) => (
                 <section key={key} aria-label={`${groupBy === 'pope' ? 'Papa' : 'Categoria'}: ${key}`}>
                   <header className="flex items-baseline justify-between mb-spacing-md border-b border-primary/[0.06] pb-spacing-2xs">
-                    <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/60">
+                    <h3 className="text-sm font-semibold text-primary/80">
                       {key}
                     </h3>
-                    <span className="text-[11px] font-black uppercase tracking-[0.2em] text-primary/30">
+                    <span className="text-xs font-medium text-muted-foreground">
                       {docs.length} {docs.length === 1 ? 'documento' : 'documentos'}
                     </span>
                   </header>
@@ -858,7 +885,7 @@ const Magisterium: React.FC = () => {
               disabled={pagination.page <= 1}
               onClick={() => setPage(p => Math.max(1, p - 1))}
               aria-label="Página anterior"
-              className="text-[11px] font-black uppercase tracking-[0.2em] text-primary/80 hover:text-primary"
+              className="text-xs font-semibold tracking-normal text-primary/80 hover:text-primary"
             >
               <Icons.ArrowLeft className="w-spacing-sm h-spacing-sm mr-spacing-2xs" />
               Anterior
@@ -876,7 +903,7 @@ const Magisterium: React.FC = () => {
               disabled={pagination.page >= pagination.totalPages}
               onClick={() => setPage(p => Math.min(pagination.totalPages, p + 1))}
               aria-label="Próxima página"
-              className="text-[11px] font-black uppercase tracking-[0.2em] text-primary/80 hover:text-primary"
+              className="text-xs font-semibold tracking-normal text-primary/80 hover:text-primary"
             >
               Próxima
               <Icons.ArrowRight className="w-spacing-sm h-spacing-sm ml-spacing-2xs" />
@@ -885,9 +912,11 @@ const Magisterium: React.FC = () => {
         )}
 
         {filteredDocs.length === 0 && (
-          <div className="text-center py-spacing-4xl opacity-20">
-            <Icons.Search className="w-spacing-2xl h-spacing-2xl mx-auto mb-spacing-md" strokeWidth={0.5} />
-            <p className="font-serif italic text-premium-sm">Nenhum documento encontrado no silêncio da busca.</p>
+          <div className="rounded-xl border border-primary/10 bg-primary/[0.025] px-5 py-10 text-center">
+            <Icons.Search className="mx-auto mb-3 h-8 w-8 text-muted-foreground" strokeWidth={1.5} aria-hidden="true" />
+            <h3 className="text-base font-semibold text-foreground">Nenhum documento encontrado</h3>
+            <p className="mx-auto mt-2 max-w-lg text-sm leading-relaxed text-muted-foreground">Tente outro termo ou remova um ou mais filtros para ampliar os resultados.</p>
+            <Button type="button" variant="outline" className="mt-4 min-h-11" onClick={clearFilters}>Limpar filtros</Button>
           </div>
         )}
       </div>
