@@ -13,6 +13,15 @@ async function login(page: Page, destination: string) {
   await page.getByLabel('Senha').fill(password!);
   await page.getByRole('button', { name: 'Entrar', exact: true }).click();
   await expect.poll(() => page.url()).toContain(destination.split('?')[0]);
+
+  // Each Playwright test has an isolated browser context, so first-access
+  // onboarding can appear again even when the shared E2E account has seen it.
+  const welcome = page.getByRole('dialog', { name: 'Bem-vindo à Cathedra' });
+  await welcome.waitFor({ state: 'visible', timeout: 5000 }).catch(() => {});
+  if (await welcome.isVisible().catch(() => false)) {
+    await welcome.getByRole('button', { name: 'Fechar boas-vindas' }).click();
+    await expect(welcome).toBeHidden();
+  }
 }
 
 function watchBrowserHealth(page: Page) {
