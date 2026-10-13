@@ -366,7 +366,7 @@ const Magisterium: React.FC = () => {
         { search: searchQuery, category: selectedCategory, type: selectedType, author: selectedAuthor, pontificate: selectedPontificate, period: selectedPeriod, year: selectedYear, themes: selectedThemes, sort: sortBy, page },
         CATEGORY_ORDER,
       ),
-    [searchQuery, selectedCategory, selectedThemes, sortBy, page],
+    [searchQuery, selectedCategory, selectedType, selectedAuthor, selectedPontificate, selectedPeriod, selectedYear, selectedThemes, sortBy, page],
   );
 
   // Página corrente (com clamp) + fatia visível.
