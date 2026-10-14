@@ -75,6 +75,24 @@ import { installSessionRenewal } from './lib/sessionRenewal';
 import ContrastInspector from './components/dev/ContrastInspector';
 import { PreviewSkeleton } from './components/cathedra/PreviewSkeleton';
 
+// Preserva o destino solicitado ao normalizar /login para a rota canônica /auth.
+const LoginRedirect = () => {
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+  let next = params.get('next');
+
+  // Corrige URLs antigas/aninhadas como /auth?next=%2Flogin%3Fnext%3D%252Fdiario.
+  // O destino deve ser sempre a rota interna original, nunca outra tela de login.
+  for (let depth = 0; depth < 2 && next?.startsWith('/login?'); depth += 1) {
+    const nestedQuery = next.slice(next.indexOf('?') + 1);
+    next = new URLSearchParams(nestedQuery).get('next');
+  }
+
+  const safeNext = next && next.startsWith('/') && !next.startsWith('//') ? next : null;
+  const query = safeNext ? `?next=${encodeURIComponent(safeNext)}` : '';
+  return <Navigate to={`/auth${query}${location.hash}`} replace />;
+};
+
 const MagisterioLegacyRedirect = () => {
   const { id } = useParams<{ id: string }>();
   return <Navigate to={`/magisterium/${id ?? ''}`} replace />;
@@ -683,7 +701,7 @@ const AppLayout: React.FC = () => {
               <Route path="/chat" element={<Navigate to="/logos" replace />} />
               <Route path="/auth" element={<Suspense fallback={<LoadingFallback />}><Auth onSuccess={() => navigate(resolveAuthHome(), { replace: true })} /></Suspense>} />
               <Route path="/.lovable/oauth/consent" element={<Suspense fallback={<LoadingFallback />}><OAuthConsent /></Suspense>} />
-              <Route path="/login" element={<Navigate to="/auth" replace />} />
+              <Route path="/login" element={<LoginRedirect />} />
               <Route path="/reset-password" element={<Suspense fallback={<LoadingFallback />}><ResetPasswordPage /></Suspense>} />
               <Route path="/profile" element={<Suspense fallback={<LoadingFallback />}><AuthGuard><ProfilePage /></AuthGuard></Suspense>} />
               <Route path="/settings" element={<Navigate to="/conta/configuracoes" replace />} />
