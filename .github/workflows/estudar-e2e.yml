@@ -7,6 +7,7 @@ on:
       - "src/**"
       - "e2e/**"
       - "playwright.config.ts"
+      - "scripts/sanitize-playwright-artifacts.py"
       - "package.json"
       - ".github/workflows/estudar-e2e.yml"
   workflow_dispatch:
@@ -54,6 +55,10 @@ jobs:
 
       - name: Run critical Estudar E2E
         run: npx playwright test e2e/estudar-critical.spec.ts
+
+      - name: Sanitize sensitive headers in Playwright traces
+        if: ${{ !cancelled() }}
+        run: python3 scripts/sanitize-playwright-artifacts.py
 
       - name: Upload Playwright evidence
         if: ${{ !cancelled() }}
