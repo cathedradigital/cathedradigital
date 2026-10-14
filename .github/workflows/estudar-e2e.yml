@@ -57,11 +57,12 @@ jobs:
         run: npx playwright test e2e/estudar-critical.spec.ts
 
       - name: Sanitize sensitive headers in Playwright traces
+        id: sanitize-traces
         if: ${{ !cancelled() }}
         run: python3 scripts/sanitize-playwright-artifacts.py
 
       - name: Upload Playwright evidence
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && steps.sanitize-traces.outcome == 'success' }}
         uses: actions/upload-artifact@v5
         with:
           name: estudar-e2e-evidence
