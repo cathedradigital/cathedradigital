@@ -192,16 +192,19 @@ test('Catecismo: §2262 preserva o texto oficial e abre a referência bíblica',
 test('Catecismo: proveniência do texto oficial fica visível e navegável', async ({ page }) => {
   await login(page, '/catechism?p=1');
   await expect(page.locator('#p1')).toBeVisible();
-  const source = page.getByText('Santa Sé · vatican.va', { exact: true });
+  const source = page.locator('#p1').getByRole('link', { name: 'Santa Sé · vatican.va', exact: true });
   await expect(source).toBeVisible();
-  await expect(source).toHaveAttribute('href', /vatican\.va/);
+  await expect(source).toHaveAttribute('href', /^https:\/\/www\.vatican\.va\//);
 });
 
 test('Catecismo: Conexo prioriza relação curada e mantém a referência navegável', async ({ page }) => {
   const bad = watchBrowserHealth(page);
   await login(page, '/catechism?p=279');
   await expect(page.locator('#p279')).toBeVisible();
-  await expect(page.getByText('Gn 1:1', { exact: true })).toBeVisible();
+  const bibleReference = page.getByRole('link', { name: 'Abrir Gn 1:1', exact: true });
+  await expect(bibleReference).toBeVisible();
+  await expect(bibleReference).toContainText('Gn 1:1');
+  await expect(bibleReference).toHaveAttribute('href', '/bible?book=gn&ch=1');
   await expect(page.getByText('Referência editorial', { exact: true })).toBeVisible();
   expect(bad).toEqual([]);
 });
