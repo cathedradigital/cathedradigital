@@ -477,20 +477,31 @@ const MagisteriumViewer: React.FC = () => {
   const [pendingSelectionAnchorId, setPendingSelectionAnchorId] = useState<string | null>(null);
 
   const handleAddNoteOrHighlight = useCallback(async (text: string, color: string) => {
-    if (!id) return;
+    if (!id) {
+      toast.error('Não foi possível identificar o documento para salvar a anotação.');
+      return;
+    }
 
+    let saved = false;
     if (activeHighlight) {
-      await updateNote(activeHighlight.id, text, color);
-      setActiveHighlight(null);
+      saved = await updateNote(activeHighlight.id, text, color);
+      if (saved) setActiveHighlight(null);
     } else {
       const match = pendingSelectionAnchorId?.match(/^para-(\d+)$/);
       const paragraphIndex = match ? Number(match[1]) : undefined;
       const contentId = paragraphIndex !== undefined ? `${id}:${paragraphIndex}` : id;
-      await addNote(contentId, text, color, paragraphIndex !== undefined ? { paragraph: paragraphIndex + 1 } : undefined);
+      const note = await addNote(contentId, text, color, paragraphIndex !== undefined ? { paragraph: paragraphIndex + 1 } : undefined);
+      saved = Boolean(note);
+    }
+
+    if (!saved) {
+      toast.error('Não foi possível salvar a anotação. Verifique sua conexão e tente novamente.');
+      return;
     }
 
     setPendingSelectionAnchorId(null);
     setIsNoteModalOpen(false);
+    toast.success('Nota salva');
   }, [id, activeHighlight, addNote, pendingSelectionAnchorId, updateNote]);
 
   useEffect(() => {
