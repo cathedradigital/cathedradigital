@@ -679,8 +679,9 @@ const Catechism: React.FC = memo(() => {
 
     const frame = window.requestAnimationFrame(restoreParagraph);
     return () => {
+      // Keep the pause intact while this effect is re-created for the same
+      // deep-link. The next effect instance owns releasing it after target sync.
       cancelled = true;
-      deepLinkRestorePendingRef.current = false;
       window.cancelAnimationFrame(frame);
     };
   }, [initialParagraph, selectedSection, viewMode]);
