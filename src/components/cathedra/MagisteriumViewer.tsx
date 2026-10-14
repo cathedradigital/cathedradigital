@@ -759,6 +759,16 @@ const MagisteriumViewer: React.FC = () => {
             <AudioButton variant="outline" className="rounded-premium-full min-h-11 min-w-11 p-spacing-0 border-primary/10" />
             <ReadingMark contentType="magisterium" contentId={id || ''} label={content.title} />
           </div>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={openDocumentNote}
+            aria-label="Anotar documento"
+            title="Anotar documento"
+            className="rounded-premium-full min-h-11 min-w-11 p-spacing-0 text-primary/70 hover:bg-primary/5 focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none"
+          >
+            <Icons.PenLine className="w-spacing-md h-spacing-md" aria-hidden="true" />
+          </Button>
           <ReadingControlPanel />
           {/* STAB-004.3.2 — Toggle da busca interna */}
           <Button
