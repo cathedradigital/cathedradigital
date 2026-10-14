@@ -81,7 +81,7 @@ Além das quatro fontes centrais do pedido (discurso de abertura, programação/
 5. **Intervenção do padre Giacomo Costa, S.J.** Método de trabalho, Conversação no Espírito e previsão de um relatório de síntese público, sem substituir *Amoris laetitia*; seção correspondente na mesma página. [Fonte oficial](https://press.vatican.va/content/salastampa/it/bollettino/pubblico/2026/10/02/0780/01454.html).
 6. **Comunicado oficial do encontro — 7 de outubro de 2026.** Registro institucional da abertura e publicação do discurso do Papa. [Sala de Imprensa da Santa Sé](https://press.vatican.va/content/salastampa/it/bollettino/pubblico/2026/10/07/0795/01484.html).
 
-**Nota sobre a dependência dos seis documentos:** estes são os seis materiais complementares oficiais identificados e acrescentados ao levantamento. Se a referência original do usuário dizia respeito a uma lista diferente de seis itens, ela ainda precisará ser comparada com os títulos exatos; não há lista nominativa desses seis itens no histórico disponível. O dossiê não os apresenta como uma lista previamente fornecida pelo usuário.
+**Resultado do levantamento:** os seis materiais complementares oficiais acima foram acrescentados ao dossiê com atribuição e links de origem. Os três textos da coletiva são identificados individualmente, embora a Santa Sé os publique dentro de uma única página.
 
 ## 5. Discernimento em curso — não confundir com decisões
 
