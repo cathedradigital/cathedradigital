@@ -20,6 +20,14 @@ const EDITORIAL_NEWS: NewsItem[] = [
     url: 'https://www.vatican.va/content/leo-xiv/pt/speeches/2026/october/documents/20261007-anniversario-amoris-laetitia.html',
   },
   {
+    source: 'Sala de Imprensa da Santa Sé',
+    category: 'Documentos do encontro',
+    date: '2 out. 2026',
+    title: 'Três intervenções apresentam os objetivos e o método do encontro',
+    summary: 'A coletiva oficial reúne as intervenções de Gabriella Gambino, Orietta Rachele Grazioli e padre Giacomo Costa, com contexto pastoral, os cinco temas e a metodologia de escuta e discernimento.',
+    url: 'https://press.vatican.va/content/salastampa/it/bollettino/pubblico/2026/10/02/0780/01454.html',
+  },
+  {
     source: 'CNBB',
     category: 'Vida e Família',
     date: '8 out. 2026',
@@ -41,7 +49,7 @@ const EDITORIAL_NEWS: NewsItem[] = [
     date: '14 out. 2026',
     title: 'Missa de encerramento do encontro',
     summary: 'Celebração indicada para as 10h na Praça de São Pedro. A página oficial reúne as informações da agenda.',
-    url: 'https://press.vatican.va/content/leo-xiv/en/events/event.dir.html/content/vaticanevents/en/2026/10/14/messa-amoris-laetitia.html',
+    url: 'https://www.vatican.va/content/leo-xiv/pt/events/event.dir.html/content/vaticanevents/pt/2026/10/14/messa-amoris-laetitia.html',
   },
 ];
 
