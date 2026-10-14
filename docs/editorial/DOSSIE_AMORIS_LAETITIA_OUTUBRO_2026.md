@@ -62,7 +62,7 @@ Mensagem por ocasião do décimo aniversário de *Amoris laetitia*, citada como 
    [Publicação oficial da Sala de Imprensa da Santa Sé, com versões em vários idiomas](https://press.vatican.va/content/salastampa/it/bollettino/pubblico/2026/07/06/0582/01092.html)
 
 3. **Missa de encerramento — 14 de outubro, 10h**  
-   [Agenda oficial do Papa](https://press.vatican.va/content/leo-xiv/en/events/event.dir.html/content/vaticanevents/en/2026/10/14/messa-amoris-laetitia.html)
+   [Agenda oficial em português](https://www.vatican.va/content/leo-xiv/pt/events/event.dir.html/content/vaticanevents/pt/2026/10/14/messa-amoris-laetitia.html) · [Agenda em espanhol com identificação do celebrante](https://www.vatican.va/content/leo-xiv/es/events/event.dir.html/content/vaticanevents/es/2026/10/14/messa-amoris-laetitia.html)
 
 4. **CNBB — cobertura da abertura, 7 de outubro**  
    [“Papa Leão XIV no encontro sobre os 10 anos da Amoris Laetitia”](https://www.cnbb.org.br/papa-leao-xiv-encontro-10-anos-amoris-laetitia/)
@@ -108,9 +108,9 @@ Estas são **questões de discernimento**, não anúncio de novas regras ou deci
 | **11 out.** | Programa diário detalhado a transcrever e verificar a partir da agenda oficial; não inferir sessões sem fonte. |
 | **12 out.** | Programa diário detalhado a transcrever e verificar a partir da agenda oficial; não inferir sessões sem fonte. |
 | **13 out.** | Último dia de acompanhamento desta versão preliminar. Verificar se a Santa Sé publicou síntese, comunicado ou material adicional. |
-| **14 out.** | Missa de encerramento anunciada para as 10h na Praça de São Pedro. Após a celebração, registrar apenas o que a fonte oficial confirmar. [Agenda oficial](https://press.vatican.va/content/leo-xiv/en/events/event.dir.html/content/vaticanevents/en/2026/10/14/messa-amoris-laetitia.html) |
+| **14 out.** | Missa de encerramento anunciada para as 10h na Praça de São Pedro. Após a celebração, registrar apenas o que a fonte oficial confirmar. [Agenda oficial](https://www.vatican.va/content/leo-xiv/pt/events/event.dir.html/content/vaticanevents/pt/2026/10/14/messa-amoris-laetitia.html) |
 
-**Nota de integridade:** o programa completo deve ser consultado antes de acrescentar sessões específicas a 8–13 de outubro. A agenda da Missa confirma data, hora e local, mas não substitui o programa diário do encontro.
+**Nota de integridade do programa:** a fonte oficial descreve a estrutura do encontro — cinco jornadas temáticas, oração, escuta, Conversação no Espírito e restituição em plenária —, mas não apresenta, na página pública localizada, uma tabela que vincule cada tema a cada data de 8 a 13 de outubro. A cronologia, portanto, registra apenas os fatos confirmados e não atribui temas a dias específicos sem fonte. A Missa está confirmada para 14 de outubro, às 10h, na Praça de São Pedro; a página oficial em espanhol identifica o Cardeal Luis Antonio G. Tagle como celebrante.
 
 ## 7. Verificação do programa diário
 
