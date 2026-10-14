@@ -412,20 +412,32 @@ const LazyParagraph: React.FC<{
   const { settings } = useReadingSettings();
 
   const ref = React.useRef<HTMLDivElement>(null);
-  const [isVisible, setIsVisible] = useState(false);
+  // O deep-link precisa carregar o texto do parágrafo pedido, mesmo antes
+  // de o IntersectionObserver concluir a primeira medição (especialmente no mobile).
+  const [isVisible, setIsVisible] = useState(() => currentParagraph === p);
   const [isContextualOpen, setIsContextualOpen] = useState(false);
   const [contextText, setContextText] = useState('');
 
   useEffect(() => {
+    if (currentParagraph === p) setIsVisible(true);
+  }, [currentParagraph, p]);
+
+  useEffect(() => {
+    if (isVisible || currentParagraph === p) return;
     const el = ref.current;
     if (!el) return;
     const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) { setIsVisible(true); observer.disconnect(); } },
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.disconnect();
+        }
+      },
       { rootMargin: '300px 0px' }
     );
     observer.observe(el);
     return () => observer.disconnect();
-  }, []);
+  }, [currentParagraph, isVisible, p]);
 
   return (
     <article 
