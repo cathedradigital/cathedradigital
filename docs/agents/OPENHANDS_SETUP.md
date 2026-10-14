@@ -6,19 +6,24 @@
 - **GitHub Actions (execução verificável):** continua sendo a fonte de verdade para CI, Playwright e artefatos. O executor não deve ter permissão de merge/deploy automático.
 
 ## Ativar o executor OpenHands
-Os arquivos deste PR preparam o contexto do repositório, mas não iniciam um agente remoto por si só. A ativação exige uma integração mantida do OpenHands, acesso ao repositório e credenciais configuradas por um administrador. A documentação oficial de execução por GitHub está em https://docs.openhands.dev/openhands/usage/run-openhands/github-action.
 
-**Atenção à manutenção:** o repositório `OpenHands/openhands-github-action` foi arquivado em 22/12/2025. Não instalar essa ação antiga sem uma revisão explícita de manutenção e segurança: https://github.com/OpenHands/openhands-github-action. Confirmar a integração atualmente suportada antes de habilitar automação.
+A estrutura de instruções e skills deste repositório está pronta, mas isso **não inicia um agente remoto**. A integração antiga `OpenHands/openhands-github-action` está arquivada desde 22/12/2025 e não deve ser usada como executor novo: https://github.com/OpenHands/openhands-github-action.
 
-Antes de ativar:
-1. Confirmar qual integração OpenHands está atualmente mantida e revisar o workflow de instalação dessa versão.
-2. Confirmar a instalação/permissões mínimas do GitHub App ou token para `cathedradigital/cathedradigital`.
-3. Configurar o provedor/modelo e a chave exigida no cofre de secrets apropriado; nunca registrar segredos em arquivos ou logs. Nenhuma chave é criada por este PR.
-4. Limitar iterações e permissões. O executor deve trabalhar em branch e abrir PR; não pode fazer merge, deploy, alterar secrets ou acessar produção.
-5. Testar primeiro apenas com a issue #173 e revisar manualmente qualquer diff.
-6. Manter o gate obrigatório: CI + build + E2E crítico com artefatos sanitizados no SHA final; desktop/mobile e autenticação real; sem merge/deploy antes de aprovação humana.
+### Caminho recomendado para ativação
+Usar a integração atual do OpenHands Agent Canvas/OpenHands Cloud com GitHub, ou hospedar o Agent Server + Automation Server em ambiente controlado. O projeto OpenHands mantém o Agent Canvas e a infraestrutura de automações; consulte a documentação oficial atual antes de habilitar:
+- OpenHands Agent Canvas: https://github.com/OpenHands/OpenHands
+- OpenHands Automation: https://github.com/OpenHands/automation
+- Documentação oficial: https://docs.openhands.dev/
 
-**Estado atual:** Superpowers está conectado, mas o executor remoto OpenHands ainda não está ativo. Este PR não declara uma execução de agente que não aconteceu.
+### Configuração mínima e segura
+1. Um administrador deve autenticar no OpenHands, conectar GitHub e conceder acesso somente ao repositório `cathedradigital/cathedradigital`.
+2. Configurar o provedor/modelo e as chaves no cofre de secrets do ambiente OpenHands. Não colocar tokens, chaves ou dados de sessão em arquivos do repositório.
+3. Usar perfil de agente com permissões mínimas. Permitir branch e PR, mas não merge, deploy, edição de secrets ou acesso à produção.
+4. Iniciar com a issue #173, em branch de trabalho isolada. Revisar manualmente cada diff antes de qualquer integração.
+5. Exigir CI, build, auditoria e E2E crítico no SHA final, com artefatos sanitizados e cobertura desktop/mobile; só então um humano pode autorizar merge.
+6. Não adicionar workflow automático que dispare em `pull_request_target` ou execute código não confiável com secrets. Não instalar actions arquivadas sem revisão explícita de manutenção e segurança.
+
+**Estado atual:** Superpowers está conectado nesta sessão e as instruções/skill estão versionadas nesta branch. OpenHands ainda não está autenticado nem executando tarefas neste repositório; a conexão de conta e a configuração de credenciais exigem ação administrativa fora deste PR.
 
 ## Primeiro trabalho recomendado
 Issue #173: https://github.com/cathedradigital/cathedradigital/issues/173
