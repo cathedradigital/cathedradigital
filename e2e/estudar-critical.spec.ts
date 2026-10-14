@@ -33,9 +33,14 @@ async function openStudyJournal(page: Page, marker: string) {
   await page.goto('/conta/diario');
   await expect(page.getByRole('button', { name: 'Estudo e Leitura' })).toBeVisible();
   await page.getByRole('button', { name: 'Estudo e Leitura' }).click();
-  const note = page.getByText(marker, { exact: false }).first();
-  await expect(note).toBeVisible();
-  return note;
+  const noteText = page.getByText(marker, { exact: false }).first();
+  await expect(noteText).toBeVisible();
+
+  // The marker is rendered in a paragraph; "Ver Contexto" is a sibling
+  // inside the note card, not a descendant of that paragraph.
+  const noteCard = noteText.locator('xpath=ancestor::*[.//button[normalize-space(.)="Ver Contexto"]][1]');
+  await expect(noteCard.getByRole('button', { name: 'Ver Contexto', exact: true })).toBeVisible();
+  return noteCard;
 }
 
 test('auth redirect preserves protected destination', async ({ page }) => {
