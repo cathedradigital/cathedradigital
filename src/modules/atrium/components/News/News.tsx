@@ -68,9 +68,11 @@ const News: React.FC = () => {
             Atualizações selecionadas de fontes católicas identificadas. Leia a matéria original na fonte.
           </p>
         </div>
-        <a href="https://www.vaticannews.va/pt.html" target="_blank" rel="noreferrer" className="text-sm underline underline-offset-4">
-          Vatican News
-        </a>
+        <div className="flex flex-wrap gap-3 text-sm">
+          <a href="https://www.vaticannews.va/pt.html" target="_blank" rel="noreferrer" className="underline underline-offset-4">Vatican News</a>
+          <a href="https://www.cnbb.org.br/" target="_blank" rel="noreferrer" className="underline underline-offset-4">CNBB</a>
+          <a href="https://press.vatican.va/content/salastampa/pt.html" target="_blank" rel="noreferrer" className="underline underline-offset-4">Santa Sé</a>
+        </div>
       </div>
 
       <div className="overflow-hidden rounded-2xl border border-border bg-card">
