@@ -12,7 +12,11 @@ async function login(page: Page, destination: string) {
   await page.getByLabel('Email').fill(email!);
   await page.getByLabel('Senha').fill(password!);
   await page.getByRole('button', { name: 'Entrar', exact: true }).click();
-  expect(page.url()).toContain(destination.split('?')[0]);
+
+  // Login and client-side redirects may finish after the click action returns.
+  // Wait for the requested pathname instead of sampling page.url() immediately.
+  const expectedPath = new URL(destination, 'http://localhost').pathname;
+  await expect(page).toHaveURL(url => url.pathname === expectedPath, { timeout: 15000 });
 }
 
 function watchBrowserHealth(page: Page) {
