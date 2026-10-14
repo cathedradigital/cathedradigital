@@ -122,8 +122,14 @@ export function mergeCuratedEdges(
     if (!resolved?.url) continue;
     if (nodeId === base.selfId) continue;
 
+    // O rótulo da aresta curada pode ser mais preciso que o nó genérico já
+    // registrado no KnowledgeGraph (por exemplo, "Gn 1:1" vs. "Gn 1").
+    // Preservamos a rota resolvida e usamos o título da relação como rótulo.
     const curatedResolved: ResolvedNode = {
       ...resolved,
+      node: edge.title?.trim()
+        ? { ...resolved.node, label: edge.title.trim() }
+        : resolved.node,
       nexusEvidence: 'editorial',
       nexusRelationKind: normalizeRelationKind(edge.relationType),
       nexusExplanation: edge.note ?? 'Relação curada no grafo do Cátedra.',
