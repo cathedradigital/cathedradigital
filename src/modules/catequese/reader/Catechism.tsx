@@ -571,7 +571,7 @@ const Catechism: React.FC = memo(() => {
 
   useEffect(() => {
     const rawParagraph = getParagraphParam(searchParams);
-    if (typeof initialParagraph === 'number' && rawParagraph !== String(initialParagraph)) {
+    if (typeof initialParagraph === 'number' && (searchParams.has('paragraph') || rawParagraph !== String(initialParagraph))) {
       // Canonicalize the legacy \`?paragraph=N\` alias immediately so shared links,
       // browser history and analytics converge on the single \`?p=N\` contract.
       setSearchParams((prev) => {
@@ -631,7 +631,11 @@ const Catechism: React.FC = memo(() => {
       if (element) {
         element.scrollIntoView({ behavior: 'auto', block: 'center' });
         element.classList.add('bg-secondary/10');
-        deepLinkRestorePendingRef.current = false;
+        // Pause scroll-based URL updates briefly after restoration. IntersectionObserver
+        // can deliver stale entries from the previous viewport in the same frame.
+        window.setTimeout(() => {
+          if (!cancelled) deepLinkRestorePendingRef.current = false;
+        }, 250);
         window.setTimeout(() => {
           if (!cancelled) element.classList.remove('bg-secondary/10');
         }, 3000);
