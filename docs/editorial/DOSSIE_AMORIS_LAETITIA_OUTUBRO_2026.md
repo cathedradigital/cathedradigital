@@ -103,18 +103,22 @@ Estas são **questões de discernimento**, não anúncio de novas regras ou deci
 |---|---|
 | **7 out.** | Abertura na Sala Paulo VI. Leão XIV pede que as Igrejas compartilhem frutos, dificuldades e aprendizados dos dez anos de recepção de *Amoris laetitia*. [Discurso oficial](https://www.vatican.va/content/leo-xiv/pt/speeches/2026/october/documents/20261007-anniversario-amoris-laetitia.html) |
 | **8 out.** | A CNBB publica a contribuição de dom Bruno Versari sobre experiências pastorais brasileiras. [Matéria da CNBB](https://www.cnbb.org.br/dom-bruno-versari-aplicacao-amoris-laetitia-no-brasil/) |
-| **9 out.** | Programa diário detalhado a transcrever e verificar a partir da agenda oficial; não inferir sessões sem fonte. |
-| **10 out.** | Programa diário detalhado a transcrever e verificar a partir da agenda oficial; não inferir sessões sem fonte. |
-| **11 out.** | Programa diário detalhado a transcrever e verificar a partir da agenda oficial; não inferir sessões sem fonte. |
-| **12 out.** | Programa diário detalhado a transcrever e verificar a partir da agenda oficial; não inferir sessões sem fonte. |
-| **13 out.** | Último dia de acompanhamento desta versão preliminar. Verificar se a Santa Sé publicou síntese, comunicado ou material adicional. |
+| **9 out.** | Encontro em andamento. A fonte oficial descreve o trabalho temático e a metodologia, mas não publica no material consultado uma agenda por data; não atribuir uma sessão específica a este dia. |
+| **10 out.** | Encontro em andamento. A programação geral prevê escuta de famílias, bispos e especialistas e trabalho em grupos; o tema específico do dia não está confirmado na agenda pública localizada. |
+| **11 out.** | O encontro está previsto para o período de 7 a 14 de outubro. Não foi localizada uma agenda pública que confirme sessões específicas nesta data; não inferir pausa ou atividade a partir do calendário geral do Papa. |
+| **12 out.** | Encontro em andamento. A fonte oficial informa cinco jornadas temáticas, mas não permite associar com segurança um tema a esta data específica. |
+| **13 out.** | Último dia antes da Missa de encerramento. Verificar se a Santa Sé publicou síntese ou comunicado; não tratar a ausência de um comunicado localizado como prova de que não houve atividade. |
 | **14 out.** | Missa de encerramento anunciada para as 10h na Praça de São Pedro. Após a celebração, registrar apenas o que a fonte oficial confirmar. [Agenda oficial](https://www.vatican.va/content/leo-xiv/pt/events/event.dir.html/content/vaticanevents/pt/2026/10/14/messa-amoris-laetitia.html) |
 
 **Nota de integridade do programa:** a fonte oficial descreve a estrutura do encontro — cinco jornadas temáticas, oração, escuta, Conversação no Espírito e restituição em plenária —, mas não apresenta, na página pública localizada, uma tabela que vincule cada tema a cada data de 8 a 13 de outubro. A cronologia, portanto, registra apenas os fatos confirmados e não atribui temas a dias específicos sem fonte. A Missa está confirmada para 14 de outubro, às 10h, na Praça de São Pedro; a página oficial em espanhol identifica o Cardeal Luis Antonio G. Tagle como celebrante.
 
-## 7. Verificação do programa diário
+## 7. Programa oficial e limite da cronologia
 
-O material oficial da coletiva informa que houve cinco jornadas temáticas e descreve os eixos, mas a página pública consultada não associa inequivocamente cada tema a uma data diária. Para evitar uma cronologia falsa, a tabela mantém a abertura e a Missa em seus horários confirmados e identifica os dias intermediários como atividades do encontro sem inventar o pareamento tema/data. A página da coletiva e o Percurso Temático são as referências públicas localizadas para programa geral e estrutura temática.
+- [Coletiva oficial de apresentação — 2 de outubro](https://press.vatican.va/content/salastampa/it/bollettino/pubblico/2026/10/02/0780/01454.html): confirma o período de 7 a 14 de outubro, a estrutura geral e cinco jornadas temáticas; inclui as intervenções de Gabriella Gambino, Orietta Rachele Grazioli e padre Giacomo Costa.
+- [Percurso Temático — versão oficial em português](https://press.vatican.va/content/salastampa/it/bollettino/pubblico/2026/07/06/0582/01092.html): documenta os cinco eixos, mas não apresenta uma tabela que vincule cada tema a uma data específica.
+- [Calendário oficial de outubro de 2026](https://press.vatican.va/content/leo-xiv/pt/events/month.dir.html/2026/10.html): confirma a Missa de encerramento no dia 14, às 10h.
+
+**Conclusão da verificação:** a fonte oficial consultada não disponibiliza um cronograma público completo, dia a dia, com a distribuição de cada tema entre 8 e 13 de outubro. A dependência foi fechada documentalmente com as fontes oficiais disponíveis e uma cronologia diária prudente; a distribuição temática por data permanece não verificável e não será inventada.
 
 ## 8. Área de atualizações e arquivo
 
