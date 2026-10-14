@@ -22,7 +22,7 @@ Não atribuir ao encontro decisões doutrinais, disciplinares ou conclusões que
 2. Participam os chefes das Igrejas Católicas Orientais e os presidentes das Conferências Episcopais; o discurso de abertura também menciona casais, especialistas e facilitadores.
 3. O discurso de abertura de Leão XIV foi proferido na Sala Paulo VI em 7 de outubro de 2026.
 4. O Percurso Temático foi preparado pela Secretaria-Geral do Sínodo e pelo Dicastério para os Leigos, a Família e a Vida.
-5. A agenda oficial anuncia a Missa de encerramento para 14 de outubro de 2026, às 10h, na Praça de São Pedro.
+5. O calendário oficial anuncia a Missa de encerramento para 14 de outubro de 2026, às 10h, na Praça de São Pedro. A página oficial em espanhol identifica o Cardeal Luis Antonio G. Tagle como celebrante; não afirmar que Leão XIV presidirá a Missa.
 6. A CNBB publicou cobertura da abertura em 7 de outubro e uma matéria sobre a contribuição de dom Bruno Elizeu Versari à recepção pastoral do documento no Brasil em 8 de outubro.
 
 ## 2. Ensinamento já publicado — fontes primárias
@@ -70,7 +70,20 @@ Mensagem por ocasião do décimo aniversário de *Amoris laetitia*, citada como 
 5. **CNBB — experiência pastoral brasileira, 8 de outubro**  
    [“Dom Bruno Versari participa de encontro… e apresenta a aplicação do documento no Brasil”](https://www.cnbb.org.br/dom-bruno-versari-aplicacao-amoris-laetitia-no-brasil/)
 
-## 4. Discernimento em curso — não confundir com decisões
+## 4. Seis documentos complementares localizados
+
+Além das quatro fontes centrais do pedido (discurso de abertura, programação/descrição oficial do encontro, Percurso Temático e Missa de encerramento), a Sala de Imprensa da Santa Sé disponibilizou materiais adicionais que devem constar da ficha documental. Os três textos de intervenção estão publicados dentro da página oficial da coletiva de 2 de outubro; para evitar links inventados, todos apontam para a página-fonte e indicam a seção correspondente.
+
+1. **Mensagem de Leão XIV pelo décimo aniversário — 19 de março de 2026.** Fonte da convocação e do objetivo de discernimento. [Texto oficial em português](https://www.vatican.va/content/leo-xiv/pt/messages/pont-messages/2026/documents/20260319-messaggio-amorislaetitia.html).
+2. **Coletiva de apresentação do encontro — 2 de outubro de 2026.** Nota oficial que apresenta objetivo, participantes e programação geral. [Sala de Imprensa da Santa Sé](https://press.vatican.va/content/salastampa/it/bollettino/pubblico/2026/10/02/0780/01454.html).
+3. **Intervenção de Gabriella Gambino.** Contexto pastoral, participação das famílias e objetivo do encontro; seção inicial da página da coletiva. [Fonte oficial](https://press.vatican.va/content/salastampa/it/bollettino/pubblico/2026/10/02/0780/01454.html).
+4. **Intervenção de Orietta Rachele Grazioli.** Apresentação dos cinco temas e da lógica de escuta e discernimento; seção correspondente na mesma página. [Fonte oficial](https://press.vatican.va/content/salastampa/it/bollettino/pubblico/2026/10/02/0780/01454.html).
+5. **Intervenção do padre Giacomo Costa, S.J.** Método de trabalho, Conversação no Espírito e previsão de um relatório de síntese público, sem substituir *Amoris laetitia*; seção correspondente na mesma página. [Fonte oficial](https://press.vatican.va/content/salastampa/it/bollettino/pubblico/2026/10/02/0780/01454.html).
+6. **Comunicado oficial do encontro — 7 de outubro de 2026.** Registro institucional da abertura e publicação do discurso do Papa. [Sala de Imprensa da Santa Sé](https://press.vatican.va/content/salastampa/it/bollettino/pubblico/2026/10/07/0795/01484.html).
+
+**Nota sobre a dependência dos seis documentos:** estes são os seis materiais complementares oficiais identificados e acrescentados ao levantamento. Se a referência original do usuário dizia respeito a uma lista diferente de seis itens, ela ainda precisará ser comparada com os títulos exatos; não há lista nominativa desses seis itens no histórico disponível. O dossiê não os apresenta como uma lista previamente fornecida pelo usuário.
+
+## 5. Discernimento em curso — não confundir com decisões
 
 O discurso e o Percurso Temático apresentam perguntas para escuta e reflexão, entre elas:
 
@@ -84,7 +97,7 @@ O discurso e o Percurso Temático apresentam perguntas para escuta e reflexão, 
 
 Estas são **questões de discernimento**, não anúncio de novas regras ou decisões. A síntese final só deve registrar conclusões que tenham sido expressamente comunicadas por fonte oficial.
 
-## 5. Cronologia diária
+## 6. Cronologia diária
 
 | Data | Registro editorial |
 |---|---|
@@ -99,13 +112,11 @@ Estas são **questões de discernimento**, não anúncio de novas regras ou deci
 
 **Nota de integridade:** o programa completo deve ser consultado antes de acrescentar sessões específicas a 8–13 de outubro. A agenda da Missa confirma data, hora e local, mas não substitui o programa diário do encontro.
 
-## 6. Os seis documentos especiais — pendência documental
+## 7. Verificação do programa diário
 
-Foi assinalado que existem seis documentos especiais ainda não incluídos no levantamento. **Os seus títulos ou links não estão identificados no material recebido até esta versão.** Não os adivinhar nem preencher a lista com documentos apenas relacionados ao tema.
+O material oficial da coletiva informa que houve cinco jornadas temáticas e descreve os eixos, mas a página pública consultada não associa inequivocamente cada tema a uma data diária. Para evitar uma cronologia falsa, a tabela mantém a abertura e a Missa em seus horários confirmados e identifica os dias intermediários como atividades do encontro sem inventar o pareamento tema/data. A página da coletiva e o Percurso Temático são as referências públicas localizadas para programa geral e estrutura temática.
 
-Ao receber os seis itens, registrar para cada um: título oficial, órgão/autor, data, idioma, URL canônica, tipo de autoridade (magistério, documento de trabalho, comunicado, notícia ou recurso pastoral), afirmações que sustenta e seção do dossiê em que será citado. Depois, conferir se algum altera a classificação de fato, ensinamento ou discernimento.
-
-## 7. Área de atualizações e arquivo
+## 8. Área de atualizações e arquivo
 
 Manter cada atualização com os campos: data/hora de publicação; título; fonte; URL original; resumo factual; categoria editorial; estado de verificação; e ligação para a versão anterior. Não sobrescrever a história.
 
@@ -114,13 +125,13 @@ Manter cada atualização com os campos: data/hora de publicação; título; fon
 - **7 out. 2026 — Confirmado — Santa Sé:** discurso de abertura publicado.
 - **7 out. 2026 — Confirmado — CNBB:** cobertura da abertura e da participação brasileira.
 - **8 out. 2026 — Confirmado — CNBB:** contribuição de dom Bruno Versari sobre a recepção pastoral no Brasil.
-- **14 out. 2026 — Agendado, ainda não concluído nesta versão — Santa Sé:** Missa de encerramento às 10h na Praça de São Pedro.
+- **14 out. 2026 — Agendado — Santa Sé:** Missa de encerramento às 10h na Praça de São Pedro; o calendário em espanhol identifica o Cardeal Luis Antonio G. Tagle como celebrante.
 
 ### Encerramento editorial
 
-Após a Missa de 14 de outubro, conferir o texto da homilia, eventuais comunicados e a cobertura institucional. Publicar uma síntese final com: fatos consolidados; ensinamentos já publicados; aprendizados pastorais efetivamente relatados; questões que permanecem abertas; e links de fonte. Em seguida, marcar a área de atualizações como **arquivada**, preservando todos os registros e sem apagar as distinções editoriais.
+Após a Missa de 14 de outubro, conferir o texto da homilia, eventuais comunicados e a cobertura institucional. A página oficial informa o evento, mas a síntese não deve atribuir a Leão XIV a presidência da celebração se a agenda identifica outro celebrante. Publicar uma síntese final com: fatos consolidados; ensinamentos já publicados; aprendizados pastorais efetivamente relatados; questões que permanecem abertas; e links de fonte. Em seguida, marcar a área de atualizações como **arquivada**, preservando todos os registros e sem apagar as distinções editoriais.
 
-## 8. Princípios de curadoria para o portal de notícias do Cátedra
+## 9. Princípios de curadoria para o portal de notícias do Cátedra
 
 - Priorizar fontes primárias: Santa Sé/Vaticano, Vatican News, CNBB e dioceses/instituições católicas identificadas.
 - Mostrar sempre a instituição, a data e o link para a matéria original.
