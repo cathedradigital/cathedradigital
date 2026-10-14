@@ -220,7 +220,7 @@ const MagisteriumViewer: React.FC = () => {
           }
           continue;
         }
-        const candidate = current ? `${current}\\n\\n${paragraph}` : paragraph;
+        const candidate = current ? `${current}\n\n${paragraph}` : paragraph;
         if (current && candidate.length > 15_000) {
           chunks.push(current);
           current = paragraph;
@@ -248,7 +248,7 @@ const MagisteriumViewer: React.FC = () => {
         translatedChunks.push(translated);
       }
 
-      const result = normalizeDocumentText(translatedChunks.join('\\n\\n'));
+      const result = normalizeDocumentText(translatedChunks.join('\n\n'));
       if (!result) throw new Error('O tradutor não retornou conteúdo.');
       setTranslatedText(result);
       if (translationCacheKey) {
