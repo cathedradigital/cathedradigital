@@ -203,16 +203,52 @@ const MagisteriumViewer: React.FC = () => {
     if (!content?.text || sourceLanguage === lang || translationLoading) return;
     setTranslationLoading(true);
     setTranslationError(null);
+    setTranslationProgress(null);
     try {
-      const { data, error } = await supabase.functions.invoke('document-translate', {
-        body: {
-          text: content.text,
-          source_language: sourceLanguage,
-          target_language: lang,
-        },
-      });
-      if (error) throw error;
-      const result = typeof data?.text === 'string' ? data.text.trim() : '';
+      // The Edge Function accepts at most 60,000 characters per request.
+      // Translate in smaller paragraph-preserving batches so long encyclicals
+      // do not fail immediately at the server's payload limit.
+      const paragraphs = splitDocumentParagraphs(content.text);
+      const chunks: string[] = [];
+      let current = '';
+      for (const paragraph of paragraphs) {
+        if (paragraph.length > 15_000) {
+          if (current) chunks.push(current);
+          current = '';
+          for (let offset = 0; offset < paragraph.length; offset += 15_000) {
+            chunks.push(paragraph.slice(offset, offset + 15_000));
+          }
+          continue;
+        }
+        const candidate = current ? `${current}\\n\\n${paragraph}` : paragraph;
+        if (current && candidate.length > 15_000) {
+          chunks.push(current);
+          current = paragraph;
+        } else {
+          current = candidate;
+        }
+      }
+      if (current) chunks.push(current);
+      if (!chunks.length) throw new Error('O documento não contém texto para traduzir.');
+
+      const translatedChunks: string[] = [];
+      setTranslationProgress({ current: 0, total: chunks.length });
+      for (let index = 0; index < chunks.length; index += 1) {
+        setTranslationProgress({ current: index + 1, total: chunks.length });
+        const { data, error } = await supabase.functions.invoke('document-translate', {
+          body: {
+            text: chunks[index],
+            source_language: sourceLanguage,
+            target_language: lang,
+          },
+        });
+        if (error) throw error;
+        const translated = typeof data?.text === 'string' ? data.text.trim() : '';
+        if (!translated) throw new Error(`O tradutor não retornou conteúdo para o bloco ${index + 1}.`);
+        translatedChunks.push(translated);
+      }
+
+      const result = normalizeDocumentText(translatedChunks.join('\\n\\n'));
       if (!result) throw new Error('O tradutor não retornou conteúdo.');
       setTranslatedText(result);
       if (translationCacheKey) {
