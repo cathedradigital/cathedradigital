@@ -538,7 +538,7 @@ const Catechism: React.FC = memo(() => {
 
   // Explicit ?p=N deep-links temporarily outrank the generic IntersectionObserver.
   // This prevents restoration from being overwritten by the first visible paragraph.
-  const deepLinkRestorePendingRef = useRef(false);
+  const deepLinkRestorePendingRef = useRef(typeof initialParagraph === 'number');
 
   // O parágrafo ativo é o ponto de continuidade do Catecismo.
   useEffect(() => {
@@ -571,7 +571,7 @@ const Catechism: React.FC = memo(() => {
 
   useEffect(() => {
     const rawParagraph = getParagraphParam(searchParams);
-    if (typeof initialParagraph === 'number' && rawParagraph !== String(initialParagraph)) {
+    if (typeof initialParagraph === 'number' && (searchParams.has('paragraph') || rawParagraph !== String(initialParagraph))) {
       // Canonicalize the legacy \`?paragraph=N\` alias immediately so shared links,
       // browser history and analytics converge on the single \`?p=N\` contract.
       setSearchParams((prev) => {
@@ -623,7 +623,11 @@ const Catechism: React.FC = memo(() => {
       if (element) {
         element.scrollIntoView({ behavior: 'auto', block: 'center' });
         element.classList.add('bg-secondary/10');
-        deepLinkRestorePendingRef.current = false;
+        // Keep the observer paused briefly so stale entries from the prior viewport
+        // cannot overwrite the requested deep-link before the browser settles.
+        window.setTimeout(() => {
+          if (!cancelled) deepLinkRestorePendingRef.current = false;
+        }, 250);
         window.setTimeout(() => {
           if (!cancelled) element.classList.remove('bg-secondary/10');
         }, 3000);
