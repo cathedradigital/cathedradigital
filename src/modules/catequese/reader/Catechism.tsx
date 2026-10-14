@@ -417,6 +417,7 @@ const LazyParagraph: React.FC<{
   const [isVisible, setIsVisible] = useState(() => currentParagraph === p);
   const [isContextualOpen, setIsContextualOpen] = useState(false);
   const [contextText, setContextText] = useState('');
+  const [hasLoadedContent, setHasLoadedContent] = useState(false);
 
   useEffect(() => {
     if (currentParagraph === p) setIsVisible(true);
@@ -442,7 +443,8 @@ const LazyParagraph: React.FC<{
   return (
     <article 
       ref={ref} 
-      id={`p${p}`} 
+      id={`p${p}`}
+      data-content-loaded={hasLoadedContent ? 'true' : 'false'}
       className={cn(
         "group scroll-mt-spacing-4xl transition-all pb-spacing-md md:pb-spacing-lg border-b border-primary/[0.03] last:border-0 last:pb-spacing-0",
         settings.reduceAnimations ? "duration-0" : "duration-700",
@@ -469,8 +471,8 @@ const LazyParagraph: React.FC<{
               size="icon-sm"
               onClick={() => onCreateNote?.(p)}
               className="rounded-premium-full text-muted-foreground/50 hover:text-primary hover:bg-primary/5"
-              aria-label={`Adicionar anotação ao parágrafo ${p}`}
-              title="Adicionar anotação"
+              aria-label={`Anotar parágrafo ${p}`}
+              title="Anotar parágrafo"
             >
               <Icons.PenLine className="w-spacing-sm h-spacing-sm" />
             </Button>
@@ -489,7 +491,7 @@ const LazyParagraph: React.FC<{
         </div>
         <div className="h-[0.5px] flex-1 bg-gradient-to-r from-primary/[0.05] via-transparent to-transparent" />
       </div>
-      <CatechismContent paragraph={p} onNavigateToBible={handleNavigateToBible} isVisible={isVisible} onHighlightClick={onHighlightClick} onCreateNote={onCreateNote} highlights={highlights} onContentLoaded={setContextText} />
+      <CatechismContent paragraph={p} onNavigateToBible={handleNavigateToBible} isVisible={isVisible} onHighlightClick={onHighlightClick} onCreateNote={onCreateNote} highlights={highlights} onContentLoaded={(text) => { setContextText(text); setHasLoadedContent(true); }} />
       <HighlightMenu
         isOpen={isContextualOpen}
         onClose={() => setIsContextualOpen(false)}
@@ -551,6 +553,7 @@ const Catechism: React.FC = memo(() => {
   // Explicit ?p=N deep-links temporarily outrank the generic IntersectionObserver.
   // This prevents restoration from being overwritten by the first visible paragraph.
   const deepLinkRestorePendingRef = useRef(typeof initialParagraph === 'number');
+  const deepLinkTargetRef = useRef<number | null>(typeof initialParagraph === 'number' ? initialParagraph : null);
 
   // O parágrafo ativo é o ponto de continuidade do Catecismo.
   useEffect(() => {
@@ -632,25 +635,35 @@ const Catechism: React.FC = memo(() => {
     }
 
     deepLinkRestorePendingRef.current = true;
+    deepLinkTargetRef.current = initialParagraph;
     let cancelled = false;
     let attempts = 0;
-    const maxAttempts = 8;
+    const maxAttempts = 80;
 
     const restoreParagraph = () => {
       if (cancelled) return;
       const element = document.getElementById(`p${initialParagraph}`);
+      const contentLoaded = element?.getAttribute('data-content-loaded') === 'true';
 
-      if (element) {
+      // The article shell exists before its text does. Do not treat that shell as
+      // a successful restoration: wait until the requested paragraph has loaded.
+      if (element && contentLoaded) {
         element.scrollIntoView({ behavior: 'auto', block: 'center' });
         element.classList.add('bg-secondary/10');
-        // Pause scroll-based URL updates briefly after restoration. IntersectionObserver
-        // can deliver stale entries from the previous viewport in the same frame.
-        window.setTimeout(() => {
-          if (!cancelled) deepLinkRestorePendingRef.current = false;
-        }, 250);
         window.setTimeout(() => {
           if (!cancelled) element.classList.remove('bg-secondary/10');
         }, 3000);
+        // Normally the observer confirms the target. This fallback only releases
+        // the pause if the requested element is actually in the viewport.
+        window.setTimeout(() => {
+          if (cancelled || !deepLinkRestorePendingRef.current) return;
+          const rect = element.getBoundingClientRect();
+          if (rect.top < window.innerHeight && rect.bottom > 0) {
+            setActiveParagraphId(element.id);
+            setCurrentParagraph(initialParagraph);
+            deepLinkRestorePendingRef.current = false;
+          }
+        }, 500);
         return;
       }
 
@@ -660,8 +673,7 @@ const Catechism: React.FC = memo(() => {
         return;
       }
 
-      // If the requested paragraph could not be rendered, allow normal
-      // scroll-based continuity to resume rather than freezing the observer.
+      // A missing/failed paragraph must not leave scroll synchronization frozen.
       deepLinkRestorePendingRef.current = false;
     };
 
@@ -703,13 +715,26 @@ const Catechism: React.FC = memo(() => {
     if (viewMode !== 'reading') return;
     const observer = new IntersectionObserver(
       (entries) => {
+        // During restoration, ignore stale intersections from the previous
+        // viewport. Resume only when the requested paragraph itself is observed.
+        if (deepLinkRestorePendingRef.current) {
+          const targetEntry = entries.find(
+            entry => entry.isIntersecting && entry.target.id === `p${deepLinkTargetRef.current}`,
+          );
+          if (!targetEntry) return;
+          deepLinkRestorePendingRef.current = false;
+          const targetId = targetEntry.target.id;
+          const targetParagraph = Number(targetId.slice(1));
+          setActiveParagraphId(targetId);
+          if (Number.isFinite(targetParagraph)) setCurrentParagraph(targetParagraph);
+          return;
+        }
+
         entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            if (deepLinkRestorePendingRef.current) return;
-            setActiveParagraphId(entry.target.id);
-            const pNum = parseInt(entry.target.id.replace('p', ''));
-            if (!isNaN(pNum)) setCurrentParagraph(pNum);
-          }
+          if (!entry.isIntersecting) return;
+          setActiveParagraphId(entry.target.id);
+          const pNum = parseInt(entry.target.id.replace('p', ''));
+          if (!isNaN(pNum)) setCurrentParagraph(pNum);
         });
       },
       { threshold: 0.5, rootMargin: '-10% 0px -70% 0px' }
