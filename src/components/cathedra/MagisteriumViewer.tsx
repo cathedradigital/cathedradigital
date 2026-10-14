@@ -476,7 +476,7 @@ const MagisteriumViewer: React.FC = () => {
 
   const [pendingSelectionAnchorId, setPendingSelectionAnchorId] = useState<string | null>(null);
 
-  const handleAddNoteOrHighlight = useCallback(async (color: string, text: string) => {
+  const handleAddNoteOrHighlight = useCallback(async (text: string, color: string) => {
     if (!id) return;
 
     if (activeHighlight) {
@@ -514,7 +514,7 @@ const MagisteriumViewer: React.FC = () => {
       if (id) {
         if (e.key.toLowerCase() === (settings.shortcuts?.highlight || 'h')) {
           e.preventDefault();
-          handleAddNoteOrHighlight('yellow', 'Destacado via atalho');
+          handleAddNoteOrHighlight('Destacado via atalho', 'yellow');
         }
         if (e.key.toLowerCase() === (settings.shortcuts?.note || 'n')) {
           e.preventDefault();
