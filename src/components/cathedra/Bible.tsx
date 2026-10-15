@@ -146,6 +146,43 @@ const nexusConnectionFromRow = (row: any, currentVerseId?: string) => {
   return { type: otherKind === 'catechism_paragraph' ? 'catechism' : otherKind === 'magisterium_doc' ? 'document' : otherKind === 'bible_verse' ? 'cross_ref' : 'reference', label: otherKind === 'catechism_paragraph' ? `§${otherParagraph}` : labels[otherKind] ?? 'Referência', color: otherKind === 'catechism_paragraph' ? 'bg-blue-500' : 'bg-amber-500', id, summary: row.note || '', theological_theme: undefined, relevance_level: row.confidence };
 };
 
+const withCuratedChapterCicLinks = (
+  connections: Record<string, any[]>,
+  abbr: string,
+  chapter: number,
+): Record<string, any[]> => {
+  const next = Object.fromEntries(
+    Object.entries(connections).map(([key, items]) => [key, [...items]]),
+  ) as Record<string, any[]>;
+
+  const chapterParagraphs = BIBLE_TO_CIC[`${abbr}:${chapter}`] ?? [];
+  const connectedParagraphs = new Set(
+    Object.values(next)
+      .flat()
+      .filter((connection: any) => connection.type === 'catechism')
+      .map((connection: any) => String(connection.id)),
+  );
+  const firstVerseKey = `${abbr}-${chapter}-1`;
+
+  for (const paragraph of chapterParagraphs) {
+    const id = String(paragraph);
+    if (connectedParagraphs.has(id)) continue;
+    if (!next[firstVerseKey]) next[firstVerseKey] = [];
+    next[firstVerseKey].push({
+      type: 'catechism',
+      label: `§${paragraph} · capítulo`,
+      color: 'bg-blue-500',
+      id,
+      summary: `Relação editorial com ${abbr} ${chapter} como capítulo. Não afirma uma citação direta entre este versículo e o parágrafo.`,
+      relevance_level: 0.5,
+      scope: 'chapter',
+    });
+    connectedParagraphs.add(id);
+  }
+
+  return next;
+};
+
 const Bible: React.FC = () => {
   const [isConnectionEditorOpen, setIsConnectionEditorOpen] = useState(false);
   const [navHistory, setNavHistory] = useState<{book: string, chapter: number, verse?: number}[]>([]);
@@ -655,43 +692,27 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
           }
         });
 
-        // The repository already contains a curated chapter-level Bible ↔ CIC map.
-        // Surface those relations on verse 1 as chapter context; never label them
-        // as direct citations or duplicate a paragraph already linked to a verse.
-        const chapterParagraphs = BIBLE_TO_CIC[`${abbr}:${chapter}`] ?? [];
-        const connectedParagraphs = new Set(
-          Object.values(chapterConnections)
-            .flat()
-            .filter((connection: any) => connection.type === 'catechism')
-            .map((connection: any) => String(connection.id)),
-        );
-        const firstVerseKey = `${abbr}-${chapter}-1`;
-        for (const paragraph of chapterParagraphs) {
-          const id = String(paragraph);
-          if (connectedParagraphs.has(id)) continue;
-          if (!chapterConnections[firstVerseKey]) chapterConnections[firstVerseKey] = [];
-          chapterConnections[firstVerseKey].push({
-            type: 'catechism',
-            label: `§${paragraph} · capítulo`,
-            color: 'bg-blue-500',
-            id,
-            summary: `Relação editorial com ${abbr} ${chapter} como capítulo. Não afirma uma citação direta entre este versículo e o parágrafo.`,
-            relevance_level: 0.5,
-            scope: 'chapter',
-          });
-        }
-
+        // Chapter-wide references come from the existing curated map and are
+        // displayed as context, never as direct verse citations.
+        const withChapterLinks = withCuratedChapterCicLinks(chapterConnections, abbr, chapter);
         setDynamicConnections((prev) => {
           const next = { ...prev };
           Object.keys(next).forEach((key) => {
             if (key.startsWith(`${abbr}-${chapter}-`)) delete next[key];
           });
-          return { ...next, ...chapterConnections };
+          return { ...next, ...withChapterLinks };
         });
       })
       .catch((error) => {
-        // Falha do Nexus não deve impedir a leitura bíblica.
+        // Falha do banco não deve ocultar as conexões editoriais locais do capítulo.
         console.warn('[Nexus] Não foi possível carregar as conexões do capítulo.', { abbr, chapter, error });
+        setDynamicConnections((prev) => {
+          const prefix = `${abbr}-${chapter}-`;
+          const currentChapter = Object.fromEntries(
+            Object.entries(prev).filter(([key]) => key.startsWith(prefix)),
+          ) as Record<string, any[]>;
+          return { ...prev, ...withCuratedChapterCicLinks(currentChapter, abbr, chapter) };
+        });
       })
       .finally(() => {
         setConnectionsLoading(false);
