@@ -12,7 +12,10 @@ async function login(page: Page, destination: string) {
   await page.getByLabel('Email').fill(email!);
   await page.getByLabel('Senha').fill(password!);
   await page.getByRole('button', { name: 'Entrar', exact: true }).click();
-  expect(page.url()).toContain(destination.split('?')[0]);
+  // Wait for the real auth redirect instead of sampling /auth immediately.
+  // The pathname requirement is unchanged; destination-specific tests still assert query parameters and content.
+  const expectedPath = new URL(destination, 'http://localhost').pathname;
+  await expect(page).toHaveURL(url => url.pathname === expectedPath, { timeout: 15_000 });
 }
 
 function watchBrowserHealth(page: Page) {
