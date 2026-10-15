@@ -631,10 +631,10 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
     setConnectionsLoading(true);
 
     Promise.resolve(
-    supabase
-      .from('nexus_relations')
-      .select('id, relation_type, source_kind, source_ref, target_kind, target_ref, note, confidence, status')
-      .eq('status', 'published')
+      supabase
+        .from('nexus_relations')
+        .select('id, relation_type, source_kind, source_ref, target_kind, target_ref, note, confidence, status')
+        .eq('status', 'published')
     )
       .then(({ data: dbConnections, error }) => {
         biblePerf.mark(runId, 'connections:end');
