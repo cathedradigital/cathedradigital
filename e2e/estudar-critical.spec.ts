@@ -155,6 +155,19 @@ test('Bíblia: Nexus do Catecismo carrega mesmo com Gênesis 1 vindo do cache lo
   expect(bad, 'Bible Nexus cache hit: HTTP/console errors').toEqual([]);
 });
 
+test('Bíblia: Nexus recupera conexões editoriais de capítulo sem inventar citação de versículo', async ({ page }) => {
+  await page.goto('/bible?book=Gn&ch=2&v=1');
+  await expect(page.getByTestId('verse-text-1')).toBeVisible();
+
+  // Gn:2 → §§355, 371 e 373 is an existing curated chapter-level map.
+  // The UI must identify it as chapter context, not claim a direct citation.
+  const chapterConnection = page.getByTestId('nexus-connection-card').filter({ hasText: '§355 · capítulo' }).first();
+  await expect(chapterConnection).toBeVisible({ timeout: 15000 });
+  await chapterConnection.click();
+  await expect(page.getByTestId('nexus-connection-popover')).toContainText(/Relação editorial com Gn 2 como capítulo/i);
+  await expect(page.getByTestId('catechism-preview')).toContainText('§355');
+});
+
 test('Bíblia preserva contexto no Nexus Gn 1:1 → CIC §279 → retorno exato', async ({ page }) => {
   const errors: string[] = [];
   page.on('console', message => {
