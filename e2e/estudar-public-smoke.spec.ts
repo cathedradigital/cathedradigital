@@ -113,6 +113,29 @@ test('Bíblia permite pesquisar uma referência real', async ({ page }) => {
   expect(errors, '/bible search: console errors').toEqual([]);
 });
 
+test('Bíblia: Nexus do Catecismo carrega mesmo com Gênesis 1 vindo do cache local', async ({ page }) => {
+  await page.goto('/');
+  await page.evaluate(() => {
+    localStorage.setItem('bible_cache_Gn_1', JSON.stringify({
+      v: 8,
+      timestamp: Date.now(),
+      verses: [
+        { number: 1, text: 'No princípio Deus criou o céu e a terra.' },
+        { number: 2, text: 'A terra estava informe e vazia.' },
+      ],
+    }));
+  });
+
+  await page.goto('/bible?book=Gn&ch=1&v=1');
+  await expect(page.getByTestId('verse-text-1')).toBeVisible();
+
+  const nexusCard = page.getByTestId('nexus-connection-card').filter({ hasText: 'Catecismo' }).first();
+  await expect(nexusCard).toBeVisible({ timeout: 15000 });
+  await nexusCard.click();
+  await expect(page.getByTestId('catechism-preview')).toBeVisible();
+  await expect(page.getByTestId('catechism-preview')).toContainText('§279');
+});
+
 test('Bíblia preserva contexto no Nexus Gn 1:1 → CIC §279 → retorno exato', async ({ page }) => {
   const errors: string[] = [];
   page.on('console', message => {
