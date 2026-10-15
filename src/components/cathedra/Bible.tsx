@@ -655,6 +655,32 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
           }
         });
 
+        // The repository already contains a curated chapter-level Bible ↔ CIC map.
+        // Surface those relations on verse 1 as chapter context; never label them
+        // as direct citations or duplicate a paragraph already linked to a verse.
+        const chapterParagraphs = BIBLE_TO_CIC[`${abbr}:${chapter}`] ?? [];
+        const connectedParagraphs = new Set(
+          Object.values(chapterConnections)
+            .flat()
+            .filter((connection: any) => connection.type === 'catechism')
+            .map((connection: any) => String(connection.id)),
+        );
+        const firstVerseKey = `${abbr}-${chapter}-1`;
+        for (const paragraph of chapterParagraphs) {
+          const id = String(paragraph);
+          if (connectedParagraphs.has(id)) continue;
+          if (!chapterConnections[firstVerseKey]) chapterConnections[firstVerseKey] = [];
+          chapterConnections[firstVerseKey].push({
+            type: 'catechism',
+            label: `§${paragraph} · capítulo`,
+            color: 'bg-blue-500',
+            id,
+            summary: `Relação editorial com ${abbr} ${chapter} como capítulo. Não afirma uma citação direta entre este versículo e o parágrafo.`,
+            relevance_level: 0.5,
+            scope: 'chapter',
+          });
+        }
+
         setDynamicConnections((prev) => {
           const next = { ...prev };
           Object.keys(next).forEach((key) => {
