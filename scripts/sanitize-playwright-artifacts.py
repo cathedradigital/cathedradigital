@@ -15,6 +15,19 @@ SENSITIVE_HEADERS = {
     "set-cookie",
     "x-api-key",
     "apikey",
+    "x-supabase-auth-token",
+    "x-auth-token",
+    "x-access-token",
+    "x-refresh-token",
+}
+SENSITIVE_VALUE_KEYS = {
+    "access_token",
+    "refresh_token",
+    "id_token",
+    "accessToken",
+    "refreshToken",
+    "idToken",
+    "supabase_auth_token",
 }
 BEARER_PATTERN = re.compile(r"(?i)(bearer\s+)[A-Za-z0-9._~+/=-]{16,}")
 TEXT_SUFFIXES = {".trace", ".network", ".json", ".har", ".txt", ".log", ".md", ".html"}
@@ -29,7 +42,11 @@ def redact_object(value: object) -> tuple[object, int]:
             value["value"] = "[REDACTED]"
             count += 1
         for key, child in list(value.items()):
-            if isinstance(key, str) and key.lower() in SENSITIVE_HEADERS and isinstance(child, str):
+            if (
+                isinstance(key, str)
+                and (key.lower() in SENSITIVE_HEADERS or key in SENSITIVE_VALUE_KEYS)
+                and isinstance(child, str)
+            ):
                 value[key] = "[REDACTED]"
                 count += 1
             else:
