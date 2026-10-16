@@ -5,42 +5,62 @@ on:
     branches: ["main"]
   workflow_dispatch:
 
+# Never cancel an in-flight production deployment. A newer run may wait in the
+# Actions queue, but it must not interrupt a deployment halfway through.
 concurrency:
   group: cloudflare-production
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 90
     permissions:
       contents: read
 
     steps:
+      - name: Guard manual production deployments
+        if: ${{ github.event_name == 'workflow_dispatch' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ "${GITHUB_REF}" != "refs/heads/main" ]; then
+            echo "::error::Production deployment is allowed only from refs/heads/main. Selected ref: ${GITHUB_REF}"
+            exit 1
+          fi
+
       - name: Checkout
         uses: actions/checkout@v6
 
-      - name: Verify Cloudflare credentials
+      - name: Verify required credentials
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          E2E_TEST_EMAIL: ${{ secrets.E2E_TEST_EMAIL }}
+          E2E_TEST_PASSWORD: ${{ secrets.E2E_TEST_PASSWORD }}
+        shell: bash
         run: |
+          set -euo pipefail
           test -n "$CLOUDFLARE_API_TOKEN" || { echo "::error::Missing GitHub secret CLOUDFLARE_API_TOKEN"; exit 1; }
           test -n "$CLOUDFLARE_ACCOUNT_ID" || { echo "::error::Missing GitHub secret CLOUDFLARE_ACCOUNT_ID"; exit 1; }
+          test -n "$E2E_TEST_EMAIL" || { echo "::error::Missing GitHub secret E2E_TEST_EMAIL"; exit 1; }
+          test -n "$E2E_TEST_PASSWORD" || { echo "::error::Missing GitHub secret E2E_TEST_PASSWORD"; exit 1; }
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "22.x"
+          cache: npm
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
       - name: Validate Cloudflare authorization
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: npx wrangler whoami --account "$CLOUDFLARE_ACCOUNT_ID"
+
       - name: Inspect public DNS
         shell: bash
         run: |
@@ -52,6 +72,7 @@ jobs:
               curl --fail --silent --show-error --connect-timeout 10 --max-time 20 "https://dns.google/resolve?name=$name&type=$type" | jq '{Status,Answer}'
             done
           done
+
       - name: Typecheck
         run: npm run typecheck
 
@@ -64,12 +85,27 @@ jobs:
       - name: Build
         run: npm run build
 
+      # Publication gate: production must not deploy unless the same commit has
+      # passed the critical authenticated E2E suite on desktop and mobile.
+      - name: Install Playwright for the publication gate
+        run: |
+          npm install --no-save @playwright/test@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Run critical authenticated Estudar E2E
+        env:
+          E2E_TEST_EMAIL: ${{ secrets.E2E_TEST_EMAIL }}
+          E2E_TEST_PASSWORD: ${{ secrets.E2E_TEST_PASSWORD }}
+          CI: "true"
+        run: npx playwright test e2e/estudar-critical.spec.ts
+
       - name: Deploy Worker
         uses: cloudflare/wrangler-action@v4
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: deploy
+
       - name: Validate production endpoints
         shell: bash
         run: |
@@ -82,26 +118,19 @@ jobs:
           for url in "${endpoints[@]}"; do
             echo "Checking $url"
             body_file="$(mktemp)"
-            status="$(curl --silent --show-error --location --retry 2 --retry-all-errors --connect-timeout 10 --max-time 30 --output "$body_file" --write-out "%{http_code}" "$url" || true)"
+            trap 'rm -f "$body_file"' EXIT
+            status="$(curl --silent --show-error --location --retry 2 --retry-all-errors --connect-timeout 10 --max-time 30 --output "$body_file" --write-out "%{http_code}" "$url")"
             size="$(wc -c < "$body_file")"
-            rm -f "$body_file"
 
-            case "$url" in
-              *workers.dev)
-                test "$status" = "200"
-                test "$size" -gt 100
-                echo "OK $url -> HTTP $status ($size bytes)"
-                ;;
-              *)
-                if [ "$status" = "200" ]; then
-                  test "$size" -gt 100
-                  echo "OK $url -> HTTP $status ($size bytes)"
-                elif [ "$status" = "403" ]; then
-                  echo "REACHABLE $url -> HTTP 403 (custom-domain protection; deployment is live)"
-                else
-                  echo "::error::$url returned unexpected HTTP $status"
-                  exit 1
-                fi
-                ;;
-            esac
+            if [ "$status" != "200" ]; then
+              echo "::error::$url returned HTTP $status; endpoint validation requires HTTP 200 and cannot treat a protection/error page as proof of a working UI."
+              exit 1
+            fi
+            if [ "$size" -le 100 ]; then
+              echo "::error::$url returned HTTP 200 but only $size bytes; response is too small to establish that the app is served."
+              exit 1
+            fi
+            echo "OK $url -> HTTP $status ($size bytes)"
+            rm -f "$body_file"
+            trap - EXIT
           done
