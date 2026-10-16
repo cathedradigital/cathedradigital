@@ -41,8 +41,9 @@ async function openStudyJournal(page: Page, marker: string) {
 test('auth redirect preserves protected destination', async ({ page }) => {
   await page.context().clearCookies();
   await page.goto('/diario');
-  expect(page.url()).toContain('/login?next=');
-  expect(page.url()).toContain('diario');
+  // /login is a compatibility redirect to the canonical /auth route.
+  await expect(page).toHaveURL(url => url.pathname === '/auth' && url.searchParams.has('next'), { timeout: 15_000 });
+  expect(new URL(page.url()).searchParams.get('next')).toContain('diario');
 });
 
 test('Bíblia: anotação → Diário → retorno exato ao versículo', async ({ page }) => {
