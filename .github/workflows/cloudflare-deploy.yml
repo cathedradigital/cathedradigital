@@ -98,6 +98,23 @@ jobs:
           CI: "true"
         run: npx playwright test e2e/estudar-critical.spec.ts
 
+      # Preserve failure evidence, but never upload unsanitized authenticated traces.
+      - name: Sanitize Playwright evidence
+        id: sanitize-deploy-traces
+        if: ${{ !cancelled() }}
+        run: python3 scripts/sanitize-playwright-artifacts.py
+
+      - name: Upload deployment E2E evidence
+        if: ${{ !cancelled() && steps.sanitize-deploy-traces.outcome == 'success' }}
+        uses: actions/upload-artifact@v5
+        with:
+          name: production-gate-e2e-evidence
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7
+          if-no-files-found: warn
+
       - name: Deploy Worker
         uses: cloudflare/wrangler-action@v4
         with:
