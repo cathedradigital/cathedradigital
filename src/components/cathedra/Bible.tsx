@@ -136,9 +136,16 @@ const nexusConnectionFromRow = (row: any, currentVerseId?: string) => {
   const otherKind = isSource ? row.target_kind : row.source_kind;
   const otherRef = isSource ? row.target_ref : row.source_ref;
   const otherBible = isSource ? targetBible : sourceBible;
-  const otherParagraph = otherKind === 'catechism_paragraph'
+  const otherParagraphRaw = otherKind === 'catechism_paragraph'
     ? String((otherRef as any)?.paragraph ?? (otherRef as any)?.paragraph_id ?? (otherRef as any)?.paragraphNumber ?? (otherRef as any)?.p ?? '').trim()
     : '';
+  const otherParagraphNumber = Number(otherParagraphRaw.replace(/^§/, '').trim());
+  // A relation cannot be shown as a Catechism citation without a real,
+  // positive paragraph number. Invalid/incomplete rows must not create dots.
+  if (otherKind === 'catechism_paragraph' && (!Number.isInteger(otherParagraphNumber) || otherParagraphNumber < 1)) {
+    return null;
+  }
+  const otherParagraph = otherKind === 'catechism_paragraph' ? String(otherParagraphNumber) : '';
   const id = otherBible
     ? otherBible.abbr + '-' + otherBible.chapter + (otherBible.verse ? '-' + otherBible.verse : '')
     : otherParagraph || String((otherRef as any)?.id ?? (otherRef as any)?.slug ?? row.id);
@@ -649,6 +656,7 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
 
           const key = `${bible.abbr}-${bible.chapter}-${bible.verse}`;
           const mapped = nexusConnectionFromRow(conn, key);
+          if (!mapped) return;
           if (!chapterConnections[key]) chapterConnections[key] = [];
           if (!chapterConnections[key].some((item) => item.id === mapped.id && item.type === mapped.type)) {
             chapterConnections[key].push(mapped);
@@ -1098,6 +1106,7 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
             if (!bible?.verse) return;
             const key = `${bible.abbr}-${bible.chapter}-${bible.verse}`;
             const mapped = nexusConnectionFromRow(conn, key);
+            if (!mapped) return;
             if (!next[key]) next[key] = [];
             if (!next[key].some((item: any) => item.id === mapped.id && item.type === mapped.type)) next[key].push(mapped);
           });
