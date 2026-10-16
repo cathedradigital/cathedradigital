@@ -1097,21 +1097,24 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
           return;
         }
         if (!data || data.length === 0) return;
-        setDynamicConnections(prev => {
-          const next = { ...prev };
-          data.forEach((conn: any) => {
-            const source = conn.source_kind === 'bible_verse' ? readBibleRef(conn.source_ref) : null;
-            const target = conn.target_kind === 'bible_verse' ? readBibleRef(conn.target_ref) : null;
-            const bible = source ?? target;
-            if (!bible?.verse) return;
-            const key = `${bible.abbr}-${bible.chapter}-${bible.verse}`;
-            const mapped = nexusConnectionFromRow(conn, key);
-            if (!mapped) return;
-            if (!next[key]) next[key] = [];
-            if (!next[key].some((item: any) => item.id === mapped.id && item.type === mapped.type)) next[key].push(mapped);
-          });
-          return next;
+        // Rebuild the published verse graph from the current database response.
+        // Merging into prior state leaves stale Catechism dots behind after a
+        // relation is unpublished or corrected in Nexus.
+        const publishedVerseConnections: Record<string, any[]> = {};
+        data.forEach((conn: any) => {
+          const source = conn.source_kind === 'bible_verse' ? readBibleRef(conn.source_ref) : null;
+          const target = conn.target_kind === 'bible_verse' ? readBibleRef(conn.target_ref) : null;
+          const bible = source ?? target;
+          if (!bible?.verse) return;
+          const key = `${bible.abbr}-${bible.chapter}-${bible.verse}`;
+          const mapped = nexusConnectionFromRow(conn, key);
+          if (!mapped) return;
+          if (!publishedVerseConnections[key]) publishedVerseConnections[key] = [];
+          if (!publishedVerseConnections[key].some((item: any) => item.id === mapped.id && item.type === mapped.type)) {
+            publishedVerseConnections[key].push(mapped);
+          }
         });
+        setDynamicConnections(publishedVerseConnections);
       } catch (err) {
         console.warn('[Nexus] connection prefetch threw — usando fallback local', err);
       }
