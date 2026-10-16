@@ -41,6 +41,9 @@ jobs:
       - name: Build PR HEAD
         run: npm run build
 
+      - name: Test Playwright artifact sanitizer
+        run: python3 scripts/test-sanitize-playwright-artifacts.py
+
       - name: Verify authenticated E2E account exists
         run: |
           test -n "$E2E_TEST_EMAIL" || { echo "::error::Missing E2E_TEST_EMAIL — authenticated E2E is blocked"; exit 1; }
