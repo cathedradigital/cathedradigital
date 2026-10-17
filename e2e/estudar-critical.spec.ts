@@ -38,6 +38,18 @@ async function openStudyJournal(page: Page, marker: string) {
   return note;
 }
 
+test('Átrio: portal de notícias identifica fontes e navegação do carrossel', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.getByRole('heading', { name: 'Notícias da Igreja' })).toBeVisible();
+  await expect(page.getByRole('link', { name: 'Vatican News' })).toHaveAttribute('href', 'https://www.vaticannews.va/pt.html');
+  await expect(page.getByRole('link', { name: 'CNBB', exact: true })).toHaveAttribute('href', 'https://www.cnbb.org.br/');
+  await expect(page.getByRole('link', { name: 'Santa Sé' })).toHaveAttribute('href', 'https://press.vatican.va/content/salastampa/pt.html');
+  await expect(page.getByRole('heading', { level: 3, name: 'Leão XIV: “Temos muito a aprender com as famílias”' })).toBeVisible();
+  await page.getByRole('button', { name: 'Próxima notícia' }).click();
+  await expect(page.getByRole('heading', { level: 3, name: 'Três intervenções apresentam os objetivos e o método do encontro' })).toBeVisible();
+  await expect(page.getByText('02 / 05')).toBeVisible();
+});
+
 test('auth redirect preserves protected destination', async ({ page }) => {
   await page.context().clearCookies();
   await page.goto('/diario');
