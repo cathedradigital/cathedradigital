@@ -1,7 +1,6 @@
 import React from 'react';
 import { Navigate, useLocation } from '@/lib/rr-compat';
 import { useAuth } from '@/hooks/useAuth';
-import { AppRoute } from '@/types';
 
 interface AuthGuardProps {
   children: React.ReactNode;
@@ -22,8 +21,9 @@ const AuthGuard = React.forwardRef<HTMLDivElement, AuthGuardProps>(({ children }
   if (!user) {
     // Carry the full internal destination through the login screen.
     const next = `${location.pathname}${location.search ?? ''}${location.hash ?? ''}`;
-    const loginPath = `${AppRoute.LOGIN}?next=${encodeURIComponent(next)}`;
-    return <Navigate to={loginPath} replace />;
+    // Redirect directly to the canonical auth route; routing through the legacy
+    // /login alias caused the destination to be nested inside next on some paths.
+    return <Navigate to={`/auth?next=${encodeURIComponent(next)}`} replace />;
   }
 
   return <div ref={ref}>{children}</div>;
