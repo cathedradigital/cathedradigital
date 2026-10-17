@@ -63,6 +63,17 @@ test('auth redirect preserves protected destination', async ({ page }) => {
   expect(page.url()).toContain('diario');
 });
 
+test('admin consoles require authentication and preserve the requested destination', async ({ page }) => {
+  for (const destination of ['/admin/parceiros', '/cache-manager', '/bible-recovery']) {
+    await page.context().clearCookies();
+    await page.goto(destination);
+    await expect(page).toHaveURL(url => {
+      if (url.pathname !== '/auth') return false;
+      return url.searchParams.get('next') === destination;
+    });
+  }
+});
+
 test('Bíblia: anotação → Diário → retorno exato ao versículo', async ({ page }) => {
   const bad = watchBrowserHealth(page);
   const marker = 'E2E-BIBLE-' + Date.now();
