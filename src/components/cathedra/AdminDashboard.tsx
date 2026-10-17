@@ -99,22 +99,24 @@ const AdminDashboard: React.FC = () => {
     }
     setManualLoading(true);
     
-    const { data: sensitiveData, error: sensitiveError } = await supabase
-      .from('user_sensitive_data' as any)
-      .select('user_id')
+    // Resolve o destinatário pela tabela canônica de perfis. A tabela
+    // user_sensitive_data não existe neste schema e fazia esta ação falhar.
+    const { data: targetProfile, error: profileLookupError } = await supabase
+      .from('profiles')
+      .select('id')
       .eq('email', manualEmail.trim())
       .maybeSingle();
 
-    if (sensitiveError || !sensitiveData) {
+    if (profileLookupError || !targetProfile) {
       setManualLoading(false);
-      toast.error('Nenhum usuário encontrado com esse email');
+      toast.error(profileLookupError ? 'Não foi possível consultar o perfil' : 'Nenhum usuário encontrado com esse email');
       return;
     }
 
     const { error } = await supabase
       .from('profiles')
       .update({ is_premium: grant })
-      .eq('id', (sensitiveData as any).user_id);
+      .eq('id', targetProfile.id);
 
     setManualLoading(false);
 
