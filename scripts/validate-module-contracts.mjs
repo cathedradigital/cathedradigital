@@ -51,6 +51,27 @@ for (const required of ['estudar', 'rezar', 'formar-se', 'pesquisar', 'minha-jor
   if (!groups.includes(required)) errors.push(`Missing public module environment: ${required}`);
 }
 
+const estudarBlock = moduleNavigation.split("key: 'estudar'")[1]?.split("key: 'rezar'")[0] ?? '';
+for (const [id, path] of [
+  ['bible', '/bible'],
+  ['catechism', '/catechism'],
+  ['documents', '/magisterium'],
+  ['nexus', '/nexus'],
+  ['library', '/biblioteca'],
+  ['saints', '/santos'],
+  ['living-church', '/community'],
+]) {
+  if (!estudarBlock.includes(`id: '${id}'`) || !estudarBlock.includes(`path: '${path}'`)) {
+    errors.push(`Canonical Estudar navigation is missing ${id} -> ${path}.`);
+  }
+}
+const pesquisarBlock = moduleNavigation.split("key: 'pesquisar'")[1]?.split("key: 'minha-jornada'")[0] ?? '';
+for (const id of ['nexus', 'library', 'saints', 'living-church']) {
+  if (pesquisarBlock.includes(`id: '${id}'`)) {
+    errors.push(`The ${id} module belongs to Estudar, not Pesquisar.`);
+  }
+}
+
 const modulePaletteKeys = {
   estudar: 'MODULE_PALETTES.estudar',
   rezar: 'MODULE_PALETTES.rezar',
