@@ -36,7 +36,7 @@ export default function DocsArticlePage() {
   return (
     <>
       <Helmet>
-        <title>{`${guide.title} · ${bundle.ui.portalTitle} · Cathedra`}</title>
+        <title>{`${guide.title} · ${bundle.ui.portalTitle} · Cátedra Digital`}</title>
         <meta name="description" content={guide.summary} />
       </Helmet>
 
