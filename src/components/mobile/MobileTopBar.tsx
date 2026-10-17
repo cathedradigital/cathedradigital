@@ -46,7 +46,7 @@ export function MobileTopBar({
     <header
       className={cn(
         "sticky top-0 z-40 w-full max-w-[100vw] overflow-hidden",
-        "flex items-center gap-3 px-[var(--stitch-margin-mobile)]",
+        "flex items-center gap-2 px-[var(--stitch-margin-mobile)]",
         "border-b transition-colors",
         transparent
           ? "bg-stitch-surface/70 border-transparent backdrop-blur-md"
@@ -110,9 +110,10 @@ export function MobileTopBar({
         {actions && <div className="flex items-center">{actions}</div>}
         <button
           type="button"
-          aria-label={t('reading_preferences')}
+          aria-label="Abrir preferências de leitura"
+          title="Preferências de leitura"
           onClick={() => window.dispatchEvent(new CustomEvent("open-reading-preferences"))}
-          className="inline-flex h-11 w-11 items-center justify-center rounded-full text-stitch-on-surface hover:bg-stitch-surface-container focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stitch-secondary"
+          className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-stitch-on-surface hover:bg-stitch-surface-container focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stitch-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-stitch-surface"
         >
           <MoreVertical className="h-5 w-5" />
         </button>

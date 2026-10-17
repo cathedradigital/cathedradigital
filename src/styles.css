@@ -647,6 +647,11 @@
   }
 }
 
+/* A MobileTopBar already owns the navigation trigger on these reader screens. */
+body:has([data-mobile-topbar="true"]) .mobile-menu-fallback {
+  display: none;
+}
+
 [data-catedra-module="estudar"] [data-catedra-module-root] input:focus-visible,
 [data-catedra-module="estudar"] [data-catedra-module-root] button:focus-visible,
 [data-catedra-module="estudar"] [data-catedra-module-root] a:focus-visible {
