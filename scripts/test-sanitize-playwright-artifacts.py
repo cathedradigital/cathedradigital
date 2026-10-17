@@ -30,7 +30,7 @@ class SanitizerTests(unittest.TestCase):
         }
         cleaned, count = SANITIZER.scrub_text((json.dumps(trace) + "\n").encode(), ".trace")
         output = cleaned.decode()
-        self.assertGreaterEqual(count, 5)
+        self.assertGreaterEqual(count, 4)
         for secret in (
             "abcdefghijklmnopqrstuvwxyz123456",
             "secret-cookie",
@@ -59,7 +59,7 @@ class SanitizerTests(unittest.TestCase):
         }
         cleaned, count = SANITIZER.scrub_text((json.dumps(trace) + "\n").encode(), ".trace")
         output = cleaned.decode()
-        self.assertGreaterEqual(count, 4)
+        self.assertGreaterEqual(count, 5)
         for secret in (jwt, "refresh-secret-value", "query-secret", "fragment-secret"):
             self.assertNotIn(secret, output)
         self.assertIn("keep=yes", output)
