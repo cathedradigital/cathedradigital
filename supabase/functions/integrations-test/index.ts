@@ -19,9 +19,20 @@ Deno.serve(async (request: Request) => {
   }
 
   const supabaseUrl = Deno.env.get("SUPABASE_URL");
-  const publishableKey =
+  const modernPublishableKeys = Deno.env.get("SUPABASE_PUBLISHABLE_KEYS");
+  let publishableKey: string | null = null;
+  if (modernPublishableKeys) {
+    try {
+      const parsed = JSON.parse(modernPublishableKeys);
+      if (typeof parsed?.default === "string") publishableKey = parsed.default;
+    } catch {
+      // Fall back to single-key variables for older project configurations.
+    }
+  }
+  publishableKey ??=
     Deno.env.get("SUPABASE_PUBLISHABLE_KEY") ??
-    Deno.env.get("SUPABASE_ANON_KEY");
+    Deno.env.get("SUPABASE_ANON_KEY") ??
+    null;
   const authorization = request.headers.get("Authorization");
 
   if (!supabaseUrl || !publishableKey || !authorization) {
