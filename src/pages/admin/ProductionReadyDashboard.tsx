@@ -3,7 +3,7 @@ import { Helmet } from '@/lib/helmet-compat';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { CheckCircle2, AlertCircle, Clock, ShieldCheck, Gauge, Search, Accessibility, TestTube2, Layout, Zap } from "lucide-react";
+import { CheckCircle2, AlertCircle, Clock, Gauge, Search, Accessibility, TestTube2, Layout, Zap } from "lucide-react";
 
 interface Checkpoint {
   id: string;
@@ -17,28 +17,28 @@ interface Checkpoint {
 export default function ProductionReadyDashboard() {
   const checkpoints: Checkpoint[] = [
     // SEO
-    { id: 'seo-headings', label: 'Hierarquia de Headings', status: 'passed', value: '0 skips', evidence: 'Auditoria de 96 páginas (H1→H2→H3)', category: 'seo' },
-    { id: 'seo-sitemap', label: 'Sitemap Consistente', status: 'passed', value: '667 URLs', evidence: 'Validado via generate-sitemap.ts', category: 'seo' },
-    { id: 'seo-meta', label: 'Meta Tags & Open Graph', status: 'passed', value: '100%', evidence: 'ROUTE_META certificado', category: 'seo' },
+    { id: 'seo-headings', label: 'Hierarquia de Headings', status: 'pending', value: 'Não verificado', evidence: 'Aguardando relatório verificável da auditoria de rotas', category: 'seo' },
+    { id: 'seo-sitemap', label: 'Sitemap Consistente', status: 'pending', value: 'Não verificado', evidence: 'Aguardando leitura e validação do sitemap publicado', category: 'seo' },
+    { id: 'seo-meta', label: 'Meta Tags & Open Graph', status: 'pending', value: 'Não verificado', evidence: 'Aguardando inspeção de metadados em páginas reais', category: 'seo' },
     
     // Acessibilidade
-    { id: 'a11y-axe', label: 'Violações Axe-core', status: 'passed', value: '0 críticas', evidence: 'Varredura WCAG 2.1 AA', category: 'a11y' },
-    { id: 'a11y-touch', label: 'Touch Targets (44px)', status: 'passed', value: 'Aprovado', evidence: 'P0.2 Final Certification', category: 'a11y' },
-    { id: 'a11y-contrast', label: 'Contraste de Cores', status: 'passed', value: 'Aprovado', evidence: 'Regra rule-gold-ink aplicada', category: 'a11y' },
+    { id: 'a11y-axe', label: 'Violações Axe-core', status: 'pending', value: 'Não verificado', evidence: 'Aguardando execução e artefato Axe/WCAG', category: 'a11y' },
+    { id: 'a11y-touch', label: 'Touch Targets (44px)', status: 'pending', value: 'Não verificado', evidence: 'Aguardando medição real dos alvos de toque', category: 'a11y' },
+    { id: 'a11y-contrast', label: 'Contraste de Cores', status: 'pending', value: 'Não verificado', evidence: 'Aguardando medição real de contraste', category: 'a11y' },
     
     // Performance
-    { id: 'perf-lighthouse', label: 'Lighthouse Score', status: 'passed', value: '98/100', evidence: 'Core Web Vitals estáveis', category: 'perf' },
-    { id: 'perf-bundle', label: 'Bundle Size (Gzip)', status: 'passed', value: '< 250kb', evidence: 'Análise de chunks Vite', category: 'perf' },
+    { id: 'perf-lighthouse', label: 'Lighthouse Score', status: 'pending', value: 'Não verificado', evidence: 'Aguardando medição Lighthouse/Core Web Vitals', category: 'perf' },
+    { id: 'perf-bundle', label: 'Bundle Size (Gzip)', status: 'pending', value: 'Não verificado', evidence: 'Aguardando relatório de build do commit atual', category: 'perf' },
     
     // Testes
-    { id: 'test-playwright', label: 'E2E Playwright', status: 'passed', value: '100% ok', evidence: '30 rotas em 3 viewports', category: 'tests' },
-    { id: 'test-vitest', label: 'Unitários (Vitest)', status: 'passed', value: 'Aprovado', evidence: 'Testes de integridade editorial', category: 'tests' },
-    { id: 'test-visual', label: 'Regressão Visual', status: 'passed', value: '0 deltas', evidence: 'Baseline CERTIFIED vs Current', category: 'tests' },
+    { id: 'test-playwright', label: 'E2E Playwright', status: 'pending', value: 'Não verificado', evidence: 'Aguardando Playwright verde no SHA final', category: 'tests' },
+    { id: 'test-vitest', label: 'Unitários (Vitest)', status: 'pending', value: 'Não verificado', evidence: 'Aguardando resultado real dos testes unitários', category: 'tests' },
+    { id: 'test-visual', label: 'Regressão Visual', status: 'pending', value: 'Não verificado', evidence: 'Aguardando comparação de regressão visual', category: 'tests' },
     
     // Arquitetura & Guardrails
-    { id: 'arch-reader', label: 'Reader V2 Certification', status: 'passed', value: 'CERTIFIED', evidence: 'EditorialClosure & ReaderShell', category: 'architecture' },
-    { id: 'arch-nexus', label: 'Nexus Intelligence', status: 'passed', value: 'Ativo', evidence: 'Navegação bidirecional validada', category: 'architecture' },
-    { id: 'arch-guardrail', label: 'Guardrail Enforcement', status: 'passed', value: 'Ativo', evidence: 'Bloqueio de forks via CI', category: 'architecture' },
+    { id: 'arch-reader', label: 'Reader V2 Certification', status: 'pending', value: 'Não verificado', evidence: 'Aguardando verificação funcional do leitor', category: 'architecture' },
+    { id: 'arch-nexus', label: 'Nexus Intelligence', status: 'pending', value: 'Não verificado', evidence: 'Aguardando testes de ida e retorno do Nexus', category: 'architecture' },
+    { id: 'arch-guardrail', label: 'Guardrail Enforcement', status: 'pending', value: 'Não verificado', evidence: 'Aguardando inspeção do workflow de proteção', category: 'architecture' },
   ];
 
   const categories = [
@@ -76,9 +76,14 @@ export default function ProductionReadyDashboard() {
           <div className="w-24">
             <Progress value={stats.percent} className="h-2" />
           </div>
-          <ShieldCheck className="w-8 h-8 text-emerald-500" />
+          <Clock className="w-8 h-8 text-amber-500" aria-hidden="true" />
         </div>
       </header>
+
+      <div role="status" className="rounded-lg border border-amber-500/30 bg-amber-500/5 p-4 text-sm">
+        <p className="font-semibold">Verificação real pendente</p>
+        <p className="mt-1 text-muted-foreground">Este painel não está conectado às execuções de CI, Playwright, Lighthouse ou à publicação. Os indicadores abaixo ficam pendentes até haver evidência verificável; não representam aprovação automática.</p>
+      </div>
 
       <div className="grid gap-6">
         {categories.map(cat => (
@@ -89,7 +94,7 @@ export default function ProductionReadyDashboard() {
                   <cat.icon className={`w-5 h-5 ${cat.color}`} />
                   <CardTitle className="text-lg font-bold">{cat.label}</CardTitle>
                 </div>
-                <Badge className="bg-emerald-500/10 text-emerald-600 border-emerald-500/20">CERTIFIED</Badge>
+                <Badge variant="outline">PENDENTE</Badge>
               </div>
             </CardHeader>
             <CardContent className="pt-6">
@@ -130,7 +135,7 @@ export default function ProductionReadyDashboard() {
             <CardTitle className="text-lg">Próximo Marco: Fase 6 — Consolidação do Conteúdo</CardTitle>
           </div>
           <CardDescription>
-            A arquitetura técnica está congelada e certificada. O foco agora migra para a expansão do acervo espiritual.
+            A expansão do acervo só deve ser priorizada depois da validação funcional, de segurança e de publicação com evidências reais.
           </CardDescription>
         </CardHeader>
         <CardContent>

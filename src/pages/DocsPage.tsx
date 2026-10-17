@@ -32,7 +32,7 @@ export default function DocsPage() {
   return (
     <>
       <Helmet>
-        <title>{`${bundle.ui.portalTitle} · Cathedra`}</title>
+        <title>{`${bundle.ui.portalTitle} · Cátedra Digital`}</title>
         <meta name="description" content={bundle.ui.portalSubtitle} />
       </Helmet>
 

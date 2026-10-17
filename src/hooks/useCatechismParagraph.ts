@@ -48,6 +48,11 @@ function isSuspiciousStoredCatechismContent(content: unknown, paragraph: number)
   if (new RegExp('^' + paragraph + '\\s*\\.\\s+').test(text)) return true;
   if (paragraph !== 2865 && text.length < 40) return true;
 
+  // §2262 is covered by an official local fallback with a verified Portuguese
+  // opening. Reject stale/imported records that omit this passage so the reader
+  // does not silently present unrelated or corrupted content for this reference.
+  if (paragraph === 2262 && !/no sermão da montanha, o senhor lembra o preceito/i.test(text)) return true;
+
   return false;
 }
 
@@ -129,6 +134,9 @@ export const fetchCatechismParagraph = async (paragraph: number, forceGenerate =
       language: 'pt',
       status: 'static',
       textoBase: localData.textoBase,
+      sourceName: localData.sourceName ?? null,
+      sourceUrl: localData.sourceUrl ?? null,
+      sourceRetrievedAt: localData.sourceRetrievedAt ?? null,
     };
     logCatechismDiag({ paragraph, step: 'local_hit' });
     cacheCatechismParagraph(paragraph, result);

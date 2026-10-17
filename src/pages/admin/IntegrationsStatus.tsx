@@ -21,43 +21,48 @@ interface Integration {
   description: string;
   howTo: string;
   docsUrl?: string;
+  /** false quando o endpoint integrations-test ainda não verifica este recurso. */
+  testable?: boolean;
 }
 
 type TestResult = { ok: boolean; message: string; latencyMs?: number };
 
 const integrations: Integration[] = [
   {
-    id: "lovable-cloud",
-    name: "Lovable Cloud",
+    id: "supabase",
+    name: "Supabase",
     category: "Infraestrutura",
-    status: "connected",
-    description: "Banco de dados, autenticação, storage e edge functions.",
-    howTo: "Ativo por padrão neste projeto. Acesse pelo botão 'View Backend'.",
+    status: "partial",
+    description: "Banco de dados, autenticação, políticas RLS e Edge Functions.",
+    howTo: "Projeto vinculado; a saúde do banco e as políticas devem ser verificadas por consulta real. Este cartão ainda não possui teste automático próprio.",
+    testable: false,
   },
   {
-    id: "lovable-ai",
-    name: "Lovable AI Gateway",
-    category: "IA",
-    status: "connected",
-    description: "Modelos de IA (chat, embeddings, imagens) via LOVABLE_API_KEY.",
-    howTo: "Disponível automaticamente nas edge functions. Secret gerenciado.",
+    id: "cloudflare-workers",
+    name: "Cloudflare Workers",
+    category: "Publicação",
+    status: "partial",
+    description: "Hospedagem e entrega da aplicação Cátedra Digital.",
+    howTo: "Destino de publicação definido; a confirmação depende do deploy e da inspeção da interface servida nos domínios de produção.",
+    testable: false,
   },
   {
     id: "mercado-pago",
     name: "Mercado Pago",
     category: "Pagamentos",
-    status: "connected",
-    description: "Checkout Pro para assinaturas PRO e doações.",
-    howTo: "Secret MERCADO_PAGO_ACCESS_TOKEN configurado. Verifique o webhook em Connectors.",
+    status: "partial",
+    description: "Checkout Pro para assinaturas PRO e doações; a conexão ainda precisa de teste real.",
+    howTo: "Execute o teste de conexão e confirme o webhook no painel do Mercado Pago antes de considerar ativo.",
     docsUrl: "https://www.mercadopago.com.br/developers",
   },
   {
     id: "google-api-key",
     name: "Google API Key",
     category: "Google",
-    status: "connected",
-    description: "Chave genérica do Google (Maps/YouTube/APIs públicas).",
-    howTo: "Secret GOOGLE_API_KEY configurado. Confirme quais APIs estão habilitadas no Google Cloud Console.",
+    status: "partial",
+    description: "Credencial Google para APIs públicas; o acesso real precisa ser testado.",
+    howTo: "Confirme a chave e as APIs habilitadas no Google Cloud Console; a validação automática segura ainda não está disponível.",
+    testable: false,
     docsUrl: "https://console.cloud.google.com/apis/credentials",
   },
   {
@@ -66,7 +71,8 @@ const integrations: Integration[] = [
     category: "Scraping",
     status: "partial",
     description: "Crawling e extração de páginas web.",
-    howTo: "Existe no workspace mas NÃO vinculado a este projeto. Peça 'vincular Firecrawl' para ativar.",
+    howTo: "Não está vinculado a este projeto.",
+    testable: false,
   },
   {
     id: "google-search-console",
@@ -74,7 +80,8 @@ const integrations: Integration[] = [
     category: "SEO",
     status: "disconnected",
     description: "Cliques, impressões, indexação e verificação de propriedade.",
-    howTo: "Aprove a conexão OAuth em Connectors → Google Search Console.",
+    howTo: "Conexão OAuth ainda não configurada neste ambiente.",
+    testable: false,
     docsUrl: "https://search.google.com/search-console",
   },
   {
@@ -83,7 +90,8 @@ const integrations: Integration[] = [
     category: "SEO",
     status: "disconnected",
     description: "Palavras-chave, backlinks e ranking competitivo.",
-    howTo: "Conecte via Connectors → Semrush (requer conta paga).",
+    howTo: "Conexão OAuth ainda não configurada neste ambiente.",
+    testable: false,
     docsUrl: "https://www.semrush.com",
   },
   {
@@ -92,7 +100,8 @@ const integrations: Integration[] = [
     category: "Analytics",
     status: "disconnected",
     description: "Tráfego, sessões e comportamento de usuários.",
-    howTo: "Não configurado. Conecte via Connectors → Google Analytics.",
+    howTo: "Conexão OAuth ainda não configurada neste ambiente.",
+    testable: false,
   },
   {
     id: "stripe",
@@ -100,7 +109,8 @@ const integrations: Integration[] = [
     category: "Pagamentos",
     status: "disconnected",
     description: "Alternativa internacional para pagamentos recorrentes.",
-    howTo: "Não configurado. Peça 'ativar Stripe' se necessário.",
+    howTo: "Não configurado neste ambiente.",
+    testable: false,
   },
   {
     id: "github",
@@ -108,7 +118,8 @@ const integrations: Integration[] = [
     category: "Dev",
     status: "disconnected",
     description: "Sincronização de código com repositório externo.",
-    howTo: "Conecte via configurações do projeto Lovable → GitHub.",
+    howTo: "O repositório é administrado pelo GitHub; este painel não testa permissões nem workflows.",
+    testable: false,
   },
 ];
 
@@ -212,7 +223,14 @@ export default function IntegrationsStatus() {
     setLoading((s) => ({ ...s, [id]: false }));
   };
 
-  const grouped = integrations.reduce<Record<string, Integration[]>>((acc, item) => {
+  // A execução mais recente do teste prevalece sobre o estado inicial. Sem
+  // evidência de teste, integrações configuráveis não devem aparecer como verdes.
+  const integrationsWithStatus = useMemo(() => integrations.map((item) => {
+    if (item.testable === false || !results[item.id]) return item;
+    return { ...item, status: results[item.id].ok ? "connected" as const : "disconnected" as const };
+  }), [results]);
+
+  const grouped = integrationsWithStatus.reduce<Record<string, Integration[]>>((acc, item) => {
     (acc[item.category] ||= []).push(item);
     return acc;
   }, {});
@@ -252,10 +270,10 @@ export default function IntegrationsStatus() {
     setDateTo("");
   };
 
-  const total = integrations.length;
-  const connected = integrations.filter((i) => i.status === "connected").length;
-  const disconnected = integrations.filter((i) => i.status === "disconnected").length;
-  const partial = integrations.filter((i) => i.status === "partial").length;
+  const total = integrationsWithStatus.length;
+  const connected = integrationsWithStatus.filter((i) => i.status === "connected").length;
+  const disconnected = integrationsWithStatus.filter((i) => i.status === "disconnected").length;
+  const partial = integrationsWithStatus.filter((i) => i.status === "partial").length;
 
   return (
     <div className="container mx-auto max-w-5xl px-4 py-8">
@@ -325,19 +343,23 @@ export default function IntegrationsStatus() {
                         </div>
                       )}
                       <div className="flex flex-wrap gap-2">
-                        <Button
-                          variant="secondary"
-                          size="sm"
-                          onClick={() => runTest(item.id)}
-                          disabled={loading[item.id]}
-                        >
-                          {loading[item.id] ? (
-                            <Loader2 className="mr-1 h-3 w-3 animate-spin" />
-                          ) : (
-                            <PlayCircle className="mr-1 h-3 w-3" />
-                          )}
-                          Testar conexão
-                        </Button>
+                        {item.testable !== false ? (
+                          <Button
+                            variant="secondary"
+                            size="sm"
+                            onClick={() => runTest(item.id)}
+                            disabled={loading[item.id]}
+                          >
+                            {loading[item.id] ? (
+                              <Loader2 className="mr-1 h-3 w-3 animate-spin" />
+                            ) : (
+                              <PlayCircle className="mr-1 h-3 w-3" />
+                            )}
+                            Testar conexão
+                          </Button>
+                        ) : (
+                          <p className="text-xs text-muted-foreground self-center">Verificação real pendente</p>
+                        )}
                         {item.docsUrl && (
                           <Button variant="outline" size="sm" asChild>
                             <a href={item.docsUrl} target="_blank" rel="noreferrer">

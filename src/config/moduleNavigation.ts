@@ -6,6 +6,8 @@
  * itens de menu de primeiro nível.
  */
 
+import { MODULE_PALETTES } from '@/lib/sacredPalette';
+
 export type ModuleEnvironment =
   | 'estudar'
   | 'rezar'
@@ -37,8 +39,8 @@ export interface ModuleNavGroup {
 export const MODULE_NAVIGATION: ModuleNavGroup[] = [
   {
     key: 'estudar',
-    accent: '#2f6f8f',
-    accentSoft: 'rgba(47,111,143,0.14)',
+    accent: MODULE_PALETTES.estudar.accent,
+    accentSoft: MODULE_PALETTES.estudar.accentSoft,
     label: 'Estudar',
     labelKey: 'nav.estudar',
     description: 'Fontes, textos e caminhos para aprofundar.',
@@ -46,12 +48,16 @@ export const MODULE_NAVIGATION: ModuleNavGroup[] = [
       { id: 'bible', label: 'Bíblia', labelKey: 'nav.biblia', path: '/bible', description: 'A Palavra que ilumina o caminho.', descriptionKey: 'source_desc_bible' },
       { id: 'catechism', label: 'Catecismo', labelKey: 'nav.catecismo', path: '/catechism', description: 'A fé compreendida e transmitida.', descriptionKey: 'source_desc_catechism' },
       { id: 'documents', label: 'Documentos', labelKey: 'nav.documentos', path: '/magisterium', description: 'A voz da Igreja através do tempo.', descriptionKey: 'source_desc_documents' },
+      { id: 'nexus', label: 'Nexus', labelKey: 'nav.nexus', path: '/nexus', description: 'Conexões entre as fontes da fé.' },
+      { id: 'library', label: 'Biblioteca', labelKey: 'nav.biblioteca', path: '/biblioteca', description: 'Um acervo para descobrir, ler e retornar.' },
+      { id: 'saints', label: 'Santos', labelKey: 'nav.santos', path: '/santos', description: 'Vidas que testemunharam a fé.' },
+      { id: 'living-church', label: 'Igreja Viva', labelKey: 'nav.igreja_viva', path: '/community', description: 'Comunidade, testemunhos e vida da Igreja.' },
     ],
   },
   {
     key: 'rezar',
-    accent: '#8b5e83',
-    accentSoft: 'rgba(139,94,131,0.14)',
+    accent: MODULE_PALETTES.rezar.accent,
+    accentSoft: MODULE_PALETTES.rezar.accentSoft,
     label: 'Rezar',
     labelKey: 'nav.rezar',
     description: 'Oração, liturgia e vida espiritual.',
@@ -70,8 +76,8 @@ export const MODULE_NAVIGATION: ModuleNavGroup[] = [
   },
   {
     key: 'formar-se',
-    accent: '#b07a35',
-    accentSoft: 'rgba(176,122,53,0.14)',
+    accent: MODULE_PALETTES['formar-se'].accent,
+    accentSoft: MODULE_PALETTES['formar-se'].accentSoft,
     label: 'Formar-se',
     labelKey: 'nav.formar_se',
     description: 'Jornadas e percursos estruturados de formação.',
@@ -82,16 +88,13 @@ export const MODULE_NAVIGATION: ModuleNavGroup[] = [
   },
   {
     key: 'pesquisar',
-    accent: '#4f7d69',
-    accentSoft: 'rgba(79,125,105,0.14)',
+    accent: MODULE_PALETTES.pesquisar.accent,
+    accentSoft: MODULE_PALETTES.pesquisar.accentSoft,
     label: 'Pesquisar',
     labelKey: 'nav.pesquisar',
     description: 'Descoberta universal e ferramentas de referência.',
     items: [
       { id: 'search', label: 'Buscar', labelKey: 'nav.buscar', path: '/buscar', description: 'Pesquisa transversal em toda a plataforma.' },
-      { id: 'nexus', label: 'Nexus', labelKey: 'nav.nexus', path: '/nexus', description: 'Relações entre fontes, temas e conteúdos.' },
-      { id: 'library', label: 'Biblioteca', labelKey: 'nav.biblioteca', path: '/acervo', description: 'Um acervo para descobrir, ler e retornar.' },
-      { id: 'saints', label: 'Santos', labelKey: 'nav.santos', path: '/santos', description: 'Vidas que testemunharam a fé.' },
       { id: 'glossary', label: 'Glossário', labelKey: 'nav.glossario', path: '/glossario', description: 'Termos e conceitos da fé.' },
       { id: 'atlas', label: 'Atlas', labelKey: 'nav.atlas', path: '/atlas', description: 'Exploração geográfica e histórica.' },
       { id: 'aquinas', label: 'Aquino', labelKey: 'nav.aquino', path: '/aquinas', description: 'Obras e pensamento de Tomás de Aquino.' },
@@ -102,8 +105,8 @@ export const MODULE_NAVIGATION: ModuleNavGroup[] = [
   },
   {
     key: 'minha-jornada',
-    accent: '#7a6aa6',
-    accentSoft: 'rgba(122,106,166,0.14)',
+    accent: MODULE_PALETTES['minha-jornada'].accent,
+    accentSoft: MODULE_PALETTES['minha-jornada'].accentSoft,
     label: 'Minha Jornada',
     labelKey: 'nav.minha_jornada',
     description: 'Continuidade, memória e configuração pessoal.',

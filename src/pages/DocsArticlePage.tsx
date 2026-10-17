@@ -10,6 +10,20 @@ import { getDocsBundle, getDocGuide } from '@/content/docs';
 import { recordDocView } from '@/lib/docsPopularity';
 
 
+const PLATFORM_DOC_LINKS = [
+  ['Carta do produto', 'product-charter.md'],
+  ['Design system e paletas por módulo', 'design-system.md'],
+  ['Contratos dos módulos', 'module-contracts.md'],
+  ['Rotas e transições de páginas', 'navigation-routing.md'],
+  ['Nexus / Conexo e proveniência', 'nexus-conexo.md'],
+  ['Segurança e privacidade', 'security-baseline.md'],
+  ['SEO técnico', 'seo-standard.md'],
+  ['Acessibilidade e desempenho', 'accessibility-performance.md'],
+  ['Qualidade e auditoria por módulo', 'quality-and-audit.md'],
+  ['Conteúdo editorial e notícias do Átrio', 'editorial-content.md'],
+  ['Publicação e validação Cloudflare', 'release-and-production.md'],
+] as const;
+
 function slugifyHeading(value: string): string {
   return value
     .normalize('NFD')
@@ -36,7 +50,7 @@ export default function DocsArticlePage() {
   return (
     <>
       <Helmet>
-        <title>{`${guide.title} · ${bundle.ui.portalTitle} · Cathedra`}</title>
+        <title>{`${guide.title} · ${bundle.ui.portalTitle} · Cátedra Digital`}</title>
         <meta name="description" content={guide.summary} />
       </Helmet>
 
@@ -82,6 +96,30 @@ export default function DocsArticlePage() {
             </section>
           ))}
         </div>
+        {slug === 'manual-tecnico-catedra-digital' && (
+          <section aria-labelledby="platform-manual-links" className="mt-10 border-t border-border pt-6">
+            <h2 id="platform-manual-links" className="font-display text-xl font-bold text-foreground">
+              Documentação técnica completa
+            </h2>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Normas versionadas do produto. O conteúdo documenta critérios e não substitui a validação do código e da produção.
+            </p>
+            <ul className="mt-4 grid gap-2 sm:grid-cols-2">
+              {PLATFORM_DOC_LINKS.map(([label, file]) => (
+                <li key={file}>
+                  <a
+                    href={`https://github.com/cathedradigital/cathedradigital/blob/main/docs/platform/${file}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex min-h-11 items-center rounded-md border border-border px-3 py-2 text-sm font-medium text-primary hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  >
+                    {label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
       </section>
     </>
   );

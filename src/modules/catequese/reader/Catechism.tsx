@@ -74,7 +74,7 @@ import {
 
 const CatechismContent: React.FC<{ 
   paragraph: number; 
-  onNavigateToBible?: (abbr: string, chapter: number) => void; 
+  onNavigateToBible?: (abbr: string, chapter: number, verse?: number) => void; 
   isVisible?: boolean;
   onHighlightClick?: (note: UserNote) => void;
   onCreateNote?: (paragraph: number) => void;
@@ -571,7 +571,7 @@ const Catechism: React.FC = memo(() => {
 
   useEffect(() => {
     const rawParagraph = getParagraphParam(searchParams);
-    if (typeof initialParagraph === 'number' && rawParagraph !== String(initialParagraph)) {
+    if (typeof initialParagraph === 'number' && (searchParams.has('paragraph') || searchParams.get('p') !== String(initialParagraph) || rawParagraph !== String(initialParagraph))) {
       // Canonicalize the legacy \`?paragraph=N\` alias immediately so shared links,
       // browser history and analytics converge on the single \`?p=N\` contract.
       setSearchParams((prev) => {
@@ -615,16 +615,25 @@ const Catechism: React.FC = memo(() => {
     let cancelled = false;
     let attempts = 0;
     const maxAttempts = 8;
+    let retryTimer: number | undefined;
+    let releaseObserverTimer: number | undefined;
+    let highlightTimer: number | undefined;
 
     const restoreParagraph = () => {
       if (cancelled) return;
       const element = document.getElementById(`p${initialParagraph}`);
 
       if (element) {
+        // Keep the URL/active paragraph lock while scroll and IntersectionObserver
+        // settle. Releasing it on the same frame lets a neighbouring paragraph
+        // overwrite a valid deep-link (especially at section boundaries/mobile).
+        deepLinkRestorePendingRef.current = true;
         element.scrollIntoView({ behavior: 'auto', block: 'center' });
         element.classList.add('bg-secondary/10');
-        deepLinkRestorePendingRef.current = false;
-        window.setTimeout(() => {
+        releaseObserverTimer = window.setTimeout(() => {
+          if (!cancelled) deepLinkRestorePendingRef.current = false;
+        }, 900);
+        highlightTimer = window.setTimeout(() => {
           if (!cancelled) element.classList.remove('bg-secondary/10');
         }, 3000);
         return;
@@ -632,7 +641,7 @@ const Catechism: React.FC = memo(() => {
 
       if (attempts < maxAttempts) {
         attempts += 1;
-        window.setTimeout(restoreParagraph, 100);
+        retryTimer = window.setTimeout(restoreParagraph, 100);
         return;
       }
 
@@ -646,6 +655,9 @@ const Catechism: React.FC = memo(() => {
       cancelled = true;
       deepLinkRestorePendingRef.current = false;
       window.cancelAnimationFrame(frame);
+      if (retryTimer !== undefined) window.clearTimeout(retryTimer);
+      if (releaseObserverTimer !== undefined) window.clearTimeout(releaseObserverTimer);
+      if (highlightTimer !== undefined) window.clearTimeout(highlightTimer);
     };
   }, [initialParagraph, selectedSection, viewMode]);
 
@@ -729,7 +741,7 @@ const Catechism: React.FC = memo(() => {
     }
   };
 
-  const handleNavigateToBible = (abbr: string, chapter: number) => navigate(`/bible?book=${abbr}&ch=${chapter}`);
+  const handleNavigateToBible = (abbr: string, chapter: number, verse?: number) => navigate(`/bible?book=${abbr}&ch=${chapter}${verse ? `&v=${verse}` : ''}`);
   const handleNavigateToDoc = (docId: string) => navigate(`/magisterium?doc=${docId}`);
 
   const startPara = selectedSection?.paragraphs[0] || 1;

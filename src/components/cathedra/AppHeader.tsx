@@ -1,4 +1,3 @@
-// SKILLS ATIVADOS: cathedra-operating-system, cathedra-design-system-guardian, cathedra-architecture-guardian, cathedra-saints-expert
 import React, { memo, useEffect, useState, useMemo } from 'react';
 import { useLocation, useNavigate } from '@/lib/rr-compat';
 import { motion } from 'framer-motion';
@@ -14,6 +13,7 @@ import { useAvatarUrl } from '@/lib/avatar';
 import { isLegitimateClick } from '@/lib/navigation-utils';
 import { getBreadcrumbs } from '@/config/routes';
 import { MODULE_NAVIGATION, type ModuleEnvironment } from '@/config/moduleNavigation';
+import { MODULE_PALETTES } from '@/lib/sacredPalette';
 
 interface AppHeaderProps {
   user: any;
@@ -34,9 +34,14 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
   const { t } = useLang();
   const avatarSrc = useAvatarUrl(user?.avatar, 96);
   const [isReady, setIsReady] = useState(false);
-  const activeGroup = MODULE_NAVIGATION.find((group) =>
-    pathname === group.items[0]?.path || group.items.some((item) => pathname === item.path || (item.path !== '/' && pathname.startsWith(item.path + '/'))),
-  );
+  const activeGroup = useMemo(() => {
+    if (pathname === '/') {
+      return { key: 'atrium', ...MODULE_PALETTES.atrium };
+    }
+    return MODULE_NAVIGATION.find((group) =>
+      pathname === group.items[0]?.path || group.items.some((item) => pathname === item.path || (item.path !== '/' && pathname.startsWith(item.path + '/'))),
+    );
+  }, [pathname]);
 
   useEffect(() => {
     const root = document.documentElement;

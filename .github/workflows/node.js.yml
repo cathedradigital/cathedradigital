@@ -6,6 +6,10 @@ on:
   push:
     branches: ["main"]
 
+concurrency:
+  group: ci-quality-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   quality:
     runs-on: ubuntu-latest
@@ -21,7 +25,7 @@ jobs:
           node-version: "22.x"
 
       - name: Install dependencies
-        run: npm install
+        run: npm install --no-audit --no-fund
 
       - name: Typecheck
         run: npm run typecheck
@@ -31,6 +35,9 @@ jobs:
 
       - name: Validate internal routes
         run: npm run validate:links
+
+      - name: Test Playwright artifact sanitizer
+        run: python3 scripts/test-sanitize-playwright-artifacts.py
 
       - name: Build (Cloudflare)
         run: npm run build

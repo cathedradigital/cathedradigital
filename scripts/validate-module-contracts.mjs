@@ -3,7 +3,10 @@ import { resolve } from 'node:path';
 
 const root = process.cwd();
 const moduleNavigation = readFileSync(resolve(root, 'src/config/moduleNavigation.ts'), 'utf8');
+const sacredPalette = readFileSync(resolve(root, 'src/lib/sacredPalette.ts'), 'utf8');
+const appHeader = readFileSync(resolve(root, 'src/components/cathedra/AppHeader.tsx'), 'utf8');
 const app = readFileSync(resolve(root, 'src/App.tsx'), 'utf8');
+const translations = readFileSync(resolve(root, 'src/services/translations.ts'), 'utf8');
 
 const navPaths = [...moduleNavigation.matchAll(/path:\s*['"]([^'"]+)['"]/g)].map((m) => m[1]);
 const routePaths = [
@@ -44,9 +47,66 @@ for (const path of navPaths) {
   if (!matchesRoute(path)) errors.push(`Module navigation points to an unregistered route: ${path}`);
 }
 
+const labelKeys = [...moduleNavigation.matchAll(/labelKey:\s*['"]([^'"]+)['"]/g)].map((m) => m[1]);
+for (const key of labelKeys) {
+  if (!translations.includes(`"${key}"`)) {
+    errors.push(`Module navigation label has no translation key: ${key}`);
+  }
+}
+
 const groups = [...moduleNavigation.matchAll(/key:\s*['"]([^'"]+)['"]/g)].map((m) => m[1]);
 for (const required of ['estudar', 'rezar', 'formar-se', 'pesquisar', 'minha-jornada']) {
   if (!groups.includes(required)) errors.push(`Missing public module environment: ${required}`);
+}
+
+const estudarBlock = moduleNavigation.split("key: 'estudar'")[1]?.split("key: 'rezar'")[0] ?? '';
+for (const [id, path] of [
+  ['bible', '/bible'],
+  ['catechism', '/catechism'],
+  ['documents', '/magisterium'],
+  ['nexus', '/nexus'],
+  ['library', '/biblioteca'],
+  ['saints', '/santos'],
+  ['living-church', '/community'],
+]) {
+  if (!estudarBlock.includes(`id: '${id}'`) || !estudarBlock.includes(`path: '${path}'`)) {
+    errors.push(`Canonical Estudar navigation is missing ${id} -> ${path}.`);
+  }
+}
+const pesquisarBlock = moduleNavigation.split("key: 'pesquisar'")[1]?.split("key: 'minha-jornada'")[0] ?? '';
+for (const id of ['nexus', 'library', 'saints', 'living-church']) {
+  if (pesquisarBlock.includes(`id: '${id}'`)) {
+    errors.push(`The ${id} module belongs to Estudar, not Pesquisar.`);
+  }
+}
+
+const modulePaletteKeys = {
+  estudar: 'MODULE_PALETTES.estudar',
+  rezar: 'MODULE_PALETTES.rezar',
+  'formar-se': "MODULE_PALETTES['formar-se']",
+  pesquisar: 'MODULE_PALETTES.pesquisar',
+  'minha-jornada': "MODULE_PALETTES['minha-jornada']",
+};
+if (!sacredPalette.includes('export const MODULE_PALETTES')) {
+  errors.push('Missing shared MODULE_PALETTES design-system tokens.');
+}
+if (!sacredPalette.includes('atrium: { accent:')) {
+  errors.push('Missing dedicated Atrium palette token.');
+}
+if (!appHeader.includes("pathname === '/'") || !appHeader.includes('MODULE_PALETTES.atrium')) {
+  errors.push('The root/Atrium route must consume the dedicated Atrium palette.');
+}
+for (const [environment, token] of Object.entries(modulePaletteKeys)) {
+  if (!groups.includes(environment)) continue;
+  if (!moduleNavigation.includes(`accent: ${token}.accent`)) {
+    errors.push(`Module ${environment} must use its shared accent token.`);
+  }
+  if (!moduleNavigation.includes(`accentSoft: ${token}.accentSoft`)) {
+    errors.push(`Module ${environment} must use its shared soft-accent token.`);
+  }
+}
+if (/accent:\s*['"]/.test(moduleNavigation) || /accentSoft:\s*['"]/.test(moduleNavigation)) {
+  errors.push('Module navigation must not define literal accent colors outside the design-system tokens.');
 }
 
 if (errors.length) {

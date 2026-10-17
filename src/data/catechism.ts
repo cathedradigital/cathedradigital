@@ -7,6 +7,9 @@ export interface CatechismData {
   conteudo: string;
   tags: string[];
   textoBase?: string;
+  sourceName?: string;
+  sourceUrl?: string;
+  sourceRetrievedAt?: string;
 }
 
 export const CATECHISM_LOCAL_DATA: Record<number, CatechismData> = {
@@ -174,6 +177,18 @@ export const CATECHISM_LOCAL_DATA: Record<number, CatechismData> = {
     titulo: "Ação da graça",
     conteudo: "A preparação do homem para acolher a graça é obra de Deus.",
     tags: ["graca"]
+  },
+  2262: {
+    id: "cat_2262",
+    paragraph: 2262,
+    tipo: "catecismo",
+    type: "catechism",
+    titulo: "O respeito pela vida humana",
+    conteudo: "No sermão da montanha, o Senhor lembra o preceito: «Não matarás» (Mt 5, 21) e acrescenta-lhe a proibição da ira, do ódio e da vingança. Mais ainda: Cristo exige do seu discípulo que ofereça a outra face (36), que ame os seus inimigos (37). Ele próprio não Se defendeu e disse a Pedro que deixasse a espada na bainha (38).",
+    tags: ["quinto-mandamento", "vida-humana", "ira", "odio", "vinganca"],
+    textoBase: "No sermão da montanha, o Senhor lembra o preceito: «Não matarás» (Mt 5, 21).",
+    sourceName: "Catecismo da Igreja Católica — Santa Sé",
+    sourceUrl: "https://www.vatican.va/archive/cathechism_po/index_new/p3s2cap2_2196-2557_po.html"
   },
   2087: {
     id: "cat_2087",
