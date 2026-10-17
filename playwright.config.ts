@@ -13,7 +13,7 @@ export default defineConfig({
   use: { baseURL, trace: 'on-first-retry', screenshot: 'only-on-failure', video: 'off' },
   projects: [
     { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
-    { name: 'mobile-chrome', use: { ...devices['Pixel 5'] } },
+    { name: 'mobile-chrome', use: { ...devices['Pixel 5'], viewport: { width: 390, height: 844 } } },
   ],
   webServer: {
     command: 'npm run preview -- --host 127.0.0.1 --port 4173',
