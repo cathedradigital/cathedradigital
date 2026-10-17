@@ -4,8 +4,8 @@
  * URL e chave anon/publishable são públicas por design (vão no bundle do
  * navegador; o acesso é protegido por RLS). Servem de fallback quando as
  * variáveis de ambiente não existem ou estão vazias — por exemplo, variáveis
- * cadastradas em branco no painel da Vercel, que têm prioridade sobre o
- * .env.production e zeravam a configuração no build.
+ * configuradas no ambiente de build do Cloudflare Workers, que têm prioridade
+ * sobre o .env.production e podem zerar a configuração se estiverem vazias.
  *
  * NUNCA coloque a service_role key aqui.
  */
