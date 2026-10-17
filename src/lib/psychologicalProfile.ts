@@ -1,11 +1,12 @@
 /**
  * Personal psychological profiling is intentionally disabled.
  *
- * The current Supabase schema does not provision the user_emotions or
- * user_psychological_profiles tables, and there is no explicit user opt-in
- * flow for inferring emotions from private spiritual notes/reflections.
- * Do not transmit or persist this sensitive content until both consent and
- * schema/RLS controls are implemented and verified.
+ * The connected Supabase project contains user_emotions and
+ * user_psychological_profiles tables, but repository inspection found no
+ * explicit user opt-in flow for inferring emotions from private spiritual
+ * notes/reflections. Keep profiling disabled until informed consent, purpose
+ * limitation, retention/deletion controls, and the existing RLS policies have
+ * been reviewed and tested together.
  */
 
 export interface EmotionRecord {
