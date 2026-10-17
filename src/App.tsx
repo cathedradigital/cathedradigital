@@ -831,7 +831,7 @@ const AppLayout: React.FC = () => {
               <Route path="/transactions" element={<Suspense fallback={<LoadingFallback />}><AuthGuard><UserTransactionsPage /></AuthGuard></Suspense>} />
               <Route path="/transactions/my" element={<Navigate to="/transactions" replace />} />
               <Route path="/partners" element={<Suspense fallback={<LoadingFallback />}><PartnersPage /></Suspense>} />
-              <Route path="/admin/parceiros" element={<Suspense fallback={<LoadingFallback />}><PartnersAdmin /></Suspense>} />
+              <Route path="/admin/parceiros" element={<Suspense fallback={<LoadingFallback />}><AdminGuard><PartnersAdmin /></AdminGuard></Suspense>} />
               <Route path="/transparencia" element={<Suspense fallback={<LoadingFallback />}><TransparencyPage /></Suspense>} />
 
               {/* Institucional */}
@@ -853,8 +853,8 @@ const AppLayout: React.FC = () => {
               <Route path="/docs/:slug" element={<Suspense fallback={<LoadingFallback />}><DocsArticlePage /></Suspense>} />
 
               <Route path="/offline" element={<Suspense fallback={<LoadingFallback />}><OfflinePage /></Suspense>} />
-              <Route path="/cache-manager" element={<Suspense fallback={<LoadingFallback />}><CacheManager /></Suspense>} />
-              <Route path="/bible-recovery" element={<Suspense fallback={<LoadingFallback />}><BibleRecoveryPanel /></Suspense>} />
+              <Route path="/cache-manager" element={<Suspense fallback={<LoadingFallback />}><AdminGuard><CacheManager /></AdminGuard></Suspense>} />
+              <Route path="/bible-recovery" element={<Suspense fallback={<LoadingFallback />}><AdminGuard><BibleRecoveryPanel /></AdminGuard></Suspense>} />
               
 
               {/* Aliases para navegação legada (mantém botões da Sidebar/BottomNav/CommandCenter funcionando) */}
