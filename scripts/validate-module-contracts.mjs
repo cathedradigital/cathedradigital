@@ -3,6 +3,7 @@ import { resolve } from 'node:path';
 
 const root = process.cwd();
 const moduleNavigation = readFileSync(resolve(root, 'src/config/moduleNavigation.ts'), 'utf8');
+const sacredPalette = readFileSync(resolve(root, 'src/lib/sacredPalette.ts'), 'utf8');
 const app = readFileSync(resolve(root, 'src/App.tsx'), 'utf8');
 
 const navPaths = [...moduleNavigation.matchAll(/path:\s*['"]([^'"]+)['"]/g)].map((m) => m[1]);
@@ -47,6 +48,29 @@ for (const path of navPaths) {
 const groups = [...moduleNavigation.matchAll(/key:\s*['"]([^'"]+)['"]/g)].map((m) => m[1]);
 for (const required of ['estudar', 'rezar', 'formar-se', 'pesquisar', 'minha-jornada']) {
   if (!groups.includes(required)) errors.push(`Missing public module environment: ${required}`);
+}
+
+const modulePaletteKeys = {
+  estudar: 'MODULE_PALETTES.estudar',
+  rezar: 'MODULE_PALETTES.rezar',
+  'formar-se': "MODULE_PALETTES['formar-se']",
+  pesquisar: 'MODULE_PALETTES.pesquisar',
+  'minha-jornada': "MODULE_PALETTES['minha-jornada']",
+};
+if (!sacredPalette.includes('export const MODULE_PALETTES')) {
+  errors.push('Missing shared MODULE_PALETTES design-system tokens.');
+}
+for (const [environment, token] of Object.entries(modulePaletteKeys)) {
+  if (!groups.includes(environment)) continue;
+  if (!moduleNavigation.includes(`accent: ${token}.accent`)) {
+    errors.push(`Module ${environment} must use its shared accent token.`);
+  }
+  if (!moduleNavigation.includes(`accentSoft: ${token}.accentSoft`)) {
+    errors.push(`Module ${environment} must use its shared soft-accent token.`);
+  }
+}
+if (/accent:\\s*['"]/.test(moduleNavigation) || /accentSoft:\\s*['"]/.test(moduleNavigation)) {
+  errors.push('Module navigation must not define literal accent colors outside the design-system tokens.');
 }
 
 if (errors.length) {
