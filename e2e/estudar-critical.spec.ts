@@ -44,8 +44,8 @@ test.afterEach(async ({ page }, testInfo) => {
     `status: ${testInfo.status} (expected ${testInfo.expectedStatus})`,
     `final URL: ${safeUrl(page.url())}`,
     ...entries,
-  ].join('\\n');
-  console.error('[E2E browser diagnostics]\\n' + report);
+  ].join('\n');
+  console.error('[E2E browser diagnostics]\n' + report);
   await testInfo.attach('browser-diagnostics.txt', {
     body: Buffer.from(report, 'utf8'),
     contentType: 'text/plain',
