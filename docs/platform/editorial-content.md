@@ -15,6 +15,8 @@ O Átrio é a entrada pública e acolhedora do Cátedra Digital: orientar a prá
 
 ## Dossiês
 
+O levantamento pós-encontro de dez anos de *Amoris laetitia* está arquivado em `docs/editorial/DOSSIE_AMORIS_LAETITIA_OUTUBRO_2026.md`; sua última atualização deve acompanhar as fontes oficiais de encerramento e distinguir a mensagem final do Papa das conclusões do relatório de síntese.
+
 Um dossiê deve separar:
 1. fatos documentados e fontes;
 2. ensinamento oficial publicado;
