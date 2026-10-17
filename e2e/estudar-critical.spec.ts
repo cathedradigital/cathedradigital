@@ -73,6 +73,17 @@ test('auth redirect preserves protected destination', async ({ page }) => {
   );
 });
 
+test('login restores the requested path, query and hash after real authentication', async ({ page }) => {
+  await login(page, '/catechism?p=2865#p2865');
+  await expect(page).toHaveURL(url =>
+    url.pathname === '/catechism' &&
+    url.searchParams.get('p') === '2865' &&
+    url.hash === '#p2865',
+    { timeout: 15000 },
+  );
+  await expect(page.locator('#p2865')).toBeVisible();
+});
+
 test('admin consoles require authentication and preserve the requested destination', async ({ page }) => {
   for (const destination of ['/admin/parceiros', '/bible-recovery']) {
     await page.context().clearCookies();
