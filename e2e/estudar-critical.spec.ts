@@ -8,7 +8,7 @@ test.beforeEach(async () => {
 });
 
 async function login(page: Page, destination: string) {
-  await page.goto('/login?next=' + encodeURIComponent(destination));
+  await page.goto('/auth?next=' + encodeURIComponent(destination));
   await page.getByLabel('Email').fill(email!);
   await page.getByLabel('Senha').fill(password!);
   await page.getByRole('button', { name: 'Entrar', exact: true }).click();
@@ -54,6 +54,14 @@ test('Átrio: portal de notícias identifica fontes e navegação do carrossel',
   await page.getByRole('button', { name: 'Próxima notícia' }).click();
   await expect(page.getByRole('heading', { level: 3, name: 'Encontro sobre Amoris laetitia: buscar novas respostas para novas perguntas' })).toBeVisible();
   await expect(page.getByText('02 / 06')).toBeVisible();
+});
+
+test('legacy /login alias preserves the full protected destination', async ({ page }) => {
+  await page.goto('/login?next=' + encodeURIComponent('/diario?section=notes#latest'));
+  await expect(page).toHaveURL(url =>
+    url.pathname === '/auth' && url.searchParams.get('next') === '/diario?section=notes#latest',
+    { timeout: 15000 },
+  );
 });
 
 test('auth redirect preserves protected destination', async ({ page }) => {
