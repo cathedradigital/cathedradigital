@@ -8,7 +8,7 @@ import { CheckCircle2, AlertCircle, Clock, ShieldCheck, Gauge, Search, Accessibi
 interface Checkpoint {
   id: string;
   label: string;
-  status: 'pending' | 'warning' | 'pending' | 'failed';
+  status: 'passed' | 'warning' | 'pending' | 'failed';
   value?: string | number;
   evidence?: string;
   category: 'seo' | 'a11y' | 'perf' | 'tests' | 'architecture';
