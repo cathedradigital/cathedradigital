@@ -36,7 +36,7 @@ const ReadingControlPanel: React.FC = memo(() => {
   const SettingsContent = () => (
     <div className="space-y-spacing-xl py-spacing-lg">
       <div className="text-center space-y-spacing-xs">
-        <p className="text-[8px] text-primary/30 uppercase tracking-[0.5em] font-bold">Atmosphæra</p>
+        <p className="text-[11px] text-primary/30 uppercase tracking-[0.5em] font-bold">Atmosphæra</p>
         <h2 className="text-premium-2xl font-display font-light text-primary uppercase tracking-[0.25em] leading-tight">Leitura</h2>
       </div>
       
@@ -98,13 +98,13 @@ const ReadingControlPanel: React.FC = memo(() => {
         
         <div className="grid grid-cols-1 gap-spacing-lg">
           <div className="space-y-spacing-sm">
-            <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/40 px-spacing-2xs">Espaçamento Entre Linhas</p>
+            <p className="text-[11px] font-black uppercase tracking-widest text-muted-foreground/40 px-spacing-2xs">Espaçamento Entre Linhas</p>
             <div className="flex bg-muted/20 rounded-premium-full p-spacing-2xs border border-primary/5">
               {(['tight', 'normal', 'wide'] as const).map((l) => (
                 <button
                   key={l}
                   onClick={() => updateSettings({ lineSpacing: l })}
-                  className={`flex-1 py-spacing-xs text-[9px] font-black uppercase tracking-widest rounded-premium-full transition-all duration-500 ${
+                  className={`flex-1 py-spacing-xs text-[11px] font-black uppercase tracking-widest rounded-premium-full transition-all duration-500 ${
                     settings.lineSpacing === l ? 'bg-background text-primary shadow-premium-md' : 'text-muted-foreground/40 hover:text-primary'
                   }`}
                 >
@@ -186,7 +186,7 @@ const ReadingControlPanel: React.FC = memo(() => {
             onChange={(e) => updateSettings({ columnWidth: Number(e.target.value) })}
             className="w-full accent-primary"
           />
-          <div className="flex justify-between text-[9px] uppercase tracking-widest text-muted-foreground/60 mt-spacing-xs">
+          <div className="flex justify-between text-[11px] uppercase tracking-widest text-muted-foreground/60 mt-spacing-xs">
             <span>Estreita</span>
             <span className="text-primary font-bold">{settings.columnWidth}ch</span>
             <span>Larga</span>
@@ -212,7 +212,7 @@ const ReadingControlPanel: React.FC = memo(() => {
         {settings.nightSchedule.enabled && (
           <div className="grid grid-cols-2 gap-spacing-sm">
             <label className="flex flex-col gap-spacing-2xs">
-              <span className="text-[9px] uppercase tracking-widest text-muted-foreground/60">Início</span>
+              <span className="text-[11px] uppercase tracking-widest text-muted-foreground/60">Início</span>
               <input
                 type="time"
                 value={settings.nightSchedule.start}
@@ -221,7 +221,7 @@ const ReadingControlPanel: React.FC = memo(() => {
               />
             </label>
             <label className="flex flex-col gap-spacing-2xs">
-              <span className="text-[9px] uppercase tracking-widest text-muted-foreground/60">Fim</span>
+              <span className="text-[11px] uppercase tracking-widest text-muted-foreground/60">Fim</span>
               <input
                 type="time"
                 value={settings.nightSchedule.end}
@@ -249,7 +249,7 @@ const ReadingControlPanel: React.FC = memo(() => {
         <Button 
           onClick={resetSettings}
           variant="ghost"
-          className="w-full rounded-premium-full py-spacing-md text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 hover:text-primary transition-all"
+          className="w-full rounded-premium-full py-spacing-md text-[11px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 hover:text-primary transition-all"
         >
           <Icons.RotateCcw className="w-spacing-sm h-spacing-sm mr-spacing-xs" /> Restaurar Padrões
         </Button>

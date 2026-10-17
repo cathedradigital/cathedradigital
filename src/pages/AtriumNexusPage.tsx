@@ -162,7 +162,7 @@ const AtriumNexusPage: React.FC = () => {
 
   return (
     <>
-      <MobileTopBar kicker="Cathedra" title="Nexus" transparent />
+      <MobileTopBar kicker="Cátedra Digital" title="Nexus" transparent />
     <div
       className="min-h-screen w-full min-w-0 overflow-x-hidden bg-stitch-background text-stitch-on-background"
       style={{
@@ -171,12 +171,12 @@ const AtriumNexusPage: React.FC = () => {
       }}
      data-catedra-module-root data-catedra-module="nexus">
       <Helmet>
-        <title>Cathedra — Nexus Theologicus</title>
+        <title>Cátedra Digital — Nexus Theologicus</title>
         <meta
           name="description"
           content="A sinfonia da Verdade: percorra as conexões entre Escritura, Catecismo, Padres, santos e o Magistério."
         />
-        <meta property="og:title" content="Cathedra — Nexus Theologicus" />
+        <meta property="og:title" content="Cátedra Digital — Nexus Theologicus" />
         <meta
           property="og:description"
           content="Fio a fio, os textos da Tradição respondem uns aos outros."

@@ -72,15 +72,15 @@ const AtriumBibliotecaPage: React.FC = () => {
       }}
     >
       <Helmet>
-        <title>Cathedra — Biblioteca</title>
+        <title>Cátedra Digital — Biblioteca</title>
         <meta
           name="description"
           content="Navegue pelos ecos sagrados de dois milênios: dos Padres Apostólicos ao Magistério contemporâneo, a sabedoria curada da Igreja."
         />
-        <meta property="og:title" content="Cathedra — Biblioteca" />
+        <meta property="og:title" content="Cátedra Digital — Biblioteca" />
       </Helmet>
 
-      <MobileTopBar kicker="Cathedra" title="Biblioteca" transparent />
+      <MobileTopBar kicker="Cátedra Digital" title="Biblioteca" transparent />
 
       <SpaceLayout>
         <EditorialHero density="minimal">
@@ -196,7 +196,7 @@ const AtriumBibliotecaPage: React.FC = () => {
                   <h3 className="font-stitch-display text-[16px] leading-tight text-stitch-primary transition-colors group-hover:text-stitch-secondary md:text-[18px]">
                     {c.title}
                   </h3>
-                  <p className="font-stitch-body text-[10px] font-bold uppercase tracking-[0.12em] text-stitch-on-surface-variant md:text-[11px]">
+                  <p className="font-stitch-body text-[12px] font-semibold uppercase tracking-[0.1em] text-stitch-on-surface-variant md:text-[12px]">
                     {c.meta}
                   </p>
                   <p className="mt-1 line-clamp-2 font-stitch-body text-[13px] leading-relaxed text-stitch-on-surface-variant">

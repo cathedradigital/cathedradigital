@@ -136,13 +136,13 @@ const ReadingSettingsPopover: React.FC<ReadingSettingsPopoverProps> = ({
             data-testid="reading-settings-header"
             className="flex items-center justify-between gap-spacing-sm flex-wrap"
           >
-            <h4 id="reading-settings-title" className="text-[10px] font-black uppercase tracking-widest text-primary/30">Aparência</h4>
+            <h4 id="reading-settings-title" className="text-[12px] font-semibold uppercase tracking-[0.12em] text-primary/60">Aparência</h4>
             <div className="flex items-center gap-spacing-xs">
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => updateSettings({ immersiveMode: !settings.immersiveMode })}
-                className={cn("text-[9px] uppercase tracking-tighter h-7 px-2 rounded-full whitespace-nowrap", settings.immersiveMode && "bg-primary/10 text-primary")}
+                className={cn("text-[11px] uppercase tracking-tighter h-7 px-2 rounded-full whitespace-nowrap", settings.immersiveMode && "bg-primary/10 text-primary")}
               >
                 Modo Imersivo
               </Button>
@@ -172,7 +172,7 @@ const ReadingSettingsPopover: React.FC<ReadingSettingsPopoverProps> = ({
                 )}
               >
                 <div className={cn("w-full aspect-square rounded-full shadow-inner border border-black/5", t.color)} />
-                <span className="text-[8px] font-medium uppercase tracking-tighter opacity-40 group-hover:opacity-100">{t.label}</span>
+                <span className="text-[11px] font-medium uppercase tracking-tighter opacity-40 group-hover:opacity-100">{t.label}</span>
               </button>
             ))}
           </div>
@@ -181,7 +181,7 @@ const ReadingSettingsPopover: React.FC<ReadingSettingsPopoverProps> = ({
 
           {/* Tamanho da Fonte */}
           <section aria-labelledby="reading-settings-size" className="space-y-spacing-md">
-            <h4 id="reading-settings-size" className="text-[10px] font-black uppercase tracking-widest text-primary/30">Tamanho do Texto</h4>
+            <h4 id="reading-settings-size" className="text-[12px] font-semibold uppercase tracking-[0.12em] text-primary/60">Tamanho do Texto</h4>
             <div role="radiogroup" aria-labelledby="reading-settings-size" className="flex bg-primary/[0.03] p-1 rounded-premium-full border border-primary/5">
               {fontSizes.map((f) => (
                 <button
@@ -203,7 +203,7 @@ const ReadingSettingsPopover: React.FC<ReadingSettingsPopoverProps> = ({
 
           {/* Contraste e Acessibilidade */}
           <section aria-labelledby="reading-settings-a11y" className="space-y-spacing-md">
-            <h4 id="reading-settings-a11y" className="text-[10px] font-black uppercase tracking-widest text-primary/30">Acessibilidade</h4>
+            <h4 id="reading-settings-a11y" className="text-[12px] font-semibold uppercase tracking-[0.12em] text-primary/60">Acessibilidade</h4>
             <div role="radiogroup" aria-labelledby="reading-settings-a11y" className="flex gap-spacing-sm">
               {[
                 { id: 'normal', label: 'Normal', icon: Icons.Circle },
@@ -223,7 +223,7 @@ const ReadingSettingsPopover: React.FC<ReadingSettingsPopoverProps> = ({
                   title={c.label}
                 >
                   <c.icon className={cn("w-spacing-md h-spacing-md", settings.contrast === c.id ? "text-primary" : "text-primary/20")} />
-                  <span className="text-[8px] font-bold uppercase tracking-tighter opacity-60">{c.id}</span>
+                  <span className="text-[11px] font-bold uppercase tracking-tighter opacity-60">{c.id}</span>
                 </button>
               ))}
             </div>
@@ -231,7 +231,7 @@ const ReadingSettingsPopover: React.FC<ReadingSettingsPopoverProps> = ({
 
           {/* Espaçamento */}
           <section aria-labelledby="reading-settings-spacing" className="space-y-spacing-md">
-            <h4 id="reading-settings-spacing" className="text-[10px] font-black uppercase tracking-widest text-primary/30">Espaçamento</h4>
+            <h4 id="reading-settings-spacing" className="text-[12px] font-semibold uppercase tracking-[0.12em] text-primary/60">Espaçamento</h4>
             <div role="radiogroup" aria-labelledby="reading-settings-spacing" className="flex gap-spacing-sm">
               {lineSpacings.map((s) => (
                 <button
@@ -246,7 +246,7 @@ const ReadingSettingsPopover: React.FC<ReadingSettingsPopoverProps> = ({
                   )}
                 >
                   <s.icon className={cn("w-spacing-md h-spacing-md", settings.lineSpacing === s.id ? "text-primary" : "text-primary/20")} />
-                  <span className="text-[8px] font-bold uppercase tracking-tighter opacity-60">{s.label}</span>
+                  <span className="text-[11px] font-bold uppercase tracking-tighter opacity-60">{s.label}</span>
                 </button>
               ))}
             </div>
@@ -260,7 +260,7 @@ const ReadingSettingsPopover: React.FC<ReadingSettingsPopoverProps> = ({
               className="w-full flex items-center justify-between p-spacing-md rounded-premium bg-primary/[0.02] border border-primary/5 hover:bg-primary/[0.04] transition-all group"
             >
               <div className="flex flex-col text-left">
-                <span className="text-[9px] font-black uppercase tracking-widest text-primary/40">Tipografia</span>
+                <span className="text-[11px] font-black uppercase tracking-widest text-primary/40">Tipografia</span>
                 <span className="text-premium-xs font-serif italic text-primary/70">{settings.fontFamily === 'serif' ? 'Serifada (Clássica)' : 'Sem Serifa (Moderna)'}</span>
               </div>
               <Icons.Shuffle className="w-spacing-sm h-spacing-sm text-primary/20 group-hover:text-primary transition-colors" />
@@ -271,7 +271,7 @@ const ReadingSettingsPopover: React.FC<ReadingSettingsPopoverProps> = ({
 
           {/* Tradução bíblica + modernização ortográfica */}
           <section aria-labelledby="reading-settings-translation" className="space-y-spacing-md">
-            <h4 id="reading-settings-translation" className="text-[10px] font-black uppercase tracking-widest text-primary/30">
+            <h4 id="reading-settings-translation" className="text-[12px] font-semibold uppercase tracking-[0.12em] text-primary/60">
               Tradução Bíblica
             </h4>
             <select
@@ -287,7 +287,7 @@ const ReadingSettingsPopover: React.FC<ReadingSettingsPopoverProps> = ({
             </select>
             <div className="flex items-center justify-between p-spacing-sm rounded-premium bg-primary/[0.02] border border-primary/5">
               <div className="flex flex-col text-left pr-2">
-                <span className="text-[9px] font-black uppercase tracking-widest text-primary/40">Modernização Ortográfica</span>
+                <span className="text-[11px] font-black uppercase tracking-widest text-primary/40">Modernização Ortográfica</span>
                 <span className="text-[10px] font-serif italic text-primary/60">
                   Opcional. Texto original sempre preservado no banco.
                 </span>
@@ -298,7 +298,7 @@ const ReadingSettingsPopover: React.FC<ReadingSettingsPopoverProps> = ({
                 aria-pressed={settings.bibleModernize}
                 onClick={() => updateSettings({ bibleModernize: !settings.bibleModernize })}
                 className={cn(
-                  "h-7 px-3 rounded-full text-[9px] uppercase tracking-tighter border border-primary/5 transition-all whitespace-nowrap",
+                  "h-7 px-3 rounded-full text-[11px] uppercase tracking-tighter border border-primary/5 transition-all whitespace-nowrap",
                   settings.bibleModernize ? "bg-primary/10 text-primary border-primary/20" : "text-primary/40"
                 )}
               >
@@ -320,7 +320,7 @@ const ReadingSettingsPopover: React.FC<ReadingSettingsPopoverProps> = ({
                 size="sm" 
                 onClick={() => updateSettings({ showStudyMarginalia: !settings.showStudyMarginalia })}
                 className={cn(
-                  "h-7 px-3 rounded-full text-[9px] uppercase tracking-tighter border border-primary/5 transition-all",
+                  "h-7 px-3 rounded-full text-[11px] uppercase tracking-tighter border border-primary/5 transition-all",
                   settings.showStudyMarginalia ? "bg-primary/10 text-primary border-primary/20" : "text-primary/40"
                 )}
               >

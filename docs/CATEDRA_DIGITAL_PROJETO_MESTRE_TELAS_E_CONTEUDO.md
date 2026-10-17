@@ -1028,6 +1028,65 @@ Se exigir uma nova tela, primeiro verificamos se uma experiência contextual res
 
 O objetivo é construir um sistema grande por dentro e simples por fora.
 
+
+## 32. Auditoria visual e consistência editorial — execução
+
+Esta seção registra uma exigência de implementação, além do mapa conceitual: a experiência precisa ser coerente entre os módulos, com tipografia legível, hierarquia clara e controles acessíveis em desktop e mobile.
+
+### 32.1 Padrão visual obrigatório
+
+- Usar a identidade oficial **Cátedra Digital** de forma consistente em títulos, cabeçalhos, metadados e documentação.
+- Reutilizar os tokens tipográficos e de espaçamento existentes; não introduzir fontes ou escalas paralelas por módulo.
+- Evitar texto funcional abaixo de 12 px quando ele for necessário para operar filtros, navegação ou leitura.
+- Preferir rótulos em caixa normal, com contraste suficiente, em vez de textos excessivamente pequenos, em caixa alta e com espaçamento de letras exagerado.
+- Em mobile, permitir que filtros e temas quebrem linha quando isso melhorar a descoberta; não esconder ações importantes em faixas horizontais difíceis de perceber.
+- Cada grupo de controles deve ter um propósito evidente, estado selecionado perceptível e rótulo acessível.
+- Não usar bolhas, círculos ou chips decorativos como substituto de uma hierarquia de conteúdo compreensível.
+- Preservar fontes primárias, URLs, filtros, paginação, parâmetros de busca e ações existentes ao alterar a apresentação.
+
+### 32.2 Documentos / Magistério — critérios visuais de aceite
+
+O módulo Documentos/Magistério deve ser revisado como uma experiência completa, e não apenas como uma listagem de links.
+
+**Biblioteca**
+- Título e explicação breve do acervo, sem ocupar altura excessiva.
+- Busca claramente identificada e filtros organizados em grupos compreensíveis.
+- Categorias e temas legíveis, responsivos e com estados selecionados visíveis.
+- Contagem de resultados e ordenação agrupadas sem competir visualmente com a busca.
+- Cartões com hierarquia consistente para título, autor, tipo, data e ação principal.
+- Estado vazio que explique como limpar ou ajustar os filtros.
+
+**Leitor do documento**
+- Título, autor, data e origem apresentados com clareza.
+- Índice e navegação que funcionem em desktop e mobile.
+- Leitura priorizada sobre decoração, com largura confortável e tipografia consistente com Bíblia e Catecismo.
+- Ações de anotação, marcação, pesquisa e retorno ao ponto de leitura visíveis e acessíveis.
+- Referências bíblicas e do Catecismo abrindo o destino correto.
+- Estados de carregamento, erro, tentativa novamente e documento indisponível claramente tratados.
+
+### 32.3 Regra de entrega
+
+A alteração visual só pode ser marcada como concluída após:
+1. comparar a biblioteca e o leitor em desktop e mobile;
+2. executar lint, typecheck e build para Cloudflare;
+3. testar busca, filtros, paginação, abertura de documento, referências e retorno ao ponto exato;
+4. registrar falhas restantes com evidências;
+5. validar a versão implantada no ambiente de produção.
+
+Uma alteração de metadados ou de SEO não conta como redesenho visual do módulo.
+
+## 33. Registro de execução por etapa
+
+Para cada etapa entregue, registrar:
+- arquivos modificados;
+- comportamento alterado;
+- verificações executadas e respectivos resultados;
+- pendências conhecidas;
+- link do commit e da revisão;
+- estado de publicação (não iniciado, em andamento ou validado).
+
+Não declarar o site inteiro atualizado com base em uma revisão parcial. O relatório final deve distinguir correções de código, documentação, alterações visuais, testes e publicação em produção.
+
 ---
 
 ## Registro

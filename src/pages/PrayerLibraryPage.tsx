@@ -193,10 +193,10 @@ const PrayerLibraryPage: React.FC = () => {
                     </ul>
         {!loading && metrics && (
           <div className="mt-8 text-center space-x-4">
-            <span className="font-stitch-body text-[9px] uppercase tracking-widest text-stitch-on-surface-variant/40">
+            <span className="font-stitch-body text-[12px] font-semibold uppercase tracking-[0.12em] text-stitch-on-surface-variant/70">
               P50: {metrics.p50}ms
             </span>
-            <span className="font-stitch-body text-[9px] uppercase tracking-widest text-stitch-on-surface-variant/40">
+            <span className="font-stitch-body text-[12px] font-semibold uppercase tracking-[0.12em] text-stitch-on-surface-variant/70">
               P95: {metrics.p95}ms
             </span>
           </div>

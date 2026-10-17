@@ -170,7 +170,6 @@ const FormacaoHero: React.FC = () => {
           id="formacao-hero-title"
           className="font-display leading-[1.05] text-foreground mb-spacing-md !tracking-normal break-words hyphens-auto"
           style={{
-            fontFamily: "'Cormorant Garamond', serif",
             fontSize: 'clamp(2rem, 7vw, 3.75rem)',
           }}
         >
@@ -216,7 +215,6 @@ const FormacaoHero: React.FC = () => {
         id="formacao-hero-title"
         className="font-display leading-[1.05] text-foreground mb-spacing-sm !tracking-normal break-words hyphens-auto"
         style={{
-          fontFamily: "'Cormorant Garamond', serif",
           fontSize: 'clamp(2rem, 7vw, 3.75rem)',
         }}
       >
@@ -265,7 +263,7 @@ const FormacaoHero: React.FC = () => {
           </p>
           <p
             className="font-display italic text-2xl md:text-3xl text-foreground leading-snug"
-            style={{ fontFamily: "'Cormorant Garamond', serif" }}
+            
           >
             {nextStep.title}
           </p>

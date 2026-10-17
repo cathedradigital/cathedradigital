@@ -133,15 +133,15 @@ const GOLD = '#c9a84c';
 const GOLD_TEXT = '#8a7020';
 const GOLD_SOFT = 'rgba(201,168,76,0.35)';
 const GOLD_HAIR = 'rgba(201,168,76,0.18)';
-const FONT_DISPLAY = "'Playfair Display', ui-serif, Georgia, serif";
-const FONT_BODY = "'Inter', ui-sans-serif, system-ui, sans-serif";
+const FONT_DISPLAY = 'var(--font-display)';
+const FONT_BODY = 'var(--font-body)';
 
 const EYEBROW_STYLE: React.CSSProperties = {
   color: GOLD_TEXT,
   fontFamily: FONT_BODY,
-  fontSize: '10px',
-  fontWeight: 500,
-  letterSpacing: '0.34em',
+  fontSize: '12px',
+  fontWeight: 600,
+  letterSpacing: '0.14em',
   textTransform: 'uppercase',
 };
 
@@ -278,7 +278,7 @@ const Footer: React.FC = React.memo(() => {
                     lineHeight: 1,
                   }}
                 >
-                  CATHEDRA
+                  Cátedra
                 </span>
               </div>
               <span
@@ -286,13 +286,13 @@ const Footer: React.FC = React.memo(() => {
                 style={{
                   color: GOLD_TEXT,
                   fontFamily: FONT_BODY,
-                  fontSize: 10,
+                  fontSize: 12,
                   fontWeight: 500,
-                  letterSpacing: '0.4em',
+                  letterSpacing: '0.18em',
                   textTransform: 'uppercase',
                 }}
               >
-                Digital Sanctuarium
+                Digital
               </span>
             </div>
 
@@ -336,7 +336,7 @@ const Footer: React.FC = React.memo(() => {
 
           {/* Coluna 2 — Navegação principal */}
           <FooterSection
-            title={lang === 'pt' ? 'CATHEDRA' : 'CATHEDRA'}
+            title={lang === 'pt' ? 'Cátedra' : 'Cátedra'}
             id="navigation"
             isMobile={isMobile}
             openId={openId}
@@ -548,7 +548,7 @@ const Footer: React.FC = React.memo(() => {
                 textTransform: 'uppercase',
               }}
             >
-              © {new Date().getFullYear()} <span style={{ color: GOLD_TEXT }}>●</span> CATHEDRA <span style={{ color: GOLD_TEXT }}>·</span> Omnia ad maiorem Dei gloriam
+              © {new Date().getFullYear()} <span style={{ color: GOLD_TEXT }}>●</span> Cátedra Digital <span style={{ color: GOLD_TEXT }}>·</span> Omnia ad maiorem Dei gloriam
             </p>
             <p
               className="flex items-center gap-2"

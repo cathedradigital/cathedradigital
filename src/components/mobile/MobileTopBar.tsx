@@ -8,7 +8,7 @@ import type { ReactNode } from "react";
 interface MobileTopBarProps {
   /** Título curto exibido no centro. Se ausente, usa apenas kicker. */
   title?: string;
-  /** Etiqueta em versalete acima do título (ex.: "Cathedra · Bíblia"). */
+  /** Etiqueta em versalete acima do título (ex.: "Cátedra Digital · Bíblia"). */
   kicker?: string;
   /** Mostra botão de voltar. Se `onBack` não for passado, usa navigate(-1). */
   showBack?: boolean;
@@ -21,7 +21,7 @@ interface MobileTopBarProps {
 }
 
 /**
- * MobileTopBar — barra superior fixa para telas mobile do Cathedra 3.0.
+ * MobileTopBar — barra superior fixa para telas mobile da Cátedra Digital.
  * Consome tokens `stitch-*` e respeita safe-area do notch.
  */
 export function MobileTopBar({
@@ -83,7 +83,7 @@ export function MobileTopBar({
 
       <div className="min-w-0 flex-1">
         {kicker && (
-          <span className="block truncate font-[var(--font-stitch-label)] text-[9px] font-bold uppercase tracking-[0.12em] text-stitch-on-surface-variant">
+          <span className="block truncate font-[var(--font-stitch-label)] text-[11px] font-semibold uppercase tracking-[0.1em] text-stitch-on-surface-variant">
             {kicker}
           </span>
         )}

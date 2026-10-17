@@ -7,6 +7,8 @@ export interface CatechismData {
   conteudo: string;
   tags: string[];
   textoBase?: string;
+  sourceName?: string;
+  sourceUrl?: string;
 }
 
 export const CATECHISM_LOCAL_DATA: Record<number, CatechismData> = {
@@ -220,6 +222,17 @@ export const CATECHISM_LOCAL_DATA: Record<number, CatechismData> = {
     titulo: "A oração",
     conteudo: "«A oração é a elevação da alma a Deus ou o pedido a Deus dos bens convenientes». Donde falamos nós, ao rezar? Da altura do nosso orgulho e vontade própria, ou das «profundezas» (Sl 130, 1) dum coração humilde e contrito? Aquele que se humilha será exaltado. A humildade é o fundamento da oração.",
     tags: ["oracao", "deus"]
+  },
+  2262: {
+    id: "cat_2262",
+    paragraph: 2262,
+    tipo: "catecismo",
+    type: "catechism",
+    titulo: "A proibição da ira, do ódio e da vingança",
+    conteudo: "No sermão da montanha, o Senhor lembra o preceito: «Não matarás» (Mt 5, 21) e acrescenta-lhe a proibição da ira, do ódio e da vingança. Mais ainda: Cristo exige do seu discípulo que ofereça a outra face (36), que ame os seus inimigos (37). Ele próprio não Se defendeu e disse a Pedro que deixasse a espada na bainha (38).",
+    tags: ["quinto-mandamento", "vida-humana", "ira", "odio", "vinganca"],
+    sourceName: "Santa Sé · vatican.va",
+    sourceUrl: "https://www.vatican.va/archive/cathechism_po/index_new/p3s2cap2_2196-2557_po.html"
   },
   2565: {
     id: "cat_2565",

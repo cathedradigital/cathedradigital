@@ -97,7 +97,7 @@ const FormacaoTimeline: React.FC = () => {
     >
       <p
         id="formacao-timeline-title"
-        className="text-[10px] font-black uppercase tracking-[0.25em] text-muted-foreground mb-spacing-lg"
+        className="text-[12px] font-semibold uppercase tracking-[0.12em] text-muted-foreground mb-spacing-lg"
       >
         Capítulos de {journey.title}
       </p>
@@ -148,7 +148,7 @@ const FormacaoTimeline: React.FC = () => {
                   st === 'done' ? 'concluído' : st === 'current' ? 'em andamento' : 'próximo'
                 })`}
               >
-                <p className="text-[10px] font-black uppercase tracking-[0.25em] text-muted-foreground mb-1">
+                <p className="text-[12px] font-semibold uppercase tracking-[0.12em] text-muted-foreground mb-1">
                   Capítulo {step.step_order}
                   {st === 'current' && (
                     <span className="ml-2 text-primary">· Em andamento</span>
@@ -160,7 +160,7 @@ const FormacaoTimeline: React.FC = () => {
                       ? 'text-2xl md:text-3xl text-foreground'
                       : 'text-xl md:text-2xl text-foreground/90 group-hover:text-foreground'
                   }`}
-                  style={{ fontFamily: "'Cormorant Garamond', serif" }}
+                  
                 >
                   {step.title}
                 </h3>

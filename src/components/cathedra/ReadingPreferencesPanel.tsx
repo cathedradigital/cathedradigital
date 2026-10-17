@@ -135,7 +135,7 @@ export const ReadingPreferencesPanel: React.FC<ReadingPreferencesPanelProps> = (
                 <section className="space-y-spacing-md">
                   <div className="flex items-center gap-spacing-xs mb-spacing-xs">
                     <Icons.Sun className="w-spacing-md h-spacing-md text-primary/60" />
-                    <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary/60">Ambiente e Profundidade</h3>
+                    <h3 className="text-[12px] font-semibold uppercase tracking-[0.12em] text-primary/70">Ambiente e Profundidade</h3>
                   </div>
                   <div className="grid grid-cols-2 gap-spacing-sm">
                     {themes.map((theme) => (
@@ -186,7 +186,7 @@ export const ReadingPreferencesPanel: React.FC<ReadingPreferencesPanelProps> = (
                 <section className="space-y-spacing-lg">
                   <div className="flex items-center gap-spacing-xs mb-spacing-xs">
                     <Icons.Type className="w-spacing-md h-spacing-md text-primary/60" />
-                    <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary/60">Tipografia</h3>
+                    <h3 className="text-[12px] font-semibold uppercase tracking-[0.12em] text-primary/70">Tipografia</h3>
                   </div>
                   
                   <div className="space-y-spacing-xl">
@@ -204,7 +204,7 @@ export const ReadingPreferencesPanel: React.FC<ReadingPreferencesPanelProps> = (
                         >
                           <div className="flex flex-col items-center gap-spacing-2xs">
                             <span className="font-serif text-premium-lg">Serif</span>
-                            <span className="text-[9px] uppercase tracking-wider opacity-60">Clássico</span>
+                            <span className="text-[11px] uppercase tracking-wider opacity-60">Clássico</span>
                           </div>
                         </ToggleGroupItem>
                         <ToggleGroupItem 
@@ -213,7 +213,7 @@ export const ReadingPreferencesPanel: React.FC<ReadingPreferencesPanelProps> = (
                         >
                           <div className="flex flex-col items-center gap-spacing-2xs">
                             <span className="font-sans text-premium-lg">Sans</span>
-                            <span className="text-[9px] uppercase tracking-wider opacity-60">Moderno</span>
+                            <span className="text-[11px] uppercase tracking-wider opacity-60">Moderno</span>
                           </div>
                         </ToggleGroupItem>
                       </ToggleGroup>
@@ -248,7 +248,7 @@ export const ReadingPreferencesPanel: React.FC<ReadingPreferencesPanelProps> = (
                 <section className="space-y-spacing-lg">
                   <div className="flex items-center gap-spacing-xs mb-spacing-xs">
                     <Icons.Sun className="w-spacing-md h-spacing-md text-primary/60" />
-                    <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary/60">Contraste e Nitidez</h3>
+                    <h3 className="text-[12px] font-semibold uppercase tracking-[0.12em] text-primary/70">Contraste e Nitidez</h3>
                   </div>
 
                   <div className="bg-muted/5 rounded-premium p-spacing-xs border border-muted/20">
@@ -261,19 +261,19 @@ export const ReadingPreferencesPanel: React.FC<ReadingPreferencesPanelProps> = (
                       <ToggleGroupItem value="soft" className="flex-1 py-spacing-md rounded-premium">
                         <div className="flex flex-col items-center gap-spacing-2xs">
                           <span className="text-premium-xs font-medium">Suave</span>
-                          <span className="text-[8px] uppercase font-bold tracking-tighter opacity-60">Relaxado</span>
+                          <span className="text-[11px] uppercase font-bold tracking-tighter opacity-60">Relaxado</span>
                         </div>
                       </ToggleGroupItem>
                       <ToggleGroupItem value="normal" className="flex-1 py-spacing-md rounded-premium">
                         <div className="flex flex-col items-center gap-spacing-2xs">
                           <span className="text-premium-xs font-medium">Equilibrado</span>
-                          <span className="text-[8px] uppercase font-bold tracking-tighter opacity-60">Confortável</span>
+                          <span className="text-[11px] uppercase font-bold tracking-tighter opacity-60">Confortável</span>
                         </div>
                       </ToggleGroupItem>
                       <ToggleGroupItem value="high" className="flex-1 py-spacing-md rounded-premium">
                         <div className="flex flex-col items-center gap-spacing-2xs">
                           <span className="text-premium-xs font-medium">Contraste Máximo</span>
-                          <span className="text-[8px] uppercase font-bold tracking-tighter opacity-60">Recomendado</span>
+                          <span className="text-[11px] uppercase font-bold tracking-tighter opacity-60">Recomendado</span>
                         </div>
                       </ToggleGroupItem>
                     </ToggleGroup>
@@ -286,7 +286,7 @@ export const ReadingPreferencesPanel: React.FC<ReadingPreferencesPanelProps> = (
                 <section className="space-y-spacing-lg">
                   <div className="flex items-center gap-spacing-xs mb-spacing-xs">
                     <Icons.Layout className="w-spacing-md h-spacing-md text-primary/60" />
-                    <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary/60">Espaçamento e Densidade</h3>
+                    <h3 className="text-[12px] font-semibold uppercase tracking-[0.12em] text-primary/70">Espaçamento e Densidade</h3>
                   </div>
 
                   <div className="space-y-spacing-xl">
@@ -330,19 +330,19 @@ export const ReadingPreferencesPanel: React.FC<ReadingPreferencesPanelProps> = (
                           <ToggleGroupItem value="standard" className="flex-1 py-spacing-md rounded-premium">
                             <div className="flex flex-col items-center gap-spacing-2xs">
                               <div className="w-spacing-lg h-spacing-2xs bg-primary/40 rounded-premium-full" />
-                              <span className="text-[8px] uppercase font-bold tracking-tighter">Focado</span>
+                              <span className="text-[11px] uppercase font-bold tracking-tighter">Focado</span>
                             </div>
                           </ToggleGroupItem>
                           <ToggleGroupItem value="comfortable" className="flex-1 py-spacing-md rounded-premium">
                             <div className="flex flex-col items-center gap-spacing-2xs">
                               <div className="w-spacing-md h-spacing-2xs bg-primary/40 rounded-premium-full" />
-                              <span className="text-[8px] uppercase font-bold tracking-tighter">Médio</span>
+                              <span className="text-[11px] uppercase font-bold tracking-tighter">Médio</span>
                             </div>
                           </ToggleGroupItem>
                           <ToggleGroupItem value="wide" className="flex-1 py-spacing-md rounded-premium">
                             <div className="flex flex-col items-center gap-spacing-2xs">
                               <div className="w-spacing-xs h-spacing-2xs bg-primary/40 rounded-premium-full" />
-                              <span className="text-[8px] uppercase font-bold tracking-tighter">Largo</span>
+                              <span className="text-[11px] uppercase font-bold tracking-tighter">Largo</span>
                             </div>
                           </ToggleGroupItem>
                         </ToggleGroup>
@@ -382,7 +382,7 @@ export const ReadingPreferencesPanel: React.FC<ReadingPreferencesPanelProps> = (
                 <section className="space-y-spacing-md">
                   <div className="flex items-center gap-spacing-xs mb-spacing-xs">
                     <Icons.Volume2 className="w-spacing-md h-spacing-md text-primary/60" />
-                    <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary/60">Experiência Sonora</h3>
+                    <h3 className="text-[12px] font-semibold uppercase tracking-[0.12em] text-primary/70">Experiência Sonora</h3>
                   </div>
                   
                   <div className="space-y-spacing-md">
@@ -443,7 +443,7 @@ export const ReadingPreferencesPanel: React.FC<ReadingPreferencesPanelProps> = (
                 <section className="space-y-spacing-md">
                   <div className="flex items-center gap-spacing-xs mb-spacing-xs">
                     <Icons.Settings2 className="w-spacing-md h-spacing-md text-primary/60" />
-                    <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary/60">Experiência Imersiva</h3>
+                    <h3 className="text-[12px] font-semibold uppercase tracking-[0.12em] text-primary/70">Experiência Imersiva</h3>
                   </div>
                   
                   <div className="grid grid-cols-1 gap-spacing-sm">

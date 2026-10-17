@@ -133,12 +133,12 @@ const AtriumJornadasPage: React.FC = () => {
       }}
     >
       <Helmet>
-        <title>Cathedra — Formação</title>
+        <title>Cátedra Digital — Formação</title>
         <meta
           name="description"
           content="Trilhas guiadas de formação católica: fundamentos, oração, vida mística e transformação. Um passo por vez, no ritmo do silêncio."
         />
-        <meta property="og:title" content="Cathedra — Formação" />
+        <meta property="og:title" content="Cátedra Digital — Formação" />
       </Helmet>
 
       <SpaceLayout>
@@ -200,7 +200,7 @@ const AtriumJornadasPage: React.FC = () => {
 
         {/* ─── Outras áreas ─── */}
         <div className="mt-8 space-y-12 opacity-60 grayscale hover:opacity-100 hover:grayscale-0 transition-all">
-          <div className="flex flex-wrap gap-8 py-6 border-y border-border/10 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">
+          <div className="flex flex-wrap gap-8 py-6 border-y border-border/10 text-[12px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
             <span className="flex items-center gap-2"><BookOpen className="w-3 h-3" /> Leituras recentes</span>
             <span className="flex items-center gap-2"><Compass className="w-3 h-3" /> Progresso</span>
             <span className="flex items-center gap-2"><Heart className="w-3 h-3" /> Favoritos</span>
