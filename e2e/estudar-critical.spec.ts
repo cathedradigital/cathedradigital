@@ -3,8 +3,53 @@ import { test, expect, Page } from '@playwright/test';
 const email = process.env.E2E_TEST_EMAIL;
 const password = process.env.E2E_TEST_PASSWORD;
 
-test.beforeEach(async () => {
+const browserDiagnostics = new WeakMap<Page, string[]>();
+
+function safeUrl(raw: string): string {
+  try {
+    const url = new URL(raw);
+    // Do not emit query strings: auth callbacks and signed links can carry secrets.
+    return `${url.origin}${url.pathname}`;
+  } catch {
+    return raw.split('?')[0];
+  }
+}
+
+test.beforeEach(async ({ page }) => {
   if (!email || !password) throw new Error('E2E_TEST_EMAIL and E2E_TEST_PASSWORD must be configured as CI secrets.');
+  const entries: string[] = [];
+  browserDiagnostics.set(page, entries);
+  const record = (message: string) => {
+    if (entries.length < 100) entries.push(message);
+  };
+  page.on('pageerror', error => record(`pageerror: ${error.name}: ${error.message}`));
+  page.on('console', message => {
+    if (message.type() === 'error') record(`console.error: ${message.text().slice(0, 500)}`);
+  });
+  page.on('requestfailed', request => record(
+    `requestfailed: ${request.method()} ${safeUrl(request.url())} — ${request.failure()?.errorText ?? 'unknown'}`,
+  ));
+  page.on('response', response => {
+    if (response.status() >= 400) record(
+      `http ${response.status()}: ${response.request().method()} ${safeUrl(response.url())}`,
+    );
+  });
+});
+
+test.afterEach(async ({ page }, testInfo) => {
+  if (testInfo.status === testInfo.expectedStatus) return;
+  const entries = browserDiagnostics.get(page) ?? [];
+  const report = [
+    `test: ${testInfo.title}`,
+    `status: ${testInfo.status} (expected ${testInfo.expectedStatus})`,
+    `final URL: ${safeUrl(page.url())}`,
+    ...entries,
+  ].join('\\n');
+  console.error('[E2E browser diagnostics]\\n' + report);
+  await testInfo.attach('browser-diagnostics.txt', {
+    body: Buffer.from(report, 'utf8'),
+    contentType: 'text/plain',
+  });
 });
 
 async function login(page: Page, destination: string) {
