@@ -84,9 +84,16 @@ export const NexusPanel: React.FC<NexusPanelProps> = ({
         'p-spacing-lg space-y-spacing-sm opacity-60',
         className
       )}>
-        <header className="flex items-center gap-spacing-sm text-muted-foreground">
-          <Icons.Info className="w-5 h-5" />
-          <h2 className="font-serif text-premium-base italic">Nexus Theologicus em Processamento</h2>
+        <header className="flex flex-col gap-spacing-xs text-muted-foreground">
+          {kicker && (
+            <p className="font-stitch-label text-stitch-label-sm uppercase tracking-[0.24em] text-secondary">
+              {kicker}
+            </p>
+          )}
+          <div className="flex items-center gap-spacing-sm">
+            <Icons.Info className="w-5 h-5 shrink-0" />
+            <h2 className="font-serif text-premium-base italic">Nexus Theologicus em Processamento</h2>
+          </div>
         </header>
         <p className="text-premium-xs text-muted-foreground/70 font-serif italic">
           O motor do Nexus está mapeando as conexões teológicas desta passagem. As referências aparecerão assim que a indexação for concluída.
@@ -109,7 +116,7 @@ export const NexusPanel: React.FC<NexusPanelProps> = ({
       <header className="space-y-spacing-2xs">
         {kicker && (
           <p className="font-stitch-label text-stitch-label-sm uppercase tracking-[0.24em] text-secondary">
-            NEXUS
+            {kicker}
           </p>
         )}
         {title && (

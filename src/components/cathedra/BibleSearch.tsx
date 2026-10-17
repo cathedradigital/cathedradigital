@@ -81,7 +81,7 @@ const BibleSearch: React.FC<BibleSearchProps> = ({ onSelectResult, onClose, init
 
 
   return (
-    <div className="fixed inset-0 z-[100] bg-[#FAF9F6] flex flex-col">
+    <div className="fixed inset-0 z-[200] bg-[#FAF9F6] flex flex-col">
       <header className="px-6 h-16 flex items-center gap-4 border-b border-primary/5">
         <button type="button" onClick={onClose} aria-label="Fechar busca" data-testid="bible-search-close" className="p-2 -ml-2 min-h-11 min-w-11 flex items-center justify-center text-primary/40 active:text-secondary">
           <Icons.X className="w-6 h-6" aria-hidden="true" />
