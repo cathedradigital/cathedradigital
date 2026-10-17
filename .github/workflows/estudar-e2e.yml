@@ -37,11 +37,11 @@ jobs:
           node-version: "22.x"
 
       - name: Install application dependencies
-        run: npm install
+        run: npm install --no-audit --no-fund
 
       - name: Install Playwright for this CI run only
         run: |
-          npm install --no-save @playwright/test@1.55.0
+          npm install --no-save --no-audit --no-fund @playwright/test@1.55.0
           npx playwright install --with-deps chromium
 
       - name: Build PR HEAD
