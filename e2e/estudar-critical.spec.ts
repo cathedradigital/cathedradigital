@@ -225,6 +225,9 @@ test('Catecismo: §2262 preserva o texto oficial e abre a referência bíblica',
   const bibleRef = page.getByRole('button', { name: /Mt 5, 21/i }).first();
   await expect(bibleRef).toBeVisible();
   await bibleRef.click();
+  // The inline reference first opens its contextual popover; navigation is an
+  // explicit action inside that popover, and must preserve the exact verse.
+  await page.getByRole('button', { name: 'Ir ao versículo 21', exact: true }).click();
   await expect(page).toHaveURL(/\/bible\?book=Mt&ch=5&v=21/);
 });
 
