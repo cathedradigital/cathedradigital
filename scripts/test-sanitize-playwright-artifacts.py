@@ -40,6 +40,30 @@ class SanitizerTests(unittest.TestCase):
             self.assertNotIn(secret, output)
         self.assertIn("[REDACTED]", output)
 
+    def test_redacts_supabase_storage_state_jwt_and_query_tokens(self):
+        jwt = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyLTEyMyJ9.signature-value-long"
+        storage_value = json.dumps({
+            "access_token": jwt,
+            "refresh_token": "refresh-secret-value",
+            "token_type": "bearer",
+        })
+        trace = {
+            "origins": [{
+                "origin": "http://127.0.0.1:4173",
+                "localStorage": [{
+                    "name": "sb-project-auth-token",
+                    "value": storage_value,
+                }],
+            }],
+            "request": {"url": f"https://example.test/path?access_token=query-secret&keep=yes"},
+        }
+        cleaned, count = SANITIZER.scrub_text((json.dumps(trace) + "\n").encode(), ".trace")
+        output = cleaned.decode()
+        self.assertGreaterEqual(count, 3)
+        for secret in (jwt, "refresh-secret-value", "query-secret"):
+            self.assertNotIn(secret, output)
+        self.assertIn("keep=yes", output)
+
     def test_redacts_tokens_in_nested_zip(self):
         inner = BytesIO()
         with zipfile.ZipFile(inner, "w") as archive:
