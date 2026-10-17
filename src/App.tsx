@@ -853,7 +853,7 @@ const AppLayout: React.FC = () => {
               <Route path="/docs/:slug" element={<Suspense fallback={<LoadingFallback />}><DocsArticlePage /></Suspense>} />
 
               <Route path="/offline" element={<Suspense fallback={<LoadingFallback />}><OfflinePage /></Suspense>} />
-              <Route path="/cache-manager" element={<Suspense fallback={<LoadingFallback />}><AdminGuard><CacheManager /></AdminGuard></Suspense>} />
+              <Route path="/cache-manager" element={<Suspense fallback={<LoadingFallback />}><CacheManager /></Suspense>} />
               <Route path="/bible-recovery" element={<Suspense fallback={<LoadingFallback />}><AdminGuard><BibleRecoveryPanel /></AdminGuard></Suspense>} />
               
 
