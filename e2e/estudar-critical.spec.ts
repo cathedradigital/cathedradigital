@@ -12,7 +12,22 @@ async function login(page: Page, destination: string) {
   await page.getByLabel('Email').fill(email!);
   await page.getByLabel('Senha').fill(password!);
   await page.getByRole('button', { name: 'Entrar', exact: true }).click();
-  expect(page.url()).toContain(destination.split('?')[0]);
+
+  // Fail with the actual Supabase auth error instead of timing out on a URL
+  // assertion when the configured test account is rejected.
+  await Promise.race([
+    page.waitForURL(url => new URL(url).pathname !== '/auth', { timeout: 15_000 }).then(() => 'redirected'),
+    page.getByRole('alert').waitFor({ state: 'visible', timeout: 15_000 }).then(() => 'rejected'),
+  ]);
+
+  if (new URL(page.url()).pathname === '/auth') {
+    const message = (await page.getByRole('alert').textContent().catch(() => null))?.trim();
+    throw new Error(
+      `E2E authentication was rejected before destination validation. Check E2E_TEST_EMAIL and E2E_TEST_PASSWORD against the app's Supabase project. Supabase response: ${message || 'no visible error'}`,
+    );
+  }
+
+  await expect.poll(() => new URL(page.url()).pathname + new URL(page.url()).search).toContain(destination);
 }
 
 function watchBrowserHealth(page: Page) {
@@ -38,11 +53,31 @@ async function openStudyJournal(page: Page, marker: string) {
   return note;
 }
 
+test('responsive critical flow: protected and legacy redirects preserve deep-links', async ({ page }) => {
+  await page.context().clearCookies();
+
+  await page.goto('/diario');
+  await expect.poll(() => new URL(page.url()).pathname).toBe('/auth');
+  await expect.poll(() => new URL(page.url()).searchParams.get('next')).toBe('/diario');
+
+  const destination = '/bible?book=joao&chapter=1&v=1';
+  await page.goto('/login?next=' + encodeURIComponent(destination));
+  await expect.poll(() => new URL(page.url()).pathname).toBe('/auth');
+  await expect.poll(() => new URL(page.url()).searchParams.get('next')).toBe(destination);
+});
+
 test('auth redirect preserves protected destination', async ({ page }) => {
   await page.context().clearCookies();
   await page.goto('/diario');
-  expect(page.url()).toContain('/login?next=');
-  expect(page.url()).toContain('diario');
+  await expect.poll(() => new URL(page.url()).pathname).toBe('/auth');
+  await expect.poll(() => new URL(page.url()).searchParams.get('next')).toBe('/diario');
+});
+
+test('legacy /login redirect preserves the complete deep-link', async ({ page }) => {
+  const destination = '/bible?book=joao&chapter=1&v=1';
+  await page.goto('/login?next=' + encodeURIComponent(destination));
+  await expect.poll(() => new URL(page.url()).pathname).toBe('/auth');
+  await expect.poll(() => new URL(page.url()).searchParams.get('next')).toBe(destination);
 });
 
 test('Bíblia: anotação → Diário → retorno exato ao versículo', async ({ page }) => {
@@ -54,8 +89,8 @@ test('Bíblia: anotação → Diário → retorno exato ao versículo', async ({
   await saveReflection(page, marker);
   const note = await openStudyJournal(page, marker);
   await note.getByRole('button', { name: /Ver Contexto/i }).click();
-  expect(page.url()).toContain('/bible?');
-  expect(page.url()).toContain('v=1');
+  await expect.poll(() => page.url()).toContain('/bible?');
+  await expect.poll(() => page.url()).toContain('v=1');
   await expect(page.locator('#verse-1')).toBeVisible();
   expect(bad).toEqual([]);
 });
@@ -69,7 +104,7 @@ test('Catecismo: anotação → Diário → retorno exato ao parágrafo', async 
   await saveReflection(page, marker);
   const note = await openStudyJournal(page, marker);
   await note.getByRole('button', { name: /Ver Contexto/i }).click();
-  expect(page.url()).toContain('/catechism?p=1');
+  await expect.poll(() => page.url()).toContain('/catechism?p=1');
   expect(bad).toEqual([]);
 });
 
@@ -82,7 +117,7 @@ test('Magistério: anotação → Diário → retorno ao documento/parágrafo', 
   await saveReflection(page, marker);
   const note = await openStudyJournal(page, marker);
   await note.getByRole('button', { name: /Ver Contexto/i }).click();
-  expect(page.url()).toContain('/magisterium/dce?p=');
+  await expect.poll(() => page.url()).toContain('/magisterium/dce?p=');
   expect(bad).toEqual([]);
 });
 
@@ -101,8 +136,8 @@ test('Bíblia: reload → back → forward preservam o deep-link do versículo',
   await expect(page.locator('#verse-1')).toBeVisible();
   await page.goBack();
   await page.goForward();
-  expect(page.url()).toContain('/bible?');
-  expect(page.url()).toContain('v=1');
+  await expect.poll(() => page.url()).toContain('/bible?');
+  await expect.poll(() => page.url()).toContain('v=1');
   await expect(page.locator('#verse-1')).toBeVisible();
 });
 
@@ -124,7 +159,7 @@ test('Bíblia: seletor de livro e capítulo permanece sincronizado com a URL can
 test('Bíblia: deep-link por referência abre o capítulo e o versículo correto', async ({ page }) => {
   await login(page, '/bible?ref=Jo%203%3A16');
   await expect(page.locator('#verse-16')).toBeVisible();
-  expect(page.url()).toContain('/bible?ref=');
+  await expect.poll(() => page.url()).toContain('/bible?ref=');
 });
 
 test('Catecismo: alias paragraph mantém o deep-link canônico no leitor', async ({ page }) => {
@@ -140,7 +175,7 @@ test('Catecismo: busca por § atualiza a URL canônica antes da navegação', as
   await search.fill('2865');
   await search.press('Enter');
   await expect(page.locator('#p2865')).toBeVisible();
-  expect(page.url()).toContain('/catechism?p=2865');
+  await expect.poll(() => page.url()).toContain('/catechism?p=2865');
 });
 
 test('Catecismo: deep-link de fronteira §2865 abre o último parágrafo sem perder a URL', async ({ page }) => {
@@ -148,7 +183,7 @@ test('Catecismo: deep-link de fronteira §2865 abre o último parágrafo sem per
   await login(page, '/catechism?p=2865');
   await expect(page.locator('#p2865')).toBeVisible();
   await expect(page.locator('#heading-p2865')).toBeVisible();
-  expect(page.url()).toContain('/catechism?p=2865');
+  await expect.poll(() => page.url()).toContain('/catechism?p=2865');
   expect(bad).toEqual([]);
 });
 
@@ -161,13 +196,13 @@ test('Catecismo: navegação por parágrafo atravessa a fronteira de seção', a
   await next.click();
 
   await expect(page.locator('#p26')).toBeVisible();
-  expect(page.url()).toContain('/catechism?p=26');
+  await expect.poll(() => page.url()).toContain('/catechism?p=26');
 
   const previous = page.getByTestId('catechism-paragraph-prev');
   await expect(previous).toBeEnabled();
   await previous.click();
   await expect(page.locator('#p25')).toBeVisible();
-  expect(page.url()).toContain('/catechism?p=25');
+  await expect.poll(() => page.url()).toContain('/catechism?p=25');
 });
 
 test('Catecismo: fronteiras desabilitam anterior em §1 e próximo em §2865', async ({ page }) => {
