@@ -153,3 +153,28 @@ jobs:
             rm -f "$body_file"
             trap - EXIT
           done
+
+      - name: Validate production SEO endpoints
+        shell: bash
+        run: |
+          set -euo pipefail
+          for domain in cathedradigital.com.br www.cathedradigital.com.br; do
+            for resource in robots.txt sitemap.xml; do
+              url="https://${domain}/${resource}"
+              body_file="$(mktemp)"
+              trap 'rm -f "$body_file"' EXIT
+              status="$(curl --silent --show-error --location --retry 2 --retry-all-errors --connect-timeout 10 --max-time 30 --output "$body_file" --write-out "%{http_code}" "$url")"
+              size="$(wc -c < "$body_file")"
+              if [ "$status" != "200" ] || [ "$size" -le 0 ]; then
+                echo "::error::$url returned HTTP $status with $size bytes; SEO endpoint validation failed."
+                exit 1
+              fi
+              if [ "$resource" = "sitemap.xml" ] && ! grep -Eq '<(urlset|sitemapindex)([[:space:]>])' "$body_file"; then
+                echo "::error::$url returned HTTP 200 but does not look like a sitemap XML document."
+                exit 1
+              fi
+              echo "OK $url -> HTTP $status ($size bytes)"
+              rm -f "$body_file"
+              trap - EXIT
+            done
+          done
