@@ -18,6 +18,11 @@ create index if not exists integration_test_runs_integration_created_at_idx
 
 alter table public.integration_test_runs enable row level security;
 
+-- AdminGuard calls this boolean RPC. Restrict execution to signed-in users;
+-- the SECURITY DEFINER function reveals only whether the caller is an admin.
+revoke all on function public.is_admin() from public, anon;
+grant execute on function public.is_admin() to authenticated;
+
 revoke all on table public.integration_test_runs from anon, authenticated;
 grant select, insert on table public.integration_test_runs to authenticated;
 
