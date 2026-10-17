@@ -26,6 +26,12 @@ import { DEFAULT_LOCALE, isSupportedLocale, resolveRouterBasename, withLocalePat
  */
 const ROUTER_BASENAME = resolveRouterBasename();
 
+// Keep the original protected destination when /login aliases to /auth.
+const LoginRedirect: React.FC = () => {
+  const location = useLocation();
+  return <Navigate to={`/auth${location.search ?? ''}${location.hash ?? ''}`} replace />;
+};
+
 import { supabase } from '@/lib/db';
 const AuthGuard = lazy(() => import('./components/cathedra/AuthGuard'));
 const AdminGuard = lazy(() => import('./components/cathedra/AdminGuard'));
@@ -683,7 +689,7 @@ const AppLayout: React.FC = () => {
               <Route path="/chat" element={<Navigate to="/logos" replace />} />
               <Route path="/auth" element={<Suspense fallback={<LoadingFallback />}><Auth onSuccess={() => navigate(resolveAuthHome(), { replace: true })} /></Suspense>} />
               <Route path="/.lovable/oauth/consent" element={<Suspense fallback={<LoadingFallback />}><OAuthConsent /></Suspense>} />
-              <Route path="/login" element={<Navigate to="/auth" replace />} />
+              <Route path="/login" element={<LoginRedirect />} />
               <Route path="/reset-password" element={<Suspense fallback={<LoadingFallback />}><ResetPasswordPage /></Suspense>} />
               <Route path="/profile" element={<Suspense fallback={<LoadingFallback />}><AuthGuard><ProfilePage /></AuthGuard></Suspense>} />
               <Route path="/settings" element={<Navigate to="/conta/configuracoes" replace />} />

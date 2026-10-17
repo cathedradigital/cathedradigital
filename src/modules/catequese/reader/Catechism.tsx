@@ -676,21 +676,33 @@ const Catechism: React.FC = memo(() => {
   }, [viewMode, lastFocusedElement]);
 
   useEffect(() => {
-    if (viewMode !== 'reading') return;
+    if (viewMode !== 'reading' || !selectedSection) return;
+
+    // Observe only real paragraph anchors in the currently rendered section.
+    // A document-wide [id^="p"] selector also matches unrelated IDs and can
+    // let stale/off-screen content overwrite a deep-link such as ?p=2865.
+    const sectionRoot = document.querySelector('.editorial-section');
+    if (!sectionRoot) return;
+
+    const paragraphElements = Array.from(
+      sectionRoot.querySelectorAll<HTMLElement>('[id^="p"]'),
+    ).filter((element) => /^p\\d+$/.test(element.id));
+
     const observer = new IntersectionObserver(
       (entries) => {
+        if (deepLinkRestorePendingRef.current) return;
         entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            if (deepLinkRestorePendingRef.current) return;
-            setActiveParagraphId(entry.target.id);
-            const pNum = parseInt(entry.target.id.replace('p', ''));
-            if (!isNaN(pNum)) setCurrentParagraph(pNum);
-          }
+          if (!entry.isIntersecting || !/^p\\d+$/.test(entry.target.id)) return;
+          const pNum = Number(entry.target.id.slice(1));
+          if (!Number.isInteger(pNum) || pNum < 1 || pNum > 2865) return;
+          setActiveParagraphId(entry.target.id);
+          setCurrentParagraph(pNum);
         });
       },
-      { threshold: 0.5, rootMargin: '-10% 0px -70% 0px' }
+      { threshold: 0.5, rootMargin: '-10% 0px -70% 0px' },
     );
-    document.querySelectorAll('[id^="p"]').forEach((el) => observer.observe(el));
+
+    paragraphElements.forEach((element) => observer.observe(element));
     return () => observer.disconnect();
   }, [viewMode, selectedSection]);
 

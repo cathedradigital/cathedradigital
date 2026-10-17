@@ -9,10 +9,30 @@ test.beforeEach(async () => {
 
 async function login(page: Page, destination: string) {
   await page.goto('/login?next=' + encodeURIComponent(destination));
+  await expect(page).toHaveURL(/\/auth\?next=/);
   await page.getByLabel('Email').fill(email!);
   await page.getByLabel('Senha').fill(password!);
   await page.getByRole('button', { name: 'Entrar', exact: true }).click();
-  expect(page.url()).toContain(destination.split('?')[0]);
+
+  // Wait for the asynchronous Supabase request + client-side redirect.
+  // If credentials are invalid, fail with the visible auth error instead of a racey URL assertion.
+  const expectedDestination = new URL(destination, page.url());
+  await expect(async () => {
+    const current = new URL(page.url());
+    if (current.pathname === '/auth') {
+      const error = page.getByRole('alert');
+      if (await error.isVisible().catch(() => false)) {
+        throw new Error('E2E login rejected by Supabase: ' + await error.innerText());
+      }
+    }
+
+    // A matching pathname alone is not enough: the app can land on the reader
+    // index while silently dropping the requested book/chapter/paragraph.
+    expect(current.pathname).toBe(expectedDestination.pathname);
+    for (const [key, value] of expectedDestination.searchParams) {
+      expect(current.searchParams.get(key), `destination query parameter "${key}"`).toBe(value);
+    }
+  }).toPass({ timeout: 20_000 });
 }
 
 function watchBrowserHealth(page: Page) {
@@ -41,14 +61,14 @@ async function openStudyJournal(page: Page, marker: string) {
 test('auth redirect preserves protected destination', async ({ page }) => {
   await page.context().clearCookies();
   await page.goto('/diario');
-  expect(page.url()).toContain('/login?next=');
-  expect(page.url()).toContain('diario');
+  await expect(page).toHaveURL(/\/auth\?next=/);
+  expect(new URL(page.url()).searchParams.get('next')).toBe('/diario');
 });
 
 test('Bíblia: anotação → Diário → retorno exato ao versículo', async ({ page }) => {
   const bad = watchBrowserHealth(page);
   const marker = 'E2E-BIBLE-' + Date.now();
-  await login(page, '/bible?book=joao&chapter=1&v=1');
+  await login(page, '/bible?book=Jo&ch=1&v=1');
   await expect(page.locator('#verse-1')).toBeVisible();
   await page.locator('#verse-1').click();
   await saveReflection(page, marker);
@@ -64,8 +84,8 @@ test('Catecismo: anotação → Diário → retorno exato ao parágrafo', async 
   const bad = watchBrowserHealth(page);
   const marker = 'E2E-CATECHISM-' + Date.now();
   await login(page, '/catechism?p=1');
-  await expect(page.getByRole('button', { name: /Anotar/i }).first()).toBeVisible();
-  await page.getByRole('button', { name: /Anotar/i }).first().click();
+  await expect(page.getByRole('button', { name: /Adicionar anotação ao parágrafo 1/i })).toBeVisible();
+  await page.getByRole('button', { name: /Adicionar anotação ao parágrafo 1/i }).click();
   await saveReflection(page, marker);
   const note = await openStudyJournal(page, marker);
   await note.getByRole('button', { name: /Ver Contexto/i }).click();
