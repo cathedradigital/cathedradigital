@@ -50,16 +50,16 @@ class SanitizerTests(unittest.TestCase):
         trace = {
             "origins": [{
                 "origin": "http://127.0.0.1:4173",
-                "localStorage": [{
-                    "name": "sb-project-auth-token",
-                    "value": storage_value,
-                }],
+                "localStorage": [
+                    {"name": "sb-project-auth-token", "value": storage_value},
+                    {"name": "profile-cache", "value": storage_value},
+                ],
             }],
             "request": {"url": f"https://example.test/path?access_token=query-secret&keep=yes"},
         }
         cleaned, count = SANITIZER.scrub_text((json.dumps(trace) + "\n").encode(), ".trace")
         output = cleaned.decode()
-        self.assertGreaterEqual(count, 3)
+        self.assertGreaterEqual(count, 4)
         for secret in (jwt, "refresh-secret-value", "query-secret"):
             self.assertNotIn(secret, output)
         self.assertIn("keep=yes", output)
