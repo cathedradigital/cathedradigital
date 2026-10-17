@@ -15,6 +15,15 @@ SENSITIVE_HEADERS = {
     "set-cookie",
     "x-api-key",
     "apikey",
+    "api-key",
+    "api_key",
+    "x-auth-token",
+    "x-supabase-auth-token",
+    "supabase-auth-token",
+    "access_token",
+    "refresh_token",
+    "id_token",
+    "token",
 }
 BEARER_PATTERN = re.compile(r"(?i)(bearer\s+)[A-Za-z0-9._~+/=-]{16,}")
 TEXT_SUFFIXES = {".trace", ".network", ".json", ".har", ".txt", ".log", ".md", ".html"}
