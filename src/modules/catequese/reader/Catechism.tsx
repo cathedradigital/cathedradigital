@@ -615,16 +615,25 @@ const Catechism: React.FC = memo(() => {
     let cancelled = false;
     let attempts = 0;
     const maxAttempts = 8;
+    let retryTimer: number | undefined;
+    let releaseObserverTimer: number | undefined;
+    let highlightTimer: number | undefined;
 
     const restoreParagraph = () => {
       if (cancelled) return;
       const element = document.getElementById(`p${initialParagraph}`);
 
       if (element) {
+        // Keep the URL/active paragraph lock while scroll and IntersectionObserver
+        // settle. Releasing it on the same frame lets a neighbouring paragraph
+        // overwrite a valid deep-link (especially at section boundaries/mobile).
+        deepLinkRestorePendingRef.current = true;
         element.scrollIntoView({ behavior: 'auto', block: 'center' });
         element.classList.add('bg-secondary/10');
-        deepLinkRestorePendingRef.current = false;
-        window.setTimeout(() => {
+        releaseObserverTimer = window.setTimeout(() => {
+          if (!cancelled) deepLinkRestorePendingRef.current = false;
+        }, 900);
+        highlightTimer = window.setTimeout(() => {
           if (!cancelled) element.classList.remove('bg-secondary/10');
         }, 3000);
         return;
@@ -632,7 +641,7 @@ const Catechism: React.FC = memo(() => {
 
       if (attempts < maxAttempts) {
         attempts += 1;
-        window.setTimeout(restoreParagraph, 100);
+        retryTimer = window.setTimeout(restoreParagraph, 100);
         return;
       }
 
@@ -646,6 +655,9 @@ const Catechism: React.FC = memo(() => {
       cancelled = true;
       deepLinkRestorePendingRef.current = false;
       window.cancelAnimationFrame(frame);
+      if (retryTimer !== undefined) window.clearTimeout(retryTimer);
+      if (releaseObserverTimer !== undefined) window.clearTimeout(releaseObserverTimer);
+      if (highlightTimer !== undefined) window.clearTimeout(highlightTimer);
     };
   }, [initialParagraph, selectedSection, viewMode]);
 
