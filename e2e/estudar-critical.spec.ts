@@ -59,8 +59,10 @@ test('Átrio: portal de notícias identifica fontes e navegação do carrossel',
 test('auth redirect preserves protected destination', async ({ page }) => {
   await page.context().clearCookies();
   await page.goto('/diario');
-  expect(page.url()).toContain('/auth?next=');
-  expect(page.url()).toContain('diario');
+  await expect(page).toHaveURL(url =>
+    url.pathname === '/auth' && url.searchParams.get('next') === '/diario',
+    { timeout: 15000 },
+  );
 });
 
 test('admin consoles require authentication and preserve the requested destination', async ({ page }) => {
