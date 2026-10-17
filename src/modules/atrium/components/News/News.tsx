@@ -56,7 +56,7 @@ const EDITORIAL_NEWS: NewsItem[] = [
     category: 'Agenda oficial',
     date: '14 out. 2026',
     title: 'Missa de encerramento do encontro',
-    summary: 'Celebração indicada para as 10h na Praça de São Pedro. A página oficial reúne as informações da agenda.',
+    summary: 'O Cardeal Luis Antonio G. Tagle presidiu a celebração e leu a homilia preparada por Leão XIV; a página oficial reúne os materiais da Missa.',
     url: 'https://www.vatican.va/content/leo-xiv/pt/events/event.dir.html/content/vaticanevents/pt/2026/10/14/messa-amoris-laetitia.html',
   },
 ];
