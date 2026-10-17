@@ -149,7 +149,25 @@ jobs:
               echo "::error::$url returned HTTP 200 but only $size bytes; response is too small to establish that the app is served."
               exit 1
             fi
-            echo "OK $url -> HTTP $status ($size bytes)"
+            if ! grep -Eiq '<div[^>]+id=["'"'"']root["'"'"']|id=["'"'"']root["'"'"']' "$body_file"; then
+              echo "::error::$url returned HTTP 200 but did not contain the application root. This may be an error/protection page, not the Cathedra UI."
+              exit 1
+            fi
+            if ! grep -Eiq '<script[^>]+src=["'"'"'][^"'"'"']+\.js' "$body_file"; then
+              echo "::error::$url returned HTTP 200 but no JavaScript application bundle was found."
+              exit 1
+            fi
+            echo "OK $url -> HTTP $status ($size bytes; app root and JS bundle found)"
             rm -f "$body_file"
             trap - EXIT
+          done
+
+          # Search/index endpoints are part of the production contract too.
+          for url in "https://cathedradigital.com.br/robots.txt" "https://cathedradigital.com.br/sitemap.xml"; do
+            status="$(curl --silent --show-error --location --retry 2 --retry-all-errors --connect-timeout 10 --max-time 30 --output /dev/null --write-out "%{http_code}" "$url")"
+            if [ "$status" != "200" ]; then
+              echo "::error::$url returned HTTP $status; expected HTTP 200."
+              exit 1
+            fi
+            echo "OK $url -> HTTP $status"
           done
