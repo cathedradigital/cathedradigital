@@ -23,9 +23,11 @@
 
 ## Recommended architecture
 
-Use the **current OpenHands resolver workflow in the OpenHands main repository** as the issue-to-PR executor, triggered only by an explicit maintainer action (a dedicated label and/or documented `@openhands-agent` command). Do not use the archived `All-Hands-AI/openhands-github-action` composite action or any third-party fork as the primary executor.
+**Do not implement an OpenHands GitHub Actions executor until a maintained, verifiable execution contract is identified.** The current OpenHands main repository presents Agent Canvas as a developer control center with local/remote/cloud agent backends; the previously documented resolver path was not present in the current repository inspection, and the separate `All-Hands-AI/openhands-resolver` repository is archived. Therefore, neither the old composite action nor an assumed reusable workflow is an acceptable dependency.
 
-The workflow must be copied/adapted from the current official OpenHands resolver example and pinned to a reviewed immutable commit SHA, not a floating `@main` reference in production. Before implementation, verify the reusable workflow's current inputs, secret names, permissions, and supported trigger contract against the upstream source at the chosen SHA.
+Evaluate the maintained Agent Canvas / OpenHands SDK or official automation integration against a concrete contract: supported trigger, runtime/backend requirements, GitHub write permissions, model configuration, secret isolation, task limits, and observable PR creation. Pin dependencies to reviewed immutable versions. If the supported approach requires a separately hosted Agent Server or a user-connected OpenHands service that is not currently configured, document that as an activation prerequisite rather than fabricating a workflow or claiming the agent is active.
+
+Keep the executor design separate from application PRs. The executor may create or update an isolated branch and PR only; it must not merge, approve, or deploy.
 
 ### Credentials
 
