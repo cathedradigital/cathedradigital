@@ -59,7 +59,7 @@ test('Átrio: portal de notícias identifica fontes e navegação do carrossel',
 test('auth redirect preserves protected destination', async ({ page }) => {
   await page.context().clearCookies();
   await page.goto('/diario');
-  expect(page.url()).toContain('/login?next=');
+  expect(page.url()).toContain('/auth?next=');
   expect(page.url()).toContain('diario');
 });
 
@@ -223,7 +223,7 @@ test('Catecismo: proveniência do texto oficial fica visível e navegável', asy
   await expect(page.locator('#p1')).toBeVisible();
   // Desktop and mobile render responsive source cards; scope to the visible
   // official link rather than matching duplicate hidden labels in both layouts.
-  const source = page.locator('a[href*="vatican.va"]:visible').filter({ hasText: 'Santa Sé · vatican.va' }).first();
+  const source = page.locator('#p1 a[href*="vatican.va"]:visible').filter({ hasText: 'Santa Sé · vatican.va' });
   await expect(source).toBeVisible();
   await expect(source).toHaveAttribute('href', /vatican\.va/);
 });
