@@ -203,16 +203,52 @@ const MagisteriumViewer: React.FC = () => {
     if (!content?.text || sourceLanguage === lang || translationLoading) return;
     setTranslationLoading(true);
     setTranslationError(null);
+    setTranslationProgress(null);
     try {
-      const { data, error } = await supabase.functions.invoke('document-translate', {
-        body: {
-          text: content.text,
-          source_language: sourceLanguage,
-          target_language: lang,
-        },
-      });
-      if (error) throw error;
-      const result = typeof data?.text === 'string' ? data.text.trim() : '';
+      // The Edge Function accepts at most 60,000 characters per request.
+      // Translate in smaller paragraph-preserving batches so long encyclicals
+      // do not fail immediately at the server's payload limit.
+      const paragraphs = splitDocumentParagraphs(content.text);
+      const chunks: string[] = [];
+      let current = '';
+      for (const paragraph of paragraphs) {
+        if (paragraph.length > 15_000) {
+          if (current) chunks.push(current);
+          current = '';
+          for (let offset = 0; offset < paragraph.length; offset += 15_000) {
+            chunks.push(paragraph.slice(offset, offset + 15_000));
+          }
+          continue;
+        }
+        const candidate = current ? `${current}\n\n${paragraph}` : paragraph;
+        if (current && candidate.length > 15_000) {
+          chunks.push(current);
+          current = paragraph;
+        } else {
+          current = candidate;
+        }
+      }
+      if (current) chunks.push(current);
+      if (!chunks.length) throw new Error('O documento não contém texto para traduzir.');
+
+      const translatedChunks: string[] = [];
+      setTranslationProgress({ current: 0, total: chunks.length });
+      for (let index = 0; index < chunks.length; index += 1) {
+        setTranslationProgress({ current: index + 1, total: chunks.length });
+        const { data, error } = await supabase.functions.invoke('document-translate', {
+          body: {
+            text: chunks[index],
+            source_language: sourceLanguage,
+            target_language: lang,
+          },
+        });
+        if (error) throw error;
+        const translated = typeof data?.text === 'string' ? data.text.trim() : '';
+        if (!translated) throw new Error(`O tradutor não retornou conteúdo para o bloco ${index + 1}.`);
+        translatedChunks.push(translated);
+      }
+
+      const result = normalizeDocumentText(translatedChunks.join('\n\n'));
       if (!result) throw new Error('O tradutor não retornou conteúdo.');
       setTranslatedText(result);
       if (translationCacheKey) {
@@ -476,21 +512,32 @@ const MagisteriumViewer: React.FC = () => {
 
   const [pendingSelectionAnchorId, setPendingSelectionAnchorId] = useState<string | null>(null);
 
-  const handleAddNoteOrHighlight = useCallback(async (color: string, text: string) => {
-    if (!id) return;
+  const handleAddNoteOrHighlight = useCallback(async (text: string, color: string) => {
+    if (!id) {
+      toast.error('Não foi possível identificar o documento para salvar a anotação.');
+      return;
+    }
 
+    let saved = false;
     if (activeHighlight) {
-      await updateNote(activeHighlight.id, text, color);
-      setActiveHighlight(null);
+      saved = await updateNote(activeHighlight.id, text, color);
+      if (saved) setActiveHighlight(null);
     } else {
       const match = pendingSelectionAnchorId?.match(/^para-(\d+)$/);
       const paragraphIndex = match ? Number(match[1]) : undefined;
       const contentId = paragraphIndex !== undefined ? `${id}:${paragraphIndex}` : id;
-      await addNote(contentId, text, color, paragraphIndex !== undefined ? { paragraph: paragraphIndex + 1 } : undefined);
+      const note = await addNote(contentId, text, color, paragraphIndex !== undefined ? { paragraph: paragraphIndex + 1 } : undefined);
+      saved = Boolean(note);
+    }
+
+    if (!saved) {
+      toast.error('Não foi possível salvar a anotação. Verifique sua conexão e tente novamente.');
+      return;
     }
 
     setPendingSelectionAnchorId(null);
     setIsNoteModalOpen(false);
+    toast.success('Nota salva');
   }, [id, activeHighlight, addNote, pendingSelectionAnchorId, updateNote]);
 
   useEffect(() => {
@@ -514,7 +561,7 @@ const MagisteriumViewer: React.FC = () => {
       if (id) {
         if (e.key.toLowerCase() === (settings.shortcuts?.highlight || 'h')) {
           e.preventDefault();
-          handleAddNoteOrHighlight('yellow', 'Destacado via atalho');
+          handleAddNoteOrHighlight('Destacado via atalho', 'yellow');
         }
         if (e.key.toLowerCase() === (settings.shortcuts?.note || 'n')) {
           e.preventDefault();
@@ -759,6 +806,16 @@ const MagisteriumViewer: React.FC = () => {
             <AudioButton variant="outline" className="rounded-premium-full min-h-11 min-w-11 p-spacing-0 border-primary/10" />
             <ReadingMark contentType="magisterium" contentId={id || ''} label={content.title} />
           </div>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={openDocumentNote}
+            aria-label="Anotar documento"
+            title="Anotar documento"
+            className="rounded-premium-full min-h-11 min-w-11 p-spacing-0 text-primary/70 hover:bg-primary/5 focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none"
+          >
+            <Icons.PenLine className="w-spacing-md h-spacing-md" aria-hidden="true" />
+          </Button>
           <ReadingControlPanel />
           {/* STAB-004.3.2 — Toggle da busca interna */}
           <Button
