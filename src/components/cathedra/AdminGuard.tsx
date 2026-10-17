@@ -44,7 +44,20 @@ const AdminGuard: React.FC<AdminGuardProps> = ({ children }) => {
     return <Navigate to={`/auth?next=${encodeURIComponent(next)}`} replace />;
   }
   if (verified === null) return <Spinner />;
-  if (!verified) return <Navigate to="/" replace />;
+  if (!verified) {
+    return (
+      <main className="mx-auto flex min-h-[60vh] max-w-2xl flex-col items-center justify-center gap-4 px-6 py-16 text-center" role="alert">
+        <h1 className="text-2xl font-semibold">Acesso administrativo restrito</h1>
+        <p className="max-w-xl text-muted-foreground">
+          Esta conta não possui uma função administrativa ativa. Nenhuma permissão foi concedida automaticamente.
+          Peça a um administrador autorizado para verificar a atribuição de função da conta.
+        </p>
+        <a href="/" className="inline-flex min-h-11 items-center rounded-md border border-border px-4 py-2 font-medium hover:bg-muted focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">
+          Voltar ao Átrio
+        </a>
+      </main>
+    );
+  }
 
   return <>{children}</>;
 };
