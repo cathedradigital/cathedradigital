@@ -57,6 +57,10 @@ jobs:
         if: ${{ !cancelled() }}
         run: python3 scripts/sanitize-playwright-artifacts.py
 
+      # Keep screenshots, reports and sanitized trace archives, but exclude
+      # raw browser recordings: a single failing run previously produced a
+      # ~972 MB artifact. Videos are redundant for diagnosis when trace and
+      # screenshot evidence is available and make CI uploads unnecessarily slow.
       - name: Upload Playwright evidence
         if: ${{ !cancelled() && steps.sanitize-traces.outcome == 'success' }}
         uses: actions/upload-artifact@v5
@@ -65,4 +69,6 @@ jobs:
           path: |
             playwright-report/
             test-results/
+            !test-results/**/*.webm
           retention-days: 7
+          if-no-files-found: warn
