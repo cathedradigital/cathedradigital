@@ -28,7 +28,7 @@ const AdminGuard: React.FC<AdminGuardProps> = ({ children }) => {
       try {
         const { data, error } = await supabase.rpc('is_current_user_admin');
         if (!cancelled) setVerified(!error && data === true);
-      } catch (error) {
+      } catch {
         // Fail closed on transport/runtime errors, but never leave the admin
         // guard in an infinite spinner when the RPC rejects instead of returning.
         if (!cancelled) setVerified(false);
