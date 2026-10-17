@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Navigate } from '@/lib/rr-compat';
+import { Navigate, useLocation } from '@/lib/rr-compat';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/lib/db';
 
@@ -15,6 +15,7 @@ const Spinner = () => (
 
 const AdminGuard: React.FC<AdminGuardProps> = ({ children }) => {
   const { user, loading } = useAuth();
+  const location = useLocation();
   const [verified, setVerified] = useState<boolean | null>(null);
 
   useEffect(() => {
@@ -31,7 +32,10 @@ const AdminGuard: React.FC<AdminGuardProps> = ({ children }) => {
   }, [user?.id]);
 
   if (loading) return <Spinner />;
-  if (!user) return <Navigate to="/" replace />;
+  if (!user) {
+    const next = `${location.pathname}${location.search ?? ''}${location.hash ?? ''}`;
+    return <Navigate to={`/auth?next=${encodeURIComponent(next)}`} replace />;
+  }
   if (verified === null) return <Spinner />;
   if (!verified) return <Navigate to="/" replace />;
 
