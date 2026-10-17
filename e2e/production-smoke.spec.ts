@@ -25,12 +25,12 @@ for (const domain of ['https://cathedradigital.com.br', 'https://www.cathedradig
     expect(robotsResponse?.status(), domain + '/robots.txt').toBe(200);
     const robots = await robotsResponse!.text();
     expect(robots).toMatch(/User-agent:/i);
-    expect(robots).toMatch(/Sitemap:\s*https:\/\/cathedradigital\.com\.br\/sitemap\.xml/i);
+    expect(robots).toMatch(/Sitemap:\s*https:\/\/www\.cathedradigital\.com\.br\/sitemap\.xml/i);
 
     const sitemapResponse = await page.goto(domain + '/sitemap.xml', { waitUntil: 'domcontentloaded', timeout: 10000 });
     expect(sitemapResponse?.status(), domain + '/sitemap.xml').toBe(200);
     const sitemap = await sitemapResponse!.text();
     expect(sitemap).toMatch(/<(urlset|sitemapindex)([\s>])/i);
-    expect(sitemap).toContain('https://cathedradigital.com.br');
+    expect(sitemap).toContain('https://www.cathedradigital.com.br');
   });
 }
