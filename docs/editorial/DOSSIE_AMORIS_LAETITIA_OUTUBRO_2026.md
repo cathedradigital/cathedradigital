@@ -1,9 +1,9 @@
 # Dossiê editorial — Dez anos após *Amoris laetitia*
 
 **Cátedra Digital · Documentos / Magistério**  
-**Versão:** 0.1 — levantamento editorial em andamento  
-**Última verificação:** 13 de outubro de 2026  
-**Estado:** síntese preliminar; atualizar após a Missa de encerramento de 14 de outubro.
+**Versão:** 1.0 — atualização pós-encontro  
+**Última verificação:** 17 de outubro de 2026  
+**Estado:** encontro concluído; síntese editorial atualizada com a mensagem final do Papa, a Missa e a cobertura do relatório de síntese. Não atribuir ao Papa conclusões que ele ainda declarou que apresentará em momento oportuno.
 
 ## Objetivo e regra editorial
 
@@ -22,8 +22,9 @@ Não atribuir ao encontro decisões doutrinais, disciplinares ou conclusões que
 2. Participam os chefes das Igrejas Católicas Orientais e os presidentes das Conferências Episcopais; o discurso de abertura também menciona casais, especialistas e facilitadores.
 3. O discurso de abertura de Leão XIV foi proferido na Sala Paulo VI em 7 de outubro de 2026.
 4. O Percurso Temático foi preparado pela Secretaria-Geral do Sínodo e pelo Dicastério para os Leigos, a Família e a Vida.
-5. O calendário oficial anuncia a Missa de encerramento para 14 de outubro de 2026, às 10h, na Praça de São Pedro. A página oficial em espanhol identifica o Cardeal Luis Antonio G. Tagle como celebrante; não afirmar que Leão XIV presidirá a Missa.
-6. A CNBB publicou cobertura da abertura em 7 de outubro e uma matéria sobre a contribuição de dom Bruno Elizeu Versari à recepção pastoral do documento no Brasil em 8 de outubro.
+5. A Missa de encerramento foi celebrada em 14 de outubro de 2026, às 10h, na Praça de São Pedro, pelo Cardeal Luis Antonio G. Tagle, que leu a homilia preparada por Leão XIV. O Papa enviou mensagem final assinada em 13 de outubro, agradecendo o trabalho e dizendo que lerá os frutos das discussões e apresentará suas reflexões em momento oportuno.
+6. A cobertura de 14 de outubro do Vatican News registra a apresentação do relatório de síntese e as contribuições finais, sem converter o documento de trabalho em nova norma doutrinal.
+7. A CNBB publicou cobertura da abertura em 7 de outubro e matéria sobre a contribuição de dom Bruno Elizeu Versari à recepção pastoral do documento no Brasil em 8 de outubro.
 
 ## 2. Ensinamento já publicado — fontes primárias
 
@@ -82,6 +83,13 @@ Além das quatro fontes centrais do pedido (discurso de abertura, programação/
 6. **Comunicado oficial do encontro — 7 de outubro de 2026.** Registro institucional da abertura e publicação do discurso do Papa. [Sala de Imprensa da Santa Sé](https://press.vatican.va/content/salastampa/it/bollettino/pubblico/2026/10/07/0795/01484.html).
 
 **Resultado do levantamento:** os seis materiais complementares oficiais acima foram acrescentados ao dossiê com atribuição e links de origem. Os três textos da coletiva são identificados individualmente, embora a Santa Sé os publique dentro de uma única página.
+
+## Atualização pós-encontro — 14 de outubro de 2026
+
+- **Mensagem final de Leão XIV:** [Vatican News, 14/10/2026](https://www.vaticannews.va/pt/papa/news/2026-10/papa-leao-xiv-mensagem-final-encontro-amoris-laetitia-2026.html). O Papa agradeceu as orações, a partilha e o trabalho conjunto; afirmou que lerá os resultados e oferecerá suas reflexões em momento oportuno.
+- **Missa de encerramento:** [Agenda oficial da Santa Sé](https://www.vatican.va/content/leo-xiv/pt/events/event.dir.html/content/vaticanevents/pt/2026/10/14/messa-amoris-laetitia.html) e [cobertura da homilia preparada pelo Papa e lida pelo Cardeal Tagle](https://www.vaticannews.va/pt/papa/news/2026-10/missa-encontro-amoris-laetitia-papa-leao-cardeal-tagle.html).
+- **Relatório de síntese e coletiva final:** [Vatican News, 14/10/2026](https://www.vaticannews.va/pt/vaticano/news/2026-10/encontro-internacional-amoris-laetitia-encerramento-respostas-26.html).
+- **Limite editorial:** não apresentar os temas do relatório como novas normas doutrinais. A mensagem final diz expressamente que o Papa lerá os frutos do trabalho e oferecerá suas próprias reflexões em momento oportuno.
 
 ## 5. Discernimento em curso — não confundir com decisões
 
