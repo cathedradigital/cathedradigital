@@ -118,7 +118,7 @@ jobs:
           E2E_TEST_EMAIL: ${{ secrets.E2E_TEST_EMAIL }}
           E2E_TEST_PASSWORD: ${{ secrets.E2E_TEST_PASSWORD }}
           CI: "true"
-        run: npx playwright test e2e/estudar-critical.spec.ts
+        run: npx playwright test e2e/estudar-critical.spec.ts e2e/site-route-smoke.spec.ts
 
       # Preserve failure evidence, but never upload unsanitized authenticated traces.
       - name: Sanitize Playwright evidence
