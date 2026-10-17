@@ -6,6 +6,7 @@ const moduleNavigation = readFileSync(resolve(root, 'src/config/moduleNavigation
 const sacredPalette = readFileSync(resolve(root, 'src/lib/sacredPalette.ts'), 'utf8');
 const appHeader = readFileSync(resolve(root, 'src/components/cathedra/AppHeader.tsx'), 'utf8');
 const app = readFileSync(resolve(root, 'src/App.tsx'), 'utf8');
+const translations = readFileSync(resolve(root, 'src/services/translations.ts'), 'utf8');
 
 const navPaths = [...moduleNavigation.matchAll(/path:\s*['"]([^'"]+)['"]/g)].map((m) => m[1]);
 const routePaths = [
@@ -44,6 +45,13 @@ duplicate(ids, 'module navigation id');
 
 for (const path of navPaths) {
   if (!matchesRoute(path)) errors.push(`Module navigation points to an unregistered route: ${path}`);
+}
+
+const labelKeys = [...moduleNavigation.matchAll(/labelKey:\s*['"]([^'"]+)['"]/g)].map((m) => m[1]);
+for (const key of labelKeys) {
+  if (!translations.includes(`"${key}"`)) {
+    errors.push(`Module navigation label has no translation key: ${key}`);
+  }
 }
 
 const groups = [...moduleNavigation.matchAll(/key:\s*['"]([^'"]+)['"]/g)].map((m) => m[1]);
