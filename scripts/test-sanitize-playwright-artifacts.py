@@ -30,7 +30,7 @@ class SanitizerTests(unittest.TestCase):
         }
         cleaned, count = SANITIZER.scrub_text((json.dumps(trace) + "\n").encode(), ".trace")
         output = cleaned.decode()
-        self.assertGreaterEqual(count, 4)
+        self.assertGreaterEqual(count, 5)
         for secret in (
             "abcdefghijklmnopqrstuvwxyz123456",
             "secret-cookie",
@@ -55,12 +55,12 @@ class SanitizerTests(unittest.TestCase):
                     {"name": "profile-cache", "value": storage_value},
                 ],
             }],
-            "request": {"url": f"https://example.test/path?access_token=query-secret&keep=yes"},
+            "request": {"url": f"https://example.test/path?access_token=query-secret&keep=yes#refresh_token=fragment-secret"},
         }
         cleaned, count = SANITIZER.scrub_text((json.dumps(trace) + "\n").encode(), ".trace")
         output = cleaned.decode()
         self.assertGreaterEqual(count, 4)
-        for secret in (jwt, "refresh-secret-value", "query-secret"):
+        for secret in (jwt, "refresh-secret-value", "query-secret", "fragment-secret"):
             self.assertNotIn(secret, output)
         self.assertIn("keep=yes", output)
 
