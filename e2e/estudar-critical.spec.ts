@@ -47,7 +47,7 @@ test('Átrio: portal de notícias identifica fontes e navegação do carrossel',
   await expect(page.getByRole('heading', { level: 3, name: 'Leão XIV: “Temos muito a aprender com as famílias”' })).toBeVisible();
   await page.getByRole('button', { name: 'Próxima notícia' }).click();
   await expect(page.getByRole('heading', { level: 3, name: 'Três intervenções apresentam os objetivos e o método do encontro' })).toBeVisible();
-  await expect(page.getByText('02 / 05')).toBeVisible();
+  await expect(page.getByText('02 / 07')).toBeVisible();
 });
 
 test('auth redirect preserves protected destination', async ({ page }) => {
