@@ -4,9 +4,9 @@
 
 **Goal:** Add a maintainer-triggered coding agent for Cátedra Digital that proposes isolated PRs and proves changes through the existing CI, audit, and authenticated E2E workflows without merge or deploy access.
 
-**Architecture:** Use the current official OpenHands issue resolver only after verifying its exact upstream workflow and pinning it to an immutable commit. Trigger it explicitly; keep agent credentials separate from E2E credentials and all Cloudflare secrets. The agent can propose changes but cannot merge or deploy.
+**Architecture:** First verify a currently maintained OpenHands Agent Canvas/SDK or official automation contract. Do not add a GitHub workflow until the runtime, inputs, permissions, and supported trigger are proven from upstream source. Trigger explicitly; keep agent credentials separate from E2E credentials and all Cloudflare secrets. The agent can propose changes but cannot merge or deploy.
 
-**Tech Stack:** GitHub Actions, OpenHands resolver, existing Node/Playwright CI.
+**Tech Stack:** GitHub Actions, a verified maintained OpenHands integration if available, existing Node/Playwright CI.
 
 **Spec:** `docs/superpowers/specs/2026-10-16-openhands-executor-design.md`
 
