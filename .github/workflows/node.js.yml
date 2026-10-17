@@ -32,5 +32,8 @@ jobs:
       - name: Validate internal routes
         run: npm run validate:links
 
+      - name: Test Playwright artifact sanitizer
+        run: python3 scripts/test-sanitize-playwright-artifacts.py
+
       - name: Build (Cloudflare)
         run: npm run build
