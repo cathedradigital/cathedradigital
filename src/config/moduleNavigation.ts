@@ -48,6 +48,9 @@ export const MODULE_NAVIGATION: ModuleNavGroup[] = [
       { id: 'bible', label: 'Bíblia', labelKey: 'nav.biblia', path: '/bible', description: 'A Palavra que ilumina o caminho.', descriptionKey: 'source_desc_bible' },
       { id: 'catechism', label: 'Catecismo', labelKey: 'nav.catecismo', path: '/catechism', description: 'A fé compreendida e transmitida.', descriptionKey: 'source_desc_catechism' },
       { id: 'documents', label: 'Documentos', labelKey: 'nav.documentos', path: '/magisterium', description: 'A voz da Igreja através do tempo.', descriptionKey: 'source_desc_documents' },
+      { id: 'nexus', label: 'Nexus', labelKey: 'nav.nexus', path: '/nexus', description: 'Conexões entre as fontes da fé.' },
+      { id: 'library', label: 'Biblioteca', labelKey: 'nav.biblioteca', path: '/biblioteca', description: 'Um acervo para descobrir, ler e retornar.' },
+      { id: 'living-church', label: 'Igreja Viva', labelKey: 'nav.igreja_viva', path: '/community', description: 'Comunidade, testemunhos e vida da Igreja.' },
     ],
   },
   {
@@ -91,8 +94,6 @@ export const MODULE_NAVIGATION: ModuleNavGroup[] = [
     description: 'Descoberta universal e ferramentas de referência.',
     items: [
       { id: 'search', label: 'Buscar', labelKey: 'nav.buscar', path: '/buscar', description: 'Pesquisa transversal em toda a plataforma.' },
-      { id: 'nexus', label: 'Nexus', labelKey: 'nav.nexus', path: '/nexus', description: 'Relações entre fontes, temas e conteúdos.' },
-      { id: 'library', label: 'Biblioteca', labelKey: 'nav.biblioteca', path: '/acervo', description: 'Um acervo para descobrir, ler e retornar.' },
       { id: 'saints', label: 'Santos', labelKey: 'nav.santos', path: '/santos', description: 'Vidas que testemunharam a fé.' },
       { id: 'glossary', label: 'Glossário', labelKey: 'nav.glossario', path: '/glossario', description: 'Termos e conceitos da fé.' },
       { id: 'atlas', label: 'Atlas', labelKey: 'nav.atlas', path: '/atlas', description: 'Exploração geográfica e histórica.' },
