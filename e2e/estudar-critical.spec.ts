@@ -57,7 +57,14 @@ async function login(page: Page, destination: string) {
   await page.getByLabel('Email').fill(email!);
   await page.getByLabel('Senha').fill(password!);
   await page.getByRole('button', { name: 'Entrar', exact: true }).click();
-  expect(page.url()).toContain(destination.split('?')[0]);
+
+  // Wait for the app's post-auth redirect instead of asserting during the
+  // transient /auth callback. Route-specific tests below verify the requested
+  // query/deep-link survives (or is normalized canonically by the reader).
+  const expectedPath = new URL(destination, page.url()).pathname;
+  await expect(page).toHaveURL(url => new URL(url).pathname === expectedPath, {
+    timeout: 15_000,
+  });
 }
 
 function watchBrowserHealth(page: Page) {
