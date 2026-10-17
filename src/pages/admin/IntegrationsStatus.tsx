@@ -50,18 +50,18 @@ const integrations: Integration[] = [
     id: "mercado-pago",
     name: "Mercado Pago",
     category: "Pagamentos",
-    status: "connected",
-    description: "Checkout Pro para assinaturas PRO e doações.",
-    howTo: "Secret MERCADO_PAGO_ACCESS_TOKEN configurado. Verifique o webhook em Connectors.",
+    status: "partial",
+    description: "Checkout Pro para assinaturas PRO e doações; a conexão ainda precisa de teste real.",
+    howTo: "Execute o teste de conexão e confirme o webhook no painel do Mercado Pago antes de considerar ativo.",
     docsUrl: "https://www.mercadopago.com.br/developers",
   },
   {
     id: "google-api-key",
     name: "Google API Key",
     category: "Google",
-    status: "connected",
-    description: "Chave genérica do Google (Maps/YouTube/APIs públicas).",
-    howTo: "Secret GOOGLE_API_KEY configurado. Confirme quais APIs estão habilitadas no Google Cloud Console.",
+    status: "partial",
+    description: "Credencial Google para APIs públicas; o acesso real precisa ser testado.",
+    howTo: "Execute o teste de conexão e confirme as APIs habilitadas no Google Cloud Console.",
     docsUrl: "https://console.cloud.google.com/apis/credentials",
   },
   {
@@ -216,7 +216,14 @@ export default function IntegrationsStatus() {
     setLoading((s) => ({ ...s, [id]: false }));
   };
 
-  const grouped = integrations.reduce<Record<string, Integration[]>>((acc, item) => {
+  // A execução mais recente do teste prevalece sobre o estado inicial. Sem
+  // evidência de teste, integrações configuráveis não devem aparecer como verdes.
+  const integrationsWithStatus = useMemo(() => integrations.map((item) => {
+    if (item.testable === false || !results[item.id]) return item;
+    return { ...item, status: results[item.id].ok ? "connected" as const : "disconnected" as const };
+  }), [results]);
+
+  const grouped = integrationsWithStatus.reduce<Record<string, Integration[]>>((acc, item) => {
     (acc[item.category] ||= []).push(item);
     return acc;
   }, {});
@@ -256,10 +263,10 @@ export default function IntegrationsStatus() {
     setDateTo("");
   };
 
-  const total = integrations.length;
-  const connected = integrations.filter((i) => i.status === "connected").length;
-  const disconnected = integrations.filter((i) => i.status === "disconnected").length;
-  const partial = integrations.filter((i) => i.status === "partial").length;
+  const total = integrationsWithStatus.length;
+  const connected = integrationsWithStatus.filter((i) => i.status === "connected").length;
+  const disconnected = integrationsWithStatus.filter((i) => i.status === "disconnected").length;
+  const partial = integrationsWithStatus.filter((i) => i.status === "partial").length;
 
   return (
     <div className="container mx-auto max-w-5xl px-4 py-8">
