@@ -120,6 +120,11 @@ jobs:
           CI: "true"
         run: npx playwright test e2e/estudar-critical.spec.ts e2e/site-route-smoke.spec.ts
 
+      - name: Verify current production UI and SEO before deploy
+        env:
+          CI: "true"
+        run: npx playwright test e2e/production-smoke.spec.ts --project=desktop-chromium
+
       # Preserve failure evidence, but never upload unsanitized authenticated traces.
       - name: Sanitize Playwright evidence
         id: sanitize-deploy-traces
@@ -144,56 +149,7 @@ jobs:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: deploy
 
-      - name: Validate production endpoints
-        shell: bash
-        run: |
-          set -euo pipefail
-          endpoints=(
-            "https://cathedradigital.com.br"
-            "https://www.cathedradigital.com.br"
-            "https://cathedradigital.cathedradigital.workers.dev"
-          )
-          for url in "${endpoints[@]}"; do
-            echo "Checking $url"
-            body_file="$(mktemp)"
-            trap 'rm -f "$body_file"' EXIT
-            status="$(curl --silent --show-error --location --retry 2 --retry-all-errors --connect-timeout 10 --max-time 30 --output "$body_file" --write-out "%{http_code}" "$url")"
-            size="$(wc -c < "$body_file")"
-
-            if [ "$status" != "200" ]; then
-              echo "::error::$url returned HTTP $status; endpoint validation requires HTTP 200 and cannot treat a protection/error page as proof of a working UI."
-              exit 1
-            fi
-            if [ "$size" -le 100 ]; then
-              echo "::error::$url returned HTTP 200 but only $size bytes; response is too small to establish that the app is served."
-              exit 1
-            fi
-            echo "OK $url -> HTTP $status ($size bytes)"
-            rm -f "$body_file"
-            trap - EXIT
-          done
-
-      - name: Validate production SEO endpoints
-        shell: bash
-        run: |
-          set -euo pipefail
-          for domain in cathedradigital.com.br www.cathedradigital.com.br; do
-            for resource in robots.txt sitemap.xml; do
-              url="https://${domain}/${resource}"
-              body_file="$(mktemp)"
-              trap 'rm -f "$body_file"' EXIT
-              status="$(curl --silent --show-error --location --retry 2 --retry-all-errors --connect-timeout 10 --max-time 30 --output "$body_file" --write-out "%{http_code}" "$url")"
-              size="$(wc -c < "$body_file")"
-              if [ "$status" != "200" ] || [ "$size" -le 0 ]; then
-                echo "::error::$url returned HTTP $status with $size bytes; SEO endpoint validation failed."
-                exit 1
-              fi
-              if [ "$resource" = "sitemap.xml" ] && ! grep -Eq '<(urlset|sitemapindex)([[:space:]>])' "$body_file"; then
-                echo "::error::$url returned HTTP 200 but does not look like a sitemap XML document."
-                exit 1
-              fi
-              echo "OK $url -> HTTP $status ($size bytes)"
-              rm -f "$body_file"
-              trap - EXIT
-            done
-          done
+      - name: Verify deployed production UI and SEO in browser
+        env:
+          CI: "true"
+        run: npx playwright test e2e/production-smoke.spec.ts --project=desktop-chromium
