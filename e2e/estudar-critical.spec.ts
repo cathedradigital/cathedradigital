@@ -205,7 +205,8 @@ test('Catecismo: Conexo prioriza relação curada e mantém a referência naveg�
   const bad = watchBrowserHealth(page);
   await login(page, '/catechism?p=279');
   await expect(page.locator('#p279')).toBeVisible();
-  await expect(page.getByText('Gn 1:1', { exact: true })).toBeVisible();
+  // The reference can also appear in a related-content card outside the paragraph.
+  await expect(page.locator('#p279').getByText('Gn 1:1', { exact: true })).toBeVisible();
   await expect(page.getByText('Referência editorial', { exact: true })).toBeVisible();
   expect(bad).toEqual([]);
 });
