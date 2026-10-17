@@ -8,7 +8,7 @@ import {
 import { Icons } from '@/constants';
 import { EnvironmentRegistry, RouteRegistry } from '@/core/navigation';
 import {
-  useResume, useLiturgyToday, useAnnouncements,
+  useResume, useLiturgyToday,
   useFeaturedThemes, useSearchSuggestions,
 } from '@/modules/atrium/hooks';
 import { useSpiritualJourney } from '@/hooks/useSpiritualJourney';
@@ -44,7 +44,6 @@ const HomeUnified: React.FC = () => {
   const environments = EnvironmentRegistry.all();
   const resume = useResume();
   const liturgy = useLiturgyToday();
-  const news = useAnnouncements();
   const themes = useFeaturedThemes();
   const suggestions = useSearchSuggestions();
   const { lastRead, dailySteps } = useSpiritualJourney();
