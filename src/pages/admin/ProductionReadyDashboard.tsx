@@ -3,7 +3,7 @@ import { Helmet } from '@/lib/helmet-compat';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { CheckCircle2, AlertCircle, Clock, ShieldCheck, Gauge, Search, Accessibility, TestTube2, Layout, Zap } from "lucide-react";
+import { CheckCircle2, AlertCircle, Clock, Gauge, Search, Accessibility, TestTube2, Layout, Zap } from "lucide-react";
 
 interface Checkpoint {
   id: string;
