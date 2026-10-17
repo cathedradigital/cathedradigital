@@ -128,7 +128,7 @@ const AtriumHome: React.FC = () => {
         />
         <link rel="canonical" href="https://cathedradigital.com.br/" />
         <meta property="og:title" content="Átrio — Cátedra Digital" />
-        <meta property="og:url" content="https://www.cathedradigital.com.br/" />
+        <meta property="og:url" content="https://cathedradigital.com.br/" />
         <meta property="og:type" content="website" />
         <meta
           property="og:description"
