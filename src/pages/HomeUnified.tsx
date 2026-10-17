@@ -8,11 +8,12 @@ import {
 import { Icons } from '@/constants';
 import { EnvironmentRegistry, RouteRegistry } from '@/core/navigation';
 import {
-  useResume, useLiturgyToday, useAnnouncements,
+  useResume, useLiturgyToday,
   useFeaturedThemes, useSearchSuggestions,
 } from '@/modules/atrium/hooks';
 import { useSpiritualJourney } from '@/hooks/useSpiritualJourney';
 import { useAuth } from '@/hooks/useAuth';
+import AtriumNews from '@/modules/atrium/components/News/News';
 
 const ENV_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
   BookOpen, HandHeart, GraduationCap, Search, Compass,
@@ -43,7 +44,6 @@ const HomeUnified: React.FC = () => {
   const environments = EnvironmentRegistry.all();
   const resume = useResume();
   const liturgy = useLiturgyToday();
-  const news = useAnnouncements();
   const themes = useFeaturedThemes();
   const suggestions = useSearchSuggestions();
   const { lastRead, dailySteps } = useSpiritualJourney();
@@ -270,7 +270,7 @@ const HomeUnified: React.FC = () => {
         )}
 
         {/* DESTAQUE + LITURGIA */}
-        {(featured || liturgy || news.length > 0) && (
+        {(featured || liturgy) && (
           <section className="mx-auto grid max-w-7xl gap-4 px-5 py-16 md:grid-cols-3 md:px-10 md:py-24">
             {featured && (
               <Link to={`/buscar?q=${encodeURIComponent(featured.label)}`} className="group rounded-3xl border border-border bg-card p-7 transition-all hover:border-primary/40 hover:shadow-md md:col-span-2">
@@ -288,14 +288,11 @@ const HomeUnified: React.FC = () => {
                 <Link to="/liturgia" className="mt-6 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-primary">Abrir liturgia <ArrowRight className="h-4 w-4" /></Link>
               </div>
             )}
-            {news.length > 0 && (
-              <div className="rounded-3xl border border-border bg-card p-7 md:col-span-3">
-                <Eyebrow>Novidades</Eyebrow>
-                <div className="mt-5 grid gap-4 md:grid-cols-3">{news.slice(0, 3).map(n => <div key={n.id} className="border-l-2 border-primary/30 pl-4"><p className="text-xs text-muted-foreground">{n.publishedAt}</p><p className="mt-1 font-medium">{n.label}</p></div>)}</div>
-              </div>
-            )}
           </section>
         )}
+        <section aria-label="Notícias da Igreja" className="mx-auto max-w-7xl px-5 pb-16 md:px-10 md:pb-24">
+          <AtriumNews />
+        </section>
       </main>
 
         <footer className="border-t border-border/60 bg-muted/20">
