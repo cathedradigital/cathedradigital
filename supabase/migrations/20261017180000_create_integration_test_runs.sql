@@ -16,6 +16,9 @@ create index if not exists integration_test_runs_created_at_idx
 create index if not exists integration_test_runs_integration_created_at_idx
   on public.integration_test_runs (integration_id, created_at desc);
 
+create index if not exists integration_test_runs_tested_by_idx
+  on public.integration_test_runs (tested_by);
+
 alter table public.integration_test_runs enable row level security;
 
 -- AdminGuard calls this boolean RPC. Restrict execution to signed-in users;
