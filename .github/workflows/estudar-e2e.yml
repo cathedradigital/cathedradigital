@@ -55,6 +55,11 @@ jobs:
       - name: Run critical Estudar E2E
         run: npx playwright test e2e/estudar-critical.spec.ts e2e/site-route-smoke.spec.ts
 
+      - name: Verify current production UI and SEO before release
+        env:
+          CI: "true"
+        run: npx playwright test e2e/production-smoke.spec.ts --project=desktop-chromium
+
       - name: Sanitize sensitive headers in Playwright traces
         id: sanitize-traces
         if: ${{ !cancelled() }}
