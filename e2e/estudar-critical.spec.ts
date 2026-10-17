@@ -36,9 +36,12 @@ async function openStudyJournal(page: Page, marker: string) {
   await page.goto('/conta/diario');
   await expect(page.getByRole('button', { name: 'Estudo e Leitura' })).toBeVisible();
   await page.getByRole('button', { name: 'Estudo e Leitura' }).click();
-  const note = page.getByText(marker, { exact: false }).first();
-  await expect(note).toBeVisible();
-  return note;
+  const markerText = page.getByText(marker, { exact: false }).first();
+  await expect(markerText).toBeVisible();
+  // Scope the context action to the exact note card created by this test.
+  const noteCard = page.getByTestId('study-note-card').filter({ hasText: marker }).first();
+  await expect(noteCard).toBeVisible();
+  return noteCard;
 }
 
 test('auth redirect preserves protected destination', async ({ page }) => {
