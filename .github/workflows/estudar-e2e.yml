@@ -3,12 +3,6 @@ name: Estudar E2E
 on:
   pull_request:
     branches: ["main"]
-    paths:
-      - "src/**"
-      - "e2e/**"
-      - "playwright.config.ts"
-      - "package.json"
-      - ".github/workflows/estudar-e2e.yml"
   workflow_dispatch:
 
 concurrency:
@@ -47,6 +41,9 @@ jobs:
       - name: Build PR HEAD
         run: npm run build
 
+      - name: Test Playwright artifact sanitizer
+        run: python3 scripts/test-sanitize-playwright-artifacts.py
+
       - name: Verify authenticated E2E account exists
         run: |
           test -n "$E2E_TEST_EMAIL" || { echo "::error::Missing E2E_TEST_EMAIL — authenticated E2E is blocked"; exit 1; }
@@ -55,12 +52,23 @@ jobs:
       - name: Run critical Estudar E2E
         run: npx playwright test e2e/estudar-critical.spec.ts
 
-      - name: Upload Playwright evidence
+      - name: Sanitize sensitive headers in Playwright traces
+        id: sanitize-traces
         if: ${{ !cancelled() }}
+        run: python3 scripts/sanitize-playwright-artifacts.py
+
+      # Keep screenshots, reports and sanitized trace archives, but exclude
+      # raw browser recordings: a single failing run previously produced a
+      # ~972 MB artifact. Videos are redundant for diagnosis when trace and
+      # screenshot evidence is available and make CI uploads unnecessarily slow.
+      - name: Upload Playwright evidence
+        if: ${{ !cancelled() && steps.sanitize-traces.outcome == 'success' }}
         uses: actions/upload-artifact@v5
         with:
           name: estudar-e2e-evidence
           path: |
             playwright-report/
             test-results/
+            !test-results/**/*.webm
           retention-days: 7
+          if-no-files-found: warn

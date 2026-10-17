@@ -12,7 +12,10 @@ async function login(page: Page, destination: string) {
   await page.getByLabel('Email').fill(email!);
   await page.getByLabel('Senha').fill(password!);
   await page.getByRole('button', { name: 'Entrar', exact: true }).click();
-  expect(page.url()).toContain(destination.split('?')[0]);
+  // Wait for the auth transition; sampling page.url() immediately after click races the SPA/session update.
+  // Destination-specific assertions below still verify query parameters and content.
+  const expectedPath = new URL(destination, 'http://localhost').pathname;
+  await expect(page).toHaveURL(url => url.pathname === expectedPath, { timeout: 15_000 });
 }
 
 function watchBrowserHealth(page: Page) {
@@ -26,23 +29,28 @@ async function saveReflection(page: Page, text: string) {
   await expect(page.getByText('Scriptum Sanctuarium')).toBeVisible();
   await page.locator('textarea[placeholder="O que esta passagem diz ao seu coração?"]').fill(text);
   await page.getByRole('button', { name: 'Salvar Reflexão', exact: true }).click();
-  await expect(page.getByText('Nota salva')).toBeVisible().catch(() => {});
+  // Persistence feedback is part of the user-visible save contract; do not swallow failures.
+  await expect(page.getByText('Nota salva')).toBeVisible();
 }
 
 async function openStudyJournal(page: Page, marker: string) {
   await page.goto('/conta/diario');
   await expect(page.getByRole('button', { name: 'Estudo e Leitura' })).toBeVisible();
   await page.getByRole('button', { name: 'Estudo e Leitura' }).click();
-  const note = page.getByText(marker, { exact: false }).first();
-  await expect(note).toBeVisible();
-  return note;
+  const markerText = page.getByText(marker, { exact: false }).first();
+  await expect(markerText).toBeVisible();
+  // Scope the context action to the exact note card created by this test.
+  const noteCard = page.getByTestId('study-note-card').filter({ hasText: marker }).first();
+  await expect(noteCard).toBeVisible();
+  return noteCard;
 }
 
 test('auth redirect preserves protected destination', async ({ page }) => {
   await page.context().clearCookies();
   await page.goto('/diario');
-  expect(page.url()).toContain('/login?next=');
-  expect(page.url()).toContain('diario');
+  // /login is a compatibility redirect to the canonical /auth route.
+  await expect(page).toHaveURL(url => url.pathname === '/auth' && url.searchParams.has('next'), { timeout: 15_000 });
+  expect(new URL(page.url()).searchParams.get('next')).toContain('diario');
 });
 
 test('Bíblia: anotação → Diário → retorno exato ao versículo', async ({ page }) => {
@@ -192,7 +200,8 @@ test('Catecismo: §2262 preserva o texto oficial e abre a referência bíblica',
 test('Catecismo: proveniência do texto oficial fica visível e navegável', async ({ page }) => {
   await login(page, '/catechism?p=1');
   await expect(page.locator('#p1')).toBeVisible();
-  const source = page.getByText('Santa Sé · vatican.va', { exact: true });
+  // The reader prefetches neighbouring paragraphs; assert the actual visible source link.
+  const source = page.locator('a[href*="vatican.va"]:visible').filter({ hasText: 'Santa Sé' }).first();
   await expect(source).toBeVisible();
   await expect(source).toHaveAttribute('href', /vatican\.va/);
 });
@@ -201,7 +210,8 @@ test('Catecismo: Conexo prioriza relação curada e mantém a referência naveg�
   const bad = watchBrowserHealth(page);
   await login(page, '/catechism?p=279');
   await expect(page.locator('#p279')).toBeVisible();
-  await expect(page.getByText('Gn 1:1', { exact: true })).toBeVisible();
+  // The reference can also appear in a related-content card outside the paragraph.
+  await expect(page.locator('#p279').getByText('Gn 1:1', { exact: true })).toBeVisible();
   await expect(page.getByText('Referência editorial', { exact: true })).toBeVisible();
   expect(bad).toEqual([]);
 });

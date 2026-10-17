@@ -539,6 +539,7 @@ const Catechism: React.FC = memo(() => {
   // Explicit ?p=N deep-links temporarily outrank the generic IntersectionObserver.
   // This prevents restoration from being overwritten by the first visible paragraph.
   const deepLinkRestorePendingRef = useRef(false);
+  const deepLinkTargetRef = useRef<number | null>(null);
 
   // O parágrafo ativo é o ponto de continuidade do Catecismo.
   useEffect(() => {
@@ -608,13 +609,25 @@ const Catechism: React.FC = memo(() => {
   useEffect(() => {
     if (typeof initialParagraph !== 'number' || viewMode !== 'reading' || !selectedSection) {
       deepLinkRestorePendingRef.current = false;
+      deepLinkTargetRef.current = null;
       return;
     }
 
+    // Ignore stale intersection events until the requested deep-link paragraph
+    // itself enters the reading viewport. This prevents ?p=2262 from becoming
+    // ?p=2084 when the first paragraph of a section intersects during mount.
     deepLinkRestorePendingRef.current = true;
+    deepLinkTargetRef.current = initialParagraph;
     let cancelled = false;
     let attempts = 0;
-    const maxAttempts = 8;
+    const maxAttempts = 100;
+    const retryTimers: number[] = [];
+    const releaseTimer = window.setTimeout(() => {
+      if (deepLinkTargetRef.current === initialParagraph) {
+        deepLinkRestorePendingRef.current = false;
+        deepLinkTargetRef.current = null;
+      }
+    }, 10_000);
 
     const restoreParagraph = () => {
       if (cancelled) return;
@@ -623,7 +636,6 @@ const Catechism: React.FC = memo(() => {
       if (element) {
         element.scrollIntoView({ behavior: 'auto', block: 'center' });
         element.classList.add('bg-secondary/10');
-        deepLinkRestorePendingRef.current = false;
         window.setTimeout(() => {
           if (!cancelled) element.classList.remove('bg-secondary/10');
         }, 3000);
@@ -632,19 +644,21 @@ const Catechism: React.FC = memo(() => {
 
       if (attempts < maxAttempts) {
         attempts += 1;
-        window.setTimeout(restoreParagraph, 100);
+        retryTimers.push(window.setTimeout(restoreParagraph, 100));
         return;
       }
 
-      // If the requested paragraph could not be rendered, allow normal
-      // scroll-based continuity to resume rather than freezing the observer.
       deepLinkRestorePendingRef.current = false;
+      deepLinkTargetRef.current = null;
     };
 
     const frame = window.requestAnimationFrame(restoreParagraph);
     return () => {
       cancelled = true;
+      window.clearTimeout(releaseTimer);
+      retryTimers.forEach(window.clearTimeout);
       deepLinkRestorePendingRef.current = false;
+      deepLinkTargetRef.current = null;
       window.cancelAnimationFrame(frame);
     };
   }, [initialParagraph, selectedSection, viewMode]);
@@ -680,19 +694,28 @@ const Catechism: React.FC = memo(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            if (deepLinkRestorePendingRef.current) return;
-            setActiveParagraphId(entry.target.id);
-            const pNum = parseInt(entry.target.id.replace('p', ''));
-            if (!isNaN(pNum)) setCurrentParagraph(pNum);
+          if (!entry.isIntersecting) return;
+
+          if (deepLinkRestorePendingRef.current) {
+            const targetId = deepLinkTargetRef.current == null
+              ? null
+              : `p${deepLinkTargetRef.current}`;
+            // Ignore stale visibility events from the section's first paragraph.
+            if (entry.target.id !== targetId) return;
+            deepLinkRestorePendingRef.current = false;
+            deepLinkTargetRef.current = null;
           }
+
+          setActiveParagraphId(entry.target.id);
+          const pNum = parseInt(entry.target.id.replace('p', ''));
+          if (!isNaN(pNum)) setCurrentParagraph(pNum);
         });
       },
-      { threshold: 0.5, rootMargin: '-10% 0px -70% 0px' }
+      { threshold: 0.01, rootMargin: '-10% 0px -70% 0px' }
     );
     document.querySelectorAll('[id^="p"]').forEach((el) => observer.observe(el));
     return () => observer.disconnect();
-  }, [viewMode, selectedSection]);
+  }, [viewMode, selectedSection, initialParagraph]);
 
   const goBack = () => {
     if (viewMode === 'reading') {
@@ -844,6 +867,29 @@ const Catechism: React.FC = memo(() => {
               </div>
             }
           >
+            {bibleReturnContext && (
+              <div
+                data-testid="bible-return-context"
+                role="region"
+                aria-label="Retorno de estudo"
+                className="mb-spacing-lg flex flex-col gap-spacing-sm rounded-xl border border-primary/10 bg-primary/[0.025] p-spacing-md sm:flex-row sm:items-center sm:justify-between"
+              >
+                <div className="min-w-0">
+                  <p className="text-premium-xs font-bold uppercase tracking-[0.16em] text-secondary">Retorno de estudo</p>
+                  <p className="mt-1 text-sm text-foreground">{bibleReturnContext.label}</p>
+                </div>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={returnToBible}
+                  data-testid="bible-return-button"
+                  className="min-h-11 shrink-0 gap-2 rounded-lg text-xs font-bold"
+                >
+                  <span aria-hidden="true">←</span>
+                  Voltar à passagem
+                </Button>
+              </div>
+            )}
             <div className="w-full editorial-column editorial-section" data-testid={`secao-${selectedSection.id}-conteudo`}>
               {/* Unified Reading Navigation */}
               <div className="flex items-center justify-between gap-spacing-md py-spacing-xs border-b border-primary/5 mb-spacing-md">

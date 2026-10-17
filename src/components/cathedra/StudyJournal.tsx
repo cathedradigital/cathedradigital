@@ -208,6 +208,7 @@ const NoteCard = ({ note, onUpdate, onDelete, onNavigate }: {
   return (
     <motion.div
       layout
+      data-testid="study-note-card"
       className="bg-card border border-border/40 rounded-premium p-spacing-lg space-y-spacing-md hover:border-primary/20 transition-all group"
     >
       <div className="flex items-center justify-between">
