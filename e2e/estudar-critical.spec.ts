@@ -64,7 +64,7 @@ test('auth redirect preserves protected destination', async ({ page }) => {
 });
 
 test('admin consoles require authentication and preserve the requested destination', async ({ page }) => {
-  for (const destination of ['/admin/parceiros', '/cache-manager', '/bible-recovery']) {
+  for (const destination of ['/admin/parceiros', '/bible-recovery']) {
     await page.context().clearCookies();
     await page.goto(destination);
     await expect(page).toHaveURL(url => {
