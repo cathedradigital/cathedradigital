@@ -12,6 +12,22 @@ type NewsItem = {
 
 const EDITORIAL_NEWS: NewsItem[] = [
   {
+    source: 'Vatican News',
+    category: 'Encerramento',
+    date: '14 out. 2026',
+    title: 'Leão XIV agradece aos participantes e pede que partilhem os frutos do encontro',
+    summary: 'Na mensagem final, o Papa agradece a escuta e o trabalho conjunto; as reflexões pontifícias sobre o encontro serão apresentadas em momento oportuno, sem antecipar conclusões ainda não publicadas.',
+    url: 'https://www.vaticannews.va/pt/papa/news/2026-10/papa-leao-xiv-mensagem-final-encontro-amoris-laetitia-2026.html',
+  },
+  {
+    source: 'Vatican News',
+    category: 'Síntese do encontro',
+    date: '14 out. 2026',
+    title: 'Encontro sobre Amoris laetitia: buscar novas respostas para novas perguntas',
+    summary: 'A cobertura final apresenta os temas discutidos e as contribuições para o documento de síntese, distinguindo a reflexão pastoral de qualquer nova norma doutrinal.',
+    url: 'https://www.vaticannews.va/pt/vaticano/news/2026-10/encontro-internacional-amoris-laetitia-encerramento-respostas-26.html',
+  },
+  {
     source: 'Santa Sé',
     category: 'Magistério',
     date: '7 out. 2026',
@@ -20,13 +36,6 @@ const EDITORIAL_NEWS: NewsItem[] = [
     url: 'https://www.vatican.va/content/leo-xiv/pt/speeches/2026/october/documents/20261007-anniversario-amoris-laetitia.html',
   },
   {
-    source: 'Sala de Imprensa da Santa Sé',
-    category: 'Documentos do encontro',
-    date: '2 out. 2026',
-    title: 'Três intervenções apresentam os objetivos e o método do encontro',
-    summary: 'A coletiva oficial reúne as intervenções de Gabriella Gambino, Orietta Rachele Grazioli e padre Giacomo Costa, com contexto pastoral, os cinco temas e a metodologia de escuta e discernimento.',
-    url: 'https://press.vatican.va/content/salastampa/it/bollettino/pubblico/2026/10/02/0780/01454.html',
-  },
   {
     source: 'CNBB',
     category: 'Vida e Família',
