@@ -25,8 +25,15 @@ const AdminGuard: React.FC<AdminGuardProps> = ({ children }) => {
       return;
     }
     (async () => {
-      const { data, error } = await supabase.rpc('is_current_user_admin');
-      if (!cancelled) setVerified(!error && data === true);
+      try {
+        const { data, error } = await supabase.rpc('is_current_user_admin');
+        if (!cancelled) setVerified(!error && data === true);
+      } catch (error) {
+        // Fail closed on transport/runtime errors, but never leave the admin
+        // guard in an infinite spinner when the RPC rejects instead of returning.
+        if (!cancelled) setVerified(false);
+        console.error('Falha ao verificar permissão administrativa.');
+      }
     })();
     return () => { cancelled = true; };
   }, [user?.id]);
