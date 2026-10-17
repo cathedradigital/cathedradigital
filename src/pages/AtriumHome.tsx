@@ -30,7 +30,6 @@ import {
   useFeaturedThemes,
   useSearchSuggestions,
   useRecommendations,
-  useAnnouncements,
 } from '@/modules/atrium/hooks';
 import type { ResumeItem } from '@/modules/atrium/types';
 import { useAuth } from '@/hooks/useAuth';
@@ -91,7 +90,6 @@ const AtriumHome: React.FC = () => {
   const themes = useFeaturedThemes().slice(0, 3);
   const suggestions = useSearchSuggestions().slice(0, 5);
   const recs = useRecommendations().slice(0, 3);
-  const announcements = useAnnouncements().slice(0, 3);
 
   const [q, setQ] = useState('');
 
