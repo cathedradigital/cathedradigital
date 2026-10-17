@@ -143,7 +143,44 @@ const nexusConnectionFromRow = (row: any, currentVerseId?: string) => {
     ? otherBible.abbr + '-' + otherBible.chapter + (otherBible.verse ? '-' + otherBible.verse : '')
     : otherParagraph || String((otherRef as any)?.id ?? (otherRef as any)?.slug ?? row.id);
   const labels: Record<string, string> = { catechism_paragraph: 'Catecismo', magisterium_doc: 'Magistério', patristic: 'Patrística', saint: 'Santo', saint_work: 'Obra de santo', glossary: 'Glossário', prayer: 'Oração', journey: 'Jornada', liturgy: 'Liturgia', bible_verse: 'Bíblia', other: 'Referência' };
-  return { type: otherKind === 'catechism_paragraph' ? 'catechism' : otherKind === 'magisterium_doc' ? 'document' : otherKind === 'bible_verse' ? 'cross_ref' : 'reference', label: labels[otherKind] ?? 'Referência', color: otherKind === 'catechism_paragraph' ? 'bg-blue-500' : 'bg-amber-500', id, summary: row.note || '', theological_theme: undefined, relevance_level: row.confidence };
+  return { type: otherKind === 'catechism_paragraph' ? 'catechism' : otherKind === 'magisterium_doc' ? 'document' : otherKind === 'bible_verse' ? 'cross_ref' : 'reference', label: otherKind === 'catechism_paragraph' ? `§${otherParagraph}` : labels[otherKind] ?? 'Referência', color: otherKind === 'catechism_paragraph' ? 'bg-blue-500' : 'bg-amber-500', id, summary: row.note || '', theological_theme: undefined, relevance_level: row.confidence };
+};
+
+const withCuratedChapterCicLinks = (
+  connections: Record<string, any[]>,
+  abbr: string,
+  chapter: number,
+): Record<string, any[]> => {
+  const next = Object.fromEntries(
+    Object.entries(connections).map(([key, items]) => [key, [...items]]),
+  ) as Record<string, any[]>;
+
+  const chapterParagraphs = BIBLE_TO_CIC[`${abbr}:${chapter}`] ?? [];
+  const connectedParagraphs = new Set(
+    Object.values(next)
+      .flat()
+      .filter((connection: any) => connection.type === 'catechism')
+      .map((connection: any) => String(connection.id)),
+  );
+  const firstVerseKey = `${abbr}-${chapter}-1`;
+
+  for (const paragraph of chapterParagraphs) {
+    const id = String(paragraph);
+    if (connectedParagraphs.has(id)) continue;
+    if (!next[firstVerseKey]) next[firstVerseKey] = [];
+    next[firstVerseKey].push({
+      type: 'catechism',
+      label: `§${paragraph} · capítulo`,
+      color: 'bg-blue-500',
+      id,
+      summary: `Relação editorial com ${abbr} ${chapter} como capítulo. Não afirma uma citação direta entre este versículo e o parágrafo.`,
+      relevance_level: 0.5,
+      scope: 'chapter',
+    });
+    connectedParagraphs.add(id);
+  }
+
+  return next;
 };
 
 const Bible: React.FC = () => {
@@ -624,12 +661,73 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
     });
   }, [activeVerse, selectedBook, selectedChapter, share]);
 
+  // O Nexus precisa carregar mesmo quando o texto do capítulo vem do cache local.
+  // Substitui apenas as relações do capítulo ativo, evitando conexões antigas.
+  const refreshNexusConnections = (abbr: string, chapter: number, runId: string) => {
+    biblePerf.mark(runId, 'connections:start');
+    setConnectionsLoading(true);
+
+    Promise.resolve(
+      supabase
+        .from('nexus_relations')
+        .select('id, relation_type, source_kind, source_ref, target_kind, target_ref, note, confidence, status')
+        .eq('status', 'published')
+    )
+      .then(({ data: dbConnections, error }) => {
+        biblePerf.mark(runId, 'connections:end');
+        if (error) throw error;
+
+        const chapterConnections: Record<string, any[]> = {};
+        (dbConnections ?? []).forEach((conn: any) => {
+          const source = conn.source_kind === 'bible_verse' ? readBibleRef(conn.source_ref) : null;
+          const target = conn.target_kind === 'bible_verse' ? readBibleRef(conn.target_ref) : null;
+          const bible = source ?? target;
+          if (!bible?.verse || bible.abbr !== abbr || bible.chapter !== chapter) return;
+
+          const key = `${bible.abbr}-${bible.chapter}-${bible.verse}`;
+          const mapped = nexusConnectionFromRow(conn, key);
+          if (!chapterConnections[key]) chapterConnections[key] = [];
+          if (!chapterConnections[key].some((item) => item.id === mapped.id && item.type === mapped.type)) {
+            chapterConnections[key].push(mapped);
+          }
+        });
+
+        // Chapter-wide references come from the existing curated map and are
+        // displayed as context, never as direct verse citations.
+        const withChapterLinks = withCuratedChapterCicLinks(chapterConnections, abbr, chapter);
+        setDynamicConnections((prev) => {
+          const next = { ...prev };
+          Object.keys(next).forEach((key) => {
+            if (key.startsWith(`${abbr}-${chapter}-`)) delete next[key];
+          });
+          return { ...next, ...withChapterLinks };
+        });
+      })
+      .catch((error) => {
+        // Falha do banco não deve ocultar as conexões editoriais locais do capítulo.
+        console.warn('[Nexus] Não foi possível carregar as conexões do capítulo.', { abbr, chapter, error });
+        setDynamicConnections((prev) => {
+          const prefix = `${abbr}-${chapter}-`;
+          const currentChapter = Object.fromEntries(
+            Object.entries(prev).filter(([key]) => key.startsWith(prefix)),
+          ) as Record<string, any[]>;
+          return { ...prev, ...withCuratedChapterCicLinks(currentChapter, abbr, chapter) };
+        });
+      })
+      .finally(() => {
+        setConnectionsLoading(false);
+      });
+  };
+
   const fetchVerses = async (abbr: string, chapter: number) => {
     const runId = `${abbr}-${chapter}-${Date.now()}`;
     biblePerf.start(runId, abbr, chapter);
 
     setIsLoading(true);
     setSourceInfo('Buscando...');
+
+    // Não condicionar a carga do Nexus ao cache do texto.
+    refreshNexusConnections(abbr, chapter, runId);
 
     // 1. Check L1 Cache (síncrono)
     const offlineKey = `bible_cache_${abbr}_${chapter}`;
@@ -662,10 +760,9 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
       }
     }
 
-    // 2. PARALELO: busca texto + conexões (não dependem entre si)
+    // 2. O texto é buscado separadamente; o Nexus já foi iniciado acima,
+    // antes do retorno antecipado do cache local.
     biblePerf.mark(runId, 'text:start');
-    biblePerf.mark(runId, 'connections:start');
-    setConnectionsLoading(true);
     setSourceInfo('Buscando na Nuvem...');
 
     const textPromise = supabase.functions
@@ -679,44 +776,6 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
         },
       })
       .finally(() => biblePerf.mark(runId, 'text:end'));
-
-    const connectionsPromise = Promise.resolve(
-      supabase
-        .from('nexus_relations')
-        .select('id, relation_type, source_kind, source_ref, target_kind, target_ref, note, confidence, status')
-        .eq('status', 'published')
-    ).then((res) => {
-      biblePerf.mark(runId, 'connections:end');
-      return res;
-    });
-
-    // Hidrata conexões assim que chegarem, sem bloquear o render do texto
-    connectionsPromise
-      .then(({ data: dbConnections }) => {
-        if (dbConnections && dbConnections.length > 0) {
-          setDynamicConnections((prev) => {
-            const newConns: Record<string, any[]> = { ...prev };
-            dbConnections.forEach((conn: any) => {
-              const source = conn.source_kind === 'bible_verse' ? readBibleRef(conn.source_ref) : null;
-              const target = conn.target_kind === 'bible_verse' ? readBibleRef(conn.target_ref) : null;
-              const bible = source ?? target;
-              if (!bible?.verse) return;
-              const key = `${bible.abbr}-${bible.chapter}-${bible.verse}`;
-              const mapped = nexusConnectionFromRow(conn, key);
-              if (!newConns[key]) newConns[key] = [];
-              if (!newConns[key].some((item) => item.id === mapped.id && item.type === mapped.type)) newConns[key].push(mapped);
-            });
-            return newConns;
-          });
-        }
-      })
-      .catch(() => {
-        // silenciar — conexões são best-effort
-      })
-      .finally(() => {
-        setConnectionsLoading(false);
-      });
-
 
     try {
       const { data, error, response } = await textPromise;

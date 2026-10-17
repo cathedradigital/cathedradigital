@@ -12,7 +12,10 @@ async function login(page: Page, destination: string) {
   await page.getByLabel('Email').fill(email!);
   await page.getByLabel('Senha').fill(password!);
   await page.getByRole('button', { name: 'Entrar', exact: true }).click();
-  expect(page.url()).toContain(destination.split('?')[0]);
+  // Wait for the real auth redirect instead of sampling /auth immediately.
+  // The pathname requirement is unchanged; destination-specific tests still assert query parameters and content.
+  const expectedPath = new URL(destination, 'http://localhost').pathname;
+  await expect(page).toHaveURL(url => url.pathname === expectedPath, { timeout: 15_000 });
 }
 
 function watchBrowserHealth(page: Page) {
@@ -41,8 +44,8 @@ async function openStudyJournal(page: Page, marker: string) {
 test('auth redirect preserves protected destination', async ({ page }) => {
   await page.context().clearCookies();
   await page.goto('/diario');
-  expect(page.url()).toContain('/login?next=');
-  expect(page.url()).toContain('diario');
+  await expect(page).toHaveURL(url => url.pathname === '/auth' && url.searchParams.has('next'), { timeout: 15_000 });
+  expect(new URL(page.url()).searchParams.get('next')).toContain('diario');
 });
 
 test('Bíblia: anotação → Diário → retorno exato ao versículo', async ({ page }) => {
@@ -125,6 +128,97 @@ test('Bíblia: deep-link por referência abre o capítulo e o versículo correto
   await login(page, '/bible?ref=Jo%203%3A16');
   await expect(page.locator('#verse-16')).toBeVisible();
   expect(page.url()).toContain('/bible?ref=');
+});
+
+test('Bíblia: Nexus do Catecismo carrega mesmo com Gênesis 1 vindo do cache local', async ({ page }) => {
+  await page.goto('/');
+  await page.evaluate(() => {
+    localStorage.setItem('bible_cache_Gn_1', JSON.stringify({
+      v: 8,
+      timestamp: Date.now(),
+      verses: [
+        { number: 1, text: 'No princípio Deus criou o céu e a terra.' },
+        { number: 2, text: 'A terra estava informe e vazia.' },
+      ],
+    }));
+  });
+
+  const bad = watchBrowserHealth(page);
+  await page.goto('/bible?book=Gn&ch=1&v=1');
+  await expect(page.getByTestId('verse-text-1')).toBeVisible();
+
+  const nexusCard = page.getByTestId('nexus-connection-card').filter({ hasText: 'Catecismo' }).first();
+  await expect(nexusCard).toBeVisible({ timeout: 15000 });
+  await nexusCard.click();
+  await expect(page.getByTestId('catechism-preview')).toBeVisible();
+  await expect(page.getByTestId('catechism-preview')).toContainText('§279');
+  expect(bad, 'Bible Nexus cache hit: HTTP/console errors').toEqual([]);
+});
+
+test('Bíblia: Nexus recupera conexões editoriais de capítulo sem inventar citação de versículo', async ({ page }) => {
+  await page.goto('/bible?book=Gn&ch=2&v=1');
+  await expect(page.getByTestId('verse-text-1')).toBeVisible();
+
+  // Gn:2 → §§355, 371 e 373 is an existing curated chapter-level map.
+  // The UI must identify it as chapter context, not claim a direct citation.
+  const chapterConnection = page.getByTestId('nexus-connection-card').filter({ hasText: '§355 · capítulo' }).first();
+  await expect(chapterConnection).toBeVisible({ timeout: 15000 });
+  await chapterConnection.click();
+  await expect(page.getByTestId('nexus-connection-popover')).toContainText(/Relação editorial com Gn 2 como capítulo/i);
+  await expect(page.getByTestId('catechism-preview')).toContainText('§355');
+});
+
+test('Bíblia preserva contexto no Nexus Gn 1:1 → CIC §279 → retorno exato', async ({ page }) => {
+  const errors: string[] = [];
+  page.on('console', message => {
+    if (message.type() === 'error') errors.push(message.text());
+  });
+
+  await page.goto('/bible?book=Gn&ch=1&v=1');
+
+  const nexusCard = page.getByTestId('nexus-connection-card').filter({ hasText: 'Catecismo' }).first();
+  await expect(nexusCard).toBeVisible();
+  await nexusCard.click();
+
+  await expect(page.getByTestId('catechism-preview')).toBeVisible();
+  await expect(page.getByTestId('catechism-preview')).toContainText('§279');
+
+  await page.getByTestId('nexus-popover-nav-link').click();
+  await expect(page).toHaveURL(/\/catechism\?p=279/);
+  await expect(page.getByText(/Retorno de estudo/i)).toBeVisible();
+  await expect(page.getByText(/Gênesis 1:1/i)).toBeVisible();
+
+  await page.getByRole('button', { name: /Voltar à passagem/i }).click();
+  await expect(page).toHaveURL(/\/bible\?book=Gn&ch=1&v=1/);
+  await expect(page.locator('#verse-1')).toBeVisible();
+
+  expect(errors, 'Nexus return flow: console errors').toEqual([]);
+});
+
+test('Bíblia: os controles principais da barra funcionam', async ({ page }) => {
+  const errors: string[] = [];
+  page.on('console', message => {
+    if (message.type() === 'error') errors.push(message.text());
+  });
+
+  await page.goto('/bible');
+
+  await page.getByTestId('bible-toolbar-search').click();
+  await expect(page.getByTestId('bible-search-input')).toBeVisible();
+  await page.getByTestId('bible-search-close').click();
+  await expect(page).toHaveURL(/\/bible$/);
+
+  await page.getByTestId('bible-toolbar-bookmarks').click();
+  await expect(page.getByText(/Marcadores/i).first()).toBeVisible();
+  await page.getByRole('button', { name: /Voltar|Fechar/i }).first().click().catch(() => {});
+  await page.goto('/bible');
+
+  await page.getByTestId('bible-toolbar-more').click();
+  await expect(page.getByRole('menuitem', { name: /Anotações/i })).toBeVisible();
+  await expect(page.getByRole('menuitem', { name: /Editor Bíblia/i })).toBeVisible();
+  await page.keyboard.press('Escape');
+
+  expect(errors, 'Bible toolbar: console errors').toEqual([]);
 });
 
 test('Catecismo: alias paragraph mantém o deep-link canônico no leitor', async ({ page }) => {

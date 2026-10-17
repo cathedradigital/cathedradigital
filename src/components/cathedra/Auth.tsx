@@ -29,12 +29,23 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
   const nextPath = safeNextPath(searchParams.get('next'));
   const nextQuery = nextPath ? `?next=${encodeURIComponent(nextPath)}` : '';
   const handleSuccess = () => {
-    if (nextPath) navigate(nextPath, { replace: true });
-    else onSuccess();
+    if (nextPath) {
+      // Supabase persists the session before signInWithPassword resolves, but
+      // AuthProvider may not have propagated onAuthStateChange to AuthGuard yet.
+      // A hard navigation lets the provider hydrate the persisted session before
+      // the protected destination is rendered, preventing a redirect loop to /auth.
+      window.location.replace(nextPath);
+      return;
+    }
+    onSuccess();
   };
   const handleSignupSuccess = () => {
-    if (nextPath) navigate(nextPath, { replace: true });
-    else if (onSignupSuccess) onSignupSuccess();
+    if (nextPath) {
+      // Use the same session-hydration-safe path as password login.
+      window.location.replace(nextPath);
+      return;
+    }
+    if (onSignupSuccess) onSignupSuccess();
     else onSuccess();
   };
   const [mode, setMode] = useState<'login' | 'signup' | 'forgot'>('login');
