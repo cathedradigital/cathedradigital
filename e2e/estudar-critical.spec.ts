@@ -29,7 +29,8 @@ async function saveReflection(page: Page, text: string) {
   await expect(page.getByText('Scriptum Sanctuarium')).toBeVisible();
   await page.locator('textarea[placeholder="O que esta passagem diz ao seu coração?"]').fill(text);
   await page.getByRole('button', { name: 'Salvar Reflexão', exact: true }).click();
-  await expect(page.getByText('Nota salva')).toBeVisible().catch(() => {});
+  // Persistence feedback is part of the user-visible save contract; do not swallow failures.
+  await expect(page.getByText('Nota salva')).toBeVisible();
 }
 
 async function openStudyJournal(page: Page, marker: string) {
