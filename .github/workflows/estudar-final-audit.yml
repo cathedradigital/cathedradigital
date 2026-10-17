@@ -7,6 +7,10 @@ on:
     branches:
       - "agent/master-estudar-final-audit-*"
 
+concurrency:
+  group: estudar-final-audit-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 
