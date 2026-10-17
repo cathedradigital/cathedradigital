@@ -17,6 +17,7 @@ jobs:
     timeout-minutes: 90
     permissions:
       contents: read
+      actions: write
 
     steps:
       - name: Guard manual production deployments
@@ -31,6 +32,24 @@ jobs:
 
       - name: Checkout
         uses: actions/checkout@v6
+
+      - name: Remove historical unsanitized Playwright artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          status="$(curl --silent --show-error --output /dev/null --write-out "%{http_code}" \
+            --request DELETE \
+            --header "Authorization: Bearer $GH_TOKEN" \
+            --header "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/cathedradigital/cathedradigital/actions/artifacts/11866733452")"
+          if [ "$status" = "204" ] || [ "$status" = "404" ]; then
+            echo "Historical unsanitized artifact removed or already absent (HTTP $status)."
+          else
+            echo "::error::Could not remove historical unsanitized artifact (HTTP $status); blocking production deployment."
+            exit 1
+          fi
 
       - name: Verify required credentials
         env:
