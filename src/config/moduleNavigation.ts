@@ -6,6 +6,8 @@
  * itens de menu de primeiro nível.
  */
 
+import { MODULE_PALETTES } from '@/lib/sacredPalette';
+
 export type ModuleEnvironment =
   | 'estudar'
   | 'rezar'
@@ -37,8 +39,8 @@ export interface ModuleNavGroup {
 export const MODULE_NAVIGATION: ModuleNavGroup[] = [
   {
     key: 'estudar',
-    accent: '#2f6f8f',
-    accentSoft: 'rgba(47,111,143,0.14)',
+    accent: MODULE_PALETTES.estudar.accent,
+    accentSoft: MODULE_PALETTES.estudar.accentSoft,
     label: 'Estudar',
     labelKey: 'nav.estudar',
     description: 'Fontes, textos e caminhos para aprofundar.',
@@ -50,8 +52,8 @@ export const MODULE_NAVIGATION: ModuleNavGroup[] = [
   },
   {
     key: 'rezar',
-    accent: '#8b5e83',
-    accentSoft: 'rgba(139,94,131,0.14)',
+    accent: MODULE_PALETTES.rezar.accent,
+    accentSoft: MODULE_PALETTES.rezar.accentSoft,
     label: 'Rezar',
     labelKey: 'nav.rezar',
     description: 'Oração, liturgia e vida espiritual.',
@@ -70,8 +72,8 @@ export const MODULE_NAVIGATION: ModuleNavGroup[] = [
   },
   {
     key: 'formar-se',
-    accent: '#b07a35',
-    accentSoft: 'rgba(176,122,53,0.14)',
+    accent: MODULE_PALETTES['formar-se'].accent,
+    accentSoft: MODULE_PALETTES['formar-se'].accentSoft,
     label: 'Formar-se',
     labelKey: 'nav.formar_se',
     description: 'Jornadas e percursos estruturados de formação.',
@@ -82,8 +84,8 @@ export const MODULE_NAVIGATION: ModuleNavGroup[] = [
   },
   {
     key: 'pesquisar',
-    accent: '#4f7d69',
-    accentSoft: 'rgba(79,125,105,0.14)',
+    accent: MODULE_PALETTES.pesquisar.accent,
+    accentSoft: MODULE_PALETTES.pesquisar.accentSoft,
     label: 'Pesquisar',
     labelKey: 'nav.pesquisar',
     description: 'Descoberta universal e ferramentas de referência.',
@@ -102,8 +104,8 @@ export const MODULE_NAVIGATION: ModuleNavGroup[] = [
   },
   {
     key: 'minha-jornada',
-    accent: '#7a6aa6',
-    accentSoft: 'rgba(122,106,166,0.14)',
+    accent: MODULE_PALETTES['minha-jornada'].accent,
+    accentSoft: MODULE_PALETTES['minha-jornada'].accentSoft,
     label: 'Minha Jornada',
     labelKey: 'nav.minha_jornada',
     description: 'Continuidade, memória e configuração pessoal.',
