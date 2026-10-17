@@ -538,7 +538,8 @@ const Catechism: React.FC = memo(() => {
 
   // Explicit ?p=N deep-links temporarily outrank the generic IntersectionObserver.
   // This prevents restoration from being overwritten by the first visible paragraph.
-  const deepLinkRestorePendingRef = useRef(false);
+  const deepLinkRestorePendingRef = useRef(typeof initialParagraph === 'number');
+  const deepLinkTargetRef = useRef<number | null>(typeof initialParagraph === 'number' ? initialParagraph : null);
 
   // O parágrafo ativo é o ponto de continuidade do Catecismo.
   useEffect(() => {
@@ -606,11 +607,20 @@ const Catechism: React.FC = memo(() => {
   // R1.2.3 — restaura o parágrafo exato do deep-link depois que a seção foi renderizada.
   // Isso fecha o retorno do Diário mesmo quando o Catecismo já está montado.
   useEffect(() => {
-    if (typeof initialParagraph !== 'number' || viewMode !== 'reading' || !selectedSection) {
+    if (typeof initialParagraph !== 'number' || viewMode !== 'reading') {
       deepLinkRestorePendingRef.current = false;
       return;
     }
 
+    // Keep the guard active while the deep-linked section is being resolved.
+    // The scroll observer must not replace ?p=N with a stale visible paragraph
+    // during this intermediate render.
+    if (!selectedSection) {
+      deepLinkRestorePendingRef.current = true;
+      return;
+    }
+
+    deepLinkTargetRef.current = initialParagraph;
     deepLinkRestorePendingRef.current = true;
     let cancelled = false;
     let attempts = 0;
@@ -623,7 +633,10 @@ const Catechism: React.FC = memo(() => {
       if (element) {
         element.scrollIntoView({ behavior: 'auto', block: 'center' });
         element.classList.add('bg-secondary/10');
-        deepLinkRestorePendingRef.current = false;
+        // O IntersectionObserver só pode retomar a sincronização depois de
+        // confirmar que o parágrafo solicitado está no viewport. Limpar o guard
+        // aqui permite que uma entrada antiga (ex.: §2057) sobrescreva ?p=2865.
+
         window.setTimeout(() => {
           if (!cancelled) element.classList.remove('bg-secondary/10');
         }, 3000);
@@ -639,6 +652,7 @@ const Catechism: React.FC = memo(() => {
       // If the requested paragraph could not be rendered, allow normal
       // scroll-based continuity to resume rather than freezing the observer.
       deepLinkRestorePendingRef.current = false;
+      deepLinkTargetRef.current = null;
     };
 
     const frame = window.requestAnimationFrame(restoreParagraph);
@@ -679,13 +693,28 @@ const Catechism: React.FC = memo(() => {
     if (viewMode !== 'reading') return;
     const observer = new IntersectionObserver(
       (entries) => {
+        if (deepLinkRestorePendingRef.current) {
+          // Ignore every stale visible paragraph until the requested target is
+          // observed. Process only that target from this batch, never a sibling
+          // emitted by the same IntersectionObserver callback.
+          const targetId = deepLinkTargetRef.current == null
+            ? null
+            : `p${deepLinkTargetRef.current}`;
+          const targetEntry = entries.find(
+            (entry) => entry.isIntersecting && entry.target.id === targetId,
+          );
+          if (!targetEntry || !targetId) return;
+          deepLinkRestorePendingRef.current = false;
+          setActiveParagraphId(targetId);
+          setCurrentParagraph(deepLinkTargetRef.current!);
+          return;
+        }
+
         entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            if (deepLinkRestorePendingRef.current) return;
-            setActiveParagraphId(entry.target.id);
-            const pNum = parseInt(entry.target.id.replace('p', ''));
-            if (!isNaN(pNum)) setCurrentParagraph(pNum);
-          }
+          if (!entry.isIntersecting) return;
+          setActiveParagraphId(entry.target.id);
+          const pNum = parseInt(entry.target.id.replace('p', ''));
+          if (!isNaN(pNum)) setCurrentParagraph(pNum);
         });
       },
       { threshold: 0.5, rootMargin: '-10% 0px -70% 0px' }

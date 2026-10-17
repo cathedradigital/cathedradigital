@@ -42,14 +42,22 @@ const ALL_BOOKS: BibleBook[] = Object.values(BIBLE_DATA)
   .flat()
   .flatMap((cat) => cat.books);
 
+function normalizeBookLabel(value: string): string {
+  return value
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLocaleLowerCase('pt-BR')
+    .trim();
+}
+
 function findBook(rawAbbr: string | null): BibleBook | null {
   if (!rawAbbr) return null;
   const decoded = decodeURIComponent(rawAbbr).trim();
-  const lower = decoded.toLocaleLowerCase('pt-BR');
+  const normalized = normalizeBookLabel(decoded);
   return (
     ALL_BOOKS.find((b) =>
-      b.abbr.toLocaleLowerCase('pt-BR') === lower ||
-      b.name.toLocaleLowerCase('pt-BR') === lower,
+      normalizeBookLabel(b.abbr) === normalized ||
+      normalizeBookLabel(b.name) === normalized,
     ) ?? null
   );
 }
