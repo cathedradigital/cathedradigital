@@ -1,3 +1,19 @@
+/**
+ * Tokens de acento por ambiente de navegação. Mantêm os valores visuais
+ * existentes, mas oferecem uma única fonte de verdade para sidebar e módulos.
+ * Contraste e semântica devem ser verificados antes de alterar estes tokens.
+ */
+export const MODULE_PALETTES: Record<
+  'estudar' | 'rezar' | 'formar-se' | 'pesquisar' | 'minha-jornada',
+  { accent: string; accentSoft: string }
+> = {
+  estudar: { accent: '#2f6f8f', accentSoft: 'rgba(47,111,143,0.14)' },
+  rezar: { accent: '#8b5e83', accentSoft: 'rgba(139,94,131,0.14)' },
+  'formar-se': { accent: '#b07a35', accentSoft: 'rgba(176,122,53,0.14)' },
+  pesquisar: { accent: '#4f7d69', accentSoft: 'rgba(79,125,105,0.14)' },
+  'minha-jornada': { accent: '#7a6aa6', accentSoft: 'rgba(122,106,166,0.14)' },
+};
+
 export const SACRED_PALETTE: Record<string, { primary: string; accent: string; depth: string }> = {
   green: { primary: '#0D2442', accent: '#BFA366', depth: '#061221' }, // Muted blue-green
   red: { primary: '#BFA366', accent: '#0D2442', depth: '#7A6438' }, // Muted gold-red
