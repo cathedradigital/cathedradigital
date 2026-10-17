@@ -4,9 +4,10 @@
  * Contraste e semântica devem ser verificados antes de alterar estes tokens.
  */
 export const MODULE_PALETTES: Record<
-  'estudar' | 'rezar' | 'formar-se' | 'pesquisar' | 'minha-jornada',
+  'atrium' | 'estudar' | 'rezar' | 'formar-se' | 'pesquisar' | 'minha-jornada',
   { accent: string; accentSoft: string }
 > = {
+  atrium: { accent: '#BFA366', accentSoft: 'rgba(191,163,102,0.14)' },
   estudar: { accent: '#2f6f8f', accentSoft: 'rgba(47,111,143,0.14)' },
   rezar: { accent: '#8b5e83', accentSoft: 'rgba(139,94,131,0.14)' },
   'formar-se': { accent: '#b07a35', accentSoft: 'rgba(176,122,53,0.14)' },
