@@ -74,7 +74,7 @@ import {
 
 const CatechismContent: React.FC<{ 
   paragraph: number; 
-  onNavigateToBible?: (abbr: string, chapter: number) => void; 
+  onNavigateToBible?: (abbr: string, chapter: number, verse?: number) => void; 
   isVisible?: boolean;
   onHighlightClick?: (note: UserNote) => void;
   onCreateNote?: (paragraph: number) => void;
@@ -741,7 +741,7 @@ const Catechism: React.FC = memo(() => {
     }
   };
 
-  const handleNavigateToBible = (abbr: string, chapter: number) => navigate(`/bible?book=${abbr}&ch=${chapter}`);
+  const handleNavigateToBible = (abbr: string, chapter: number, verse?: number) => navigate(`/bible?book=${abbr}&ch=${chapter}${verse ? `&v=${verse}` : ''}`);
   const handleNavigateToDoc = (docId: string) => navigate(`/magisterium?doc=${docId}`);
 
   const startPara = selectedSection?.paragraphs[0] || 1;
