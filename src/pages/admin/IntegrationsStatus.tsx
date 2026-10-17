@@ -61,7 +61,8 @@ const integrations: Integration[] = [
     category: "Google",
     status: "partial",
     description: "Credencial Google para APIs públicas; o acesso real precisa ser testado.",
-    howTo: "Execute o teste de conexão e confirme as APIs habilitadas no Google Cloud Console.",
+    howTo: "Confirme a chave e as APIs habilitadas no Google Cloud Console; a validação automática segura ainda não está disponível.",
+    testable: false,
     docsUrl: "https://console.cloud.google.com/apis/credentials",
   },
   {
@@ -70,7 +71,8 @@ const integrations: Integration[] = [
     category: "Scraping",
     status: "partial",
     description: "Crawling e extração de páginas web.",
-    howTo: "Existe no workspace mas NÃO vinculado a este projeto. Peça 'vincular Firecrawl' para ativar.",
+    howTo: "Não está vinculado a este projeto.",
+    testable: false,
   },
   {
     id: "google-search-console",
@@ -78,7 +80,8 @@ const integrations: Integration[] = [
     category: "SEO",
     status: "disconnected",
     description: "Cliques, impressões, indexação e verificação de propriedade.",
-    howTo: "Aprove a conexão OAuth em Connectors → Google Search Console.",
+    howTo: "Conexão OAuth ainda não configurada neste ambiente.",
+    testable: false,
     docsUrl: "https://search.google.com/search-console",
   },
   {
@@ -87,7 +90,8 @@ const integrations: Integration[] = [
     category: "SEO",
     status: "disconnected",
     description: "Palavras-chave, backlinks e ranking competitivo.",
-    howTo: "Conecte via Connectors → Semrush (requer conta paga).",
+    howTo: "Conexão OAuth ainda não configurada neste ambiente.",
+    testable: false,
     docsUrl: "https://www.semrush.com",
   },
   {
@@ -96,7 +100,8 @@ const integrations: Integration[] = [
     category: "Analytics",
     status: "disconnected",
     description: "Tráfego, sessões e comportamento de usuários.",
-    howTo: "Não configurado. Conecte via Connectors → Google Analytics.",
+    howTo: "Conexão OAuth ainda não configurada neste ambiente.",
+    testable: false,
   },
   {
     id: "stripe",
@@ -104,7 +109,8 @@ const integrations: Integration[] = [
     category: "Pagamentos",
     status: "disconnected",
     description: "Alternativa internacional para pagamentos recorrentes.",
-    howTo: "Não configurado. Peça 'ativar Stripe' se necessário.",
+    howTo: "Não configurado neste ambiente.",
+    testable: false,
   },
   {
     id: "github",
@@ -112,7 +118,8 @@ const integrations: Integration[] = [
     category: "Dev",
     status: "disconnected",
     description: "Sincronização de código com repositório externo.",
-    howTo: "A integração do repositório é administrada pelo GitHub. Este painel não confirma sozinho permissões de escrita ou execução de workflows.",
+    howTo: "O repositório é administrado pelo GitHub; este painel não testa permissões nem workflows.",
+    testable: false,
   },
 ];
 
