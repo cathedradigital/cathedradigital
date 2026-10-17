@@ -44,10 +44,10 @@ test('Átrio: portal de notícias identifica fontes e navegação do carrossel',
   await expect(page.getByRole('link', { name: 'Vatican News' })).toHaveAttribute('href', 'https://www.vaticannews.va/pt.html');
   await expect(page.getByRole('link', { name: 'CNBB', exact: true })).toHaveAttribute('href', 'https://www.cnbb.org.br/');
   await expect(page.getByRole('link', { name: 'Santa Sé' })).toHaveAttribute('href', 'https://press.vatican.va/content/salastampa/pt.html');
-  await expect(page.getByRole('heading', { level: 3, name: 'Leão XIV: “Temos muito a aprender com as famílias”' })).toBeVisible();
+  await expect(page.getByRole('heading', { level: 3, name: 'Leão XIV agradece aos participantes e pede que partilhem os frutos do encontro' })).toBeVisible();
   await page.getByRole('button', { name: 'Próxima notícia' }).click();
-  await expect(page.getByRole('heading', { level: 3, name: 'Três intervenções apresentam os objetivos e o método do encontro' })).toBeVisible();
-  await expect(page.getByText('02 / 07')).toBeVisible();
+  await expect(page.getByRole('heading', { level: 3, name: 'Encontro sobre Amoris laetitia: buscar novas respostas para novas perguntas' })).toBeVisible();
+  await expect(page.getByText('02 / 06')).toBeVisible();
 });
 
 test('auth redirect preserves protected destination', async ({ page }) => {
