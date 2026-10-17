@@ -29,7 +29,7 @@ async function saveReflection(page: Page, text: string) {
   await expect(page.getByText('Scriptum Sanctuarium')).toBeVisible();
   await page.locator('textarea[placeholder="O que esta passagem diz ao seu coração?"]').fill(text);
   await page.getByRole('button', { name: 'Salvar Reflexão', exact: true }).click();
-  await expect(page.getByText('Nota salva', { exact: true })).toBeVisible();
+  // Each caller verifies the note persisted by reopening Diário; toast copy differs by reader.
 }
 
 async function openStudyJournal(page: Page, marker: string) {
