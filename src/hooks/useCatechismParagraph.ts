@@ -129,6 +129,9 @@ export const fetchCatechismParagraph = async (paragraph: number, forceGenerate =
       language: 'pt',
       status: 'static',
       textoBase: localData.textoBase,
+      sourceName: localData.sourceName ?? null,
+      sourceUrl: localData.sourceUrl ?? null,
+      sourceRetrievedAt: localData.sourceRetrievedAt ?? null,
     };
     logCatechismDiag({ paragraph, step: 'local_hit' });
     cacheCatechismParagraph(paragraph, result);
