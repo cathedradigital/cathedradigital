@@ -45,6 +45,8 @@ A paleta é uma identidade contextual, não uma licença para reduzir contraste.
 | Minha Jornada | continuidade pessoal | estados privados e progresso compreensível |
 | Yá | assistência e explicação | identidade própria sem competir com a marca nem parecer autoridade doutrinal |
 
+Os acentos dos cinco ambientes de navegação e do Átrio são centralizados em `src/lib/sacredPalette.ts` (`MODULE_PALETTES`). O Átrio usa ouro institucional sobre a base azul-petróleo; Estudar, Rezar, Formar-se, Pesquisar e Minha Jornada mantêm os acentos específicos existentes. `scripts/validate-module-contracts.mjs` verifica que a navegação consome os tokens e que a rota raiz aplica a paleta do Átrio.
+
 ## Acessibilidade cromática e interação
 
 - Não comunicar estado apenas por cor; usar texto, ícone ou forma complementar.
