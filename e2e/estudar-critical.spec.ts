@@ -12,7 +12,10 @@ async function login(page: Page, destination: string) {
   await page.getByLabel('Email').fill(email!);
   await page.getByLabel('Senha').fill(password!);
   await page.getByRole('button', { name: 'Entrar', exact: true }).click();
-  expect(page.url()).toContain(destination.split('?')[0]);
+
+  // Aguarda a navegação SPA terminar; não amostra /login ou /auth imediatamente após o clique.
+  const expectedPath = new URL(destination, 'http://localhost').pathname;
+  await expect(page).toHaveURL(url => url.pathname === expectedPath, { timeout: 15000 });
 }
 
 function watchBrowserHealth(page: Page) {
@@ -33,9 +36,12 @@ async function openStudyJournal(page: Page, marker: string) {
   await page.goto('/conta/diario');
   await expect(page.getByRole('button', { name: 'Estudo e Leitura' })).toBeVisible();
   await page.getByRole('button', { name: 'Estudo e Leitura' }).click();
-  const note = page.getByText(marker, { exact: false }).first();
-  await expect(note).toBeVisible();
-  return note;
+  const noteText = page.getByText(marker, { exact: false }).first();
+  await expect(noteText).toBeVisible();
+  // O botão de contexto é irmão do parágrafo dentro do cartão da anotação.
+  const noteCard = noteText.locator('xpath=ancestor::*[.//button[normalize-space(.)="Ver Contexto"]][1]');
+  await expect(noteCard.getByRole('button', { name: 'Ver Contexto', exact: true })).toBeVisible();
+  return noteCard;
 }
 
 test('Átrio: portal de notícias identifica fontes e navegação do carrossel', async ({ page }) => {
