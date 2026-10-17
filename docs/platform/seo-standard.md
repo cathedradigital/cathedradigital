@@ -25,7 +25,7 @@
 
 - Validar localmente os metadados e o sitemap gerado.
 - Após deploy autorizado, requisitar `https://cathedradigital.com.br/robots.txt` e `https://cathedradigital.com.br/sitemap.xml`; exigir status esperado e conteúdo válido.
-- Repetir nos domínios raiz e `www) para as páginas de entrada prioritárias.
+- Repetir nos domínios raiz e `www` para as páginas de entrada prioritárias.
 - Verificar redirects, canonical, título, description, status HTTP e conteúdo servido.
 - Inspecionar URLs prioritárias no Search Console quando houver acesso.
 - Um teste HTTP 200 isolado não prova que o HTML contém a interface correta; conferir tamanho/conteúdo e navegador.
