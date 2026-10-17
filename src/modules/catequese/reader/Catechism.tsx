@@ -571,7 +571,7 @@ const Catechism: React.FC = memo(() => {
 
   useEffect(() => {
     const rawParagraph = getParagraphParam(searchParams);
-    if (typeof initialParagraph === 'number' && rawParagraph !== String(initialParagraph)) {
+    if (typeof initialParagraph === 'number' && (searchParams.has('paragraph') || searchParams.get('p') !== String(initialParagraph) || rawParagraph !== String(initialParagraph))) {
       // Canonicalize the legacy \`?paragraph=N\` alias immediately so shared links,
       // browser history and analytics converge on the single \`?p=N\` contract.
       setSearchParams((prev) => {
