@@ -49,6 +49,7 @@ const protectedRoutes = [
 
 for (const [label, path] of publicRoutes) {
   test('route smoke: ' + label + ' renders the application shell', async ({ page }) => {
+    test.setTimeout(20000);
     const badResponses: string[] = [];
     page.on('response', (response) => {
       if ([404, 500, 502, 503, 504].includes(response.status())) {
@@ -58,7 +59,7 @@ for (const [label, path] of publicRoutes) {
 
     const response = await page.goto(path);
     expect(response?.status(), label + ' document response').toBe(200);
-    await expect(page.locator('main').first(), label + ' should render a main landmark').toBeVisible();
+    await expect(page.locator('main').first(), label + ' should render a main landmark').toBeVisible({ timeout: 7000 });
     await expect(page.getByText('Página não encontrada', { exact: false })).toHaveCount(0);
     await expect(page.getByText('Não foi possível carregar esta página', { exact: false })).toHaveCount(0);
     expect(badResponses, label + ' unexpected HTTP failures').toEqual([]);
@@ -67,11 +68,12 @@ for (const [label, path] of publicRoutes) {
 
 for (const destination of protectedRoutes) {
   test('route smoke: protected destination is preserved for ' + destination, async ({ page }) => {
+    test.setTimeout(20000);
     await page.goto(destination);
     await expect(page).toHaveURL((url) =>
       url.pathname === '/auth' && url.searchParams.get('next') === destination,
-      { timeout: 15000 },
+      { timeout: 7000 },
     );
-    await expect(page.getByLabel('Email')).toBeVisible();
+    await expect(page.getByLabel('Email')).toBeVisible({ timeout: 7000 });
   });
 }
