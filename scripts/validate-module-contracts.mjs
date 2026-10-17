@@ -69,7 +69,7 @@ for (const [environment, token] of Object.entries(modulePaletteKeys)) {
     errors.push(`Module ${environment} must use its shared soft-accent token.`);
   }
 }
-if (/accent:\\s*['"]/.test(moduleNavigation) || /accentSoft:\\s*['"]/.test(moduleNavigation)) {
+if (/accent:\s*['"]/.test(moduleNavigation) || /accentSoft:\s*['"]/.test(moduleNavigation)) {
   errors.push('Module navigation must not define literal accent colors outside the design-system tokens.');
 }
 
