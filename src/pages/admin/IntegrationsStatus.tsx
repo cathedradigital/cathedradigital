@@ -21,26 +21,30 @@ interface Integration {
   description: string;
   howTo: string;
   docsUrl?: string;
+  /** false quando o endpoint integrations-test ainda não verifica este recurso. */
+  testable?: boolean;
 }
 
 type TestResult = { ok: boolean; message: string; latencyMs?: number };
 
 const integrations: Integration[] = [
   {
-    id: "lovable-cloud",
-    name: "Lovable Cloud",
+    id: "supabase",
+    name: "Supabase",
     category: "Infraestrutura",
-    status: "connected",
-    description: "Banco de dados, autenticação, storage e edge functions.",
-    howTo: "Ativo por padrão neste projeto. Acesse pelo botão 'View Backend'.",
+    status: "partial",
+    description: "Banco de dados, autenticação, políticas RLS e Edge Functions.",
+    howTo: "Projeto vinculado; a saúde do banco e as políticas devem ser verificadas por consulta real. Este cartão ainda não possui teste automático próprio.",
+    testable: false,
   },
   {
-    id: "lovable-ai",
-    name: "Lovable AI Gateway",
-    category: "IA",
-    status: "connected",
-    description: "Modelos de IA (chat, embeddings, imagens) via LOVABLE_API_KEY.",
-    howTo: "Disponível automaticamente nas edge functions. Secret gerenciado.",
+    id: "cloudflare-workers",
+    name: "Cloudflare Workers",
+    category: "Publicação",
+    status: "partial",
+    description: "Hospedagem e entrega da aplicação Cátedra Digital.",
+    howTo: "Destino de publicação definido; a confirmação depende do deploy e da inspeção da interface servida nos domínios de produção.",
+    testable: false,
   },
   {
     id: "mercado-pago",
@@ -108,7 +112,7 @@ const integrations: Integration[] = [
     category: "Dev",
     status: "disconnected",
     description: "Sincronização de código com repositório externo.",
-    howTo: "Conecte via configurações do projeto Lovable → GitHub.",
+    howTo: "A integração do repositório é administrada pelo GitHub. Este painel não confirma sozinho permissões de escrita ou execução de workflows.",
   },
 ];
 
@@ -325,19 +329,23 @@ export default function IntegrationsStatus() {
                         </div>
                       )}
                       <div className="flex flex-wrap gap-2">
-                        <Button
-                          variant="secondary"
-                          size="sm"
-                          onClick={() => runTest(item.id)}
-                          disabled={loading[item.id]}
-                        >
-                          {loading[item.id] ? (
-                            <Loader2 className="mr-1 h-3 w-3 animate-spin" />
-                          ) : (
-                            <PlayCircle className="mr-1 h-3 w-3" />
-                          )}
-                          Testar conexão
-                        </Button>
+                        {item.testable !== false ? (
+                          <Button
+                            variant="secondary"
+                            size="sm"
+                            onClick={() => runTest(item.id)}
+                            disabled={loading[item.id]}
+                          >
+                            {loading[item.id] ? (
+                              <Loader2 className="mr-1 h-3 w-3 animate-spin" />
+                            ) : (
+                              <PlayCircle className="mr-1 h-3 w-3" />
+                            )}
+                            Testar conexão
+                          </Button>
+                        ) : (
+                          <p className="text-xs text-muted-foreground self-center">Verificação real pendente</p>
+                        )}
                         {item.docsUrl && (
                           <Button variant="outline" size="sm" asChild>
                             <a href={item.docsUrl} target="_blank" rel="noreferrer">
