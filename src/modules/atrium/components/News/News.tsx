@@ -36,7 +36,6 @@ const EDITORIAL_NEWS: NewsItem[] = [
     url: 'https://www.vatican.va/content/leo-xiv/pt/speeches/2026/october/documents/20261007-anniversario-amoris-laetitia.html',
   },
   {
-  {
     source: 'CNBB',
     category: 'Vida e Família',
     date: '8 out. 2026',
