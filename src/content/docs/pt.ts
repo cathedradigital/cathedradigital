@@ -146,5 +146,63 @@ export const docsPt: DocsBundle = {
         },
       ],
     },
+    {
+      slug: 'manual-tecnico-catedra-digital',
+      category: 'estudo',
+      title: 'Manual técnico e editorial do Cátedra Digital',
+      summary: 'Princípios do produto, identidade visual, módulos, navegação, Nexus, segurança, SEO, acessibilidade e publicação.',
+      keywords: ['manual', 'documentação', 'design system', 'segurança', 'seo', 'rotas', 'nexus', 'auditoria', 'cloudflare', 'módulos'],
+      sections: [
+        {
+          heading: 'O que é o Cátedra Digital',
+          body: [
+            'O Cátedra Digital integra estudo, oração, formação e continuidade pessoal numa experiência católica baseada em fontes identificáveis. O princípio de compreensão é Fonte → Contexto → Conexão → Compreensão → Ação.',
+            'A Escritura e as fontes oficiais da Igreja têm prioridade. A inteligência Yá organiza e explica; não inventa doutrina, citações ou referências.'
+          ],
+        },
+        {
+          heading: 'Identidade e design system',
+          body: [
+            'A identidade pública é Cátedra Digital. A interface deve manter hierarquia tipográfica, contraste, foco visível e padrões comuns de navegação, com paletas contextuais por módulo sem sacrificar acessibilidade.',
+            'Tokens e componentes existentes devem ser reutilizados. Mudanças de cor, fonte ou espaçamento exigem verificação visual e responsiva, não apenas build.'
+          ],
+        },
+        {
+          heading: 'Módulos e navegação',
+          body: [
+            'O Átrio orienta a experiência diária; Estudar reúne Bíblia, Catecismo, Magistério, Nexus, Biblioteca, Santos e Igreja Viva; Rezar reúne práticas de oração; Formar-se organiza percursos; Pesquisar conecta o acervo; Minha Jornada guarda progresso e dados pessoais.',
+            'Links diretos, aliases, refresh, voltar/avançar e retorno de contexto devem preservar o destino esperado. O fluxo de login deve preservar o destino protegido e validar que ele é interno.'
+          ],
+        },
+        {
+          heading: 'Nexus e proveniência',
+          body: [
+            'O Nexus conecta conteúdos por relações identificáveis. Citação direta, referência explícita e contexto editorial devem ser distinguidos. Relações contextuais não podem ser apresentadas como citação oficial.',
+            'O cache de texto não pode impedir o carregamento das relações, e o leitor deve permitir retornar à passagem ou ao parágrafo de origem.'
+          ],
+        },
+        {
+          heading: 'Segurança, SEO e acessibilidade',
+          body: [
+            'Dados pessoais exigem autenticação, autorização no backend e políticas RLS testadas. Segredos não podem aparecer no código público, logs ou artefatos E2E; sanitização deve falhar de modo seguro.',
+            'Páginas indexáveis precisam de metadados canônicos, robots.txt e sitemap.xml coerentes. Interfaces devem ser testadas em desktop e mobile, com teclado, foco, contraste, estados de erro e ausência de overflow.'
+          ],
+        },
+        {
+          heading: 'Qualidade e publicação',
+          body: [
+            'Documentar não é provar implementação. Build verde não prova comportamento funcional, e deploy concluído não prova que a interface correta está servida.',
+            'A cadeia oficial é GitHub → CI/testes → merge autorizado → Cloudflare Workers → verificação dos domínios reais. Merge e deploy permanecem bloqueados enquanto CI, E2E autenticado desktop/mobile, segurança ou verificações de produção estiverem pendentes.'
+          ],
+        },
+        {
+          heading: 'Documentação normativa completa',
+          body: [
+            'O repositório mantém o manual em docs/platform/README.md, com carta do produto, design system, contratos dos módulos, navegação e transições, Nexus/Conexo, segurança e privacidade, SEO técnico, acessibilidade e desempenho, qualidade e auditoria, conteúdo editorial do Átrio e publicação Cloudflare.',
+            'Cada requisito deve ser confirmado no código, nos testes ou na produção. Pendências e limites de evidência devem continuar explícitos.'
+          ],
+        },
+      ],
+    },
   ],
 };
