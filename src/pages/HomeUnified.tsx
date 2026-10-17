@@ -69,7 +69,7 @@ const HomeUnified: React.FC = () => {
 
   const greeting = useMemo(() => {
     const name = profile?.name?.split(' ')[0];
-    return name ? `Olá, ${name}.` : 'Bem-vindo à CATHEDRA Digital.';
+    return name ? `Olá, ${name}.` : 'Bem-vindo à Cátedra Digital.';
   }, [profile?.name]);
 
   const submitSearch = (e: React.FormEvent) => {
@@ -114,7 +114,7 @@ const HomeUnified: React.FC = () => {
                   Bíblia, Catecismo e Magistério <span className="text-primary">em um só lugar — conectados.</span>
                 </h1>
                 <p className="mt-7 max-w-2xl text-base leading-7 text-muted-foreground md:text-lg">
-                  {greeting} Leia a Escritura, aprofunde-se no Catecismo e descubra as conexões com o Magistério e toda a Tradição Católica, sem sair do CATHEDRA Digital.
+                  {greeting} Leia a Escritura, aprofunde-se no Catecismo e descubra as conexões com o Magistério e toda a Tradição Católica, sem sair do Cátedra Digital.
                 </p>
 
                 <form onSubmit={submitSearch} className="mt-9 flex max-w-2xl items-center gap-2 rounded-2xl border border-border bg-card p-2 shadow-sm">
@@ -124,7 +124,7 @@ const HomeUnified: React.FC = () => {
                     onChange={(e) => setQuery(e.target.value)}
                     placeholder="O que você quer estudar ou descobrir?"
                     className="min-w-0 flex-1 bg-transparent px-2 py-3 text-sm outline-none placeholder:text-muted-foreground/70 md:text-base"
-                    aria-label="Buscar na CATHEDRA"
+                    aria-label="Buscar na Cátedra"
                   />
                   <button type="submit" className="min-h-11 rounded-xl bg-primary px-5 py-3 text-xs font-semibold uppercase tracking-wider text-primary-foreground transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
                     Buscar
@@ -149,7 +149,7 @@ const HomeUnified: React.FC = () => {
                   </div>
                   <div>
                     <Eyebrow>Seu ponto de continuidade</Eyebrow>
-                    <h2 className="mt-1 font-display text-xl">Hoje na CATHEDRA</h2>
+                    <h2 className="mt-1 font-display text-xl">Hoje na Cátedra</h2>
                   </div>
                 </div>
                 <div className="mt-6 space-y-3">
@@ -270,7 +270,7 @@ const HomeUnified: React.FC = () => {
         )}
 
         {/* DESTAQUE + LITURGIA */}
-        {(featured || liturgy || news.length > 0) && (
+        {(featured || liturgy) && (
           <section className="mx-auto grid max-w-7xl gap-4 px-5 py-16 md:grid-cols-3 md:px-10 md:py-24">
             {featured && (
               <Link to={`/buscar?q=${encodeURIComponent(featured.label)}`} className="group rounded-3xl border border-border bg-card p-7 transition-all hover:border-primary/40 hover:shadow-md md:col-span-2">
