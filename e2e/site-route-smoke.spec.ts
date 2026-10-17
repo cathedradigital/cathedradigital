@@ -59,6 +59,8 @@ for (const [label, path] of publicRoutes) {
 
     const response = await page.goto(path);
     expect(response?.status(), label + ' document response').toBe(200);
+    const expectedPath = new URL(path, 'http://localhost').pathname;
+    await expect(page).toHaveURL((url) => url.pathname === expectedPath, { timeout: 7000 });
     await expect(page.locator('main').first(), label + ' should render a main landmark').toBeVisible({ timeout: 7000 });
     await expect(page.getByText('Página não encontrada', { exact: false })).toHaveCount(0);
     await expect(page.getByText('Não foi possível carregar esta página', { exact: false })).toHaveCount(0);
