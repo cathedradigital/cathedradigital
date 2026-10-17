@@ -38,6 +38,12 @@ A proposta não é apenas oferecer uma coleção de conteúdos católicos. É aj
 - `docs/quality/testing.md` — qualidade
 - `docs/ai/logos.md` — princípios do assistente
 
+### Manual técnico e editorial
+
+O índice normativo de produto, design system, contratos dos módulos, navegação, Nexus, segurança, SEO, acessibilidade, auditoria editorial e publicação está em [docs/platform/README.md](docs/platform/README.md).
+
+O portal de documentação do próprio site é servido em `/docs`; o guia **Manual técnico e editorial do Cátedra Digital** passa a apontar para esse conjunto de normas. A documentação registra critérios e evidências necessárias, mas não declara automaticamente que o código ou a produção já os cumprem.
+
 ## Desenvolvimento
 
 O código é mantido no GitHub e publicado no Cloudflare Workers. Não criar uma segunda cadeia de deploy nem reintroduzir dependência de plataforma de geração de código para publicação.
