@@ -175,6 +175,13 @@ export const docsPt: DocsBundle = {
           ],
         },
         {
+          heading: 'Átrio: notícias católicas e dossiês',
+          body: [
+            'O Átrio agora inclui um carrossel editorial com cobertura da Vatican News, da CNBB e links institucionais da Santa Sé. Cada matéria identifica veículo, categoria, data e link para a fonte original; os avisos internos do Cátedra continuam separados.',
+            'A cobertura pós-encontro de dez anos de Amoris laetitia foi atualizada com a mensagem final de Leão XIV, a Missa de encerramento presidida pelo Cardeal Tagle e a cobertura do relatório de síntese. O dossiê editorial versionado está em docs/editorial/DOSSIE_AMORIS_LAETITIA_OUTUBRO_2026.md; a mensagem do Papa deixa claro que suas próprias reflexões serão oferecidas em momento oportuno.'
+          ],
+        },
+        {
           heading: 'Nexus e proveniência',
           body: [
             'O Nexus conecta conteúdos por relações identificáveis. Citação direta, referência explícita e contexto editorial devem ser distinguidos. Relações contextuais não podem ser apresentadas como citação oficial.',
