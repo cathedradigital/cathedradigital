@@ -72,6 +72,6 @@ for (const destination of protectedRoutes) {
       url.pathname === '/auth' && url.searchParams.get('next') === destination,
       { timeout: 15000 },
     );
-    await expect(page.getByRole('heading', { name: /entrar|bem-vindo|acessar/i })).toBeVisible();
+    await expect(page.getByLabel('Email')).toBeVisible();
   });
 }
