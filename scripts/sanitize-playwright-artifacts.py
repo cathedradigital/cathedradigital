@@ -32,7 +32,7 @@ SENSITIVE_HEADERS = {
 }
 BEARER_PATTERN = re.compile(r"(?i)(bearer\s+)[A-Za-z0-9._~+/=-]{16,}")
 JWT_PATTERN = re.compile(r"\beyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\b")
-SENSITIVE_PARAM_PATTERN = re.compile(r"(?i)([?&](?:access_token|refresh_token|id_token|auth_token|token|apikey|api_key)=)[^&#\s]+")
+SENSITIVE_PARAM_PATTERN = re.compile(r"(?i)([?&#](?:access_token|refresh_token|id_token|auth_token|token|apikey|api_key)=)[^&#\s]+")
 AUTH_STORAGE_NAME_PATTERN = re.compile(r"(?i)(?:auth|access|refresh|session)[_-]?token")
 TEXT_SUFFIXES = {".trace", ".network", ".json", ".har", ".txt", ".log", ".md", ".html"}
 
