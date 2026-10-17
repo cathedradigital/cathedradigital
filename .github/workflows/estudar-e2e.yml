@@ -53,7 +53,7 @@ jobs:
           test -n "$E2E_TEST_PASSWORD" || { echo "::error::Missing E2E_TEST_PASSWORD — authenticated E2E is blocked"; exit 1; }
 
       - name: Run critical Estudar E2E
-        run: npx playwright test e2e/estudar-critical.spec.ts
+        run: npx playwright test e2e/estudar-critical.spec.ts e2e/atrium-news.spec.ts
 
       - name: Upload Playwright evidence
         if: ${{ !cancelled() }}
