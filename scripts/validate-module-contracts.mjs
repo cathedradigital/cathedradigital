@@ -4,6 +4,7 @@ import { resolve } from 'node:path';
 const root = process.cwd();
 const moduleNavigation = readFileSync(resolve(root, 'src/config/moduleNavigation.ts'), 'utf8');
 const sacredPalette = readFileSync(resolve(root, 'src/lib/sacredPalette.ts'), 'utf8');
+const appHeader = readFileSync(resolve(root, 'src/components/cathedra/AppHeader.tsx'), 'utf8');
 const app = readFileSync(resolve(root, 'src/App.tsx'), 'utf8');
 
 const navPaths = [...moduleNavigation.matchAll(/path:\s*['"]([^'"]+)['"]/g)].map((m) => m[1]);
@@ -59,6 +60,12 @@ const modulePaletteKeys = {
 };
 if (!sacredPalette.includes('export const MODULE_PALETTES')) {
   errors.push('Missing shared MODULE_PALETTES design-system tokens.');
+}
+if (!sacredPalette.includes('atrium: { accent:')) {
+  errors.push('Missing dedicated Atrium palette token.');
+}
+if (!appHeader.includes("pathname === '/'") || !appHeader.includes('MODULE_PALETTES.atrium')) {
+  errors.push('The root/Atrium route must consume the dedicated Atrium palette.');
 }
 for (const [environment, token] of Object.entries(modulePaletteKeys)) {
   if (!groups.includes(environment)) continue;
