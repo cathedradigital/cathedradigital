@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Redact authenticated request headers from Playwright ZIP traces before upload."""
+"""Redact authentication secrets from Playwright ZIP traces before upload."""
 from __future__ import annotations
 
 from io import BytesIO
@@ -24,23 +24,72 @@ SENSITIVE_HEADERS = {
     "refresh_token",
     "id_token",
     "token",
+    "auth_token",
+    "auth-token",
+    "session_token",
+    "session-token",
+    "supabase_auth_token",
 }
 BEARER_PATTERN = re.compile(r"(?i)(bearer\s+)[A-Za-z0-9._~+/=-]{16,}")
+JWT_PATTERN = re.compile(r"\beyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\b")
+SENSITIVE_PARAM_PATTERN = re.compile(r"(?i)([?&](?:access_token|refresh_token|id_token|auth_token|token|apikey|api_key)=)[^&#\s]+")
+AUTH_STORAGE_NAME_PATTERN = re.compile(r"(?i)(?:auth|access|refresh|session)[_-]?token")
 TEXT_SUFFIXES = {".trace", ".network", ".json", ".har", ".txt", ".log", ".md", ".html"}
+
+
+def scrub_string(value: str) -> tuple[str, int]:
+    count = 0
+    value, replacements = BEARER_PATTERN.subn(r"\1[REDACTED]", value)
+    count += replacements
+    value, replacements = JWT_PATTERN.subn("[REDACTED_JWT]", value)
+    count += replacements
+    value, replacements = SENSITIVE_PARAM_PATTERN.subn(r"\1[REDACTED]", value)
+    count += replacements
+    return value, count
 
 
 def redact_object(value: object) -> tuple[object, int]:
     count = 0
     if isinstance(value, dict):
-        # Playwright/ HAR headers are represented as {name, value} objects.
-        header_name = value.get("name")
-        if isinstance(header_name, str) and header_name.lower() in SENSITIVE_HEADERS and "value" in value:
-            value["value"] = "[REDACTED]"
-            count += 1
+        # Playwright/HAR headers and localStorage entries use {name, value}.
+        field_name = value.get("name")
+        if isinstance(field_name, str):
+            normalized_name = field_name.lower()
+            is_secret_field = normalized_name in SENSITIVE_HEADERS
+            is_auth_storage = "auth-token" in normalized_name or bool(
+                AUTH_STORAGE_NAME_PATTERN.search(normalized_name)
+            )
+            if (is_secret_field or is_auth_storage) and isinstance(value.get("value"), str):
+                value["value"] = "[REDACTED]"
+                count += 1
+
         for key, child in list(value.items()):
-            if isinstance(key, str) and key.lower() in SENSITIVE_HEADERS and isinstance(child, str):
+            normalized_key = key.lower() if isinstance(key, str) else ""
+            if normalized_key in SENSITIVE_HEADERS and isinstance(child, str):
                 value[key] = "[REDACTED]"
                 count += 1
+            elif isinstance(child, str):
+                # Trace files can embed storageState/response JSON inside a
+                # string-valued field. Parse it before recursively scrubbing.
+                stripped = child.lstrip()
+                if normalized_key in {"value", "body", "text", "data"} and stripped.startswith(("{", "[")):
+                    try:
+                        embedded = json.loads(child)
+                    except json.JSONDecodeError:
+                        cleaned, replacements = scrub_string(child)
+                        value[key] = cleaned
+                        count += replacements
+                    else:
+                        embedded, embedded_count = redact_object(embedded)
+                        value[key] = json.dumps(embedded, ensure_ascii=False, separators=(",", ":"))
+                        count += embedded_count
+                        cleaned, replacements = scrub_string(value[key])
+                        value[key] = cleaned
+                        count += replacements
+                else:
+                    cleaned, replacements = scrub_string(child)
+                    value[key] = cleaned
+                    count += replacements
             else:
                 value[key], child_count = redact_object(child)
                 count += child_count
@@ -64,13 +113,13 @@ def scrub_text(data: bytes, suffix: str) -> tuple[bytes, int]:
             try:
                 value = json.loads(line)
             except json.JSONDecodeError:
-                cleaned, replacements = BEARER_PATTERN.subn(r"\1[REDACTED]", line)
+                cleaned, replacements = scrub_string(line)
                 count += replacements
                 lines.append(cleaned)
                 continue
             value, redactions = redact_object(value)
             cleaned = json.dumps(value, ensure_ascii=False, separators=(",", ":"))
-            cleaned, replacements = BEARER_PATTERN.subn(r"\1[REDACTED]", cleaned)
+            cleaned, replacements = scrub_string(cleaned)
             count += redactions + replacements
             lines.append(cleaned)
         result = "\n".join(lines)
@@ -78,7 +127,7 @@ def scrub_text(data: bytes, suffix: str) -> tuple[bytes, int]:
             result += "\n"
         return result.encode("utf-8"), count
 
-    cleaned, count = BEARER_PATTERN.subn(r"\1[REDACTED]", text)
+    cleaned, count = scrub_string(text)
     return cleaned.encode("utf-8"), count
 
 
