@@ -45,6 +45,7 @@ const CathedralSidebar = lazy(() => import('./components/cathedra/Sidebar'));
 const TheologicalTextFixture = lazy(() => import('./pages/__test/TheologicalTextFixture'));
 const EditorialShowcase = lazy(() => import('./pages/dev/EditorialShowcase'));
 const MobileShowcase = lazy(() => import('./pages/dev/MobileShowcase'));
+import { MobileModuleCarousel } from './components/mobile/MobileModuleCarousel';
 const CathedralFooter = lazy(() => import('./components/cathedra/Footer'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 const AppHeader = lazy(() => import('./components/cathedra/AppHeader'));
@@ -627,6 +628,10 @@ const AppLayout: React.FC = () => {
         <Suspense fallback={null}>
           <WelcomeFirstAccess />
         </Suspense>
+
+        {!location.pathname.startsWith('/bible') && !location.pathname.startsWith('/prototype-2.0') && (
+          <MobileModuleCarousel />
+        )}
 
         {/* Arquitetura estabilizada: Layout único, Card único, Navegação única e Tema único. */}
 
