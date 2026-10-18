@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useLocation, useNavigate } from '@/lib/rr-compat';
-import { BookOpen, Compass, Footprints, GraduationCap, HandHeart, House, Search } from 'lucide-react';
+import { BookOpen, Footprints, GraduationCap, HandHeart, House, Search } from 'lucide-react';
 import { MODULE_NAVIGATION, type ModuleEnvironment } from '@/config/moduleNavigation';
 import { useLang } from '@/hooks/useLang';
 import { cn } from '@/lib/utils';
@@ -105,7 +105,7 @@ export function MobileModuleCarousel() {
     <nav
       aria-label="Navegação entre módulos"
       data-testid="mobile-module-carousel"
-      className="relative z-[145] border-b border-primary/10 bg-background/95 backdrop-blur-xl md:hidden"
+      className="sticky top-0 relative z-[145] border-b border-primary/10 bg-background/95 backdrop-blur-xl md:hidden"
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
