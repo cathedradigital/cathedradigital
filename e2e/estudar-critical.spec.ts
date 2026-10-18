@@ -7,6 +7,16 @@ test.beforeEach(async () => {
   if (!email || !password) throw new Error('E2E_TEST_EMAIL and E2E_TEST_PASSWORD must be configured as CI secrets.');
 });
 
+test('mobile module carousel opens canonical environments', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/');
+  const carousel = page.getByTestId('mobile-module-carousel');
+  await expect(carousel).toBeVisible();
+  await carousel.getByRole('button', { name: 'Abrir módulo Estudar' }).click();
+  await expect(page).toHaveURL(/\/estudar$/);
+  await expect(carousel.getByRole('button', { name: 'Abrir módulo Estudar' })).toHaveAttribute('aria-current', 'page');
+});
+
 async function login(page: Page, destination: string) {
   await page.goto('/login?next=' + encodeURIComponent(destination));
   await page.getByLabel('Email').fill(email!);
