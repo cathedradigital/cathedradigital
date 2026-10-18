@@ -22,7 +22,7 @@ async function login(page: Page, destination: string) {
   await page.getByLabel('Email').fill(email!);
   await page.getByLabel('Senha').fill(password!);
   await page.getByRole('button', { name: 'Entrar', exact: true }).click();
-  expect(page.url()).toContain(destination.split('?')[0]);
+  await expect(page).toHaveURL((url) => url.pathname + url.search === destination || url.pathname === destination.split('?')[0], { timeout: 15000 });
 }
 
 function watchBrowserHealth(page: Page) {
@@ -52,7 +52,7 @@ test('auth redirect preserves protected destination', async ({ page }) => {
   await page.context().clearCookies();
   await page.addInitScript(() => localStorage.clear());
   await page.goto('/diario');
-  await expect(page).toHaveURL(/\/auth\?next=/);
+  await expect(page).toHaveURL(/\/login\?next=/);
   const current = new URL(page.url());
   expect(current.searchParams.get('next')).toBe('/diario');
 });
