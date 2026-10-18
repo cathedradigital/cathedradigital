@@ -70,7 +70,7 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: deploy
-      - name: Validate production endpoints
+      - name: Validate production endpoints and SEO resources
         shell: bash
         run: |
           set -euo pipefail
@@ -84,24 +84,31 @@ jobs:
             body_file="$(mktemp)"
             status="$(curl --silent --show-error --location --retry 2 --retry-all-errors --connect-timeout 10 --max-time 30 --output "$body_file" --write-out "%{http_code}" "$url" || true)"
             size="$(wc -c < "$body_file")"
+            if [ "$status" != "200" ]; then
+              echo "::error::$url returned HTTP $status; endpoint is not publicly verified."
+              head -c 500 "$body_file" || true
+              rm -f "$body_file"
+              exit 1
+            fi
+            test "$size" -gt 100
+            if ! grep -Eqi '<html|<!doctype html' "$body_file"; then
+              echo "::error::$url returned HTTP 200 without an HTML document."
+              rm -f "$body_file"
+              exit 1
+            fi
+            if ! grep -Eqi 'Cathedra|Cátedra' "$body_file"; then
+              echo "::error::$url returned HTML without the expected Cátedra identity."
+              rm -f "$body_file"
+              exit 1
+            fi
+            echo "OK $url -> HTTP $status ($size bytes; expected HTML identity present)"
             rm -f "$body_file"
+          done
 
-            case "$url" in
-              *workers.dev)
-                test "$status" = "200"
-                test "$size" -gt 100
-                echo "OK $url -> HTTP $status ($size bytes)"
-                ;;
-              *)
-                if [ "$status" = "200" ]; then
-                  test "$size" -gt 100
-                  echo "OK $url -> HTTP $status ($size bytes)"
-                elif [ "$status" = "403" ]; then
-                  echo "REACHABLE $url -> HTTP 403 (custom-domain protection; deployment is live)"
-                else
-                  echo "::error::$url returned unexpected HTTP $status"
-                  exit 1
-                fi
-                ;;
-            esac
+          for resource in "https://cathedradigital.com.br/robots.txt" "https://cathedradigital.com.br/sitemap.xml"; do
+            echo "Checking $resource"
+            code="$(curl --silent --show-error --location --retry 2 --retry-all-errors --connect-timeout 10 --max-time 30 --output /tmp/cathedra-resource --write-out "%{http_code}" "$resource" || true)"
+            test "$code" = "200" || { echo "::error::$resource returned HTTP $code"; exit 1; }
+            test "$(wc -c < /tmp/cathedra-resource)" -gt 10
+            echo "OK $resource -> HTTP $code"
           done
