@@ -5,6 +5,7 @@ import { HelmetProvider } from '@/lib/helmet-compat';
 import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation, useParams } from '@/lib/rr-compat';
 import { resolveSpaceForPath } from '@/lib/spaces/resolveSpace';
 import { MODULE_NAVIGATION } from '@/config/moduleNavigation';
+import { MobileModuleCarousel } from './components/mobile/MobileModuleCarousel';
 
 import { AnimatePresence, motion, MotionConfig } from 'framer-motion';
 import { QueryClient } from '@tanstack/react-query';
@@ -45,7 +46,6 @@ const CathedralSidebar = lazy(() => import('./components/cathedra/Sidebar'));
 const TheologicalTextFixture = lazy(() => import('./pages/__test/TheologicalTextFixture'));
 const EditorialShowcase = lazy(() => import('./pages/dev/EditorialShowcase'));
 const MobileShowcase = lazy(() => import('./pages/dev/MobileShowcase'));
-import { MobileModuleCarousel } from './components/mobile/MobileModuleCarousel';
 const CathedralFooter = lazy(() => import('./components/cathedra/Footer'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 const AppHeader = lazy(() => import('./components/cathedra/AppHeader'));
