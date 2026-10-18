@@ -49,9 +49,8 @@ async function openStudyJournal(page: Page, marker: string) {
 }
 
 test('auth redirect preserves protected destination', async ({ page }) => {
-  await page.goto('/');
-  await page.evaluate(() => localStorage.clear());
   await page.context().clearCookies();
+  await page.addInitScript(() => localStorage.clear());
   await page.goto('/diario');
   await expect(page).toHaveURL(/\/auth\?next=/);
   const current = new URL(page.url());
