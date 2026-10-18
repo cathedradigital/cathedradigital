@@ -1,0 +1,100 @@
+name: Cloudflare Preview
+
+on:
+  pull_request:
+    branches: ["main"]
+    types: [opened, synchronize, reopened]
+    paths:
+      - "src/**"
+      - "public/**"
+      - "e2e/**"
+      - "wrangler.jsonc"
+      - "vite.config.*"
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/cloudflare-preview.yml"
+
+permissions:
+  contents: read
+  deployments: write
+  pull-requests: write
+
+concurrency:
+  group: cloudflare-preview-pr-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  preview:
+    name: Build and publish isolated Cloudflare Preview
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout PR HEAD
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22.x"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build and validate
+        run: |
+          npm run typecheck
+          npm run build
+
+      - name: Publish isolated Cloudflare Preview
+        id: preview
+        uses: cloudflare/wrangler-action@v4
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          wranglerVersion: "4.145.0"
+          command: preview --name pr-${{ github.event.pull_request.number }}
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Verify preview endpoint
+        env:
+          PREVIEW_URL: ${{ steps.preview.outputs.preview-url }}
+        run: |
+          set -euo pipefail
+          test -n "$PREVIEW_URL"
+          echo "Preview URL: $PREVIEW_URL"
+          curl --fail --silent --show-error --location --retry 5 --retry-all-errors --retry-delay 3 --connect-timeout 10 --max-time 30 "$PREVIEW_URL" -o /tmp/preview.html
+          test "$(wc -c < /tmp/preview.html)" -gt 100
+          grep -Eqi '<html|<!doctype html' /tmp/preview.html
+
+      - name: Comment preview URL on PR
+        if: ${{ success() }}
+        uses: actions/github-script@v7
+        env:
+          PREVIEW_URL: ${{ steps.preview.outputs.preview-url }}
+          DEPLOYMENT_URL: ${{ steps.preview.outputs.preview-deployment-url }}
+        with:
+          script: |
+            const marker = '<!-- cloudflare-preview-pr -->';
+            const body = [
+              marker,
+              '## Cloudflare Preview',
+              '',
+              'A visual preview was generated from this PR branch; this does **not** deploy to the production domain.',
+              '',
+              '- **Preview (latest branch build):** ' + process.env.PREVIEW_URL,
+              '- **This deployment:** ' + process.env.DEPLOYMENT_URL,
+              '',
+              'Use the preview to inspect the mobile module carousel. Preview settings/secrets are isolated from production.'
+            ].join('\\n');
+            const { owner, repo } = context.repo;
+            const issue_number = context.issue.number;
+            const comments = await github.rest.issues.listComments({ owner, repo, issue_number, per_page: 100 });
+            const existing = comments.data.find(comment => comment.body?.includes(marker));
+            if (existing) {
+              await github.rest.issues.updateComment({ owner, repo, comment_id: existing.id, body });
+            } else {
+              await github.rest.issues.createComment({ owner, repo, issue_number, body });
+            }
