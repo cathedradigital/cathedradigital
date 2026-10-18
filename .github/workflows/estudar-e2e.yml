@@ -7,6 +7,7 @@ on:
       - "src/**"
       - "e2e/**"
       - "playwright.config.ts"
+      - "scripts/sanitize-playwright-artifacts.py"
       - "package.json"
       - ".github/workflows/estudar-e2e.yml"
   workflow_dispatch:
@@ -55,10 +56,15 @@ jobs:
       - name: Run critical Estudar E2E
         run: npx playwright test e2e/estudar-critical.spec.ts
 
-      # The HTML report includes the test attachments (traces, screenshots and videos).
-      # Uploading test-results/ alongside it duplicates those large attachments in the same artifact.
-      - name: Upload Playwright evidence
+      - name: Sanitize sensitive headers in Playwright traces
+        id: sanitize-traces
         if: ${{ !cancelled() }}
+        run: python3 scripts/sanitize-playwright-artifacts.py
+
+      # The HTML report contains test attachments; uploading test-results/ as well duplicates them.
+      # Keep the sanitization step before upload because traces can contain authenticated headers.
+      - name: Upload Playwright evidence
+        if: ${{ !cancelled() && steps.sanitize-traces.outcome == 'success' }}
         uses: actions/upload-artifact@v5
         with:
           name: estudar-e2e-evidence
