@@ -55,9 +55,10 @@ export function MobileModuleCarousel() {
   const activeRef = useRef<HTMLButtonElement | null>(null);
   const touchStartX = useRef<number | null>(null);
   const touchStartY = useRef<number | null>(null);
+  const didSwipe = useRef(false);
 
   const destinations = useMemo<Destination[]>(() => [
-    { key: 'atrium', label: t('nav.inicio') || 'Átrio', path: '/', icon: House, accent: '#c6a45c' },
+    { key: 'atrium', label: 'Átrio', path: '/', icon: House, accent: '#c6a45c' },
     ...MODULE_NAVIGATION.map((environment) => ({
       key: environment.key,
       label: t(environment.labelKey) || environment.label,
@@ -96,6 +97,7 @@ export function MobileModuleCarousel() {
     const deltaX = end.clientX - startX;
     const deltaY = end.clientY - startY;
     if (Math.abs(deltaX) < 48 || Math.abs(deltaX) < Math.abs(deltaY) * 1.2) return;
+    didSwipe.current = true;
     openIndex(Math.max(0, Math.min(destinations.length - 1, activeIndex + (deltaX < 0 ? 1 : -1))));
   };
 
@@ -105,9 +107,15 @@ export function MobileModuleCarousel() {
     <nav
       aria-label="Navegação entre módulos"
       data-testid="mobile-module-carousel"
-      className="sticky top-0 relative z-[145] border-b border-primary/10 bg-background/95 backdrop-blur-xl md:hidden"
+      className="sticky top-0 z-[145] border-b border-primary/10 bg-background/95 backdrop-blur-xl md:hidden"
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
+      onClickCapture={(event) => {
+        if (!didSwipe.current) return;
+        event.preventDefault();
+        event.stopPropagation();
+        didSwipe.current = false;
+      }}
     >
       <div className="flex min-h-[60px] items-center gap-1 overflow-x-auto px-2 pb-1 pt-1 pl-[3.75rem] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {destinations.map((destination, index) => {
