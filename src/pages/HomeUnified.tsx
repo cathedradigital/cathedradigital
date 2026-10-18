@@ -331,7 +331,7 @@ const HomeUnified: React.FC = () => {
                   Todas as notícias <ArrowRight className="h-4 w-4" />
                 </a>
               </div>
-            </div>}
+            </div>
           </section>
         )}
       </main>
