@@ -12,7 +12,20 @@ async function login(page: Page, destination: string) {
   await page.getByLabel('Email').fill(email!);
   await page.getByLabel('Senha').fill(password!);
   await page.getByRole('button', { name: 'Entrar', exact: true }).click();
-  expect(page.url()).toContain(destination.split('?')[0]);
+
+  // Authentication is asynchronous: wait for the requested route instead of
+  // reading page.url() immediately after the click. If Supabase rejects the
+  // credentials, report the visible auth error rather than a misleading route
+  // assertion shared by every downstream test.
+  const expectedPath = new URL(destination, page.url()).pathname;
+  const authError = page.getByRole('alert');
+  await Promise.race([
+    page.waitForURL(url => url.pathname === expectedPath, { timeout: 15_000 }),
+    authError.waitFor({ state: 'visible', timeout: 15_000 }).then(async () => {
+      throw new Error(`Authentication failed before redirect to ${expectedPath}: ${await authError.innerText()}`);
+    }),
+  ]);
+  await expect(page).toHaveURL(url => url.pathname === expectedPath);
 }
 
 function watchBrowserHealth(page: Page) {
