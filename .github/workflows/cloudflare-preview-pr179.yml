@@ -1,0 +1,89 @@
+name: Cloudflare Worker Preview
+
+on:
+  push:
+    branches:
+      - fix/bible-nexus-hydrate-on-cache
+
+concurrency:
+  group: cloudflare-preview-pr-179
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  preview:
+    name: Deploy isolated Cloudflare Preview
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+      VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY }}
+    steps:
+      - name: Checkout candidate branch
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22.x"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Verify preview credentials and app configuration
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$CLOUDFLARE_API_TOKEN" || { echo "::error::Missing CLOUDFLARE_API_TOKEN"; exit 1; }
+          test -n "$CLOUDFLARE_ACCOUNT_ID" || { echo "::error::Missing CLOUDFLARE_ACCOUNT_ID"; exit 1; }
+          test -n "$VITE_SUPABASE_URL" || { echo "::error::Missing VITE_SUPABASE_URL"; exit 1; }
+          test -n "$VITE_SUPABASE_PUBLISHABLE_KEY" || { echo "::error::Missing VITE_SUPABASE_PUBLISHABLE_KEY"; exit 1; }
+          npx wrangler whoami --account "$CLOUDFLARE_ACCOUNT_ID"
+
+      - name: Build candidate with the intended Supabase project
+        run: npm run build
+
+      - name: Create or update isolated Worker Preview
+        id: deploy-preview
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Preview secrets are scoped to this named preview, not production.
+          printf '%s' "$VITE_SUPABASE_URL" | npx wrangler preview secret put SUPABASE_URL --name pr-179
+          printf '%s' "$VITE_SUPABASE_PUBLISHABLE_KEY" | npx wrangler preview secret put SUPABASE_PUBLISHABLE_KEY --name pr-179
+
+          output="$(npx wrangler preview --name pr-179 --json 2>&1)"
+          printf '%s\n' "$output" | tee preview-deploy.log
+          preview_url="$(printf '%s\n' "$output" | grep -Eo 'https://[[:alnum:].-]+\.workers\.dev' | tail -n 1 || true)"
+          test -n "$preview_url" || { echo "::error::Wrangler did not return a workers.dev Preview URL"; exit 1; }
+          echo "url=$preview_url" >> "$GITHUB_OUTPUT"
+          {
+            echo "## Cátedra Digital — Cloudflare Preview"
+            echo
+            echo "Candidate branch: `fix/bible-nexus-hydrate-on-cache`"
+            echo "Preview URL: $preview_url"
+            echo
+            echo "This is a non-production Preview. Production domains were not changed."
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Verify Preview responds
+        shell: bash
+        env:
+          PREVIEW_URL: ${{ steps.deploy-preview.outputs.url }}
+        run: |
+          set -euo pipefail
+          body="$(mktemp)"
+          status="$(curl --silent --show-error --location --retry 2 --retry-all-errors --connect-timeout 10 --max-time 30 --output "$body" --write-out '%{http_code}' "$PREVIEW_URL")"
+          size="$(wc -c < "$body")"
+          if [ "$status" != "200" ] || [ "$size" -le 100 ]; then
+            echo "::error::Preview smoke test failed: HTTP $status, $size bytes"
+            head -c 1000 "$body"
+            rm -f "$body"
+            exit 1
+          fi
+          rm -f "$body"
+          echo "Preview smoke test passed: HTTP $status, $size bytes"
