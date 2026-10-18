@@ -12,7 +12,9 @@ async function login(page: Page, destination: string) {
   await page.getByLabel('Email').fill(email!);
   await page.getByLabel('Senha').fill(password!);
   await page.getByRole('button', { name: 'Entrar', exact: true }).click();
-  expect(page.url()).toContain(destination.split('?')[0]);
+  // Login uses an async Supabase request; wait for the app's real post-login navigation.
+  // This keeps the destination assertion strict without racing the submit handler.
+  await expect(page).toHaveURL(url => url.pathname === destination.split('?')[0], { timeout: 15_000 });
 }
 
 function watchBrowserHealth(page: Page) {
