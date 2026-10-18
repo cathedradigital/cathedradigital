@@ -55,12 +55,12 @@ jobs:
       - name: Run critical Estudar E2E
         run: npx playwright test e2e/estudar-critical.spec.ts
 
+      # The HTML report includes the test attachments (traces, screenshots and videos).
+      # Uploading test-results/ alongside it duplicates those large attachments in the same artifact.
       - name: Upload Playwright evidence
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v5
         with:
           name: estudar-e2e-evidence
-          path: |
-            playwright-report/
-            test-results/
+          path: playwright-report/
           retention-days: 7
