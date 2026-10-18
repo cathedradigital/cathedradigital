@@ -8,6 +8,7 @@ on:
       - "e2e/**"
       - "playwright.config.ts"
       - "package.json"
+      - "bun.lock"
       - ".github/workflows/estudar-e2e.yml"
   workflow_dispatch:
 
@@ -33,10 +34,21 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
 
-      - name: Setup Node 22
+      - name: Setup Node 22 with npm download cache
         uses: actions/setup-node@v6
         with:
           node-version: "22.x"
+          cache: npm
+          # The repository's authoritative lockfile is bun.lock; use it to invalidate
+          # the npm download cache when dependency declarations/versions change.
+          cache-dependency-path: bun.lock
+
+      - name: Restore Playwright browser cache
+        uses: actions/cache@v4
+        id: playwright-cache
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-chromium-1.55.0
 
       - name: Install application dependencies
         run: npm install
