@@ -12,7 +12,9 @@ async function login(page: Page, destination: string) {
   await page.getByLabel('Email').fill(email!);
   await page.getByLabel('Senha').fill(password!);
   await page.getByRole('button', { name: 'Entrar', exact: true }).click();
-  expect(page.url()).toContain(destination.split('?')[0]);
+  const expectedPath = destination.split('?')[0];
+  await page.waitForURL(url => url.pathname.endsWith(expectedPath), { timeout: 15_000 });
+  expect(new URL(page.url()).pathname).toContain(expectedPath);
 }
 
 function watchBrowserHealth(page: Page) {
@@ -37,6 +39,24 @@ async function openStudyJournal(page: Page, marker: string) {
   await expect(note).toBeVisible();
   return note;
 }
+
+test('Átrio: ambientes Estudar e Pesquisar levam às rotas canônicas', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.getByRole('heading', { name: /Bíblia, Catecismo e Magistério/ })).toBeVisible();
+
+  const estudar = page.getByRole('link', { name: /Entrar em Estudar/ });
+  await expect(estudar).toHaveAttribute('href', '/estudar');
+  await estudar.click();
+  await page.waitForURL(url => url.pathname === '/estudar', { timeout: 15_000 });
+  expect(new URL(page.url()).pathname).toBe('/estudar');
+
+  await page.goto('/');
+  const pesquisar = page.getByRole('link', { name: /Entrar em Pesquisar/ });
+  await expect(pesquisar).toHaveAttribute('href', '/buscar');
+  await pesquisar.click();
+  await page.waitForURL(url => url.pathname === '/buscar', { timeout: 15_000 });
+  expect(new URL(page.url()).pathname).toBe('/buscar');
+});
 
 test('auth redirect preserves protected destination', async ({ page }) => {
   await page.context().clearCookies();
