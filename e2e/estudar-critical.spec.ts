@@ -49,10 +49,13 @@ async function openStudyJournal(page: Page, marker: string) {
 }
 
 test('auth redirect preserves protected destination', async ({ page }) => {
+  await page.goto('/');
+  await page.evaluate(() => localStorage.clear());
   await page.context().clearCookies();
   await page.goto('/diario');
-  expect(page.url()).toContain('/login?next=');
-  expect(page.url()).toContain('diario');
+  await expect(page).toHaveURL(/\/auth\?next=/);
+  const current = new URL(page.url());
+  expect(current.searchParams.get('next')).toBe('/diario');
 });
 
 test('Bíblia: anotação → Diário → retorno exato ao versículo', async ({ page }) => {
