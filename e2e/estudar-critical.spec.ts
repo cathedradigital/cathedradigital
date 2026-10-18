@@ -47,6 +47,14 @@ test('auth redirect preserves protected destination', async ({ page }) => {
   expect(page.url()).toContain('diario');
 });
 
+test('login alias preserves the full next destination through /auth', async ({ page }) => {
+  const destination = '/catechism?p=2865';
+  await page.goto('/login?next=' + encodeURIComponent(destination));
+  await expect(page).toHaveURL(url =>
+    url.pathname === '/auth' && url.searchParams.get('next') === destination,
+  );
+});
+
 test('Bíblia: anotação → Diário → retorno exato ao versículo', async ({ page }) => {
   const bad = watchBrowserHealth(page);
   const marker = 'E2E-BIBLE-' + Date.now();
