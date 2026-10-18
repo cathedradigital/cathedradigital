@@ -71,5 +71,40 @@ export function useAnnouncements(): AnnouncementItem[] {
   return useAsync(() => atriumAdapters.announcement.getRecent(), []);
 }
 
+export type AnnouncementLoadState =
+  | { status: 'loading'; items: [] }
+  | { status: 'success'; items: AnnouncementItem[] }
+  | { status: 'error'; items: [] };
+
+/**
+ * Estado explícito para o bloco de novidades do Átrio.
+ * Não transforma falha de serviço em uma lista vazia nem simula sucesso.
+ */
+export function useAnnouncementsState(): AnnouncementLoadState {
+  const [state, setState] = useState<AnnouncementLoadState>({
+    status: 'loading',
+    items: [],
+  });
+
+  useEffect(() => {
+    let active = true;
+
+    atriumAdapters.announcement.getRecent().then(
+      (items) => {
+        if (active) setState({ status: 'success', items });
+      },
+      () => {
+        if (active) setState({ status: 'error', items: [] });
+      },
+    );
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  return state;
+}
+
 // Placeholder da Fase 1 mantido para compat:
 export function useAtriumState() { return null; }
