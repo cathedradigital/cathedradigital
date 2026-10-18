@@ -192,7 +192,9 @@ test('Catecismo: §2262 preserva o texto oficial e abre a referência bíblica',
 test('Catecismo: proveniência do texto oficial fica visível e navegável', async ({ page }) => {
   await login(page, '/catechism?p=1');
   await expect(page.locator('#p1')).toBeVisible();
-  const source = page.getByText('Santa Sé · vatican.va', { exact: true });
+  // Provenance labels repeat across loaded Catechism paragraphs; scope the
+  // assertion to §1 and target the actual anchor rather than matching all text.
+  const source = page.locator('#p1').getByRole('link', { name: 'Santa Sé · vatican.va', exact: true });
   await expect(source).toBeVisible();
   await expect(source).toHaveAttribute('href', /vatican\.va/);
 });
