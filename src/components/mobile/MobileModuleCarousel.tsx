@@ -107,7 +107,7 @@ export function MobileModuleCarousel() {
     <nav
       aria-label="Navegação entre módulos"
       data-testid="mobile-module-carousel"
-      className="sticky top-0 z-[145] border-b border-primary/10 bg-background/95 backdrop-blur-xl md:hidden"
+      className="fixed inset-x-0 bottom-0 z-[45] border-t border-primary/10 bg-background/95 pb-[var(--stitch-mobile-safe-bottom,env(safe-area-inset-bottom,0px))] shadow-[0_-8px_24px_rgba(0,0,0,0.06)] backdrop-blur-xl md:hidden"
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
       onClickCapture={(event) => {
@@ -117,7 +117,7 @@ export function MobileModuleCarousel() {
         didSwipe.current = false;
       }}
     >
-      <div className="flex min-h-[60px] items-center gap-1 overflow-x-auto px-2 pb-1 pt-1 pl-[3.75rem] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <div className="flex min-h-[64px] items-center justify-around gap-1 overflow-x-auto px-2 py-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {destinations.map((destination, index) => {
           const Icon = destination.icon;
           const active = index === activeIndex;
@@ -130,7 +130,7 @@ export function MobileModuleCarousel() {
               aria-label={`Abrir módulo ${destination.label}`}
               onClick={() => openIndex(index)}
               className={cn(
-                'group relative inline-flex min-h-[44px] shrink-0 items-center justify-center gap-2 rounded-full border px-3 transition-all duration-200',
+                'group relative inline-flex min-h-[48px] min-w-[54px] shrink-0 flex-col items-center justify-center gap-1 rounded-xl border px-2 py-1 transition-all duration-200',
                 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2',
                 active
                   ? 'border-[var(--module-carousel-accent)] bg-primary/[0.07] text-foreground shadow-sm'
@@ -140,14 +140,14 @@ export function MobileModuleCarousel() {
             >
               <Icon
                 aria-hidden="true"
-                className={cn('h-[18px] w-[18px] shrink-0 transition-transform duration-200', active && 'scale-110')}
+                className={cn('h-[19px] w-[19px] shrink-0 transition-transform duration-200', active && 'scale-110')}
                 style={{ color: active ? destination.accent : undefined }}
                 strokeWidth={active ? 2.2 : 1.8}
               />
-              <span className={cn('whitespace-nowrap text-[11px] font-semibold tracking-[0.015em]', active && 'text-foreground')}>
+              <span className={cn('max-w-[78px] truncate whitespace-nowrap text-[9px] font-semibold tracking-[0.005em] sm:text-[10px]', active && 'text-foreground')}>
                 {destination.label}
               </span>
-              {active && <span className="absolute inset-x-3 -bottom-[1px] h-[2px] rounded-full" style={{ background: destination.accent }} />}
+              {active && <span className="absolute inset-x-3 top-0 h-[2px] rounded-full" style={{ background: destination.accent }} />}
             </button>
           );
         })}
