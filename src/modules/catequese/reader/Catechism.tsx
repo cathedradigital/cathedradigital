@@ -679,18 +679,36 @@ const Catechism: React.FC = memo(() => {
     if (viewMode !== 'reading') return;
     const observer = new IntersectionObserver(
       (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            if (deepLinkRestorePendingRef.current) return;
-            setActiveParagraphId(entry.target.id);
-            const pNum = parseInt(entry.target.id.replace('p', ''));
-            if (!isNaN(pNum)) setCurrentParagraph(pNum);
-          }
-        });
+        // A deep link is authoritative while its requested paragraph is being
+        // restored. Do not let unrelated intersection events rewrite ?p=N.
+        if (deepLinkRestorePendingRef.current || !entries.some((entry) => entry.isIntersecting)) return;
+
+        // Observe only paragraph articles in the active Catechism reader. The
+        // old document-wide [id^="p"] selector also matched unrelated elements,
+        // and processing every intersecting entry in one callback made the last
+        // entry win (causing deep links such as §2865 to drift to another §).
+        const reader = document.querySelector('[data-testid$="-conteudo"].editorial-section');
+        if (!reader) return;
+        const viewportAnchor = window.innerHeight * 0.42;
+        const visible = Array.from(reader.querySelectorAll<HTMLElement>('article[id^="p"]'))
+          .map((element) => {
+            const rect = element.getBoundingClientRect();
+            return { element, rect, distance: Math.abs(rect.top + rect.height / 2 - viewportAnchor) };
+          })
+          .filter(({ rect }) => rect.bottom > 0 && rect.top < window.innerHeight)
+          .sort((a, b) => a.distance - b.distance);
+        const active = visible[0]?.element;
+        if (!active) return;
+
+        const pNum = Number(active.id.slice(1));
+        if (!Number.isInteger(pNum) || pNum < 1 || pNum > 2865) return;
+        setActiveParagraphId(active.id);
+        setCurrentParagraph(pNum);
       },
       { threshold: 0.5, rootMargin: '-10% 0px -70% 0px' }
     );
-    document.querySelectorAll('[id^="p"]').forEach((el) => observer.observe(el));
+    const reader = document.querySelector('[data-testid$="-conteudo"].editorial-section');
+    reader?.querySelectorAll('[id^="p"]').forEach((el) => observer.observe(el));
     return () => observer.disconnect();
   }, [viewMode, selectedSection]);
 
