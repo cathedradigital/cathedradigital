@@ -22,7 +22,7 @@ async function login(page: Page, destination: string) {
   await page.getByLabel('Email').fill(email!);
   await page.getByLabel('Senha').fill(password!);
   await page.getByRole('button', { name: 'Entrar', exact: true }).click();
-  await expect(page).toHaveURL((url) => url.pathname + url.search === destination || url.pathname === destination.split('?')[0], { timeout: 15000 });
+  await expect(page).toHaveURL((url) => url.pathname + url.search === destination, { timeout: 15000 });
 }
 
 function watchBrowserHealth(page: Page) {
