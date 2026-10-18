@@ -1,7 +1,7 @@
 # Matriz de rastreabilidade — requisitos, código e testes
 
 **Versão:** 1.0.0  
-**Estado:** mapeamento estático inicial; não é aprovação funcional ou de produção.  
+**Estado:** mapeamento estático inicial, com CI e auditoria documental aprovados no SHA registrado abaixo; não é aprovação funcional ou de produção.  
 **Base inspecionada:** `main` em `3d11520d3b1c8a713d278589ad0ab89e7982c0e0` (SHA base confirmado na PR de documentação modular).  
 **Método:** leitura de arquivos e busca estática no GitHub. Não foi executada uma nova suíte Playwright, build ou teste real de isolamento durante este mapeamento.
 
@@ -25,7 +25,7 @@
 | P0 | Auth: rota protegida e preservação do destino | [App.tsx](../src/App.tsx), [estudar-critical.spec.ts](../e2e/estudar-critical.spec.ts) | Teste `auth redirect preserves protected destination`; helper `login` | **Teste localizado; execução não verificada.** O helper atual verifica URL imediatamente após clicar; confirmar que aguarda a transição e testar query/hash, destino interno e rejeição de destino externo. |
 | P0 | Minha Jornada: anotação e retorno ao contexto exato | [Bible.tsx](../src/components/cathedra/Bible.tsx), [SpiritualProfile.tsx](../src/components/cathedra/SpiritualProfile.tsx), [migração pessoal](../supabase/migrations/20260909213548_2e8e8ab8-d3cc-41d5-a30e-8a5dcfc79971.sql) | Fluxos Bíblia/Catecismo/Magistério → Diário → contexto em [estudar-critical.spec.ts](../e2e/estudar-critical.spec.ts) | **Fluxos de teste localizados; execução não verificada.** Verificar persistência, falha de salvamento, expiração de sessão e destino exato após autenticar novamente. |
 | P0 Segurança | Isolamento de notas, histórico, diário e progresso | Migração SQL habilita RLS e define política `auth.uid() = user_id` para tabelas pessoais | Não localizei teste E2E de acesso cruzado com duas contas nas buscas realizadas | **Políticas definidas na migração; aplicação efetiva e isolamento real não verificados.** Exige teste negativo com duas identidades e confirmação do schema/policies ativos no Supabase. |
-| P1 | Rezar | Especificação em [REZAR.md]([REZAR.md na PR #201](https://github.com/cathedradigital/cathedradigital/blob/docs/module-specifications-clean/docs/modules/REZAR.md)) na PR modular | Testes específicos não localizados nesta busca | **Não verificado.** Mapear sequências, avançar/voltar, fonte, persistência e estados de erro. |
+| P1 | Rezar | Especificação em [REZAR.md na PR #201](https://github.com/cathedradigital/cathedradigital/blob/docs/module-specifications-clean/docs/modules/REZAR.md) na PR modular | Testes específicos não localizados nesta busca | **Não verificado.** Mapear sequências, avançar/voltar, fonte, persistência e estados de erro. |
 | P1 | Formar-se | [useSpiritualJourney](../src/hooks/useSpiritualJourney.ts) é usado na home; dados de jornadas/progresso na migração SQL | Teste específico de percurso/retomada não localizado nesta busca | **Parcialmente mapeado; não verificado.** Cobrir novo/em andamento/concluído, persistência e isolamento por usuário. |
 | P1 | Pesquisar | [HomeUnified.tsx](../src/pages/HomeUnified.tsx) navega para `/buscar`; rota e página devem ser confirmadas no mapa de rotas | Testes específicos de busca não localizados nesta busca | **Parcialmente mapeado; não verificado.** Cobrir consulta, filtros, zero resultados, falha e autorização. |
 | P1 | Biblioteca, Santos, Igreja Viva e demais áreas | Referências e rotas devem ser mapeadas no código de rotas e nos módulos correspondentes | Nenhuma cobertura suficiente confirmada neste mapeamento | **Não verificado.** Criar critérios de aceite por módulo antes de declarar cobertura. |
@@ -50,9 +50,11 @@
 
 ## Registro desta revisão
 
-- Tipo de verificação: inspeção estática de arquivos e buscas no GitHub.
-- SHA de base: `3d11520d3b1c8a713d278589ad0ab89e7982c0e0`.
-- Build/CI/Playwright executados nesta revisão: **não**.
-- Falhas funcionais confirmadas nesta revisão: **nenhuma** — não houve execução de testes.
-- Lacunas verificadas: cobertura específica de Átrio e teste negativo de Nexus não foram localizados nas buscas; teste de isolamento entre duas contas não foi localizado; status das políticas ativas no Supabase não foi consultado.
-- Resultado global: **mapeamento inicial criado; implementação e aceite continuam não verificados onde indicado**.
+- Inspeção estática da matriz: base `3d11520d3b1c8a713d278589ad0ab89e7982c0e0`.
+- **CI aprovado** no commit documental `8e9b9559fa26f37d6f3c240cbd9abd155d896ad3`: [run 39145728797](https://github.com/cathedradigital/cathedradigital/actions/runs/39145728797). Typecheck, lint, rotas internas e build Cloudflare concluídos com sucesso.
+- **Auditoria aprovada** no mesmo commit documental: [run 39145728740](https://github.com/cathedradigital/cathedradigital/actions/runs/39145728740). Lint, typecheck, links, segurança e build concluídos com sucesso.
+- Playwright **não foi acionado** para o commit documental porque o workflow E2E filtra alterações em `src/**`, `e2e/**`, `playwright.config.ts`, `package.json` e no próprio workflow. Portanto, esses dois sucessos não constituem aprovação funcional dos módulos.
+- A PR de teste separada [#203](https://github.com/cathedradigital/cathedradigital/pull/203) adiciona espera explícita de navegação no helper de login e teste de destinos do Átrio. CI, auditoria e Playwright foram iniciados no SHA `425a5ac2d390fd5b9d784142d08d4fa96fedbbb6`; resultados ainda pendentes no momento do registro.
+- Falhas funcionais confirmadas: **nenhuma nesta revisão documental**, pois não houve execução concluída dos testes de navegador.
+- Lacunas: teste negativo específico do Nexus não localizado; teste de isolamento entre duas contas não localizado; a verificação de políticas RLS ativas no Supabase foi bloqueada por falta de permissão no conector desta sessão. A migração versionada mostra a política pretendida, não o estado atual do banco.
+- Resultado global: **CI/auditoria documental aprovados; validação funcional e de segurança ainda não aprovada**.
