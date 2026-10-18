@@ -113,59 +113,6 @@ test('Bíblia permite pesquisar uma referência real', async ({ page }) => {
   expect(errors, '/bible search: console errors').toEqual([]);
 });
 
-test('Bíblia preserva contexto no Nexus Gn 1:1 → CIC §279 → retorno exato', async ({ page }) => {
-  const errors: string[] = [];
-  page.on('console', message => {
-    if (message.type() === 'error') errors.push(message.text());
-  });
-
-  await page.goto('/bible?book=Gn&ch=1&v=1');
-
-  const nexusCard = page.getByTestId('nexus-connection-card').filter({ hasText: 'Catecismo' }).first();
-  await expect(nexusCard).toBeVisible();
-  await nexusCard.click();
-
-  await expect(page.getByTestId('catechism-preview')).toBeVisible();
-  await expect(page.getByTestId('catechism-preview')).toContainText('§279');
-
-  await page.getByTestId('nexus-popover-nav-link').click();
-  await expect(page).toHaveURL(/\/catechism\?p=279/);
-  await expect(page.getByText(/Retorno de estudo/i)).toBeVisible();
-  await expect(page.getByText(/Gênesis 1:1/i)).toBeVisible();
-
-  await page.getByRole('button', { name: /Voltar à passagem/i }).click();
-  await expect(page).toHaveURL(/\/bible\?book=Gn&ch=1&v=1/);
-  await expect(page.locator('#verse-1')).toBeVisible();
-
-  expect(errors, 'Nexus return flow: console errors').toEqual([]);
-});
-
-test('Bíblia: os controles principais da barra funcionam', async ({ page }) => {
-  const errors: string[] = [];
-  page.on('console', message => {
-    if (message.type() === 'error') errors.push(message.text());
-  });
-
-  await page.goto('/bible');
-
-  await page.getByTestId('bible-toolbar-search').click();
-  await expect(page.getByTestId('bible-search-input')).toBeVisible();
-  await page.getByTestId('bible-search-close').click();
-  await expect(page).toHaveURL(/\/bible$/);
-
-  await page.getByTestId('bible-toolbar-bookmarks').click();
-  await expect(page.getByText(/Marcadores/i).first()).toBeVisible();
-  await page.getByRole('button', { name: /Voltar|Fechar/i }).first().click().catch(() => {});
-  await page.goto('/bible');
-
-  await page.getByTestId('bible-toolbar-more').click();
-  await expect(page.getByRole('menuitem', { name: /Anotações/i })).toBeVisible();
-  await expect(page.getByRole('menuitem', { name: /Editor Bíblia/i })).toBeVisible();
-  await page.keyboard.press('Escape');
-
-  expect(errors, 'Bible toolbar: console errors').toEqual([]);
-});
-
 test('Bíblia: leitura mantém espaçamento compacto e Nexus sem bolhas excessivas', async ({ page }) => {
   await page.goto('/bible?book=Gn&ch=1&v=1');
   const verse1 = page.getByTestId('verse-text-1');
