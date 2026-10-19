@@ -75,6 +75,7 @@ jobs:
           const raw = process.env.RAW_SUPABASE_URL;
           let url;
           try { url = new URL(raw); } catch { throw new Error('VITE_SUPABASE_URL must be a valid project URL'); }
+          console.log('Configured Supabase project host:', url.hostname);
           if (url.protocol !== 'https:' || url.hostname !== 'gpwrpmoniglarqwfyryp.supabase.co') {
             throw new Error('VITE_SUPABASE_URL must target the configured production project; legacy or unrelated Supabase projects are rejected');
           }
