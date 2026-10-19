@@ -46,9 +46,13 @@ async function openStudyJournal(page: Page, marker: string) {
   await page.goto('/conta/diario');
   await expect(page.getByRole('button', { name: 'Estudo e Leitura' })).toBeVisible();
   await page.getByRole('button', { name: 'Estudo e Leitura' }).click();
-  const note = page.getByText(marker, { exact: false }).first();
-  await expect(note).toBeVisible();
-  return note;
+  const noteText = page.getByText(marker, { exact: false }).first();
+  await expect(noteText).toBeVisible();
+
+  // The marker is inside a paragraph; the context button is a sibling in the note card.
+  const noteCard = noteText.locator('xpath=ancestor::*[.//button[normalize-space(.)="Ver Contexto"]][1]');
+  await expect(noteCard.getByRole('button', { name: 'Ver Contexto', exact: true })).toBeVisible();
+  return noteCard;
 }
 
 test('auth redirect preserves protected destination', async ({ page }) => {
@@ -64,6 +68,7 @@ test('Bíblia: anotação → Diário → retorno exato ao versículo', async ({
   await login(page, '/bible?book=joao&chapter=1&v=1');
   await expect(page.locator('#verse-1')).toBeVisible();
   await page.locator('#verse-1').click();
+  await page.getByRole('button', { name: 'Anotar / refletir', exact: true }).click();
   await saveReflection(page, marker);
   const note = await openStudyJournal(page, marker);
   await note.getByRole('button', { name: /Ver Contexto/i }).click();
