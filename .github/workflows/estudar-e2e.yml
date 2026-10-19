@@ -68,7 +68,7 @@ jobs:
           }
           const normalized = url.origin;
           console.log('Validated Supabase project host:', url.hostname);
-          fs.appendFileSync(process.env.GITHUB_OUTPUT, 'url=' + normalized + '\\n');
+          fs.appendFileSync(process.env.GITHUB_OUTPUT, 'url=' + normalized + '\n');
           NODE
       - name: Build PR HEAD
         env:
