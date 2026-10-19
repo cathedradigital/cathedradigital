@@ -6,6 +6,7 @@ on:
     paths:
       - "src/**"
       - "e2e/**"
+      - "scripts/sanitize-playwright-artifacts.py"
       - "playwright.config.ts"
       - "package.json"
       - ".github/workflows/estudar-e2e.yml"
@@ -86,12 +87,16 @@ jobs:
       - name: Run critical Estudar E2E
         run: npx playwright test e2e/estudar-critical.spec.ts
 
-      - name: Upload Playwright evidence
+      - name: Sanitize sensitive headers in Playwright traces
+        id: sanitize-traces
         if: ${{ !cancelled() }}
+        run: python3 scripts/sanitize-playwright-artifacts.py
+
+      # The HTML report includes attachments; uploading test-results/ too duplicates large videos and traces.
+      - name: Upload Playwright evidence
+        if: ${{ !cancelled() && steps.sanitize-traces.outcome == 'success' }}
         uses: actions/upload-artifact@v5
         with:
           name: estudar-e2e-evidence
-          path: |
-            playwright-report/
-            test-results/
+          path: playwright-report/
           retention-days: 7
