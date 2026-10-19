@@ -571,9 +571,13 @@ const Catechism: React.FC = memo(() => {
 
   useEffect(() => {
     const rawParagraph = getParagraphParam(searchParams);
-    if (typeof initialParagraph === 'number' && rawParagraph !== String(initialParagraph)) {
-      // Canonicalize the legacy \`?paragraph=N\` alias immediately so shared links,
-      // browser history and analytics converge on the single \`?p=N\` contract.
+    const hasLegacyAlias = searchParams.has('paragraph');
+    if (
+      typeof initialParagraph === 'number' &&
+      (hasLegacyAlias || searchParams.get('p') !== String(initialParagraph))
+    ) {
+      // Canonicalization depends on the parameter name, not just its value:
+      // ?paragraph=2865 parses to "2865" too, so the legacy alias must be removed.
       setSearchParams((prev) => {
         const next = new URLSearchParams(prev);
         next.delete('paragraph');
