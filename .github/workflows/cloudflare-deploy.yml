@@ -83,7 +83,7 @@ jobs:
             throw new Error('VITE_SUPABASE_URL must point to the project root; unexpected URL path/query detected');
           }
           console.log('Validated Supabase project host:', url.hostname);
-          fs.appendFileSync(process.env.GITHUB_OUTPUT, 'url=' + url.origin + '\\n');
+          fs.appendFileSync(process.env.GITHUB_OUTPUT, 'url=' + url.origin + '\n');
           NODE
       - name: Build
         env:
