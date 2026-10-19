@@ -5,6 +5,7 @@ import { HelmetProvider } from '@/lib/helmet-compat';
 import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation, useParams } from '@/lib/rr-compat';
 import { resolveSpaceForPath } from '@/lib/spaces/resolveSpace';
 import { MODULE_NAVIGATION } from '@/config/moduleNavigation';
+import { MobileModuleCarousel } from './components/mobile/MobileModuleCarousel';
 
 import { AnimatePresence, motion, MotionConfig } from 'framer-motion';
 import { QueryClient } from '@tanstack/react-query';
@@ -78,6 +79,11 @@ import { PreviewSkeleton } from './components/cathedra/PreviewSkeleton';
 const MagisterioLegacyRedirect = () => {
   const { id } = useParams<{ id: string }>();
   return <Navigate to={`/magisterium/${id ?? ''}`} replace />;
+};
+
+const LoginRedirect = () => {
+  const location = useLocation();
+  return <Navigate to={`/auth${location.search}`} replace />;
 };
 
 const queryClient = new QueryClient({
@@ -628,13 +634,17 @@ const AppLayout: React.FC = () => {
           <WelcomeFirstAccess />
         </Suspense>
 
+        {!location.pathname.startsWith('/bible') && !location.pathname.startsWith('/prototype-2.0') && (
+          <MobileModuleCarousel />
+        )}
+
         {/* Arquitetura estabilizada: Layout único, Card único, Navegação única e Tema único. */}
 
         <main
           id="main-content"
           ref={mainContentRef}
           tabIndex={-1}
-          className="outline-none catedra-module-shell"
+          className={`outline-none catedra-module-shell ${!location.pathname.startsWith('/bible') && !location.pathname.startsWith('/prototype-2.0') ? 'pb-[calc(5rem+env(safe-area-inset-bottom,0px))] md:pb-0' : ''}`}
           data-space={resolveSpaceForPath(location.pathname) ?? undefined}
           data-catedra-module={activeModule?.key ?? undefined}
           style={activeModule ? {
@@ -683,7 +693,7 @@ const AppLayout: React.FC = () => {
               <Route path="/chat" element={<Navigate to="/logos" replace />} />
               <Route path="/auth" element={<Suspense fallback={<LoadingFallback />}><Auth onSuccess={() => navigate(resolveAuthHome(), { replace: true })} /></Suspense>} />
               <Route path="/.lovable/oauth/consent" element={<Suspense fallback={<LoadingFallback />}><OAuthConsent /></Suspense>} />
-              <Route path="/login" element={<Navigate to="/auth" replace />} />
+              <Route path="/login" element={<Suspense fallback={<LoadingFallback />}><Auth onSuccess={() => navigate(resolveAuthHome(), { replace: true })} /></Suspense>} />
               <Route path="/reset-password" element={<Suspense fallback={<LoadingFallback />}><ResetPasswordPage /></Suspense>} />
               <Route path="/profile" element={<Suspense fallback={<LoadingFallback />}><AuthGuard><ProfilePage /></AuthGuard></Suspense>} />
               <Route path="/settings" element={<Navigate to="/conta/configuracoes" replace />} />

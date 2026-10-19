@@ -3,7 +3,7 @@ import { Helmet } from '@/lib/helmet-compat';
 import { Link, useNavigate } from '@/lib/rr-compat';
 import {
   ArrowRight, BookOpen, Compass, GraduationCap, HandHeart, Search,
-  Clock3, Flame, ChevronRight, Library, Brain
+  Clock3, Flame, ChevronRight, ChevronLeft, ExternalLink, Library, Brain
 } from 'lucide-react';
 import { Icons } from '@/constants';
 import { EnvironmentRegistry, RouteRegistry } from '@/core/navigation';
@@ -49,6 +49,7 @@ const HomeUnified: React.FC = () => {
   const { lastRead, dailySteps } = useSpiritualJourney();
   const { profile, authenticated } = useAuth();
   const [query, setQuery] = useState('');
+  const [newsIndex, setNewsIndex] = useState(0);
   const [opening, setOpening] = useState(true);
 
   useEffect(() => {
@@ -288,12 +289,49 @@ const HomeUnified: React.FC = () => {
                 <Link to="/liturgia" className="mt-6 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-primary">Abrir liturgia <ArrowRight className="h-4 w-4" /></Link>
               </div>
             )}
-            {news.length > 0 && (
-              <div className="rounded-3xl border border-border bg-card p-7 md:col-span-3">
-                <Eyebrow>Novidades</Eyebrow>
-                <div className="mt-5 grid gap-4 md:grid-cols-3">{news.slice(0, 3).map(n => <div key={n.id} className="border-l-2 border-primary/30 pl-4"><p className="text-xs text-muted-foreground">{n.publishedAt}</p><p className="mt-1 font-medium">{n.label}</p></div>)}</div>
+            <div className="rounded-3xl border border-border bg-card p-5 md:col-span-3 md:p-7" aria-roledescription="carrossel" aria-label="Notícias da Igreja">
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <Eyebrow>Átrio · Notícias da Igreja</Eyebrow>
+                  <h3 className="mt-2 font-display text-2xl md:text-3xl">A Igreja em notícia</h3>
+                  <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">Destaques recentes do Vatican News. As notícias completas são lidas na fonte oficial.</p>
+                </div>
+                <div className="flex shrink-0 gap-2">
+                  <button type="button" onClick={() => setNewsIndex((current) => (current + 2) % 3)} aria-label="Notícia anterior" className="flex h-10 w-10 items-center justify-center rounded-full border border-border transition-colors hover:border-primary/50 hover:bg-primary/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                    <ChevronLeft className="h-4 w-4" />
+                  </button>
+                  <button type="button" onClick={() => setNewsIndex((current) => (current + 1) % 3)} aria-label="Próxima notícia" className="flex h-10 w-10 items-center justify-center rounded-full border border-border transition-colors hover:border-primary/50 hover:bg-primary/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                    <ChevronRight className="h-4 w-4" />
+                  </button>
+                </div>
               </div>
-            )}
+              {[
+                { date: '18 out. 2026', title: 'Papa Leão: ser verdadeiro, sem subserviência nem hipocrisia, livre para o bem', category: 'Vaticano', description: 'Destaque publicado pelo Vatican News em 18 de outubro.', url: 'https://www.vaticannews.va/pt.html' },
+                { date: '18 out. 2026', title: 'Semeraro: fiéis no amor todos os dias, seguindo o exemplo dos mártires de Ibiza', category: 'Igreja no mundo', description: 'Notícia recente sobre testemunho cristão e vida de fé.', url: 'https://www.vaticannews.va/pt.html' },
+                { date: '17 out. 2026', title: 'Dossiê Fides 2026: aumenta o número de batizados e sacerdotes', category: 'Missão', description: 'Panorama recente sobre a vida e a missão da Igreja.', url: 'https://www.vaticannews.va/pt.html' },
+              ].map((item, index) => (
+                <div key={item.title} hidden={newsIndex !== index} className="mt-6 rounded-2xl border border-primary/20 bg-primary/[0.035] p-5 md:p-7">
+                  <div className="flex flex-wrap items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-primary">
+                    <span>{item.category}</span><span aria-hidden="true">·</span><time>{item.date}</time>
+                  </div>
+                  <h4 className="mt-3 max-w-4xl font-display text-2xl leading-snug md:text-3xl">{item.title}</h4>
+                  <p className="mt-3 text-sm leading-6 text-muted-foreground">{item.description}</p>
+                  <a href={item.url} target="_blank" rel="noreferrer" className="mt-5 inline-flex min-h-11 items-center gap-2 rounded-xl bg-primary px-4 py-3 text-xs font-semibold uppercase tracking-wider text-primary-foreground transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
+                    Ler na fonte oficial <ExternalLink className="h-4 w-4" />
+                  </a>
+                </div>
+              ))}
+              <div className="mt-4 flex items-center justify-between gap-4">
+                <div className="flex items-center gap-2" aria-label={`Notícia ${newsIndex + 1} de 3`}>
+                  {[0, 1, 2].map((index) => (
+                    <button key={index} type="button" onClick={() => setNewsIndex(index)} aria-label={`Mostrar notícia ${index + 1}`} aria-current={newsIndex === index ? 'true' : undefined} className={`h-2.5 rounded-full transition-all ${newsIndex === index ? 'w-7 bg-primary' : 'w-2.5 bg-muted-foreground/30 hover:bg-primary/50'}`} />
+                  ))}
+                </div>
+                <a href="https://www.vaticannews.va/pt.html" target="_blank" rel="noreferrer" className="inline-flex min-h-10 items-center gap-2 text-xs font-semibold text-primary hover:underline">
+                  Todas as notícias <ArrowRight className="h-4 w-4" />
+                </a>
+              </div>
+            </div>
           </section>
         )}
       </main>

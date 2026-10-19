@@ -7,12 +7,22 @@ test.beforeEach(async () => {
   if (!email || !password) throw new Error('E2E_TEST_EMAIL and E2E_TEST_PASSWORD must be configured as CI secrets.');
 });
 
+test('mobile module carousel opens canonical environments', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/');
+  const carousel = page.getByTestId('mobile-module-carousel');
+  await expect(carousel).toBeVisible();
+  await carousel.getByRole('button', { name: 'Abrir módulo Estudar' }).click();
+  await expect(page).toHaveURL(/\/estudar$/);
+  await expect(carousel.getByRole('button', { name: 'Abrir módulo Estudar' })).toHaveAttribute('aria-current', 'page');
+});
+
 async function login(page: Page, destination: string) {
   await page.goto('/login?next=' + encodeURIComponent(destination));
   await page.getByLabel('Email').fill(email!);
   await page.getByLabel('Senha').fill(password!);
   await page.getByRole('button', { name: 'Entrar', exact: true }).click();
-  expect(page.url()).toContain(destination.split('?')[0]);
+  await expect(page).toHaveURL((url) => url.pathname + url.search === destination, { timeout: 15000 });
 }
 
 function watchBrowserHealth(page: Page) {
@@ -40,9 +50,11 @@ async function openStudyJournal(page: Page, marker: string) {
 
 test('auth redirect preserves protected destination', async ({ page }) => {
   await page.context().clearCookies();
+  await page.addInitScript(() => localStorage.clear());
   await page.goto('/diario');
-  expect(page.url()).toContain('/login?next=');
-  expect(page.url()).toContain('diario');
+  await expect(page).toHaveURL(/\/login\?next=/);
+  const current = new URL(page.url());
+  expect(current.searchParams.get('next')).toBe('/diario');
 });
 
 test('Bíblia: anotação → Diário → retorno exato ao versículo', async ({ page }) => {
