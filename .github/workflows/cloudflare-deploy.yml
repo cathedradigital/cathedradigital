@@ -97,7 +97,7 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: deploy
-      - name: Validate production endpoints
+      - name: Validate production UI and SEO endpoints
         shell: bash
         run: |
           set -euo pipefail
@@ -107,28 +107,60 @@ jobs:
             "https://cathedradigital.cathedradigital.workers.dev"
           )
           for url in "${endpoints[@]}"; do
-            echo "Checking $url"
+            echo "Checking actual UI shell: $url"
             body_file="$(mktemp)"
             status="$(curl --silent --show-error --location --retry 2 --retry-all-errors --connect-timeout 10 --max-time 30 --output "$body_file" --write-out "%{http_code}" "$url" || true)"
             size="$(wc -c < "$body_file")"
-            rm -f "$body_file"
 
-            case "$url" in
-              *workers.dev)
-                test "$status" = "200"
-                test "$size" -gt 100
-                echo "OK $url -> HTTP $status ($size bytes)"
+            if [ "$status" != "200" ]; then
+              echo "::error::$url returned HTTP $status; reachability/403 is not proof of a published UI"
+              rm -f "$body_file"
+              exit 1
+            fi
+            if [ "$size" -le 100 ]; then
+              echo "::error::$url returned an unexpectedly small body ($size bytes)"
+              rm -f "$body_file"
+              exit 1
+            fi
+            if ! grep -Eiq '<html([[:space:]>])' "$body_file"; then
+              echo "::error::$url did not return an HTML document"
+              rm -f "$body_file"
+              exit 1
+            fi
+            if ! grep -Eiq '<title>[^<]*(Cátedra|Cathedra)[^<]*Digital' "$body_file"; then
+              echo "::error::$url HTML title does not identify the Cátedra Digital application"
+              rm -f "$body_file"
+              exit 1
+            fi
+            if ! grep -Eiq '(src|href)="[^"]*/assets/[^"]+"' "$body_file"; then
+              echo "::error::$url HTML does not reference built application assets"
+              rm -f "$body_file"
+              exit 1
+            fi
+            echo "OK $url -> HTTP 200; verified HTML title and built asset references ($size bytes)"
+            rm -f "$body_file"
+          done
+
+          for path in robots.txt sitemap.xml; do
+            url="https://www.cathedradigital.com.br/$path"
+            body_file="$(mktemp)"
+            status="$(curl --silent --show-error --location --retry 2 --retry-all-errors --connect-timeout 10 --max-time 30 --output "$body_file" --write-out "%{http_code}" "$url" || true)"
+            size="$(wc -c < "$body_file")"
+            if [ "$status" != "200" ] || [ "$size" -le 20 ]; then
+              echo "::error::$url failed validation (HTTP $status, $size bytes)"
+              rm -f "$body_file"
+              exit 1
+            fi
+            case "$path" in
+              robots.txt)
+                grep -Eiq '^User-agent:' "$body_file" || { echo "::error::robots.txt has no User-agent directive"; rm -f "$body_file"; exit 1; }
+                grep -Eiq '^Sitemap: https://www\.cathedradigital\.com\.br/sitemap\.xml' "$body_file" || { echo "::error::robots.txt does not reference the canonical sitemap"; rm -f "$body_file"; exit 1; }
                 ;;
-              *)
-                if [ "$status" = "200" ]; then
-                  test "$size" -gt 100
-                  echo "OK $url -> HTTP $status ($size bytes)"
-                elif [ "$status" = "403" ]; then
-                  echo "REACHABLE $url -> HTTP 403 (custom-domain protection; deployment is live)"
-                else
-                  echo "::error::$url returned unexpected HTTP $status"
-                  exit 1
-                fi
+              sitemap.xml)
+                grep -Eiq '<urlset([[:space:]>])' "$body_file" || { echo "::error::sitemap.xml has no urlset root"; rm -f "$body_file"; exit 1; }
+                grep -Fq 'https://www.cathedradigital.com.br' "$body_file" || { echo "::error::sitemap.xml has no canonical production URLs"; rm -f "$body_file"; exit 1; }
                 ;;
             esac
+            echo "OK $url -> HTTP 200; content structure verified ($size bytes)"
+            rm -f "$body_file"
           done
