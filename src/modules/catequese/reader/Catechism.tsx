@@ -708,7 +708,7 @@ const Catechism: React.FC = memo(() => {
       { threshold: 0.5, rootMargin: '-10% 0px -70% 0px' }
     );
     const reader = document.querySelector('[data-testid$="-conteudo"].editorial-section');
-    reader?.querySelectorAll('[id^="p"]').forEach((el) => observer.observe(el));
+    reader?.querySelectorAll('article[id^="p"]').forEach((el) => observer.observe(el));
     return () => observer.disconnect();
   }, [viewMode, selectedSection]);
 
