@@ -59,8 +59,8 @@ jobs:
           const raw = process.env.RAW_SUPABASE_URL;
           let url;
           try { url = new URL(raw); } catch { throw new Error('VITE_SUPABASE_URL must be a valid project URL'); }
-          if (url.protocol !== 'https:' || !url.hostname.endsWith('.supabase.co')) {
-            throw new Error('VITE_SUPABASE_URL must be the HTTPS Supabase project URL, not a REST endpoint or API gateway URL');
+          if (url.protocol !== 'https:' || url.hostname !== 'gpwrpmoniglarqwfyryp.supabase.co') {
+            throw new Error('VITE_SUPABASE_URL must target the configured production project; legacy or unrelated Supabase projects are rejected');
           }
           // Supabase's Project URL is the origin. Some dashboards expose the Data API URL with /rest/v1.
           if (url.pathname === '/rest/v1' || url.pathname === '/rest/v1/') url.pathname = '/';
