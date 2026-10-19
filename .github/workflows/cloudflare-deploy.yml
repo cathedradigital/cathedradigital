@@ -20,13 +20,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
 
-      - name: Verify Cloudflare credentials
+      - name: Verify deployment and Supabase build configuration
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY }}
         run: |
           test -n "$CLOUDFLARE_API_TOKEN" || { echo "::error::Missing GitHub secret CLOUDFLARE_API_TOKEN"; exit 1; }
           test -n "$CLOUDFLARE_ACCOUNT_ID" || { echo "::error::Missing GitHub secret CLOUDFLARE_ACCOUNT_ID"; exit 1; }
+          test -n "$VITE_SUPABASE_URL" || { echo "::error::Missing GitHub secret VITE_SUPABASE_URL — refusing to build with the legacy Supabase fallback"; exit 1; }
+          test -n "$VITE_SUPABASE_PUBLISHABLE_KEY" || { echo "::error::Missing GitHub secret VITE_SUPABASE_PUBLISHABLE_KEY — refusing to build with the legacy Supabase fallback"; exit 1; }
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -61,7 +65,30 @@ jobs:
       - name: Validate internal routes
         run: npm run validate:links
 
+      - name: Normalize and validate Supabase project URL
+        id: supabase-url
+        env:
+          RAW_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+        run: |
+          node <<'NODE'
+          const fs = require('node:fs');
+          const raw = process.env.RAW_SUPABASE_URL;
+          let url;
+          try { url = new URL(raw); } catch { throw new Error('VITE_SUPABASE_URL must be a valid project URL'); }
+          if (url.protocol !== 'https:' || !url.hostname.endsWith('.supabase.co')) {
+            throw new Error('VITE_SUPABASE_URL must be the HTTPS Supabase project URL, not a REST endpoint or API gateway URL');
+          }
+          if (url.pathname === '/rest/v1' || url.pathname === '/rest/v1/') url.pathname = '/';
+          if (url.pathname !== '/' || url.search || url.hash) {
+            throw new Error('VITE_SUPABASE_URL must point to the project root; unexpected URL path/query detected');
+          }
+          console.log('Validated Supabase project host:', url.hostname);
+          fs.appendFileSync(process.env.GITHUB_OUTPUT, 'url=' + url.origin + '\\n');
+          NODE
       - name: Build
+        env:
+          VITE_SUPABASE_URL: ${{ steps.supabase-url.outputs.url }}
+          VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY }}
         run: npm run build
 
       - name: Deploy Worker
