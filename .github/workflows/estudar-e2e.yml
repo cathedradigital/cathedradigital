@@ -60,7 +60,7 @@ jobs:
           let url;
           try { url = new URL(raw); } catch { throw new Error('VITE_SUPABASE_URL must be a valid project URL'); }
           console.log('Configured Supabase project host:', url.hostname);
-          if (url.protocol !== 'https:' || url.hostname !== 'gpwrpmoniglarqwfyryp.supabase.co') {
+          if (url.protocol !== 'https:' || url.hostname !== 'isojguvcnfncokoxoauk.supabase.co') {
             throw new Error('VITE_SUPABASE_URL must target the configured production project; legacy or unrelated Supabase projects are rejected');
           }
           // Supabase's Project URL is the origin. Some dashboards expose the Data API URL with /rest/v1.
