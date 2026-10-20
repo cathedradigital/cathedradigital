@@ -85,7 +85,7 @@ Deno.serve(async (req) => {
     return json({ mode: "reference_only", document: data });
   }
 
-  const response = await fetch(sourceUrl, { headers: { "User-Agent": "CathedraCorpusBot/1.0 (+https://cathedradigital.vercel.app)" } });
+  const response = await fetch(sourceUrl, { headers: { "User-Agent": "CathedraCorpusBot/1.0 (+https://www.cathedradigital.com.br)" } });
   if (!response.ok) return json({ error: "A fonte não permitiu a recuperação do documento.", status: response.status }, 502);
   const contentType = response.headers.get("content-type") || "";
   if (!contentType.includes("text/") && !contentType.includes("json") && !contentType.includes("xml")) {

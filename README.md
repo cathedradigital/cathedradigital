@@ -22,7 +22,6 @@ A proposta não é apenas oferecer uma coleção de conteúdos católicos. É aj
 - Privacidade por padrão.
 - Qualidade contínua em mobile, acessibilidade, SEO e testes.
 - **GitHub → main → Cloudflare Workers** é a cadeia oficial de publicação.
-- Vercel e Lovable não são ambientes oficiais de produção deste projeto.
 
 ## Documentação
 

@@ -8,7 +8,7 @@ A cadeia oficial é:
 
 **GitHub `main` → GitHub Actions → build/validação → Cloudflare Worker → domínios oficiais**
 
-Não manter uma segunda publicação de produção em Vercel nem uma cadeia paralela de código.
+Manter uma única cadeia de publicação de produção e uma única fonte de código.
 
 ## Worker e domínios
 
