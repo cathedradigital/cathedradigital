@@ -88,7 +88,7 @@ jobs:
           test -n "$E2E_TEST_PASSWORD" || { echo "::error::Missing E2E_TEST_PASSWORD — authenticated E2E is blocked"; exit 1; }
           test -n "$SUPABASE_URL" || { echo "::error::Missing validated Supabase project URL"; exit 1; }
           test -n "$SUPABASE_PUBLISHABLE_KEY" || { echo "::error::Missing Supabase publishable key"; exit 1; }
-          node <<'NODE'
+          node --input-type=module <<'NODE'
           const url = process.env.SUPABASE_URL;
           const key = process.env.SUPABASE_PUBLISHABLE_KEY;
           const email = process.env.E2E_TEST_EMAIL;
