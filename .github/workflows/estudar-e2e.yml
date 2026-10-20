@@ -78,12 +78,40 @@ jobs:
           VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY }}
         run: npm run build
 
-      - name: Verify authenticated E2E account exists
+      - name: Verify authenticated E2E account can sign in
+        env:
+          SUPABASE_URL: ${{ steps.supabase-url.outputs.url }}
+          SUPABASE_PUBLISHABLE_KEY: ${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY }}
         run: |
+          set -euo pipefail
           test -n "$E2E_TEST_EMAIL" || { echo "::error::Missing E2E_TEST_EMAIL — authenticated E2E is blocked"; exit 1; }
           test -n "$E2E_TEST_PASSWORD" || { echo "::error::Missing E2E_TEST_PASSWORD — authenticated E2E is blocked"; exit 1; }
-          test -n "$VITE_SUPABASE_URL" || { echo "::error::Missing VITE_SUPABASE_URL — E2E build would use the legacy fallback project"; exit 1; }
-          test -n "$VITE_SUPABASE_PUBLISHABLE_KEY" || { echo "::error::Missing VITE_SUPABASE_PUBLISHABLE_KEY — E2E build cannot connect to the configured Supabase project"; exit 1; }
+          test -n "$SUPABASE_URL" || { echo "::error::Missing validated Supabase project URL"; exit 1; }
+          test -n "$SUPABASE_PUBLISHABLE_KEY" || { echo "::error::Missing Supabase publishable key"; exit 1; }
+          node <<'NODE'
+          const url = process.env.SUPABASE_URL;
+          const key = process.env.SUPABASE_PUBLISHABLE_KEY;
+          const email = process.env.E2E_TEST_EMAIL;
+          const password = process.env.E2E_TEST_PASSWORD;
+          const response = await fetch(new URL('/auth/v1/token?grant_type=password', url), {
+            method: 'POST',
+            headers: { 'content-type': 'application/json', apikey: key },
+            body: JSON.stringify({ email, password }),
+          });
+          if (!response.ok) {
+            // Never print request data or Supabase response bodies: keep credentials and account details out of CI logs.
+            const status = response.status;
+            await response.arrayBuffer();
+            console.error(`::error::E2E sign-in preflight failed (HTTP ${status}). The GitHub Actions E2E_TEST_EMAIL/E2E_TEST_PASSWORD secrets do not authenticate against the configured Supabase project. Update them to the confirmed test account credentials for this project; the browser suite was not started.`);
+            process.exit(1);
+          }
+          const payload = await response.json();
+          if (!payload.access_token || !payload.user?.id) {
+            console.error('::error::Supabase accepted the sign-in request but returned no authenticated session; E2E was not started.');
+            process.exit(1);
+          }
+          console.log('Authenticated E2E preflight passed for the configured Supabase project.');
+          NODE
 
       - name: Run critical Estudar E2E
         run: npx playwright test e2e/estudar-critical.spec.ts
