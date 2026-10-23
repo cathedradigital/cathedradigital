@@ -1,7 +1,14 @@
+import importlib.util
 import json
+from pathlib import Path
 import unittest
 
-from scripts.sanitize_playwright_artifacts import scrub_text
+MODULE_PATH = Path(__file__).with_name("sanitize-playwright-artifacts.py")
+SPEC = importlib.util.spec_from_file_location("sanitize_playwright_artifacts", MODULE_PATH)
+assert SPEC is not None and SPEC.loader is not None
+SANITIZER = importlib.util.module_from_spec(SPEC)
+SPEC.loader.exec_module(SANITIZER)
+scrub_text = SANITIZER.scrub_text
 
 
 class PasswordRedactionTests(unittest.TestCase):
@@ -25,7 +32,7 @@ class PasswordRedactionTests(unittest.TestCase):
             "value": "E2E-secret-123",
             "snapshot": '<input type="password" value="E2E-secret-123">',
         }
-        source = (json.dumps(payload) + "\n").encode()
+        source = (json.dumps(payload) + "\\n").encode()
         cleaned, count = scrub_text(source, ".trace")
         self.assertNotIn(b"E2E-secret-123", cleaned)
         self.assertIn(b"[REDACTED]", cleaned)
