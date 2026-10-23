@@ -93,16 +93,33 @@ jobs:
           const key = process.env.SUPABASE_PUBLISHABLE_KEY;
           const email = process.env.E2E_TEST_EMAIL;
           const password = process.env.E2E_TEST_PASSWORD;
+          const checks = {
+            emailPresent: Boolean(email),
+            passwordPresent: Boolean(password),
+            emailHasOuterWhitespace: Boolean(email && email !== email.trim()),
+            passwordHasOuterWhitespace: Boolean(password && password !== password.trim()),
+            projectUrlPresent: Boolean(url),
+            publishableKeyPresent: Boolean(key),
+          };
+          console.log('Sanitized E2E auth configuration checks:', JSON.stringify(checks));
           const response = await fetch(new URL('/auth/v1/token?grant_type=password', url), {
             method: 'POST',
             headers: { 'content-type': 'application/json', apikey: key },
             body: JSON.stringify({ email, password }),
           });
           if (!response.ok) {
-            // Never print request data or Supabase response bodies: keep credentials and account details out of CI logs.
+            // Parse only an allowlisted error code; never log response bodies, email, password, tokens, or account metadata.
             const status = response.status;
-            await response.arrayBuffer();
-            console.error(`::error::E2E sign-in preflight failed (HTTP ${status}). The GitHub Actions E2E_TEST_EMAIL/E2E_TEST_PASSWORD secrets do not authenticate against the configured Supabase project. Update them to the confirmed test account credentials for this project; the browser suite was not started.`);
+            let errorCode = 'unavailable';
+            try {
+              const errorPayload = await response.json();
+              const candidate = errorPayload?.error_code;
+              if (typeof candidate === 'string' && /^[a-z_]{1,64}$/.test(candidate)) errorCode = candidate;
+              else if (candidate === undefined && errorPayload?.code === 'invalid_credentials') errorCode = 'invalid_credentials';
+            } catch {
+              // Keep the diagnostic generic if Supabase returns a non-JSON response.
+            }
+            console.error(`::error::E2E sign-in preflight failed (HTTP ${status}; code ${errorCode}). Browser tests were not started. Check the configured test-account pair and its secret scope; do not print or paste secrets into logs.`);
             process.exit(1);
           }
           const payload = await response.json();
