@@ -44,6 +44,9 @@ jobs:
       - name: Install application dependencies
         run: npm install
 
+      - name: Test Playwright artifact secret redaction
+        run: python3 -m unittest scripts.test_sanitize_playwright_artifacts
+
       - name: Install Playwright for this CI run only
         run: |
           npm install --no-save @playwright/test@1.55.0
