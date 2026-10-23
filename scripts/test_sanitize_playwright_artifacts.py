@@ -32,7 +32,7 @@ class PasswordRedactionTests(unittest.TestCase):
             "value": "E2E-secret-123",
             "snapshot": '<input type="password" value="E2E-secret-123">',
         }
-        source = (json.dumps(payload) + "\\n").encode()
+        source = (json.dumps(payload) + "\n").encode()
         cleaned, count = scrub_text(source, ".trace")
         self.assertNotIn(b"E2E-secret-123", cleaned)
         self.assertIn(b"[REDACTED]", cleaned)
