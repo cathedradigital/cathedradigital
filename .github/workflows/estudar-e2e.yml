@@ -6,6 +6,7 @@ on:
     paths:
       - "src/**"
       - "e2e/**"
+      - "scripts/sanitize-playwright-artifacts.py"
       - "playwright.config.ts"
       - "package.json"
       - ".github/workflows/estudar-e2e.yml"
@@ -25,6 +26,10 @@ jobs:
     env:
       E2E_TEST_EMAIL: ${{ secrets.E2E_TEST_EMAIL }}
       E2E_TEST_PASSWORD: ${{ secrets.E2E_TEST_PASSWORD }}
+      # The browser bundle must target the same Supabase project as the E2E account.
+      # Without these build-time Vite variables, publicConfig.ts falls back to a legacy project.
+      VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+      VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY }}
     steps:
       - name: Checkout PR HEAD
         uses: actions/checkout@v6
@@ -39,28 +44,108 @@ jobs:
       - name: Install application dependencies
         run: npm install
 
+      - name: Test Playwright artifact secret redaction
+        run: python3 -m unittest scripts.test_sanitize_playwright_artifacts
+
       - name: Install Playwright for this CI run only
         run: |
           npm install --no-save @playwright/test@1.55.0
           npx playwright install --with-deps chromium
 
+      - name: Normalize and validate Supabase project URL
+        id: supabase-url
+        env:
+          RAW_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+        run: |
+          node <<'NODE'
+          const fs = require('node:fs');
+          const raw = process.env.RAW_SUPABASE_URL;
+          let url;
+          try { url = new URL(raw); } catch { throw new Error('VITE_SUPABASE_URL must be a valid project URL'); }
+          console.log('Configured Supabase project host:', url.hostname);
+          if (url.protocol !== 'https:' || url.hostname !== 'isojguvcnfncokoxoauk.supabase.co') {
+            throw new Error('VITE_SUPABASE_URL must target the configured production project; legacy or unrelated Supabase projects are rejected');
+          }
+          // Supabase's Project URL is the origin. Some dashboards expose the Data API URL with /rest/v1.
+          if (url.pathname === '/rest/v1' || url.pathname === '/rest/v1/') url.pathname = '/';
+          if (url.pathname !== '/' || url.search || url.hash) {
+            throw new Error('VITE_SUPABASE_URL must point to the project root; unexpected URL path/query detected');
+          }
+          const normalized = url.origin;
+          console.log('Validated Supabase project host:', url.hostname);
+          fs.appendFileSync(process.env.GITHUB_OUTPUT, 'url=' + normalized + '\n');
+          NODE
       - name: Build PR HEAD
+        env:
+          VITE_SUPABASE_URL: ${{ steps.supabase-url.outputs.url }}
+          VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY }}
         run: npm run build
 
-      - name: Verify authenticated E2E account exists
+      - name: Verify authenticated E2E account can sign in
+        env:
+          SUPABASE_URL: ${{ steps.supabase-url.outputs.url }}
+          SUPABASE_PUBLISHABLE_KEY: ${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY }}
         run: |
+          set -euo pipefail
           test -n "$E2E_TEST_EMAIL" || { echo "::error::Missing E2E_TEST_EMAIL — authenticated E2E is blocked"; exit 1; }
           test -n "$E2E_TEST_PASSWORD" || { echo "::error::Missing E2E_TEST_PASSWORD — authenticated E2E is blocked"; exit 1; }
+          test -n "$SUPABASE_URL" || { echo "::error::Missing validated Supabase project URL"; exit 1; }
+          test -n "$SUPABASE_PUBLISHABLE_KEY" || { echo "::error::Missing Supabase publishable key"; exit 1; }
+          node --input-type=module <<'NODE'
+          const url = process.env.SUPABASE_URL;
+          const key = process.env.SUPABASE_PUBLISHABLE_KEY;
+          const email = process.env.E2E_TEST_EMAIL;
+          const password = process.env.E2E_TEST_PASSWORD;
+          const checks = {
+            emailPresent: Boolean(email),
+            passwordPresent: Boolean(password),
+            emailHasOuterWhitespace: Boolean(email && email !== email.trim()),
+            passwordHasOuterWhitespace: Boolean(password && password !== password.trim()),
+            projectUrlPresent: Boolean(url),
+            publishableKeyPresent: Boolean(key),
+          };
+          console.log('Sanitized E2E auth configuration checks:', JSON.stringify(checks));
+          const response = await fetch(new URL('/auth/v1/token?grant_type=password', url), {
+            method: 'POST',
+            headers: { 'content-type': 'application/json', apikey: key },
+            body: JSON.stringify({ email, password }),
+          });
+          if (!response.ok) {
+            // Parse only an allowlisted error code; never log response bodies, email, password, tokens, or account metadata.
+            const status = response.status;
+            let errorCode = 'unavailable';
+            try {
+              const errorPayload = await response.json();
+              const candidate = errorPayload?.error_code;
+              if (typeof candidate === 'string' && /^[a-z_]{1,64}$/.test(candidate)) errorCode = candidate;
+              else if (candidate === undefined && errorPayload?.code === 'invalid_credentials') errorCode = 'invalid_credentials';
+            } catch {
+              // Keep the diagnostic generic if Supabase returns a non-JSON response.
+            }
+            console.error(`::error::E2E sign-in preflight failed (HTTP ${status}; code ${errorCode}). Browser tests were not started. Check the configured test-account pair and its secret scope; do not print or paste secrets into logs.`);
+            process.exit(1);
+          }
+          const payload = await response.json();
+          if (!payload.access_token || !payload.user?.id) {
+            console.error('::error::Supabase accepted the sign-in request but returned no authenticated session; E2E was not started.');
+            process.exit(1);
+          }
+          console.log('Authenticated E2E preflight passed for the configured Supabase project.');
+          NODE
 
       - name: Run critical Estudar E2E
         run: npx playwright test e2e/estudar-critical.spec.ts
 
-      - name: Upload Playwright evidence
+      - name: Sanitize sensitive headers in Playwright traces
+        id: sanitize-traces
         if: ${{ !cancelled() }}
+        run: python3 scripts/sanitize-playwright-artifacts.py
+
+      # The HTML report includes attachments; uploading test-results/ too duplicates large videos and traces.
+      - name: Upload Playwright evidence
+        if: ${{ !cancelled() && steps.sanitize-traces.outcome == 'success' }}
         uses: actions/upload-artifact@v5
         with:
           name: estudar-e2e-evidence
-          path: |
-            playwright-report/
-            test-results/
+          path: playwright-report/
           retention-days: 7
