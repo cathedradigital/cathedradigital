@@ -52,6 +52,11 @@ def redact_object(value: object) -> tuple[object, int]:
         for index, child in enumerate(value):
             value[index], child_count = redact_object(child)
             count += child_count
+    elif isinstance(value, str):
+        value, replacements = PASSWORD_INPUT_PATTERN.subn(
+            lambda match: match.group(1) + match.group(2) + "[REDACTED]" + match.group(2), value
+        )
+        count += replacements
     return value, count
 
 
