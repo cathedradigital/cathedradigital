@@ -11,6 +11,8 @@
     "build": "node scripts/check-deploy-assets.mjs && node scripts/validate-module-contracts.mjs && node scripts/validate-security-boundaries.mjs && vite build && tsc --noEmit",
     "build:dev": "vite build --mode development",
     "preview": "vite preview",
+    "test:e2e": "playwright test",
+    "test:e2e:public": "playwright test e2e/estudar-public-smoke.spec.ts --project=chromium",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "format": "prettier --write .",
@@ -102,6 +104,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.32.0",
+    "@playwright/test": "1.55.0",
     "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.3",
     "@types/node": "^22.16.5",

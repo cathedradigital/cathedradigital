@@ -2096,7 +2096,6 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
             onClose={() => setViewMode('home')} 
             onSelectResult={(book, chapter, verse) => {
               navigate(`/bible?book=${book}&ch=${chapter}&v=${verse}`);
-              setViewMode('reading');
             }} 
             initialTheme={activeThemeFilter}
           />
@@ -2108,7 +2107,6 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
             onClose={() => setViewMode('home')}
             onSelectReference={(book, chapter, verse) => {
               navigate(`/bible?book=${book}&ch=${chapter}&v=${verse}`);
-              setViewMode('reading');
             }}
             onEditNote={async (noteId, text, color) => {
               await updateNote(noteId, text, color);
@@ -2126,7 +2124,6 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
             onClose={() => setViewMode('home')}
             onSelectReference={(book, chapter, verse) => {
               navigate('/bible?book=' + book + '&ch=' + chapter + '&v=' + verse);
-              setViewMode('reading');
             }}
           />
         )}
@@ -2136,7 +2133,6 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
             onClose={() => setViewMode('home')}
             onSelectDate={(bookAbbr, chapter) => {
               navigate(`/bible?book=${bookAbbr}&ch=${chapter}`);
-              setViewMode('reading');
             }}
           />
         )}

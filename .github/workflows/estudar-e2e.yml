@@ -39,10 +39,8 @@ jobs:
       - name: Install application dependencies
         run: npm install
 
-      - name: Install Playwright for this CI run only
-        run: |
-          npm install --no-save @playwright/test@1.55.0
-          npx playwright install --with-deps chromium
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
 
       - name: Build PR HEAD
         run: npm run build

@@ -85,6 +85,7 @@ export const NexusPanel: React.FC<NexusPanelProps> = ({
         className
       )}>
         <header className="flex items-center gap-spacing-sm text-muted-foreground">
+          {kicker && <p className="font-stitch-label text-stitch-label-sm uppercase tracking-[0.24em] text-secondary">{kicker}</p>}
           <Icons.Info className="w-5 h-5" />
           <h2 className="font-serif text-premium-base italic">Nexus Theologicus em Processamento</h2>
         </header>
@@ -109,7 +110,7 @@ export const NexusPanel: React.FC<NexusPanelProps> = ({
       <header className="space-y-spacing-2xs">
         {kicker && (
           <p className="font-stitch-label text-stitch-label-sm uppercase tracking-[0.24em] text-secondary">
-            NEXUS
+            {kicker}
           </p>
         )}
         {title && (

@@ -1,20 +1,12 @@
-  if (!match) return null;
-  const [, rawBook, chapterRaw, verseRaw] = match;
-  const normalizedBook = normalize(rawBook);
-  const compactBook = normalizedBook.replace(/\s+/g, "");
+import "jsr:@supabase/functions-js/edge-runtime.d.ts";
+import { createClient } from "npm:@supabase/supabase-js@2";
 
-  // Abreviações são mais específicas que nomes normalizados. Sem essa
-  // prioridade, "Jo 3:16" pode colidir com "Jó" antes de "João".
-  const exactAbbrev = books.find((candidate) => {
-    const abbrev = normalize(candidate.abbrev);
-    return abbrev === normalizedBook || abbrev.replace(/\s+/g, "") === compactBook;
-  });
-  const book = exactAbbrev ?? books.find((candidate) => {
-    const name = normalize(candidate.name);
-    return name === normalizedBook || name.replace(/\s+/g, "") === compactBook;
-  });
-  if (!book) return null;
-  return { book, chapter: Number(chapterRaw), verse: Number(verseRaw) };
+const cors = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-correlation-id",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+};
+
 const json = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body), {
     status,
@@ -38,13 +30,32 @@ function escapeLike(value: string) {
 function parseReference(input: string, books: Array<{ id: string; name: string; abbrev: string }>) {
   const match = input.trim().match(/^(.*?)\s+(\d+)\s*[:.,]\s*(\d+)$/);
   if (!match) return null;
+
   const [, rawBook, chapterRaw, verseRaw] = match;
-  const normalizedBook = normalize(rawBook);
-  const book = books.find((candidate) => {
-    const names = [candidate.abbrev, candidate.name].map(normalize);
-    return names.some((name) => name === normalizedBook || name.replace(/\s+/g, "") === normalizedBook.replace(/\s+/g, ""));
+  const rawBookTrimmed = rawBook.trim().replace(/\s+/g, " ");
+  const normalizedBook = normalize(rawBookTrimmed);
+  const compactBook = normalizedBook.replace(/\s+/g, "");
+  const rawBookLower = rawBookTrimmed.toLocaleLowerCase("pt-BR");
+
+  // Compare a grafia da abreviação antes de remover diacríticos: "Jo" é João,
+  // enquanto "Jó" é Jó. Normalizar acentos antes dessa etapa torna os dois iguais.
+  const exactSpellingAbbrev = books.find(
+    (candidate) => candidate.abbrev.trim().toLocaleLowerCase("pt-BR") === rawBookLower,
+  );
+  const normalizedAbbrev = books.find((candidate) => {
+    const abbrev = normalize(candidate.abbrev);
+    return abbrev === normalizedBook || abbrev.replace(/\s+/g, "") === compactBook;
   });
+  const exactSpellingName = books.find(
+    (candidate) => candidate.name.trim().toLocaleLowerCase("pt-BR") === rawBookLower,
+  );
+  const normalizedName = books.find((candidate) => {
+    const name = normalize(candidate.name);
+    return name === normalizedBook || name.replace(/\s+/g, "") === compactBook;
+  });
+  const book = exactSpellingAbbrev ?? normalizedAbbrev ?? exactSpellingName ?? normalizedName;
   if (!book) return null;
+
   return { book, chapter: Number(chapterRaw), verse: Number(verseRaw) };
 }
 

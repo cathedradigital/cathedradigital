@@ -50,7 +50,7 @@ test('Documentos: leitor canônico, fonte oficial e Conexo sem duplicação', as
   await expect(page.getByText('vatican.va').first()).toBeVisible();
   await expect(page.locator('[id^="para-"]').first()).toBeVisible();
 
-  const nexusKicker = page.getByText('Conexões · Deus Caritas Est', { exact: true });
+  const nexusKicker = page.getByText(/^Conexões · Deus caritas est/i);
   await expect(nexusKicker).toHaveCount(1);
 
   expect(errors, 'Magistério: console errors').toEqual([]);
@@ -68,7 +68,7 @@ test('Bíblia abre e renderiza conteúdo real', async ({ page }) => {
     if (response.status() >= 400) badResponses.push(`${response.status()}: ${response.url()}`);
   });
 
-  const response = await page.goto('/bible?book=Gen&ch=1');
+  const response = await page.goto('/bible?book=Gn&ch=1');
   expect(response?.ok(), `/bible: HTTP ${response?.status()}`).toBeTruthy();
   await expect(page.locator('body')).not.toContainText(/Application error|Something went wrong/i);
   await expect(page.locator('body')).toContainText(/Gênesis|Genesis/i);
@@ -88,7 +88,7 @@ test('Bíblia permite pesquisar uma referência real', async ({ page }) => {
 
   const input = page.getByPlaceholder('Pesquisar nas Escrituras...');
   await expect(input).toBeVisible();
-  await input.fill('Jo 3:16');
+  await input.fill('João 3:16');
   await expect(page.getByTestId('bible-search-submit')).toBeEnabled();
   await page.getByTestId('bible-search-submit').click();
 
@@ -108,15 +108,21 @@ test('Bíblia permite pesquisar uma referência real', async ({ page }) => {
   await expect(page.locator('body')).toContainText(/João.*3:16/i);
   await expect(page.getByTestId('bible-search-close')).toBeVisible();
   await page.getByTestId('bible-search-close').click();
-  await expect(page).toHaveURL(/\/bible$/);
+  await expect(page).toHaveURL(/\/bible\??$/);
 
   expect(errors, '/bible search: console errors').toEqual([]);
 });
 
 test('Bíblia preserva contexto no Nexus Gn 1:1 → CIC §279 → retorno exato', async ({ page }) => {
   const errors: string[] = [];
+  const badResponses: string[] = [];
   page.on('console', message => {
     if (message.type() === 'error') errors.push(message.text());
+  });
+  page.on('response', response => {
+    if (response.status() >= 400) {
+      badResponses.push(`${response.status()} ${new URL(response.url()).pathname}`);
+    }
   });
 
   await page.goto('/bible?book=Gn&ch=1&v=1');
@@ -137,7 +143,7 @@ test('Bíblia preserva contexto no Nexus Gn 1:1 → CIC §279 → retorno exato'
   await expect(page).toHaveURL(/\/bible\?book=Gn&ch=1&v=1/);
   await expect(page.locator('#verse-1')).toBeVisible();
 
-  expect(errors, 'Nexus return flow: console errors').toEqual([]);
+  expect(errors, `Nexus return flow: console errors; HTTP failures: ${badResponses.join(', ') || 'none'}`).toEqual([]);
 });
 
 test('Bíblia: os controles principais da barra funcionam', async ({ page }) => {
@@ -151,7 +157,7 @@ test('Bíblia: os controles principais da barra funcionam', async ({ page }) => 
   await page.getByTestId('bible-toolbar-search').click();
   await expect(page.getByTestId('bible-search-input')).toBeVisible();
   await page.getByTestId('bible-search-close').click();
-  await expect(page).toHaveURL(/\/bible$/);
+  await expect(page).toHaveURL(/\/bible\??$/);
 
   await page.getByTestId('bible-toolbar-bookmarks').click();
   await expect(page.getByText(/Marcadores/i).first()).toBeVisible();

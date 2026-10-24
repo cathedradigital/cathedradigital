@@ -794,6 +794,21 @@ const Catechism: React.FC = memo(() => {
               revisão e anotações. O contexto agora vive no header do ReaderShell. */}
           <div className="min-w-0 flex-1">
 
+          {bibleReturnContext && (
+            <aside
+              className="mx-auto mb-6 flex w-full max-w-3xl flex-col gap-3 rounded-xl border border-secondary/20 bg-secondary/[0.04] px-4 py-3 md:flex-row md:items-center md:justify-between"
+              aria-label="Retorno de estudo"
+            >
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-wider text-secondary">Retorno de estudo</p>
+                <p className="mt-1 text-sm text-foreground">{bibleReturnContext.label}</p>
+              </div>
+              <Button type="button" variant="outline" onClick={returnToBible} className="min-h-11 rounded-full">
+                Voltar à passagem
+              </Button>
+            </aside>
+          )}
+
           <ReaderShell
             ariaLabel={`Catecismo — ${selectedSection.title}`}
             contentMaxWidth="max-w-3xl"
@@ -1114,4 +1129,3 @@ const Catechism: React.FC = memo(() => {
 });
 
 export default Catechism;
-
