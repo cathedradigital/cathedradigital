@@ -39,6 +39,57 @@ async function openStudyJournal(page: Page, marker: string) {
   return note;
 }
 
+test('auth diagnostic records safe form, visible error and session state', async ({ page }, testInfo) => {
+  const destination = '/bible?book=Jo&ch=3';
+  await page.context().clearCookies();
+  await page.goto('/login?next=' + encodeURIComponent(destination));
+  await page.getByLabel('Email').fill(email!);
+  await page.getByLabel('Senha').fill(password!);
+
+  let submitted = false;
+  await page.getByRole('button', { name: 'Entrar', exact: true }).click();
+  submitted = true;
+
+  const destinationPath = destination.split('?')[0];
+  const outcome = await Promise.race([
+    page.waitForURL(url => url.pathname === destinationPath, { timeout: 15_000 })
+      .then(() => 'destination' as const).catch(() => null),
+    page.getByRole('alert').waitFor({ state: 'visible', timeout: 15_000 })
+      .then(() => 'visible-error' as const).catch(() => null),
+  ]);
+
+  const diagnostic = await page.evaluate(() => {
+    const error = document.querySelector('[role="alert"]')?.textContent?.trim() ?? null;
+    const sessionPresent = Object.keys(localStorage).some(key => {
+      if (!/^sb-.+-auth-token$/.test(key)) return false;
+      try {
+        const value = JSON.parse(localStorage.getItem(key) ?? 'null');
+        return Boolean(value?.access_token && value?.user);
+      } catch {
+        return false;
+      }
+    });
+    return {
+      pathname: location.pathname,
+      searchKeys: [...new URLSearchParams(location.search).keys()],
+      visibleError: error,
+      sessionPresent,
+    };
+  });
+
+  const result = { submitted, outcome, ...diagnostic };
+  console.log('[AUTH-DIAGNOSTIC-SAFE]', JSON.stringify(result));
+  await testInfo.attach('auth-diagnostic-safe.json', {
+    body: JSON.stringify(result, null, 2),
+    contentType: 'application/json',
+  });
+
+  expect(
+    outcome === 'destination' || outcome === 'visible-error' || diagnostic.sessionPresent,
+    'Login produced neither a destination, a visible form error, nor an authenticated session. See auth-diagnostic-safe.json.',
+  ).toBeTruthy();
+});
+
 test('auth redirect preserves protected destination', async ({ page }) => {
   await page.context().clearCookies();
   await page.goto('/diario');
