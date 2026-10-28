@@ -32,7 +32,6 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: "22.x"
-          cache: npm
       - name: Instalar dependências
         run: npm install
       - name: Typecheck
@@ -158,8 +157,8 @@ jobs:
             body="$(mktemp)"
             status="$(curl --silent --show-error --location --connect-timeout 10 --max-time 30 --output "$body" --write-out "%{http_code}" "$url" || true)"
             echo "$url -> HTTP $status"
-            if [ "$status" != "200" ] || ! grep -Eqi '<html|<!doctype html' "$body"; then
-              echo "::error::Produção não validada em $url; bloqueando deploy."
+            if [ "$status" != "200" ] || ! grep -Eqi '<html|<!doctype html' "$body" || ! grep -Eqi 'Cátedra|Cathedra' "$body"; then
+              echo "::error::Produção não validada como site Cátedra em $url; bloqueando deploy."
               head -c 400 "$body" || true
               rm -f "$body"
               exit 1
@@ -221,13 +220,22 @@ jobs:
           for url in \
             "https://cathedradigital.com.br" \
             "https://www.cathedradigital.com.br" \
-            "https://cathedradigital.cathedradigital.workers.dev" \
+            "https://cathedradigital.cathedradigital.workers.dev"; do
+            status="$(curl --silent --show-error --location --connect-timeout 10 --max-time 30 --output /tmp/cathedra-response --write-out "%{http_code}" "$url" || true)"
+            echo "$url -> HTTP $status"
+            if [ "$status" != "200" ] || ! grep -Eqi '<html|<!doctype html' /tmp/cathedra-response || ! grep -Eqi 'Cátedra|Cathedra' /tmp/cathedra-response; then
+              echo "::error::Verificação pós-publicação não confirmou a aplicação Cátedra em $url."
+              head -c 400 /tmp/cathedra-response || true
+              exit 1
+            fi
+          done
+          for url in \
             "https://cathedradigital.com.br/robots.txt" \
             "https://cathedradigital.com.br/sitemap.xml"; do
             status="$(curl --silent --show-error --location --connect-timeout 10 --max-time 30 --output /tmp/cathedra-response --write-out "%{http_code}" "$url" || true)"
             echo "$url -> HTTP $status"
             if [ "$status" != "200" ] || [ ! -s /tmp/cathedra-response ]; then
-              echo "::error::Verificação pós-publicação falhou em $url."
+              echo "::error::Verificação pós-publicação de SEO falhou em $url."
               exit 1
             fi
           done
