@@ -1,107 +1,233 @@
-name: Deploy Cloudflare
+name: Publicar Cátedra Digital — ponta a ponta
 
+# Publicação manual e controlada. Não publicar automaticamente ao fazer push em main.
 on:
-  push:
-    branches: ["main"]
   workflow_dispatch:
 
 concurrency:
-  group: cloudflare-production
-  cancel-in-progress: true
+  group: cathedra-production-release
+  cancel-in-progress: false
+
+permissions:
+  contents: read
 
 jobs:
-  deploy:
+  quality:
+    name: Qualidade e build
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Exigir execução a partir de main
+        shell: bash
+        run: |
+          test "$GITHUB_REF" = "refs/heads/main" || {
+            echo "::error::A publicação só pode ser iniciada a partir de main."
+            exit 1
+          }
+      - name: Checkout SHA da publicação
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.sha }}
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22.x"
+          cache: npm
+      - name: Instalar dependências
+        run: npm install
+      - name: Typecheck
+        run: npm run typecheck
+      - name: Lint
+        run: npm run lint -- --quiet
+      - name: Validar rotas internas
+        run: npm run validate:links
+      - name: Build de produção
+        run: npm run build
+
+  security:
+    name: Auditoria de dependências
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Exigir execução a partir de main
+        shell: bash
+        run: |
+          test "$GITHUB_REF" = "refs/heads/main" || {
+            echo "::error::A publicação só pode ser iniciada a partir de main."
+            exit 1
+          }
+      - name: Checkout SHA da publicação
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.sha }}
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22.x"
+          cache: npm
+      - name: Instalar dependências
+        run: npm install
+      - name: Gerar relatório npm audit
+        id: audit
+        shell: bash
+        run: |
+          set +e
+          npm audit --json > npm-audit.json
+          audit_exit=$?
+          set -e
+          node --input-type=commonjs <<'NODE'
+          const fs = require('node:fs');
+          const report = JSON.parse(fs.readFileSync('npm-audit.json', 'utf8'));
+          const v = report.metadata?.vulnerabilities ?? {};
+          const high = Number(v.high ?? 0);
+          const critical = Number(v.critical ?? 0);
+          console.log(JSON.stringify({low:v.low??0, moderate:v.moderate??0, high, critical}, null, 2));
+          if (high > 0 || critical > 0) {
+            console.error('Bloqueado: há vulnerabilidades high/critical em dependências.');
+            process.exit(1);
+          }
+          NODE
+          echo "npm audit exit code: $audit_exit"
+      - name: Guardar relatório de segurança
+        if: always()
+        uses: actions/upload-artifact@v5
+        with:
+          name: relatorio-npm-audit
+          path: npm-audit.json
+          if-no-files-found: warn
+          retention-days: 14
+
+  e2e:
+    name: Playwright desktop e mobile
     runs-on: ubuntu-latest
     timeout-minutes: 60
-    permissions:
-      contents: read
-
+    env:
+      E2E_TEST_EMAIL: ${{ secrets.E2E_TEST_EMAIL }}
+      E2E_TEST_PASSWORD: ${{ secrets.E2E_TEST_PASSWORD }}
     steps:
-      - name: Checkout
+      - name: Exigir execução a partir de main
+        shell: bash
+        run: |
+          test "$GITHUB_REF" = "refs/heads/main" || {
+            echo "::error::A publicação só pode ser iniciada a partir de main."
+            exit 1
+          }
+      - name: Checkout SHA da publicação
         uses: actions/checkout@v6
+        with:
+          ref: ${{ github.sha }}
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22.x"
+          cache: npm
+      - name: Instalar dependências
+        run: npm install
+      - name: Instalar navegador Playwright
+        run: npx playwright install --with-deps chromium
+      - name: Confirmar segredos de teste sem exibi-los
+        shell: bash
+        run: |
+          test -n "$E2E_TEST_EMAIL" || { echo "::error::Falta E2E_TEST_EMAIL"; exit 1; }
+          test -n "$E2E_TEST_PASSWORD" || { echo "::error::Falta E2E_TEST_PASSWORD"; exit 1; }
+      - name: Build do SHA exato
+        run: npm run build
+      - name: Executar suíte completa desktop/mobile
+        run: npx playwright test --reporter=line
 
-      - name: Verify Cloudflare credentials
+  production_preflight:
+    name: Verificar produção antes de publicar
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Exigir execução a partir de main
+        shell: bash
+        run: |
+          test "$GITHUB_REF" = "refs/heads/main" || {
+            echo "::error::A publicação só pode ser iniciada a partir de main."
+            exit 1
+          }
+      - name: Verificar domínios e recursos SEO atuais
+        shell: bash
+        run: |
+          set -euo pipefail
+          for url in \
+            "https://cathedradigital.com.br" \
+            "https://www.cathedradigital.com.br" \
+            "https://cathedradigital.cathedradigital.workers.dev"; do
+            body="$(mktemp)"
+            status="$(curl --silent --show-error --location --connect-timeout 10 --max-time 30 --output "$body" --write-out "%{http_code}" "$url" || true)"
+            echo "$url -> HTTP $status"
+            if [ "$status" != "200" ] || ! grep -Eqi '<html|<!doctype html' "$body"; then
+              echo "::error::Produção não validada em $url; bloqueando deploy."
+              head -c 400 "$body" || true
+              rm -f "$body"
+              exit 1
+            fi
+            rm -f "$body"
+          done
+          for url in \
+            "https://cathedradigital.com.br/robots.txt" \
+            "https://cathedradigital.com.br/sitemap.xml"; do
+            status="$(curl --silent --show-error --location --connect-timeout 10 --max-time 30 --output /tmp/cathedra-seo --write-out "%{http_code}" "$url" || true)"
+            echo "$url -> HTTP $status"
+            if [ "$status" != "200" ] || [ ! -s /tmp/cathedra-seo ]; then
+              echo "::error::Recurso SEO não validado em $url; bloqueando deploy."
+              exit 1
+            fi
+          done
+
+  deploy:
+    name: Publicar no Cloudflare Workers
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    needs: [quality, security, e2e, production_preflight]
+    steps:
+      - name: Checkout SHA aprovado
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.sha }}
+      - name: Verificar credenciais Cloudflare
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: |
-          test -n "$CLOUDFLARE_API_TOKEN" || { echo "::error::Missing GitHub secret CLOUDFLARE_API_TOKEN"; exit 1; }
-          test -n "$CLOUDFLARE_ACCOUNT_ID" || { echo "::error::Missing GitHub secret CLOUDFLARE_ACCOUNT_ID"; exit 1; }
-
+          test -n "$CLOUDFLARE_API_TOKEN" || { echo "::error::Falta CLOUDFLARE_API_TOKEN"; exit 1; }
+          test -n "$CLOUDFLARE_ACCOUNT_ID" || { echo "::error::Falta CLOUDFLARE_ACCOUNT_ID"; exit 1; }
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: "22.x"
-
-      - name: Install dependencies
+          cache: npm
+      - name: Instalar dependências
         run: npm install
-
-      - name: Validate Cloudflare authorization
+      - name: Confirmar conta Cloudflare
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: npx wrangler whoami --account "$CLOUDFLARE_ACCOUNT_ID"
-      - name: Inspect public DNS
-        shell: bash
-        run: |
-          set -euo pipefail
-          for name in cathedradigital.com.br www.cathedradigital.com.br cathedradigital.cathedradigital.workers.dev; do
-            echo "=== DNS $name ==="
-            for type in A AAAA CNAME NS; do
-              echo "-- $type"
-              curl --fail --silent --show-error --connect-timeout 10 --max-time 20 "https://dns.google/resolve?name=$name&type=$type" | jq '{Status,Answer}'
-            done
-          done
-      - name: Typecheck
-        run: npm run typecheck
-
-      - name: Lint
-        run: npm run lint -- --quiet
-
-      - name: Validate internal routes
-        run: npm run validate:links
-
-      - name: Build
+      - name: Rebuild do SHA aprovado
         run: npm run build
-
       - name: Deploy Worker
         uses: cloudflare/wrangler-action@v4
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: deploy
-      - name: Validate production endpoints
+      - name: Confirmar publicação nos domínios e SEO
         shell: bash
         run: |
           set -euo pipefail
-          endpoints=(
-            "https://cathedradigital.com.br"
-            "https://www.cathedradigital.com.br"
-            "https://cathedradigital.cathedradigital.workers.dev"
-          )
-          for url in "${endpoints[@]}"; do
-            echo "Checking $url"
-            body_file="$(mktemp)"
-            status="$(curl --silent --show-error --location --retry 2 --retry-all-errors --connect-timeout 10 --max-time 30 --output "$body_file" --write-out "%{http_code}" "$url" || true)"
-            size="$(wc -c < "$body_file")"
-            rm -f "$body_file"
-
-            case "$url" in
-              *workers.dev)
-                test "$status" = "200"
-                test "$size" -gt 100
-                echo "OK $url -> HTTP $status ($size bytes)"
-                ;;
-              *)
-                if [ "$status" = "200" ]; then
-                  test "$size" -gt 100
-                  echo "OK $url -> HTTP $status ($size bytes)"
-                elif [ "$status" = "403" ]; then
-                  echo "REACHABLE $url -> HTTP 403 (custom-domain protection; deployment is live)"
-                else
-                  echo "::error::$url returned unexpected HTTP $status"
-                  exit 1
-                fi
-                ;;
-            esac
+          for url in \
+            "https://cathedradigital.com.br" \
+            "https://www.cathedradigital.com.br" \
+            "https://cathedradigital.cathedradigital.workers.dev" \
+            "https://cathedradigital.com.br/robots.txt" \
+            "https://cathedradigital.com.br/sitemap.xml"; do
+            status="$(curl --silent --show-error --location --connect-timeout 10 --max-time 30 --output /tmp/cathedra-response --write-out "%{http_code}" "$url" || true)"
+            echo "$url -> HTTP $status"
+            if [ "$status" != "200" ] || [ ! -s /tmp/cathedra-response ]; then
+              echo "::error::Verificação pós-publicação falhou em $url."
+              exit 1
+            fi
           done
