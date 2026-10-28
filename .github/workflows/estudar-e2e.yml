@@ -6,6 +6,7 @@ on:
     paths:
       - "src/**"
       - "e2e/**"
+      - "scripts/test-safe-playwright-evidence.mjs"
       - "playwright.config.ts"
       - "package.json"
       - ".github/workflows/estudar-e2e.yml"
@@ -22,9 +23,6 @@ jobs:
     timeout-minutes: 45
     permissions:
       contents: read
-    env:
-      E2E_TEST_EMAIL: ${{ secrets.E2E_TEST_EMAIL }}
-      E2E_TEST_PASSWORD: ${{ secrets.E2E_TEST_PASSWORD }}
     steps:
       - name: Checkout PR HEAD
         uses: actions/checkout@v6
@@ -45,20 +43,35 @@ jobs:
       - name: Build PR HEAD
         run: npm run build
 
-      - name: Verify authenticated E2E account exists
+      - name: Verify safe evidence handling with synthetic values
+        run: node scripts/test-safe-playwright-evidence.mjs
+
+      - name: Check E2E secrets are configured (not a validity check)
         run: |
           test -n "$E2E_TEST_EMAIL" || { echo "::error::Missing E2E_TEST_EMAIL — authenticated E2E is blocked"; exit 1; }
           test -n "$E2E_TEST_PASSWORD" || { echo "::error::Missing E2E_TEST_PASSWORD — authenticated E2E is blocked"; exit 1; }
+        env:
+          E2E_TEST_EMAIL: ${{ secrets.E2E_TEST_EMAIL }}
+          E2E_TEST_PASSWORD: ${{ secrets.E2E_TEST_PASSWORD }}
 
-      - name: Run critical Estudar E2E
-        run: npx playwright test e2e/estudar-critical.spec.ts
+      - name: Run complete Playwright suite
+        run: npx playwright test
+        env:
+          E2E_TEST_EMAIL: ${{ secrets.E2E_TEST_EMAIL }}
+          E2E_TEST_PASSWORD: ${{ secrets.E2E_TEST_PASSWORD }}
 
-      - name: Upload Playwright evidence
-        if: ${{ !cancelled() }}
+      - name: Validate sanitized Playwright evidence
+        id: safe_evidence
+        if: always()
+        run: node e2e/verify-safe-playwright-evidence.mjs
+        env:
+          E2E_TEST_EMAIL: ${{ secrets.E2E_TEST_EMAIL }}
+          E2E_TEST_PASSWORD: ${{ secrets.E2E_TEST_PASSWORD }}
+
+      - name: Upload sanitized Playwright evidence
+        if: ${{ !cancelled() && steps.safe_evidence.outcome == 'success' }}
         uses: actions/upload-artifact@v5
         with:
-          name: estudar-e2e-evidence
-          path: |
-            playwright-report/
-            test-results/
+          name: estudar-e2e-safe-evidence
+          path: safe-playwright-evidence/report.json
           retention-days: 7
