@@ -22,7 +22,7 @@ const BIBLE_BOOK_MAP: Record<string, string> = {
   'Jdt': 'jdt', 'Judite': 'jdt',
   'Est': 'est', 'Ester': 'est',
   '1Mc': '1mc', '1 Mc': '1mc', '1Macabeus': '1mc',
-  '2Mc': '2mc', '2 Mc': '2mc', '2Macabeus': '2mc',
+  '2Mc': '2mc', '2 Mc': '2mc', '2 Mac': '2mc', '2Macabeus': '2mc',
   'Jó': 'job', 'Job': 'job',
   'Sl': 'sl', 'Salmos': 'sl', 'Salmo': 'sl',
   'Pr': 'pr', 'Provérbios': 'pr',
