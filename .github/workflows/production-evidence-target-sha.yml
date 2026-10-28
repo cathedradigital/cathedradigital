@@ -81,6 +81,8 @@ jobs:
           node-version: "22.x"
       - name: Install dependencies
         run: npm install
+      - name: Build app and generate Cloudflare preview configuration
+        run: npm run build
       - name: Install Playwright browser
         run: npx playwright install --with-deps chromium
       - name: Verify E2E credentials exist
