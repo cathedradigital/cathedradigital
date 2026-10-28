@@ -127,7 +127,7 @@ export const BIBLE_DATA: Record<string, BibleCategory[]> = {
         },
         { name: 'Provérbios', abbr: 'Pr', chapters: 31, category: 'Sapiencial' },
         { name: 'Eclesiastes', abbr: 'Ecl', chapters: 12, category: 'Sapiencial' },
-        { name: 'Cântico dos Cânticos', abbr: 'Ct', chapters: 8, category: 'Poético' },
+        { name: 'Cânticos', abbr: 'Ct', chapters: 8, category: 'Poético' },
         { 
           name: 'Sabedoria', 
           abbr: 'Sb', 
