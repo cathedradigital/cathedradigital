@@ -233,9 +233,12 @@ test('Catecismo: fronteiras desabilitam anterior em §1 e próximo em §2865', a
 });
 
 test('Catecismo: §2262 preserva o texto oficial e abre a referência bíblica', async ({ page }) => {
-  await page.goto('/catechism?p=2262');
-  await expect(page.locator('body')).toContainText('No sermão da montanha, o Senhor lembra o preceito');
-  const bibleRef = page.getByRole('button', { name: /Mt 5, 21/i }).first();
+  await login(page, '/catechism?p=2262');
+  await expect(page).toHaveURL(/\/catechism\?p=2262$/);
+  const paragraph = page.locator('#p2262');
+  await expect(paragraph).toBeVisible();
+  await expect(paragraph).toContainText('No sermão da montanha, o Senhor lembra o preceito');
+  const bibleRef = paragraph.getByRole('button', { name: /Mt 5, 21/i }).first();
   await expect(bibleRef).toBeVisible();
   await bibleRef.click();
   await expect(page).toHaveURL(/\/bible\?book=Mt&ch=5&v=21/);
