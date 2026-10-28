@@ -196,7 +196,7 @@ export const BIBLE_DATA: Record<string, BibleCategory[]> = {
         { name: 'Jonas', abbr: 'Jn', chapters: 4, category: 'Profético' },
         { name: 'Miqueias', abbr: 'Mq', chapters: 7, category: 'Profético' },
         { name: 'Naum', abbr: 'Na', chapters: 3, category: 'Profético' },
-        { name: 'Habacuc', abbr: 'Hab', chapters: 3, category: 'Profético' },
+        { name: 'Habacuque', abbr: 'Hab', chapters: 3, category: 'Profético' },
         { name: 'Sofonias', abbr: 'Sf', chapters: 3, category: 'Profético' },
         { name: 'Ageu', abbr: 'Ag', chapters: 2, category: 'Profético' },
         { name: 'Zacarias', abbr: 'Zc', chapters: 14, category: 'Profético' },
