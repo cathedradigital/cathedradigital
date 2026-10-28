@@ -106,7 +106,7 @@ export interface ParsedSegment {
 
 // Full reference pattern: (Book) (Chapter)[, (Verse)[-(EndVerse)]]
 const FULL_REF_PATTERN = (bookNames: string[]) => 
-  new RegExp(`(?:cf\\.?\\s*)?(${bookNames.join('|')})\\s+(\\d{1,3})(?:[,.:]\\s*(\\d{1,3})(?:\\s*[-–]\\s*\\d{1,3})?)?`, 'g');
+  new RegExp(`(?:cf\\.?\\s*)?(${bookNames.join('|')})\\s+(\\d{1,3})(?:[,.:]\\s*(\\d{1,3})(?:\\s*[-–]\\s*(\\d{1,3}))?)?`, 'g');
 
 // Short reference pattern (only numbers): (Chapter)[, (Verse)[-(EndVerse)]]
 const SHORT_REF_PATTERN = new RegExp(`(\\d{1,3})(?:[,.:]\\s*(\\d{1,3})(?:\\s*[-–]\\s*\\d{1,3})?)?`, 'g');
