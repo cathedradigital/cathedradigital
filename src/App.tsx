@@ -80,6 +80,11 @@ const MagisterioLegacyRedirect = () => {
   return <Navigate to={`/magisterium/${id ?? ''}`} replace />;
 };
 
+const LoginAliasRedirect = () => {
+  const location = useLocation();
+  return <Navigate to={`/auth${location.search}${location.hash}`} replace />;
+};
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -683,7 +688,7 @@ const AppLayout: React.FC = () => {
               <Route path="/chat" element={<Navigate to="/logos" replace />} />
               <Route path="/auth" element={<Suspense fallback={<LoadingFallback />}><Auth onSuccess={() => navigate(resolveAuthHome(), { replace: true })} /></Suspense>} />
               <Route path="/.lovable/oauth/consent" element={<Suspense fallback={<LoadingFallback />}><OAuthConsent /></Suspense>} />
-              <Route path="/login" element={<Navigate to="/auth" replace />} />
+              <Route path="/login" element={<LoginAliasRedirect />} />
               <Route path="/reset-password" element={<Suspense fallback={<LoadingFallback />}><ResetPasswordPage /></Suspense>} />
               <Route path="/profile" element={<Suspense fallback={<LoadingFallback />}><AuthGuard><ProfilePage /></AuthGuard></Suspense>} />
               <Route path="/settings" element={<Navigate to="/conta/configuracoes" replace />} />
