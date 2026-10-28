@@ -63,7 +63,6 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: "22.x"
-          cache: npm
       - name: Instalar dependências
         run: npm install
       - name: Gerar relatório npm audit
@@ -119,7 +118,6 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: "22.x"
-          cache: npm
       - name: Instalar dependências
         run: npm install
       - name: Instalar navegador Playwright
@@ -197,7 +195,6 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: "22.x"
-          cache: npm
       - name: Instalar dependências
         run: npm install
       - name: Confirmar conta Cloudflare
