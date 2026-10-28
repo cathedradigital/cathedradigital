@@ -23,6 +23,11 @@ jobs:
     timeout-minutes: 45
     permissions:
       contents: read
+    env:
+      VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+      VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY }}
+      E2E_TEST_EMAIL: ${{ secrets.E2E_TEST_EMAIL }}
+      E2E_TEST_PASSWORD: ${{ secrets.E2E_TEST_PASSWORD }}
     steps:
       - name: Checkout PR HEAD
         uses: actions/checkout@v6
@@ -40,7 +45,15 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
 
-      - name: Build PR HEAD
+      - name: Verify Supabase and authenticated E2E secrets exist
+        shell: bash
+        run: |
+          test -n "$VITE_SUPABASE_URL" || { echo "::error::Missing VITE_SUPABASE_URL — app build/auth is blocked"; exit 1; }
+          test -n "$VITE_SUPABASE_PUBLISHABLE_KEY" || { echo "::error::Missing VITE_SUPABASE_PUBLISHABLE_KEY — app build/auth is blocked"; exit 1; }
+          test -n "$E2E_TEST_EMAIL" || { echo "::error::Missing E2E_TEST_EMAIL — authenticated E2E is blocked"; exit 1; }
+          test -n "$E2E_TEST_PASSWORD" || { echo "::error::Missing E2E_TEST_PASSWORD — authenticated E2E is blocked"; exit 1; }
+
+      - name: Build PR HEAD with the configured Supabase project
         run: npm run build
 
       - name: Verify safe evidence handling with synthetic values
