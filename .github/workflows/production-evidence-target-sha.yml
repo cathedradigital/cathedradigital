@@ -1,0 +1,163 @@
+name: Production evidence and target-SHA E2E (diagnostic only)
+
+on:
+  pull_request:
+    branches: ["main"]
+    paths:
+      - ".github/workflows/production-evidence-target-sha.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: production-evidence-target-sha
+  cancel-in-progress: false
+
+env:
+  TARGET_SHA: a745ae1cd8d6cb6c7c446a0d022c7b3d989994f8
+
+jobs:
+  http-evidence:
+    name: HTTP and SEO response evidence (no deploy)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Capture status, headers, and response bodies
+        shell: bash
+        run: |
+          mkdir -p evidence/http
+          urls=(
+            "https://cathedradigital.com.br"
+            "https://www.cathedradigital.com.br"
+            "https://cathedradigital.cathedradigital.workers.dev"
+            "https://cathedradigital.com.br/robots.txt"
+            "https://cathedradigital.com.br/sitemap.xml"
+          )
+          printf 'url\tstatus\tcontent_type\tfinal_url\tbytes\n' > evidence/http/summary.tsv
+          for i in "${!urls[@]}"; do
+            url="${urls[$i]}"
+            name="$(printf '%02d' "$((i+1))")"
+            set +e
+            curl --location --silent --show-error --max-time 30 \
+              --dump-header "evidence/http/$name.headers.txt" \
+              --output "evidence/http/$name.body" \
+              --write-out '%{http_code}\t%{content_type}\t%{url_effective}\t%{size_download}' \
+              "$url" > "evidence/http/$name.meta.txt"
+            rc=$?
+            set -e
+            if [ "$rc" -ne 0 ]; then echo "curl_exit=$rc url=$url" > "evidence/http/$name.error.txt"; fi
+            printf '%s\t%s\t%s\t%s\t%s\n' "$url" "$(cut -f1 "evidence/http/$name.meta.txt" 2>/dev/null)" "$(cut -f2 "evidence/http/$name.meta.txt" 2>/dev/null)" "$(cut -f3 "evidence/http/$name.meta.txt" 2>/dev/null)" "$(cut -f4 "evidence/http/$name.meta.txt" 2>/dev/null)" >> evidence/http/summary.tsv
+          done
+          cat evidence/http/summary.tsv
+      - name: Preserve HTTP evidence
+        if: always()
+        uses: actions/upload-artifact@v5
+        with:
+          name: production-http-evidence-${{ github.run_id }}
+          path: evidence/http/
+          retention-days: 14
+
+  target-sha-e2e:
+    name: Playwright E2E against exact requested source SHA
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      E2E_TEST_EMAIL: ${{ secrets.E2E_TEST_EMAIL }}
+      E2E_TEST_PASSWORD: ${{ secrets.E2E_TEST_PASSWORD }}
+    steps:
+      - name: Checkout exact target SHA (not the diagnostic PR head)
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ env.TARGET_SHA }}
+      - name: Verify checked out source SHA
+        run: |
+          actual="$(git rev-parse HEAD)"
+          echo "Expected: $TARGET_SHA"
+          echo "Actual:   $actual"
+          test "$actual" = "$TARGET_SHA"
+      - name: Setup Node 22
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22.x"
+      - name: Install dependencies
+        run: npm install
+      - name: Install Playwright browser
+        run: npx playwright install --with-deps chromium
+      - name: Verify E2E credentials exist
+        run: |
+          test -n "$E2E_TEST_EMAIL" || { echo "::error::E2E_TEST_EMAIL missing; browser tests cannot start"; exit 1; }
+          test -n "$E2E_TEST_PASSWORD" || { echo "::error::E2E_TEST_PASSWORD missing; browser tests cannot start"; exit 1; }
+      - name: Run critical desktop and mobile browser tests
+        run: npx playwright test e2e/estudar-critical.spec.ts
+      - name: Preserve Playwright evidence
+        if: always()
+        uses: actions/upload-artifact@v5
+        with:
+          name: target-sha-playwright-evidence-${{ github.run_id }}
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 14
+
+  dependency-audit:
+    name: Dependency vulnerability and reproducibility diagnostics
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ env.TARGET_SHA }}
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "22.x"
+      - name: Create isolated npm lock and produce full npm audit JSON
+        shell: bash
+        run: |
+          mkdir -p evidence/dependencies
+          npm install --package-lock-only --ignore-scripts --no-audit --no-fund
+          set +e
+          npm audit --json > evidence/dependencies/npm-audit.json
+          audit_rc=$?
+          set -e
+          echo "$audit_rc" > evidence/dependencies/npm-audit-exit-code.txt
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const p='evidence/dependencies/npm-audit.json';
+          let a={};
+          try { a=JSON.parse(fs.readFileSync(p,'utf8')); } catch {}
+          const m=a.metadata?.vulnerabilities ?? {};
+          const summary={
+            generatedAt:new Date().toISOString(),
+            targetSha:process.env.TARGET_SHA,
+            auditExitCode:Number(fs.readFileSync('evidence/dependencies/npm-audit-exit-code.txt','utf8').trim()),
+            counts:{info:m.info??0,low:m.low??0,moderate:m.moderate??0,high:m.high??0,critical:m.critical??0,total:m.total??0},
+            advisories:Object.entries(a.vulnerabilities??{}).map(([name,v])=>({
+              name, severity:v.severity, isDirect:v.isDirect,
+              range:v.range, installedVersions:v.nodes,
+              fixAvailable:v.fixAvailable,
+              via:(v.via??[]).map(x=>typeof x==='string'?x:{name:x.name,title:x.title,url:x.url,range:x.range,severity:x.severity})
+            }))
+          };
+          fs.writeFileSync('evidence/dependencies/npm-audit-summary.json',JSON.stringify(summary,null,2));
+          console.log(JSON.stringify(summary.counts));
+          NODE
+      - name: Validate Bun lockfile reproducibility
+        shell: bash
+        run: |
+          set +e
+          npx --yes bun --version > evidence/dependencies/bun-version.txt 2>&1
+          version_rc=$?
+          npx --yes bun install --frozen-lockfile > evidence/dependencies/bun-install.log 2>&1
+          install_rc=$?
+          set -e
+          echo "$version_rc" > evidence/dependencies/bun-version-exit-code.txt
+          echo "$install_rc" > evidence/dependencies/bun-install-exit-code.txt
+          cat evidence/dependencies/bun-version.txt
+          tail -n 100 evidence/dependencies/bun-install.log
+          echo "bun_install_exit_code=$install_rc"
+      - name: Preserve dependency evidence
+        if: always()
+        uses: actions/upload-artifact@v5
+        with:
+          name: dependency-audit-evidence-${{ github.run_id }}
+          path: evidence/dependencies/
+          retention-days: 14
