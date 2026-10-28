@@ -82,26 +82,22 @@ jobs:
           for url in "${endpoints[@]}"; do
             echo "Checking $url"
             body_file="$(mktemp)"
-            status="$(curl --silent --show-error --location --retry 2 --retry-all-errors --connect-timeout 10 --max-time 30 --output "$body_file" --write-out "%{http_code}" "$url" || true)"
+            headers_file="$(mktemp)"
+            status="$(curl --silent --show-error --location --retry 2 --retry-all-errors --connect-timeout 10 --max-time 30 --dump-header "$headers_file" --output "$body_file" --write-out "%{http_code}" "$url" || true)"
             size="$(wc -c < "$body_file")"
-            rm -f "$body_file"
+            content_type="$(grep -i '^content-type:' "$headers_file" | tail -n 1 | cut -d: -f2- | tr -d '\r' | xargs || true)"
 
-            case "$url" in
-              *workers.dev)
-                test "$status" = "200"
-                test "$size" -gt 100
-                echo "OK $url -> HTTP $status ($size bytes)"
-                ;;
-              *)
-                if [ "$status" = "200" ]; then
-                  test "$size" -gt 100
-                  echo "OK $url -> HTTP $status ($size bytes)"
-                elif [ "$status" = "403" ]; then
-                  echo "REACHABLE $url -> HTTP 403 (custom-domain protection; deployment is live)"
-                else
-                  echo "::error::$url returned unexpected HTTP $status"
-                  exit 1
-                fi
-                ;;
-            esac
+            if [ "$status" != "200" ] || [[ "$content_type" != text/html* ]] || ! grep -Eiq '<!doctype[[:space:]]+html|<html([[:space:]>])' "$body_file"; then
+              echo "::error::Production endpoint validation failed: $url -> HTTP ${status:-no-response}; content-type=${content_type:-missing}; bytes=$size"
+              echo "--- Response headers (redirect chain included) ---"
+              sed -n '1,160p' "$headers_file" || true
+              echo "--- Response body excerpt (first 800 bytes) ---"
+              head -c 800 "$body_file" || true
+              echo
+              rm -f "$body_file" "$headers_file"
+              exit 1
+            fi
+
+            echo "OK $url -> HTTP $status; content-type=$content_type; HTML response; $size bytes"
+            rm -f "$body_file" "$headers_file"
           done
