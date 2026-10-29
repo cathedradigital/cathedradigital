@@ -47,6 +47,38 @@ test('auth diagnostic records safe form, visible error and session state', async
   await page.getByLabel('Senha').fill(password!);
 
   let submitted = false;
+  const authApiDiagnostics: Array<{ status: number; code: string | null; category: string }> = [];
+  page.on('response', async response => {
+    try {
+      const url = new URL(response.url());
+      if (url.pathname !== '/auth/v1/token' || !url.searchParams.has('grant_type')) return;
+      let payload: Record<string, unknown> = {};
+      try {
+        payload = await response.json() as Record<string, unknown>;
+      } catch {
+        payload = {};
+      }
+      const rawCode = [payload.code, payload.error, payload.error_code]
+        .find(value => typeof value === 'string') as string | undefined;
+      const normalized = (rawCode ?? '').toLowerCase();
+      const allowedCodes = new Set([
+        'invalid_credentials', 'email_not_confirmed', 'over_request_rate_limit',
+        'bad_jwt', 'invalid_api_key', 'no_api_key', 'validation_failed',
+        'user_banned', 'request_timeout',
+      ]);
+      const code = allowedCodes.has(normalized) ? normalized : (rawCode ? 'other_service_error' : null);
+      const category =
+        response.status() === 401 && ['invalid_credentials', 'email_not_confirmed'].includes(normalized) ? 'credentials_or_confirmation' :
+        response.status() === 401 && ['invalid_api_key', 'no_api_key'].includes(normalized) ? 'api_key_rejected' :
+        response.status() === 429 || normalized === 'over_request_rate_limit' ? 'rate_limited' :
+        response.status() >= 500 ? 'supabase_server_error' :
+        response.status() >= 400 ? 'request_rejected' :
+        response.ok() ? 'success' : 'unknown';
+      authApiDiagnostics.push({ status: response.status(), code, category });
+    } catch {
+      authApiDiagnostics.push({ status: 0, code: null, category: 'diagnostic_capture_error' });
+    }
+  });
   await page.getByRole('button', { name: 'Entrar', exact: true }).click();
   submitted = true;
 
@@ -77,7 +109,7 @@ test('auth diagnostic records safe form, visible error and session state', async
     };
   });
 
-  const result = { submitted, outcome, ...diagnostic };
+  const result = { submitted, outcome, ...diagnostic, authApiDiagnostics };
   console.log('[AUTH-DIAGNOSTIC-SAFE]', JSON.stringify(result));
   await testInfo.attach('auth-diagnostic-safe.json', {
     body: JSON.stringify(result, null, 2),
