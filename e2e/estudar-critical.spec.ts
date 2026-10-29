@@ -48,6 +48,55 @@ test('auth diagnostic records safe form, visible error and session state', async
 
   let submitted = false;
   const authApiDiagnostics: Array<{ status: number; code: string | null; category: string }> = [];
+  const authNetworkDiagnostics: Array<{ event: 'request_started' | 'request_failed'; host: string; category: string }> = [];
+  const isAuthTokenRequest = (rawUrl: string) => {
+    try {
+      const url = new URL(rawUrl);
+      return url.pathname === '/auth/v1/token' && url.searchParams.has('grant_type');
+    } catch {
+      return false;
+    }
+  };
+  page.on('request', request => {
+    if (!isAuthTokenRequest(request.url())) return;
+    try {
+      authNetworkDiagnostics.push({
+        event: 'request_started',
+        host: new URL(request.url()).host,
+        category: 'auth_token_request_started',
+      });
+    } catch {
+      authNetworkDiagnostics.push({
+        event: 'request_started',
+        host: 'unavailable',
+        category: 'auth_token_request_started',
+      });
+    }
+  });
+  page.on('requestfailed', request => {
+    if (!isAuthTokenRequest(request.url())) return;
+    const failure = request.failure()?.errorText ?? '';
+    const knownNetworkErrors: Record<string, string> = {
+      'net::ERR_NAME_NOT_RESOLVED': 'dns_resolution_failed',
+      'net::ERR_CONNECTION_REFUSED': 'connection_refused',
+      'net::ERR_CONNECTION_RESET': 'connection_reset',
+      'net::ERR_TIMED_OUT': 'network_timeout',
+      'net::ERR_INTERNET_DISCONNECTED': 'network_disconnected',
+      'net::ERR_CERT_AUTHORITY_INVALID': 'tls_certificate_rejected',
+      'net::ERR_FAILED': 'browser_network_failure',
+    };
+    let host = 'unavailable';
+    try {
+      host = new URL(request.url()).host;
+    } catch {
+      // Keep sanitized fallback.
+    }
+    authNetworkDiagnostics.push({
+      event: 'request_failed',
+      host,
+      category: knownNetworkErrors[failure] ?? 'unclassified_network_failure',
+    });
+  });
   page.on('response', async response => {
     try {
       const url = new URL(response.url());
@@ -109,7 +158,7 @@ test('auth diagnostic records safe form, visible error and session state', async
     };
   });
 
-  const result = { submitted, outcome, ...diagnostic, authApiDiagnostics };
+  const result = { submitted, outcome, ...diagnostic, authApiDiagnostics, authNetworkDiagnostics };
   console.log('[AUTH-DIAGNOSTIC-SAFE]', JSON.stringify(result));
   await testInfo.attach('auth-diagnostic-safe.json', {
     body: JSON.stringify(result, null, 2),
