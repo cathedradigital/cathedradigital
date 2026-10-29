@@ -47,8 +47,8 @@ test('auth diagnostic records safe form, visible error and session state', async
   await page.getByLabel('Senha').fill(password!);
 
   let submitted = false;
-  const authApiDiagnostics: Array<{ status: number; code: string | null; category: string }> = [];
-  const authNetworkDiagnostics: Array<{ event: 'request_started' | 'request_failed'; host: string; category: string }> = [];
+  const authApiDiagnostics: Array<{ status: number; category: string }> = [];
+  const authNetworkDiagnostics: Array<{ event: 'request_started' | 'request_finished' | 'request_failed'; host: string; category: string }> = [];
   const isAuthTokenRequest = (rawUrl: string) => {
     try {
       const url = new URL(rawUrl);
@@ -57,21 +57,28 @@ test('auth diagnostic records safe form, visible error and session state', async
       return false;
     }
   };
+  const safeHost = (rawUrl: string) => {
+    try {
+      return new URL(rawUrl).host;
+    } catch {
+      return 'unavailable';
+    }
+  };
   page.on('request', request => {
     if (!isAuthTokenRequest(request.url())) return;
-    try {
-      authNetworkDiagnostics.push({
-        event: 'request_started',
-        host: new URL(request.url()).host,
-        category: 'auth_token_request_started',
-      });
-    } catch {
-      authNetworkDiagnostics.push({
-        event: 'request_started',
-        host: 'unavailable',
-        category: 'auth_token_request_started',
-      });
-    }
+    authNetworkDiagnostics.push({
+      event: 'request_started',
+      host: safeHost(request.url()),
+      category: 'auth_token_request_started',
+    });
+  });
+  page.on('requestfinished', request => {
+    if (!isAuthTokenRequest(request.url())) return;
+    authNetworkDiagnostics.push({
+      event: 'request_finished',
+      host: safeHost(request.url()),
+      category: 'auth_token_request_finished_without_network_error',
+    });
   });
   page.on('requestfailed', request => {
     if (!isAuthTokenRequest(request.url())) return;
@@ -85,48 +92,25 @@ test('auth diagnostic records safe form, visible error and session state', async
       'net::ERR_CERT_AUTHORITY_INVALID': 'tls_certificate_rejected',
       'net::ERR_FAILED': 'browser_network_failure',
     };
-    let host = 'unavailable';
-    try {
-      host = new URL(request.url()).host;
-    } catch {
-      // Keep sanitized fallback.
-    }
     authNetworkDiagnostics.push({
       event: 'request_failed',
-      host,
+      host: safeHost(request.url()),
       category: knownNetworkErrors[failure] ?? 'unclassified_network_failure',
     });
   });
-  page.on('response', async response => {
-    try {
-      const url = new URL(response.url());
-      if (url.pathname !== '/auth/v1/token' || !url.searchParams.has('grant_type')) return;
-      let payload: Record<string, unknown> = {};
-      try {
-        payload = await response.json() as Record<string, unknown>;
-      } catch {
-        payload = {};
-      }
-      const rawCode = [payload.code, payload.error, payload.error_code]
-        .find(value => typeof value === 'string') as string | undefined;
-      const normalized = (rawCode ?? '').toLowerCase();
-      const allowedCodes = new Set([
-        'invalid_credentials', 'email_not_confirmed', 'over_request_rate_limit',
-        'bad_jwt', 'invalid_api_key', 'no_api_key', 'validation_failed',
-        'user_banned', 'request_timeout',
-      ]);
-      const code = allowedCodes.has(normalized) ? normalized : (rawCode ? 'other_service_error' : null);
-      const category =
-        response.status() === 401 && ['invalid_credentials', 'email_not_confirmed'].includes(normalized) ? 'credentials_or_confirmation' :
-        response.status() === 401 && ['invalid_api_key', 'no_api_key'].includes(normalized) ? 'api_key_rejected' :
-        response.status() === 429 || normalized === 'over_request_rate_limit' ? 'rate_limited' :
-        response.status() >= 500 ? 'supabase_server_error' :
-        response.status() >= 400 ? 'request_rejected' :
-        response.ok() ? 'success' : 'unknown';
-      authApiDiagnostics.push({ status: response.status(), code, category });
-    } catch {
-      authApiDiagnostics.push({ status: 0, code: null, category: 'diagnostic_capture_error' });
-    }
+  page.on('response', response => {
+    if (!isAuthTokenRequest(response.url())) return;
+    const status = response.status();
+    const category =
+      status === 401 ? 'http_401_auth_rejected' :
+      status === 403 ? 'http_403_forbidden' :
+      status === 429 ? 'http_429_rate_limited' :
+      status >= 500 ? 'http_5xx_service_error' :
+      status >= 400 ? 'http_4xx_request_rejected' :
+      status >= 200 && status < 300 ? 'http_2xx_success' :
+      'http_other_status';
+    // Record status synchronously; do not wait for or persist the response body.
+    authApiDiagnostics.push({ status, category });
   });
   await page.getByRole('button', { name: 'Entrar', exact: true }).click();
   submitted = true;
@@ -158,7 +142,21 @@ test('auth diagnostic records safe form, visible error and session state', async
     };
   });
 
-  const result = { submitted, outcome, ...diagnostic, authApiDiagnostics, authNetworkDiagnostics };
+  let configuredSupabaseHost = 'unavailable';
+  try {
+    configuredSupabaseHost = new URL(process.env.VITE_SUPABASE_URL ?? '').host || 'missing_or_invalid';
+  } catch {
+    configuredSupabaseHost = process.env.VITE_SUPABASE_URL ? 'invalid_url' : 'missing';
+  }
+  const result = {
+    submitted,
+    outcome,
+    ...diagnostic,
+    configuredSupabaseHost,
+    authRequestObserved: authNetworkDiagnostics.some(event => event.event === 'request_started'),
+    authNetworkDiagnostics,
+    authApiDiagnostics,
+  };
   console.log('[AUTH-DIAGNOSTIC-SAFE]', JSON.stringify(result));
   await testInfo.attach('auth-diagnostic-safe.json', {
     body: JSON.stringify(result, null, 2),
