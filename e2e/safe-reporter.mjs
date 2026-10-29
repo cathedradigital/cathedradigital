@@ -3,7 +3,38 @@ import path from "node:path";
 
 const outputDir = path.resolve("safe-playwright-evidence");
 
-export function redactText(value) {
+export function classifyAuthError(value) {
+  const message = String(value ?? '').toLowerCase();
+  if (!message) return null;
+  if (message.includes('invalid login credentials') || message.includes('email ou senha incorretos')) return 'invalid_credentials';
+  if (message.includes('email not confirmed') || message.includes('email nao confirmado') || message.includes('email não confirmado')) return 'email_not_confirmed';
+  if (message.includes('too many requests') || message.includes('rate limit')) return 'rate_limited';
+  if (message.includes('fetch') || message.includes('network') || message.includes('failed to') || message.includes('timeout')) return 'network_or_timeout';
+  if (message.includes('supabase') || message.includes('api key') || message.includes('url')) return 'configuration_or_service';
+  return 'other_visible_auth_error';
+}
+
+function safeAuthDiagnostic(result) {
+  const attachment = result.attachments?.find((item) => item.name === 'auth-diagnostic-safe.json');
+  if (!attachment?.body) return undefined;
+  try {
+    const diagnostic = JSON.parse(Buffer.from(attachment.body).toString('utf8'));
+    return {
+      submitted: diagnostic.submitted === true,
+      outcome: ['destination', 'visible-error', null].includes(diagnostic.outcome) ? diagnostic.outcome : 'unknown',
+      pathname: typeof diagnostic.pathname === 'string' ? diagnostic.pathname.slice(0, 160) : null,
+      searchKeys: Array.isArray(diagnostic.searchKeys)
+        ? diagnostic.searchKeys.filter((key) => typeof key === 'string').slice(0, 12)
+        : [],
+      sessionPresent: diagnostic.sessionPresent === true,
+      visibleErrorCategory: classifyAuthError(diagnostic.visibleError),
+    };
+  } catch {
+    return { diagnosticAvailable: false };
+  }
+}
+
+function redactText(value) {
   let text = String(value ?? "");
   const secrets = [
     ["[REDACTED_EMAIL]", process.env.E2E_TEST_EMAIL],
@@ -57,6 +88,7 @@ export default class SafePlaywrightReporter {
             detail: safeErrorDetail,
           }
         : null,
+      authDiagnostic: safeAuthDiagnostic(result) ?? null,
     };
 
     this.tests.push(record);
