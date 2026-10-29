@@ -44,6 +44,23 @@ try {
         name: "AssertionError",
         message: `Failure for ${syntheticEmail}; password=${syntheticPassword}\nSensitive second line`,
       },
+      attachments: [{
+        name: "auth-diagnostic-safe.json",
+        body: Buffer.from(JSON.stringify({
+          submitted: true,
+          outcome: "visible-error",
+          pathname: "/auth",
+          searchKeys: ["next"],
+          sessionPresent: false,
+          visibleError: "Service unavailable",
+          authApiDiagnostics: [],
+          authNetworkDiagnostics: [{
+            event: "request_failed",
+            host: "api.example.supabase.co",
+            category: "dns_resolution_failed",
+          }],
+        })),
+      }],
     },
   );
   reporter.onEnd({ status: "failed" });
@@ -53,6 +70,8 @@ try {
   assert(!safeReport.includes(syntheticPassword), "password must be redacted");
   assert(safeReport.includes("[REDACTED_EMAIL]"), "redaction marker must be present");
   assert(safeReport.includes("password=[REDACTED_SECRET]"), "secret marker must be present");
+  assert(safeReport.includes('"authNetworkDiagnostics"'), "safe auth network diagnostics must be retained");
+  assert(safeReport.includes('"dns_resolution_failed"'), "network failure category must remain inspectable");
   assert(
     safeReport.includes("Sensitive second line"),
     "multiline error detail must remain inspectable",
