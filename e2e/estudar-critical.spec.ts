@@ -85,9 +85,21 @@ test('auth diagnostic records safe form, visible error and session state', async
   });
 
   expect(
-    outcome === 'destination' || outcome === 'visible-error' || diagnostic.sessionPresent,
-    'Login produced neither a destination, a visible form error, nor an authenticated session. See auth-diagnostic-safe.json.',
+    outcome,
+    'Login did not reach the requested protected destination. See auth-diagnostic-safe.json for the sanitized result.',
+  ).toBe('destination');
+  expect(
+    diagnostic.pathname,
+    'Login ended on the wrong route instead of the protected destination.',
+  ).toBe(destinationPath);
+  expect(
+    diagnostic.sessionPresent,
+    'The protected destination was reached without a Supabase session in localStorage.',
   ).toBeTruthy();
+  expect(
+    diagnostic.visibleError,
+    'The login form reported an authentication error.',
+  ).toBeNull();
 });
 
 test('auth redirect preserves protected destination', async ({ page }) => {
