@@ -54,11 +54,23 @@ try {
           sessionPresent: false,
           visibleError: "Service unavailable",
           authApiDiagnostics: [],
-          authNetworkDiagnostics: [{
-            event: "request_failed",
-            host: "api.example.supabase.co",
-            category: "dns_resolution_failed",
-          }],
+          authNetworkDiagnostics: [
+            {
+              event: "request_started",
+              host: "api.example.supabase.co",
+              category: "auth_token_request_started",
+            },
+            {
+              event: "request_finished",
+              host: "api.example.supabase.co",
+              category: "auth_token_request_finished_without_network_error",
+            },
+            {
+              event: "request_failed",
+              host: "api.example.supabase.co",
+              category: "dns_resolution_failed",
+            },
+          ],
         })),
       }],
     },
@@ -71,6 +83,8 @@ try {
   assert(safeReport.includes("[REDACTED_EMAIL]"), "redaction marker must be present");
   assert(safeReport.includes("password=[REDACTED_SECRET]"), "secret marker must be present");
   assert(safeReport.includes('"authNetworkDiagnostics"'), "safe auth network diagnostics must be retained");
+  assert(safeReport.includes('"request_started"'), "auth request start must remain inspectable");
+  assert(safeReport.includes('"request_finished"'), "auth request completion must remain inspectable");
   assert(safeReport.includes('"dns_resolution_failed"'), "network failure category must remain inspectable");
   assert(
     safeReport.includes("Sensitive second line"),
