@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
 
+const expectedProjectHost = "gpwrpmoniglarqwfyryp.supabase.co";
 const configuredUrl = process.env.VITE_SUPABASE_URL ?? "";
 assert(configuredUrl, "VITE_SUPABASE_URL must be set before build-host verification");
 
@@ -11,6 +12,7 @@ try {
   assert.equal(parsed.protocol, "https:", "Supabase URL must use HTTPS");
   assert.match(parsed.hostname, /^[a-z0-9-]+\.supabase\.co$/, "VITE_SUPABASE_URL must be a Supabase project URL");
   expectedHost = parsed.hostname;
+  assert.equal(expectedHost, expectedProjectHost, "VITE_SUPABASE_URL points to a different Supabase project than the approved project");
 } catch (error) {
   console.error("[supabase-build-host] Configured URL is invalid; URL and key values are never printed.");
   throw error;
