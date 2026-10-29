@@ -67,6 +67,16 @@ jobs:
           E2E_TEST_EMAIL: ${{ secrets.E2E_TEST_EMAIL }}
           E2E_TEST_PASSWORD: ${{ secrets.E2E_TEST_PASSWORD }}
 
+      - name: Prove successful authenticated login on desktop and mobile
+        run: >-
+          npx playwright test e2e/estudar-critical.spec.ts
+          --grep "auth diagnostic records safe form"
+          --project=chromium
+          --project=mobile-chrome
+        env:
+          E2E_TEST_EMAIL: ${{ secrets.E2E_TEST_EMAIL }}
+          E2E_TEST_PASSWORD: ${{ secrets.E2E_TEST_PASSWORD }}
+
       - name: Run complete Playwright suite
         run: npx playwright test
         env:
