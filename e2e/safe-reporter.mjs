@@ -28,6 +28,15 @@ function safeAuthDiagnostic(result) {
         : [],
       sessionPresent: diagnostic.sessionPresent === true,
       visibleErrorCategory: classifyAuthError(diagnostic.visibleError),
+      authApiDiagnostics: Array.isArray(diagnostic.authApiDiagnostics)
+        ? diagnostic.authApiDiagnostics.slice(0, 4).map((item) => ({
+            status: Number.isInteger(item?.status) ? item.status : 0,
+            code: typeof item?.code === "string" && /^[a-z0-9_]{1,48}$/.test(item.code) ? item.code : null,
+            category: typeof item?.category === "string" && /^[a-z0-9_]{1,48}$/.test(item.category)
+              ? item.category
+              : "unknown",
+          }))
+        : [],
     };
   } catch {
     return { diagnosticAvailable: false };
