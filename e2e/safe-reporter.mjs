@@ -39,7 +39,7 @@ function safeAuthDiagnostic(result) {
         : [],
       authNetworkDiagnostics: Array.isArray(diagnostic.authNetworkDiagnostics)
         ? diagnostic.authNetworkDiagnostics.slice(0, 8).map((item) => ({
-            event: ["request_started", "request_failed"].includes(item?.event) ? item.event : "unknown",
+            event: ["request_started", "request_finished", "request_failed"].includes(item?.event) ? item.event : "unknown",
             host: typeof item?.host === "string" && /^[a-z0-9.-]{1,253}$/i.test(item.host)
               ? item.host.toLowerCase()
               : "unavailable",
