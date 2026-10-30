@@ -21,7 +21,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "22.x"
-      - run: npm install --package-lock-only --ignore-scripts --no-audit --no-fund
+      - name: Apply non-breaking dependency security fixes to the lockfile
+        run: npm audit fix --package-lock-only --ignore-scripts --no-fund || true
       - name: Commit generated lockfile
         run: |
           git config user.name "github-actions[bot]"
