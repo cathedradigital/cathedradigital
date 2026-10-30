@@ -209,3 +209,12 @@ Nenhuma PR histórica foi fechada ou integrada nesta fase de investigação. Nã
 - A migration harden_bible_read_policies já está aplicada em produção sob a versão 20261003201821; a migration antiga da PR é redundante.
 - A PR tem CI, auditoria e E2E históricos falhos.
 - Decisão: não integrar código ou dados da Bíblia, conforme limite de escopo congelado; não executar sync/import. A migration de RLS já está coberta no banco. Encerrar como não aprovada para merge.
+
+### PR #179 — decisão técnica de encerramento
+
+- A PR altera Bible.tsx, useBibleNavigation e outros arquivos de navegação/caching da Bíblia; não integrar alterações de runtime da Bíblia, conforme congelamento.
+- A tentativa de corrigir o Nexus cache depende de uma chave/cache local nova (bible_cache_Gn_1) que não existe na implementação atual da main; não copiar teste que falha sem a implementação correspondente.
+- A PR adiciona workflow de Cloudflare Preview automático por push e usa Bun; não adotar preview deploy automático nem trocar package manager.
+- Os documentos de agente/skills desta PR são substituídos pelos contratos operacionais e pelo agente de encerramento já copiados para a release.
+- E2E histórico falhou em 48 casos no SHA antigo; parte das falhas era autenticação/URLs, agora tratada separadamente no release, mas o restante do teste depende de alterações bíblicas não autorizadas.
+- Decisão: não integrar o snapshot; encerrar como não aprovado para merge por violar limites da Bíblia e da publicação.
