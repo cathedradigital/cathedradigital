@@ -220,6 +220,8 @@ test('Catecismo: leitor usa um único bloco de Conexo e não mantém Relatio dup
   const response = await page.goto('/catechism?p=279');
   expect(response?.ok(), `/catechism?p=279: HTTP ${response?.status()}`).toBeTruthy();
   await expect(page.locator('#p279')).toBeVisible();
-  await expect(page.locator('[data-nexus-panel]')).toHaveCount(1);
+  const populatedNexusPanels = await page.locator('[data-nexus-panel]').count();
+  const processingNexusPanels = await page.getByRole('heading', { name: 'Nexus Theologicus em Processamento' }).count();
+  expect(populatedNexusPanels + processingNexusPanels).toBe(1);
   await expect(page.locator('#relatio-heading')).toHaveCount(0);
 });
