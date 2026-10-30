@@ -329,6 +329,11 @@ const ReadingJournal: React.FC = () => {
                           if (paragraphIndex !== undefined && /^\d+$/.test(paragraphIndex)) {
                             params.set('p', paragraphIndex);
                             url += `?${params.toString()}`;
+                          } else if (note.paragraph && Number.isInteger(Number(note.paragraph)) && Number(note.paragraph) > 0) {
+                            // Legacy notes store the document ID in content_id and a 1-based
+                            // paragraph in the paragraph column; the reader URL is 0-based.
+                            params.set('p', String(Number(note.paragraph) - 1));
+                            url += `?${params.toString()}`;
                           }
                         } else if (note.content_type === 'saint' && note.content_id) {
                           url = `/santos/${encodeURIComponent(note.content_id)}`;
