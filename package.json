@@ -127,5 +127,6 @@
   },
   "overrides": {
     "@modelcontextprotocol/sdk": "^1.32.2"
-  }
+  },
+  "packageManager": "npm@10.9.9"
 }
