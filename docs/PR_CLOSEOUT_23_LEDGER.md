@@ -155,3 +155,13 @@ Nenhuma PR histórica foi fechada ou integrada nesta fase de investigação. Nã
 - O índice parcial de leitura (um is_last_read por usuário) ainda não existe no banco. A tabela tem 1 linha e zero duplicatas; o índice é uma melhoria válida, mas precisa de migration nova gerada pelo fluxo Supabase correto, com teste e revisão. Não aplicar DDL de produção nem inventar versão de migration nesta rodada.
 - O workflow Node.js CI da PR #1 falha com 49.725 erros Prettier/ESLint e a branch troca npm por Bun, incompatível com o release atual.
 - A PR #1 será encerrada como substituída/ parcialmente preservada: documento integrado, RLS já garantida no banco, hook de favoritos rejeitado por depender de tabela inexistente, índice parcial registrado como pendência técnica explícita.
+
+### PR #2 — decisão técnica de encerramento
+
+- A PR contém 486 arquivos e 57 commits à frente de uma base com 810 commits de atraso/divergência em relação à main atual; não é uma unidade segura de merge.
+- CI histórico falhou com 18 erros e 177 avisos, incluindo Rules of Hooks, imports proibidos e expressões inválidas.
+- O documento de auditoria de 15/09 já existe na main; as migrações de perfil/premium e permissões RLS foram reaplicadas/aplicadas sob versões posteriores e registradas na release #215.
+- O projeto ativo não possui public.user_sensitive_data. telemetry_settings contém somente a chave thresholds; a leitura pública é consumida por Telemetry.init() para carregar limites operacionais, enquanto alterações ficam restritas pela política admin. Não remover a leitura pública sem substituir esse contrato.
+- A sobrecarga enum de auth_internal.has_role usada pela política admin existe em produção e está correta; a sobrecarga text/is_admin antiga não é usada pelas políticas atuais consultadas.
+- Nenhum merge integral dos 486 arquivos será feito. O restante do snapshot antigo (funções, seeds e testes) não foi validado individualmente contra a arquitetura atual e não será restaurado em bloco.
+- Decisão: encerrar como snapshot obsoleto/reprovado para merge, preservando a documentação de auditoria já presente na main e mantendo os controles de produção atuais. Não declarar que todo o código da branch foi integrado.
