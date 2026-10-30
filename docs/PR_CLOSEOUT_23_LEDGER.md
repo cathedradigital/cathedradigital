@@ -70,3 +70,32 @@ Fora do lote: **#215** (release principal) e **#217** (instalação do agente). 
 - [ ] Domínios oficiais, Worker, robots.txt e sitemap.xml verificados em produção.
 
 Nenhuma PR histórica foi fechada ou integrada nesta fase de investigação. Não marcar qualquer item como concluído sem SHA e URL de evidência.
+
+## Evidências adicionais — CI e Supabase de produção
+
+### CI histórico consultado nos SHAs das PRs
+
+| PR | Workflow | Resultado | Diagnóstico observado |
+|---:|---|---|---|
+| #1 | Node.js CI | Falhou | ESLint/Prettier: 49.725 erros e 165 avisos; branch troca npm por Bun e não é compatível com o pipeline npm atual |
+| #2 | Node.js CI | Falhou | ESLint: 18 erros e 177 avisos, incluindo Rules of Hooks e no-require-imports |
+| #4 | Node.js CI | Falhou | ESLint: 1.068 erros e 159 avisos; adiciona também workflow e script específicos de Vercel, incompatíveis com a arquitetura atual |
+| #8 | CI | Passou | A comparação com main mostra a remoção dos artefatos antigos `public/cathedra.zip`, relatórios HTML/MD/PDF e JSON de indexação; alterações visuais ainda precisam ser comparadas ao estado atual |
+| #26 | CI | Falhou | TypeScript em `src/services/corpusService.ts`: schema generated não reconhece colunas/relations de corpus; Vercel falhou por rate limit de build, não é evidência Cloudflare |
+
+### Verificação direta do projeto Supabase ativo
+
+- `list_projects` confirmou exatamente um projeto: `isojguvcnfncokoxoauk`, nome `cathedradigital`, estado `ACTIVE_HEALTHY`, PostgreSQL 17, região `sa-east-1`.
+- Consulta de catálogo em produção confirmou RLS ativo e política owner-scoped `notifications_own` para todas as operações, com `auth.uid() = user_id` em USING e WITH CHECK.
+- A mesma consulta confirmou RLS ativo e política owner-scoped `reading_marks_own` para todas as operações, com USING e WITH CHECK por `auth.uid() = user_id`.
+- A tabela `public.bible_favorites` não existe no projeto ativo (consulta ao catálogo retornou zero linhas). A migration da PR #1 pula a criação quando a tabela não existe, mas o hook proposto passa a consultar/inserir nessa tabela para usuários autenticados. Integrar esse hook isoladamente quebraria favoritos autenticados e ocultaria os favoritos locais existentes.
+- Não executar migrations de produção para tentar fazer o hook funcionar sem antes definir schema, migração de dados, RLS, unicidade, testes e compatibilidade com `useDevotionalFavorites`.
+
+### Consequências para a triagem
+
+- PR #1: a política de notifications e reading_marks já está coberta no banco ativo; a parte de favoritos depende de tabela inexistente e exige redesenho/migração antes de ser aproveitada. Não fazer merge integral.
+- PR #2: o escopo de 486 arquivos e o CI falho impedem merge integral. Separar migrations/testes realmente exclusivos depois de comparar com o estado do banco e com as migrations já aplicadas.
+- PR #4: o pipeline npm já é o padrão atual e #215 traz npm 10.9.9/lockfile; não importar o workflow Vercel.
+- PR #8: a remoção de artefatos públicos é útil e a comparação indica que o PR remove os arquivos; verificar quais alterações visuais continuam ausentes antes de encerrar.
+- PR #26: a alteração de UX não pode ser integrada até resolver os erros de tipos e demonstrar que os arquivos continuam compatíveis com a arquitetura atual.
+
