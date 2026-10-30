@@ -321,3 +321,22 @@ test('Magistério: filtros de tema são acessíveis e alternam sem overlays', as
   await expect(firstTheme).toHaveAttribute('aria-pressed', before ?? 'false');
   expect(errors, 'Magisterium theme filters: console errors').toEqual([]);
 });
+
+test('SEO: robots e sitemap preservam rotas públicas e excluem rotas privadas/duplicadas', async ({ page }) => {
+  const robotsResponse = await page.request.get('/robots.txt');
+  expect(robotsResponse.ok()).toBeTruthy();
+  const robots = await robotsResponse.text();
+  expect(robots).toContain('Disallow: /admin');
+  expect(robots).toContain('Disallow: /auth');
+  expect(robots).toContain('Disallow: /hoje');
+  expect(robots).not.toContain('Disallow: /sobre');
+
+  const sitemapResponse = await page.request.get('/sitemap.xml');
+  expect(sitemapResponse.ok()).toBeTruthy();
+  const sitemap = await sitemapResponse.text();
+  expect(sitemap).toContain('https://www.cathedradigital.com.br/calendar');
+  expect(sitemap).toContain('https://www.cathedradigital.com.br/bible');
+  expect(sitemap).toContain('https://www.cathedradigital.com.br/catechism');
+  expect(sitemap).not.toContain('?');
+  expect(sitemap).not.toContain('/igreja');
+});
