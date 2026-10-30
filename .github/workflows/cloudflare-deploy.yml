@@ -1,57 +1,68 @@
 name: Deploy Cloudflare
 
 on:
-  push:
-    branches: ["main"]
+  # Publicação deliberadamente manual: nenhum push/merge publica produção sozinho.
   workflow_dispatch:
 
 concurrency:
   group: cloudflare-production
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
-  deploy:
+  validate:
+    name: Validate candidate (build, security and authenticated E2E)
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 90
     permissions:
       contents: read
-
+    env:
+      VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+      VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY }}
+      SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+      SUPABASE_PUBLISHABLE_KEY: ${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v6
-
-      - name: Verify Cloudflare credentials
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      - name: Require main as the release source
+        shell: bash
         run: |
-          test -n "$CLOUDFLARE_API_TOKEN" || { echo "::error::Missing GitHub secret CLOUDFLARE_API_TOKEN"; exit 1; }
-          test -n "$CLOUDFLARE_ACCOUNT_ID" || { echo "::error::Missing GitHub secret CLOUDFLARE_ACCOUNT_ID"; exit 1; }
+          test "$GITHUB_REF" = "refs/heads/main" || {
+            echo "::error::Production release can only be dispatched from main."
+            exit 1
+          }
+
+      - name: Checkout exact production candidate
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.sha }}
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: "22.x"
 
-      - name: Install dependencies
-        run: npm install
-
-      - name: Validate Cloudflare authorization
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-        run: npx wrangler whoami --account "$CLOUDFLARE_ACCOUNT_ID"
-      - name: Inspect public DNS
+      - name: Verify Supabase project configuration without exposing keys
         shell: bash
         run: |
           set -euo pipefail
-          for name in cathedradigital.com.br www.cathedradigital.com.br cathedradigital.cathedradigital.workers.dev; do
-            echo "=== DNS $name ==="
-            for type in A AAAA CNAME NS; do
-              echo "-- $type"
-              curl --fail --silent --show-error --connect-timeout 10 --max-time 20 "https://dns.google/resolve?name=$name&type=$type" | jq '{Status,Answer}'
-            done
-          done
+          test -n "$VITE_SUPABASE_URL" || { echo "::error::Missing VITE_SUPABASE_URL"; exit 1; }
+          test -n "$VITE_SUPABASE_PUBLISHABLE_KEY" || { echo "::error::Missing VITE_SUPABASE_PUBLISHABLE_KEY"; exit 1; }
+          test "$VITE_SUPABASE_URL" = "$SUPABASE_URL" || { echo "::error::Client and server Supabase URLs differ"; exit 1; }
+          test "$VITE_SUPABASE_PUBLISHABLE_KEY" = "$SUPABASE_PUBLISHABLE_KEY" || { echo "::error::Client and server publishable keys differ"; exit 1; }
+          configured_host="$(node -e 'const u = new URL(process.env.VITE_SUPABASE_URL); if (u.protocol !== "https:") process.exit(2); process.stdout.write(u.hostname)')"
+          echo "Configured Supabase host: $configured_host"
+          case "$configured_host" in
+            isojguvcnfncokoxoauk.supabase.co)
+              echo "Supabase project host matches the approved single project."
+              ;;
+            *)
+              echo "::error::Supabase host does not match the approved Cátedra Digital project."
+              exit 1
+              ;;
+          esac
+
+      - name: Install dependencies
+        id: install
+        run: npm ci --no-audit --no-fund
+
       - name: Typecheck
         run: npm run typecheck
 
@@ -61,8 +72,185 @@ jobs:
       - name: Validate internal routes
         run: npm run validate:links
 
-      - name: Build
+      - name: Build exact candidate
         run: npm run build
+
+      - name: Verify authenticated E2E account configuration
+        shell: bash
+        env:
+          E2E_TEST_EMAIL: ${{ secrets.E2E_TEST_EMAIL }}
+          E2E_TEST_PASSWORD: ${{ secrets.E2E_TEST_PASSWORD }}
+        run: |
+          test -n "$E2E_TEST_EMAIL" || { echo "::error::Missing E2E_TEST_EMAIL"; exit 1; }
+          test -n "$E2E_TEST_PASSWORD" || { echo "::error::Missing E2E_TEST_PASSWORD"; exit 1; }
+          echo "E2E credentials are present; values are never printed."
+
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Run critical authenticated Playwright suite (desktop and mobile)
+        run: npx playwright test e2e/estudar-critical.spec.ts
+        env:
+          E2E_TEST_EMAIL: ${{ secrets.E2E_TEST_EMAIL }}
+          E2E_TEST_PASSWORD: ${{ secrets.E2E_TEST_PASSWORD }}
+
+      - name: Audit dependencies and enforce high/critical gate
+        if: always() && steps.install.outcome == 'success'
+        shell: bash
+        run: |
+          set +e
+          npm audit --json > npm-audit.json
+          audit_exit=$?
+          set -e
+          if ! node -e 'const fs=require("node:fs"); const a=JSON.parse(fs.readFileSync("npm-audit.json","utf8")); const v=Object.values(a.vulnerabilities||{}); const counts={low:0,moderate:0,high:0,critical:0}; for (const x of v) counts[x.severity]=(counts[x.severity]||0)+1; console.log(JSON.stringify({counts,total:v.length},null,2)); if (counts.high+counts.critical>0) process.exit(2);'; then
+            echo "::error::Dependency audit has high/critical vulnerabilities or could not be parsed."
+            exit 1
+          fi
+          echo "npm audit command exit code: $audit_exit (moderate/low findings do not bypass the high/critical gate)."
+
+      - name: Upload validation evidence
+        if: always()
+        uses: actions/upload-artifact@v5
+        with:
+          name: cathedra-validation-evidence-${{ github.sha }}
+          path: |
+            npm-audit.json
+            safe-playwright-evidence/report.json
+          if-no-files-found: warn
+          retention-days: 14
+
+  production-preflight:
+    name: Capture pre-deploy baseline (informational only)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    steps:
+      - name: Capture production HTTP baseline (informational; strict verification is post-deploy)
+        shell: bash
+        run: |
+          set -uo pipefail
+          mkdir -p production-evidence
+          evidence="production-evidence/preflight.txt"
+          : > "$evidence"
+
+          probe() {
+            local label="$1"
+            local url="$2"
+            local min_bytes="$3"
+            local body headers meta status effective bytes curl_rc
+            body="$(mktemp)"
+            headers="$(mktemp)"
+            set +e
+            meta="$(curl --silent --show-error --location --connect-timeout 10 --max-time 30 \
+              --dump-header "$headers" --output "$body" \
+              --write-out '%{http_code}\n%{url_effective}' "$url" 2>&1)"
+            curl_rc=$?
+            set -e
+            status="$(printf '%s\n' "$meta" | sed -n '1p')"
+            effective="$(printf '%s\n' "$meta" | sed -n '2p')"
+            bytes="$(wc -c < "$body" | tr -d ' ')"
+            {
+              echo "[$label]"
+              echo "requested_url=$url"
+              echo "effective_url=$effective"
+              echo "http_status=$status"
+              echo "curl_exit=$curl_rc"
+              echo "body_bytes=$bytes"
+              echo "body_sha256=$(sha256sum "$body" | cut -d ' ' -f1)"
+              echo "response_headers_allowlist:"
+              grep -Eai '^(HTTP/|server:|cf-ray:|cf-cache-status:|location:|content-type:)' "$headers" | tail -n 12 || true
+              echo
+            } >> "$evidence"
+            if [ "$curl_rc" -ne 0 ] || [ "$status" != "200" ] || [ "$bytes" -lt "$min_bytes" ]; then
+              echo "::warning::$label failed: HTTP $status, $bytes bytes (curl exit $curl_rc)"
+            else
+              echo "PASS $label: HTTP 200, $bytes bytes"
+            fi
+            case "$label" in
+              apex|www|worker)
+                if ! grep -Eiq 'Cátedra Digital|Cathedra Digital' "$body"; then
+                  echo "::warning::$label returned HTTP 200 but does not look like the Cátedra Digital site."
+                fi
+                ;;
+              robots-*)
+                if ! grep -Eiq '^[[:space:]]*User-agent:' "$body"; then
+                  echo "::warning::$label does not contain a robots User-agent directive."
+                fi
+                ;;
+              sitemap-*)
+                if ! grep -Eiq '<(urlset|sitemapindex)([[:space:]>])' "$body"; then
+                  echo "::warning::$label does not contain a sitemap XML root."
+                fi
+                ;;
+            esac
+            case "$label:$effective" in
+              apex:https://cathedradigital.com.br/*|apex:https://www.cathedradigital.com.br/*|www:https://www.cathedradigital.com.br/*|www:https://cathedradigital.com.br/*|worker:https://cathedradigital.cathedradigital.workers.dev/*) ;;
+              apex:*|www:*|worker:*)
+                echo "::warning::$label redirected outside the expected production domains: $effective"
+                ;;
+            esac
+            rm -f "$body" "$headers"
+          }
+
+          probe apex "https://cathedradigital.com.br/" 100
+          probe www "https://www.cathedradigital.com.br/" 100
+          probe worker "https://cathedradigital.cathedradigital.workers.dev/" 100
+          probe robots-apex "https://cathedradigital.com.br/robots.txt" 1
+          probe sitemap-apex "https://cathedradigital.com.br/sitemap.xml" 1
+          probe robots-www "https://www.cathedradigital.com.br/robots.txt" 1
+          probe sitemap-www "https://www.cathedradigital.com.br/sitemap.xml" 1
+
+          echo "Pre-deploy baseline captured. Strict HTTP 200 verification runs after deployment."
+
+      - name: Upload production preflight evidence
+        if: always()
+        uses: actions/upload-artifact@v5
+        with:
+          name: cathedra-production-preflight-${{ github.sha }}
+          path: production-evidence/
+          if-no-files-found: warn
+          retention-days: 14
+
+  deploy:
+    name: Publish and verify Cloudflare Worker
+    needs: [validate]
+    if: github.ref == 'refs/heads/main' && needs.validate.result == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    permissions:
+      contents: read
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+      VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY }}
+      SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+      SUPABASE_PUBLISHABLE_KEY: ${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY }}
+    steps:
+      - name: Checkout exact validated candidate
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.sha }}
+
+      - name: Verify Cloudflare credentials are present
+        shell: bash
+        run: |
+          test -n "$CLOUDFLARE_API_TOKEN" || { echo "::error::Missing CLOUDFLARE_API_TOKEN"; exit 1; }
+          test -n "$CLOUDFLARE_ACCOUNT_ID" || { echo "::error::Missing CLOUDFLARE_ACCOUNT_ID"; exit 1; }
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22.x"
+
+      - name: Install dependencies and rebuild exact SHA
+        run: |
+          npm ci --no-audit --no-fund
+          npm run build
+
+      - name: Validate Cloudflare authorization
+        run: npx wrangler whoami --account "$CLOUDFLARE_ACCOUNT_ID"
 
       - name: Deploy Worker
         uses: cloudflare/wrangler-action@v4
@@ -70,38 +258,66 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: deploy
-      - name: Validate production endpoints
+
+      - name: Verify production after deployment
         shell: bash
         run: |
-          set -euo pipefail
-          endpoints=(
-            "https://cathedradigital.com.br"
-            "https://www.cathedradigital.com.br"
-            "https://cathedradigital.cathedradigital.workers.dev"
-          )
-          for url in "${endpoints[@]}"; do
-            echo "Checking $url"
-            body_file="$(mktemp)"
-            status="$(curl --silent --show-error --location --retry 2 --retry-all-errors --connect-timeout 10 --max-time 30 --output "$body_file" --write-out "%{http_code}" "$url" || true)"
-            size="$(wc -c < "$body_file")"
-            rm -f "$body_file"
-
+          set -uo pipefail
+          mkdir -p production-evidence
+          evidence="production-evidence/post-deploy.txt"
+          : > "$evidence"
+          failed=0
+          for url in \
+            "https://cathedradigital.com.br/" \
+            "https://www.cathedradigital.com.br/" \
+            "https://cathedradigital.cathedradigital.workers.dev/" \
+            "https://cathedradigital.com.br/robots.txt" \
+            "https://cathedradigital.com.br/sitemap.xml" \
+            "https://www.cathedradigital.com.br/robots.txt" \
+            "https://www.cathedradigital.com.br/sitemap.xml"; do
+            body="$(mktemp)"
+            headers="$(mktemp)"
+            set +e
+            status="$(curl --silent --show-error --location --connect-timeout 10 --max-time 30 \
+              --dump-header "$headers" --output "$body" --write-out '%{http_code}' "$url")"
+            curl_rc=$?
+            set -e
+            bytes="$(wc -c < "$body" | tr -d ' ')"
+            {
+              echo "url=$url"
+              echo "http_status=$status"
+              echo "curl_exit=$curl_rc"
+              echo "body_bytes=$bytes"
+              echo "body_sha256=$(sha256sum "$body" | cut -d ' ' -f1)"
+              grep -Eai '^(HTTP/|server:|cf-ray:|cf-cache-status:|location:|content-type:)' "$headers" | tail -n 12 || true
+              echo
+            } >> "$evidence"
+            if [ "$curl_rc" -ne 0 ] || [ "$status" != "200" ] || [ "$bytes" -lt 1 ]; then
+              echo "::error::Post-deploy verification failed for $url (HTTP $status, $bytes bytes)"
+              failed=1
+            else
+              echo "PASS $url: HTTP 200, $bytes bytes"
+            fi
             case "$url" in
-              *workers.dev)
-                test "$status" = "200"
-                test "$size" -gt 100
-                echo "OK $url -> HTTP $status ($size bytes)"
+              */robots.txt)
+                grep -Eiq '^[[:space:]]*User-agent:' "$body" || { echo "::error::Invalid robots.txt response: $url"; failed=1; }
                 ;;
-              *)
-                if [ "$status" = "200" ]; then
-                  test "$size" -gt 100
-                  echo "OK $url -> HTTP $status ($size bytes)"
-                elif [ "$status" = "403" ]; then
-                  echo "REACHABLE $url -> HTTP 403 (custom-domain protection; deployment is live)"
-                else
-                  echo "::error::$url returned unexpected HTTP $status"
-                  exit 1
-                fi
+              */sitemap.xml)
+                grep -Eiq '<(urlset|sitemapindex)([[:space:]>])' "$body" || { echo "::error::Invalid sitemap.xml response: $url"; failed=1; }
+                ;;
+              */)
+                grep -Eiq 'Cátedra Digital|Cathedra Digital' "$body" || { echo "::error::HTTP 200 did not contain the Cátedra Digital site: $url"; failed=1; }
                 ;;
             esac
+            rm -f "$body" "$headers"
           done
+          test "$failed" -eq 0
+
+      - name: Upload post-deployment evidence
+        if: always()
+        uses: actions/upload-artifact@v5
+        with:
+          name: cathedra-post-deploy-evidence-${{ github.sha }}
+          path: production-evidence/
+          if-no-files-found: warn
+          retention-days: 14

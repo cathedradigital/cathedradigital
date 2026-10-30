@@ -76,40 +76,47 @@ async function fetchDocument(url: URL) {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
   try {
-    const response = await fetch(url, {
-      signal: controller.signal,
-      redirect: "follow",
-      headers: {
-        "Accept": "text/html,application/xhtml+xml",
-        "Accept-Language": "pt-BR,pt;q=0.9,en;q=0.5",
-        "User-Agent": "CathedraDigital/1.0 (magisterium reader)",
-      },
-    });
-
+    let currentUrl = new URL(url.toString());
+    let response: Response | null = null;
+    // Follow redirects manually and revalidate every hop; never leave the Vatican allowlist.
+    for (let hop = 0; hop <= 5; hop += 1) {
+      if (currentUrl.protocol !== "https:" || !ALLOWED_HOSTS.has(currentUrl.hostname)) {
+        return { ok: false, status: 403, reason: "Redirecionamento para domínio não autorizado." };
+      }
+      response = await fetch(currentUrl, {
+        signal: controller.signal,
+        redirect: "manual",
+        headers: {
+          "Accept": "text/html,application/xhtml+xml",
+          "Accept-Language": "pt-BR,pt;q=0.9,en;q=0.5",
+          "User-Agent": "CathedraDigital/1.0 (magisterium reader)",
+        },
+      });
+      if (![301, 302, 303, 307, 308].includes(response.status)) break;
+      const location = response.headers.get("location");
+      if (!location) return { ok: false, status: 502, reason: "Redirecionamento sem destino." };
+      if (hop === 5) return { ok: false, status: 502, reason: "Limite de redirecionamentos excedido." };
+      try {
+        currentUrl = new URL(location, currentUrl);
+      } catch {
+        return { ok: false, status: 502, reason: "Destino de redirecionamento inválido." };
+      }
+    }
+    if (!response) return { ok: false, status: 502, reason: "A fonte não retornou resposta." };
     const contentType = response.headers.get("content-type") ?? "";
     const body = await response.text();
     const bytes = new TextEncoder().encode(body).byteLength;
-
-    if (!response.ok) {
-      return { ok: false, status: response.status, reason: `HTTP ${response.status}` };
-    }
-    if (bytes > MAX_HTML_BYTES) {
-      return { ok: false, status: 413, reason: "Documento excede o limite de leitura." };
-    }
-    if (!contentType.includes("html")) {
-      return { ok: false, status: 415, reason: `Formato não suportado: ${contentType || "desconhecido"}` };
-    }
-
+    if (!response.ok) return { ok: false, status: response.status, reason: `HTTP ${response.status}` };
+    if (bytes > MAX_HTML_BYTES) return { ok: false, status: 413, reason: "Documento excede o limite de leitura." };
+    if (!contentType.includes("html")) return { ok: false, status: 415, reason: `Formato não suportado: ${contentType || "desconhecido"}` };
     const text = extractText(body);
-    if (text.length < MIN_TEXT_LENGTH) {
-      return { ok: false, status: 422, reason: `Conteúdo legível insuficiente (${text.length} caracteres).` };
-    }
-
+    if (text.length < MIN_TEXT_LENGTH) return { ok: false, status: 422, reason: `Conteúdo legível insuficiente (${text.length} caracteres).` };
     return {
       ok: true,
       status: response.status,
-      title: extractTitle(body, url.pathname.split("/").pop() || "Documento do Magistério"),
+      title: extractTitle(body, currentUrl.pathname.split("/").pop() || "Documento do Magistério"),
       text,
+      finalUrl: currentUrl.toString(),
     };
   } finally {
     clearTimeout(timeout);
@@ -146,7 +153,7 @@ Deno.serve(async (req: Request) => {
             meta: {
               step: "fetch_ok",
               content_length: result.text.length,
-              winning_url: candidate,
+              winning_url: result.finalUrl,
               attempts,
               correlation,
             },

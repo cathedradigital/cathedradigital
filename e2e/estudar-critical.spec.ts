@@ -12,8 +12,8 @@ async function login(page: Page, destination: string) {
   await page.getByLabel('Email').fill(email!);
   await page.getByLabel('Senha').fill(password!);
   await page.getByRole('button', { name: 'Entrar', exact: true }).click();
-  const destinationPath = destination.split('?')[0];
-  await expect(page).toHaveURL(url => url.pathname === destinationPath);
+  const expected = new URL(destination, page.url());
+  await expect(page).toHaveURL(url => url.pathname + url.search + url.hash === expected.pathname + expected.search + expected.hash, { timeout: 15000 });
 }
 
 function watchBrowserHealth(page: Page) {
@@ -39,11 +39,23 @@ async function openStudyJournal(page: Page, marker: string) {
   return note;
 }
 
+test('mobile module carousel opens canonical environments', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/');
+  const carousel = page.getByTestId('mobile-module-carousel');
+  await expect(carousel).toBeVisible();
+  const estudar = carousel.getByRole('button', { name: 'Abrir módulo Estudar' });
+  await estudar.click();
+  await expect(page).toHaveURL(/\/estudar$/);
+  await expect(estudar).toHaveAttribute('aria-current', 'page');
+});
+
 test('auth redirect preserves protected destination', async ({ page }) => {
   await page.context().clearCookies();
+  await page.addInitScript(() => localStorage.clear());
   await page.goto('/diario');
   await expect(page).toHaveURL(/\/auth\?next=/);
-  expect(new URL(page.url()).searchParams.get('next')).toContain('diario');
+  expect(new URL(page.url()).searchParams.get('next')).toBe('/diario');
 });
 
 test('Bíblia: anotação → Diário → retorno exato ao versículo', async ({ page }) => {

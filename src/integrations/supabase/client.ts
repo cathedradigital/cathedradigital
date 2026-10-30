@@ -28,12 +28,35 @@ function createSupabaseFetch(supabaseKey: string): typeof fetch {
 }
 
 
+function normalizeSupabaseProjectUrl(rawUrl: string): string {
+  const url = new URL(rawUrl);
+
+  if (url.search || url.hash) {
+    throw new Error('Supabase project URL must not contain a query string or fragment.');
+  }
+
+  const path = url.pathname.replace(new RegExp('/+$'), '');
+  if (path === '/rest/v1') {
+    // createClient expects the project root and appends /auth/v1 and /rest/v1
+    // itself. Some CI secrets were stored as the REST endpoint, causing
+    // authentication requests to become /rest/v1/auth/v1/token (404).
+    url.pathname = '';
+  } else if (path !== '') {
+    throw new Error(
+      `Invalid Supabase project URL path "${url.pathname}". Use the project root URL, not a service endpoint.`,
+    );
+  }
+
+  return url.toString().replace(new RegExp('/+$'), '');
+}
+
 function createSupabaseClient() {
   // Use import.meta.env for client-side (Vite build-time replacement)
   // Fall back to process.env for SSR (server-side rendering)
   // Valores vazios caem no fallback público (ver publicConfig.ts).
-  const SUPABASE_URL =
+  const rawSupabaseUrl =
     import.meta.env['VITE_SUPABASE_URL'] || process.env['SUPABASE_URL'] || PUBLIC_SUPABASE_URL;
+  const SUPABASE_URL = normalizeSupabaseProjectUrl(rawSupabaseUrl);
   const SUPABASE_PUBLISHABLE_KEY =
     import.meta.env['VITE_SUPABASE_PUBLISHABLE_KEY'] ||
     process.env['SUPABASE_PUBLISHABLE_KEY'] ||

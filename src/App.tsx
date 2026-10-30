@@ -5,6 +5,7 @@ import { HelmetProvider } from '@/lib/helmet-compat';
 import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation, useParams } from '@/lib/rr-compat';
 import { resolveSpaceForPath } from '@/lib/spaces/resolveSpace';
 import { MODULE_NAVIGATION } from '@/config/moduleNavigation';
+import { MobileModuleCarousel } from './components/mobile/MobileModuleCarousel';
 
 import { AnimatePresence, motion, MotionConfig } from 'framer-motion';
 import { QueryClient } from '@tanstack/react-query';
@@ -633,13 +634,15 @@ const AppLayout: React.FC = () => {
           <WelcomeFirstAccess />
         </Suspense>
 
+        <MobileModuleCarousel />
+
         {/* Arquitetura estabilizada: Layout único, Card único, Navegação única e Tema único. */}
 
         <main
           id="main-content"
           ref={mainContentRef}
           tabIndex={-1}
-          className="outline-none catedra-module-shell"
+          className={`outline-none catedra-module-shell ${!location.pathname.startsWith('/bible') && !location.pathname.startsWith('/prototype-2.0') ? 'pb-[calc(5rem+env(safe-area-inset-bottom,0px))] md:pb-0' : ''}`}
           data-space={resolveSpaceForPath(location.pathname) ?? undefined}
           data-catedra-module={activeModule?.key ?? undefined}
           style={activeModule ? {
