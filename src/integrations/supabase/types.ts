@@ -130,6 +130,42 @@ export type Database = {
         }
         Relationships: []
       }
+      bible_favorites: {
+        Row: {
+          content: string | null
+          content_id: string
+          content_type: string
+          created_at: string
+          id: string
+          metadata: Json
+          title: string | null
+          url: string | null
+          user_id: string
+        }
+        Insert: {
+          content?: string | null
+          content_id: string
+          content_type: string
+          created_at?: string
+          id?: string
+          metadata?: Json
+          title?: string | null
+          url?: string | null
+          user_id: string
+        }
+        Update: {
+          content?: string | null
+          content_id?: string
+          content_type?: string
+          created_at?: string
+          id?: string
+          metadata?: Json
+          title?: string | null
+          url?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       bible_verses: {
         Row: {
           chapter_id: string
