@@ -201,3 +201,11 @@ Nenhuma PR histórica foi fechada ou integrada nesta fase de investigação. Nã
 - O workflow estudar-validation.yml desta PR é redundante em relação aos workflows atuais de CI/auditoria/E2E.
 - O PR tem CI e Estudar validation verdes no SHA antigo, mas mergeability false e sobreposição de arquivos com branches posteriores.
 - Decisão: conteúdo de runtime já substituído na main; não copiar branch antiga. Encerrar como supersedida.
+
+### PR #117 — decisão técnica de encerramento
+
+- Todos os arquivos de runtime alterados são do domínio Bíblia/Catecismo: Bible.tsx, BibleSearch, BibleReadGate, BiblePickerSheet, ReaderToolbar, RouteRegistry, useBibleNavigation, bibleCanon, adapters/searchers da biblioteca, Catechism.tsx, AtriumBibleReader e Edge Function bible-search.
+- O script sync-official-sources.mjs executa importação de conteúdo bíblico/catequético em lotes; não executar nem integrar sem uma validação de dados e autorização específica.
+- A migration harden_bible_read_policies já está aplicada em produção sob a versão 20261003201821; a migration antiga da PR é redundante.
+- A PR tem CI, auditoria e E2E históricos falhos.
+- Decisão: não integrar código ou dados da Bíblia, conforme limite de escopo congelado; não executar sync/import. A migration de RLS já está coberta no banco. Encerrar como não aprovada para merge.
