@@ -132,7 +132,7 @@
     "@lovable.dev/mcp-js": {
       "esbuild": "^0.28.2"
     },
-    "esbuild": "^0.28.2"
+    "esbuild": "0.28.2"
   },
   "packageManager": "npm@10.9.9"
 }
