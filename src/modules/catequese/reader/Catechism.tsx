@@ -537,7 +537,8 @@ const Catechism: React.FC = memo(() => {
 
   // Explicit ?p=N deep-links temporarily outrank the generic IntersectionObserver.
   // This prevents restoration from being overwritten by the first visible paragraph.
-  const deepLinkRestorePendingRef = useRef(false);
+  const deepLinkRestorePendingRef = useRef(typeof initialParagraph === 'number');
+  const deepLinkTargetRef = useRef<number | null>(typeof initialParagraph === 'number' ? initialParagraph : null);
 
   // O parágrafo ativo é o ponto de continuidade do Catecismo.
   useEffect(() => {
@@ -609,11 +610,20 @@ const Catechism: React.FC = memo(() => {
   // R1.2.3 — restaura o parágrafo exato do deep-link depois que a seção foi renderizada.
   // Isso fecha o retorno do Diário mesmo quando o Catecismo já está montado.
   useEffect(() => {
-    if (typeof initialParagraph !== 'number' || viewMode !== 'reading' || !selectedSection) {
+    if (typeof initialParagraph !== 'number' || viewMode !== 'reading') {
       deepLinkRestorePendingRef.current = false;
+      deepLinkTargetRef.current = null;
       return;
     }
 
+    // Keep the guard active while the target section is still resolving.
+    if (!selectedSection) {
+      deepLinkRestorePendingRef.current = true;
+      deepLinkTargetRef.current = initialParagraph;
+      return;
+    }
+
+    deepLinkTargetRef.current = initialParagraph;
     deepLinkRestorePendingRef.current = true;
     let cancelled = false;
     let attempts = 0;
@@ -626,7 +636,7 @@ const Catechism: React.FC = memo(() => {
       if (element) {
         element.scrollIntoView({ behavior: 'auto', block: 'center' });
         element.classList.add('bg-secondary/10');
-        deepLinkRestorePendingRef.current = false;
+        // The observer releases the guard only after this exact target intersects.
         window.setTimeout(() => {
           if (!cancelled) element.classList.remove('bg-secondary/10');
         }, 3000);
@@ -639,15 +649,14 @@ const Catechism: React.FC = memo(() => {
         return;
       }
 
-      // If the requested paragraph could not be rendered, allow normal
-      // scroll-based continuity to resume rather than freezing the observer.
+      // If the requested paragraph could not be rendered, resume normal continuity.
       deepLinkRestorePendingRef.current = false;
+      deepLinkTargetRef.current = null;
     };
 
     const frame = window.requestAnimationFrame(restoreParagraph);
     return () => {
       cancelled = true;
-      deepLinkRestorePendingRef.current = false;
       window.cancelAnimationFrame(frame);
     };
   }, [initialParagraph, selectedSection, viewMode]);
@@ -682,8 +691,17 @@ const Catechism: React.FC = memo(() => {
     if (viewMode !== 'reading') return;
     const observer = new IntersectionObserver(
       (entries) => {
-        // An explicit deep link remains authoritative while its target is restored.
-        if (deepLinkRestorePendingRef.current || !entries.some((entry) => entry.isIntersecting)) return;
+        if (deepLinkRestorePendingRef.current) {
+          // Ignore stale visible paragraphs until the exact requested target intersects.
+          const targetId = deepLinkTargetRef.current == null ? null : `p${deepLinkTargetRef.current}`;
+          const targetEntry = entries.find((entry) => entry.isIntersecting && entry.target.id === targetId);
+          if (!targetEntry || !targetId) return;
+          deepLinkRestorePendingRef.current = false;
+          setActiveParagraphId(targetId);
+          setCurrentParagraph(deepLinkTargetRef.current!);
+          return;
+        }
+        if (!entries.some((entry) => entry.isIntersecting)) return;
 
         // Observe only real Catechism paragraph articles. A document-wide id selector
         // also catches unrelated elements and stale entries can override the target.
