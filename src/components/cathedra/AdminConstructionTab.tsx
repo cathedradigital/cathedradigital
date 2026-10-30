@@ -145,8 +145,8 @@ const AdminConstructionTab: React.FC = () => {
           throw new Error('A planilha está vazia ou não contém linhas de dados.');
         }
 
-        const headers = worksheet.getRow(1).values
-          .slice(1)
+        const headerValues = worksheet.getRow(1).values;
+        const headers = (Array.isArray(headerValues) ? headerValues.slice(1) : [])
           .map((value) => String(value ?? '').trim());
         if (headers.every((header) => !header)) {
           throw new Error('A primeira linha precisa conter os nomes das colunas.');
