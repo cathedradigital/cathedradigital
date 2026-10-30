@@ -182,3 +182,11 @@ Nenhuma PR histórica foi fechada ou integrada nesta fase de investigação. Nã
 
 - A pendência do índice parcial de reading_marks registrada no comentário inicial da #1 foi resolvida pelas migrations 20261030203257 e 20261030203411.
 - A decisão de não integrar o hook useFavorites da #1 permanece: public.bible_favorites agora existe para useDevotionalFavorites, mas o hook antigo da #1 tem contrato diferente, não migra localStorage e não foi validado para a UI global de favoritos.
+
+### PR #26 — decisão técnica de encerramento
+
+- A especificação UX/UI do Estudar já existe na main em docs/design/estudar-module-ux-spec.md.
+- Os atributos data-catedra-module-root e a fundação CSS do Estudar já aparecem na main nas páginas Biblioteca, Comunidade, Magistério, Santos, Catecismo e Nexus.
+- O componente antigo src/components/cathedra/BibleReader.tsx não existe mais na main; a Bíblia usa a arquitetura atual e permanece congelada, então não restaurar esse arquivo.
+- O CI histórico falhou por tipos Supabase antigos na branch obsoleta (corpusService não reconhecia relations/colunas existentes na main atual); o Vercel status falhou por rate limit, sem relação com Cloudflare.
+- Decisão: conteúdo UX principal já substituído pela arquitetura atual; arquivo de Bíblia obsoleto não será reaplicado. Encerrar sem merge da branch antiga.
