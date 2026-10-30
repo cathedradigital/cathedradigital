@@ -241,3 +241,44 @@ test('Magistério: filtros editoriais por categoria e temas são acessíveis e f
 
   expect(errors, 'Magistério filters: console errors').toEqual([]);
 });
+
+test('Átrio: acessos principais levam às rotas canônicas de Estudar e Pesquisar', async ({ page }) => {
+  const errors: string[] = [];
+  const badResponses: string[] = [];
+  page.on('console', message => {
+    if (message.type() === 'error') errors.push(message.text());
+  });
+  page.on('response', response => {
+    if ([404, 500, 502, 503, 504].includes(response.status())) {
+      badResponses.push(`${response.status()}: ${response.url()}`);
+    }
+  });
+
+  const home = await page.goto('/');
+  expect(home?.ok(), `Átrio: HTTP ${home?.status()}`).toBeTruthy();
+
+  const estudar = page.getByRole('link', { name: /Entrar em Estudar/ });
+  await expect(estudar).toHaveAttribute('href', '/estudar');
+  await estudar.click();
+  await expect(page).toHaveURL(url => url.pathname === '/estudar');
+
+  await page.goto('/');
+  const pesquisar = page.getByRole('link', { name: /Entrar em Pesquisar/ });
+  await expect(pesquisar).toHaveAttribute('href', '/buscar');
+  await pesquisar.click();
+  await expect(page).toHaveURL(url => url.pathname === '/buscar');
+
+  expect(errors, 'Átrio: console errors').toEqual([]);
+  expect(badResponses, 'Átrio: HTTP errors').toEqual([]);
+});
+
+test('auth routing preserves protected and legacy deep-link destinations', async ({ page }) => {
+  await page.goto('/diario');
+  await expect.poll(() => new URL(page.url()).pathname).toBe('/auth');
+  await expect.poll(() => new URL(page.url()).searchParams.get('next')).toBe('/diario');
+
+  const destination = '/bible?book=joao&chapter=1&v=1#verse-1';
+  await page.goto('/login?next=' + encodeURIComponent(destination));
+  await expect.poll(() => new URL(page.url()).pathname).toBe('/auth');
+  await expect.poll(() => new URL(page.url()).searchParams.get('next')).toBe(destination);
+});
