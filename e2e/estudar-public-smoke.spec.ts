@@ -215,3 +215,14 @@ test('Documentos: Dei Filius organiza cabeçalho, idioma original e tradução',
   await expect(page.getByText('Temas', { exact: true })).toHaveCount(0);
   expect(errors, 'Dei Filius: console errors').toEqual([]);
 });
+
+test('auth routing preserves protected and legacy deep-link destinations', async ({ page }) => {
+  await page.goto('/diario');
+  await expect.poll(() => new URL(page.url()).pathname).toBe('/auth');
+  await expect.poll(() => new URL(page.url()).searchParams.get('next')).toBe('/diario');
+
+  const destination = '/bible?book=joao&chapter=1&v=1#verse-1';
+  await page.goto('/login?next=' + encodeURIComponent(destination));
+  await expect.poll(() => new URL(page.url()).pathname).toBe('/auth');
+  await expect.poll(() => new URL(page.url()).searchParams.get('next')).toBe(destination);
+});
