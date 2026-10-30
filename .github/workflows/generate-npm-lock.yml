@@ -1,8 +1,8 @@
 name: Generate npm lockfile
 
 on:
-  push:
-    branches: ["audit/hardening-2026-10-30"]
+  pull_request:
+    branches: [main]
     paths:
       - "package.json"
 
@@ -14,21 +14,20 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
-          ref: ${{ github.ref_name }}
+          ref: ${{ github.head_ref }}
           token: ${{ secrets.GITHUB_TOKEN }}
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: "22.x"
-      - name: Apply non-breaking dependency security fixes to the lockfile
-        run: npm audit fix --package-lock-only --ignore-scripts --no-fund || true
+      - run: npm install --package-lock-only --ignore-scripts --no-audit --no-fund
       - name: Commit generated lockfile
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add package-lock.json
           if git diff --cached --quiet; then exit 0; fi
-          git commit -m "build: lock patched esbuild dependency tree"
-          git pull --rebase origin "${GITHUB_REF_NAME}"
-          git push origin "HEAD:${GITHUB_REF_NAME}"
+          git commit -m "build: align npm lockfile engine metadata"
+          git pull --rebase origin "${GITHUB_HEAD_REF}"
+          git push origin "HEAD:${GITHUB_HEAD_REF}"
