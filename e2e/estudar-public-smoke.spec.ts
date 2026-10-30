@@ -215,3 +215,11 @@ test('Documentos: Dei Filius organiza cabeçalho, idioma original e tradução',
   await expect(page.getByText('Temas', { exact: true })).toHaveCount(0);
   expect(errors, 'Dei Filius: console errors').toEqual([]);
 });
+
+test('Catecismo: leitor usa um único bloco de Conexo e não mantém Relatio duplicado', async ({ page }) => {
+  const response = await page.goto('/catechism?p=279');
+  expect(response?.ok(), `/catechism?p=279: HTTP ${response?.status()}`).toBeTruthy();
+  await expect(page.locator('#p279')).toBeVisible();
+  await expect(page.locator('[data-nexus-panel]')).toHaveCount(1);
+  await expect(page.locator('#relatio-heading')).toHaveCount(0);
+});
