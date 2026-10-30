@@ -1,40 +1,55 @@
-# Visão do produto
+# Visão do produto — Cátedra Digital
 
 ## Missão
 
-Ajudar cada católico a transformar o desejo de viver a fé em uma prática diária simples, profunda e sustentável.
+Ajudar o católico a acessar, compreender, estudar, rezar e viver a fé com continuidade, fontes confiáveis e uma experiência digital integrada.
 
 ## Tese
 
-O Cathedra pode se tornar o lugar onde o católico organiza sua vida espiritual digital: oração, Bíblia, formação, liturgia, memória pessoal e jornadas de crescimento em uma única experiência.
+A Cátedra Digital organiza estudo, oração, formação, pesquisa e memória pessoal em um ambiente coerente. Não é apenas uma coleção de textos nem um chat genérico: conecta fontes, contexto, relações verificáveis, compreensão e ação.
+
+## Princípio orientador
+
+**Fonte → Contexto → Conexão → Compreensão → Ação**
+
+A fonte permanece distinguível da explicação; a conexão precisa de fundamento; a compreensão não pode alterar silenciosamente o conteúdo original; a ação deve conduzir a estudo, oração, formação, pesquisa ou continuidade pessoal.
+
+## Experiência e organização
+
+O **Átrio** é a porta de entrada editorial e orienta o usuário para cinco ambientes:
+- Estudar;
+- Rezar;
+- Formar-se;
+- Pesquisar;
+- Minha Jornada.
+
+O módulo Hoje pode oferecer continuidade diária dentro da experiência pessoal, mas não substitui o Átrio como entrada institucional do produto.
 
 ## Problema
 
-Muitos recursos católicos digitais são fragmentados. O usuário encontra Bíblia em um lugar, conteúdo formativo em outro, oração em outro e não possui continuidade pessoal.
+Recursos católicos digitais costumam estar fragmentados: Bíblia, Catecismo, documentos, oração, formação e registros pessoais vivem em lugares diferentes e não preservam o contexto de uma atividade para outra.
 
 ## Solução
 
-Uma experiência integrada que conecta:
-- conteúdo confiável;
-- contexto;
-- prática diária;
-- jornadas;
-- diário espiritual;
-- biblioteca pessoal;
-- personalização;
-- assistência inteligente.
+Uma experiência integrada com:
+- fontes identificáveis e proveniência;
+- leitores e referências canônicas;
+- conexões entre fontes com destino válido;
+- percursos de formação;
+- recursos específicos de oração;
+- pesquisa transversal;
+- diário e continuidade pessoal;
+- assistência contextual subordinada às fontes.
 
-## Loop principal
+## Papel da inteligência artificial
 
-Notificação ou intenção → Hoje → Evangelho → reflexão → oração → jornada → registro pessoal → progresso → retorno no dia seguinte.
+Yá auxilia a localizar, organizar, contextualizar e comparar fontes. Não cria doutrina, não substitui o Magistério e não deve afirmar conteúdo doutrinal sem fonte verificável recuperada.
 
-## Moat
+## Princípios de produto
 
-O diferencial não deve ser apenas IA. O ativo estratégico é a combinação de conteúdo + contexto + relações entre fontes + histórico pessoal + experiência diária + personalização.
-
-## Não objetivos iniciais
-
-- Ser uma rede social católica.
-- Atender institucionalmente dioceses/paróquias antes de validar B2C.
-- Colocar IA no centro da proposta de valor.
-- Monetizar bloqueando necessidades espirituais básicas.
+- Formação e integridade editorial antes de efeitos visuais.
+- A experiência deve parecer um mosteiro digital, não um painel administrativo.
+- Identidade Cátedra Digital consistente em desktop e mobile.
+- Privacidade e autorização no backend.
+- Continuidade sem perda de contexto.
+- Nenhuma funcionalidade simulada deve ser apresentada como concluída.
