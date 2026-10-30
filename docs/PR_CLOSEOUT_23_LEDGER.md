@@ -139,3 +139,10 @@ Nenhuma PR histórica foi fechada ou integrada nesta fase de investigação. Nã
 - Nenhum merge/fechamento de PR histórica foi realizado ainda.
 - Não executar mudanças de produção Supabase nesta etapa. As consultas foram somente leitura.
 - Não publicar produção. O único alvo de deploy segue sendo Cloudflare Workers, por workflow manual após a release principal.
+
+## Ações de consolidação na branch de release — 2026-10-30
+
+- PR #206: **closed sem merge direto**, com os quatro arquivos de documentação/agente copiados byte a byte para esta branch de release. Conteúdo preservado; PR encerrada como substituída pela consolidação #215.
+- PR #217: **closed sem merge direto** (PR auxiliar fora do lote), com o perfil PR Closeout 23 e o ledger copiados byte a byte para esta branch de release. O agente ficará disponível na main somente após merge aprovado da #215.
+- SHA da branch de release após a cópia: `74e4ac05d5ff57561ed783279ac12509676e0f52`.
+- As outras 22 PRs da allowlist histórica continuam abertas e em investigação. Nenhuma foi fechada sem decisão de preservação.
