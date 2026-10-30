@@ -356,4 +356,7 @@ test('Átrio: carrossel editorial navega entre fontes oficiais', async ({ page }
 
   await page.getByRole('button', { name: /Mostrar notícia 3:/ }).click();
   await expect(sourceLink).toHaveAttribute('href', 'https://www.cnbb.org.br/dom-bruno-versari-aplicacao-amoris-laetitia-no-brasil/');
+
+  await page.getByRole('button', { name: /Mostrar notícia 5:/ }).click();
+  await expect(sourceLink).toHaveAttribute('href', 'https://www.vatican.va/content/leo-xiv/pt/homilies/2026/documents/20261014-messa-amoris-laetitia.html');
 });
