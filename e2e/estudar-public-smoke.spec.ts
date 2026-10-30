@@ -384,9 +384,16 @@ test('Catecismo: alias de parágrafo é canonicalizado para o deep-link p', asyn
   await expect(page.locator('#p2865')).toBeVisible();
 });
 
-test('Catecismo: leitor apresenta um único painel Conexo canônico', async ({ page }) => {
+test('Catecismo: leitor apresenta um único estado Conexo canônico', async ({ page }) => {
   await page.goto('/catechism?p=279');
   await expect(page.locator('#p279')).toBeVisible();
-  await expect(page.locator('[data-nexus-panel]')).toHaveCount(1);
+
+  // O Nexus pode estar preenchido ou ainda em processamento; ambos são estados
+  // válidos do mesmo painel. O teste rejeita ausência, duplicação e o painel legado.
+  const populatedPanelCount = await page.locator('[data-nexus-panel]').count();
+  const processingStateCount = await page
+    .getByRole('heading', { name: /Nexus Theologicus em Processamento/ })
+    .count();
+  expect(populatedPanelCount + processingStateCount).toBe(1);
   await expect(page.locator('#relatio-heading')).toHaveCount(0);
 });
