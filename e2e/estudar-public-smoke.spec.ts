@@ -215,3 +215,42 @@ test('Documentos: Dei Filius organiza cabeçalho, idioma original e tradução',
   await expect(page.getByText('Temas', { exact: true })).toHaveCount(0);
   expect(errors, 'Dei Filius: console errors').toEqual([]);
 });
+
+
+test('canonical public modules render on mobile and desktop without horizontal overflow', async ({ page }) => {
+  const publicRoutes = [
+    '/', '/bible?book=Gn&ch=1&v=1', '/catechism?p=279', '/magisterium/dce',
+    '/oracao', '/oracao/rosario', '/oracao/exame-de-consciencia', '/liturgia',
+    '/breviary', '/lectio', '/viacrucis', '/litanies', '/novenas', '/missal',
+    '/temas', '/buscar', '/nexus', '/acervo', '/santos', '/glossario',
+    '/atlas', '/aquinas', '/dogmas', '/papas', '/aparicoes',
+  ];
+  const viewports = [
+    { width: 390, height: 844, label: 'mobile', routes: [
+      '/', '/bible?book=Gn&ch=1&v=1', '/catechism?p=279', '/magisterium/dce',
+      '/oracao', '/temas', '/buscar', '/acervo',
+    ]},
+    { width: 1365, height: 900, label: 'desktop', routes: publicRoutes },
+  ];
+
+  for (const viewport of viewports) {
+    await page.setViewportSize({ width: viewport.width, height: viewport.height });
+    for (const route of viewport.routes) {
+      const response = await page.goto(route, { waitUntil: 'domcontentloaded' });
+      expect(response?.ok(), `${viewport.label} ${route}: HTTP ${response?.status()}`).toBeTruthy();
+      await expect(page.locator('body')).not.toContainText(/Application error|Something went wrong/i);
+      const overflow = await page.evaluate(
+        () => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
+      );
+      expect(overflow, `${viewport.label} ${route}: horizontal overflow`).toBe(false);
+    }
+    for (const protectedRoute of ['/hoje', '/diario', '/jornadas', '/favorites', '/achievements', '/profile', '/settings']) {
+      await page.goto(protectedRoute, { waitUntil: 'domcontentloaded' });
+      await expect(page).toHaveURL(/\\/auth\\?next=/);
+      const overflow = await page.evaluate(
+        () => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
+      );
+      expect(overflow, `${viewport.label} ${protectedRoute} login redirect: horizontal overflow`).toBe(false);
+    }
+  }
+});

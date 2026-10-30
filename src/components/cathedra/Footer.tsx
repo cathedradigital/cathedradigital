@@ -6,6 +6,7 @@ import { AppRoute } from '../../types';
 import { useLang } from '@/hooks/useLang';
 import { useIsAdmin } from '@/hooks/useIsAdmin';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { toast } from 'sonner';
 import { SOCIAL_LINKS, EXTERNAL_URLS } from '@/config/site-config';
 import { trackEvent } from '@/lib/analytics';
 import { MODULE_NAVIGATION } from '@/config/moduleNavigation';
@@ -199,7 +200,6 @@ const Footer: React.FC = React.memo(() => {
   const [openId, setOpenId] = useState<string | null>(null);
   const [selectedDiocese, setSelectedDiocese] = useState(() => localStorage.getItem('cathedra_diocese') || '');
   const [email, setEmail] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [mobileNavExpanded, setMobileNavExpanded] = useState(false);
 
   const toggleSection = (id: string) => setOpenId(prev => (prev === id ? null : id));
@@ -226,14 +226,14 @@ const Footer: React.FC = React.memo(() => {
     }
   };
 
-  const handleSubscribe = async (e: React.FormEvent) => {
+  const handleSubscribe = (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
-    trackEvent('newsletter_signup', { email });
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    alert(lang === 'pt' ? `E-mail ${email} cadastrado com sucesso!` : `Email ${email} registered successfully!`);
-    setEmail('');
-    setIsSubmitting(false);
+    // Não há endpoint de inscrição conectado: nunca afirmar que o cadastro foi salvo.
+    toast.info(
+      lang === 'pt'
+        ? 'O boletim ainda não está disponível. Nenhum cadastro foi realizado.'
+        : 'The newsletter is not available yet. No subscription was created.',
+    );
   };
 
   const handleDioceseChange = (val: string) => {
@@ -486,8 +486,8 @@ const Footer: React.FC = React.memo(() => {
                   }}
                 >
                   {lang === 'pt'
-                    ? 'Reflexões teológicas em seu e-mail.'
-                    : 'Theological reflections in your email.'}
+                    ? 'Boletim por e-mail em preparação.'
+                    : 'Email newsletter coming soon.'}
                 </p>
                 <form onSubmit={handleSubscribe} className="flex items-stretch gap-2">
                   <input
@@ -509,18 +509,13 @@ const Footer: React.FC = React.memo(() => {
                   />
                   <button
                     type="submit"
-                    disabled={isSubmitting}
-                    aria-label={lang === 'pt' ? 'Inscrever no boletim informativo' : 'Subscribe to newsletter'}
+                    aria-label={lang === 'pt' ? 'Boletim informativo em preparação' : 'Newsletter coming soon'}
                     className="inline-flex items-center justify-center min-w-[44px] min-h-[44px] px-3 rounded-none transition-colors disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c9a84c]"
                     style={{ border: `1px solid ${GOLD}`, color: GOLD_TEXT, background: 'transparent' }}
-                    onMouseEnter={(e) => { if (!isSubmitting) { e.currentTarget.style.background = GOLD; e.currentTarget.style.color = '#0a0a0a'; } }}
+                    onMouseEnter={(e) => { e.currentTarget.style.background = GOLD; e.currentTarget.style.color = '#0a0a0a'; }}
                     onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = GOLD; }}
                   >
-                    {isSubmitting ? (
-                      <div className="w-4 h-4 border-2 border-t-transparent rounded-full animate-spin" style={{ borderColor: GOLD, borderTopColor: 'transparent' }} />
-                    ) : (
-                      <Icons.ArrowDown className="-rotate-90 w-4 h-4" />
-                    )}
+                    <Icons.ArrowDown className="-rotate-90 w-4 h-4" />
                   </button>
                 </form>
               </div>

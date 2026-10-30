@@ -32,10 +32,17 @@ export const APP_ROUTES: RouteConfig[] = [
   { path: '/catechism', label: 'Catecismo', icon: Icons.Book, showInMenu: false, category: 'content' },
   { path: '/magisterium', label: 'Magistério', icon: Icons.ScrollText, showInMenu: false, category: 'content' },
   { path: '/atlas', label: 'Atlas Católico', icon: Icons.Globe, showInMenu: false, category: 'content' },
+  // Rotas canônicas dos ambientes: metadados usados por breadcrumbs, não por menus.
+  { path: '/liturgia', label: 'Liturgia', icon: Icons.Calendar, showInMenu: false, category: 'content' },
+  { path: '/buscar', label: 'Buscar', icon: Icons.Search, showInMenu: false, category: 'content' },
+  { path: '/acervo', label: 'Biblioteca', icon: Icons.BookOpen, showInMenu: false, category: 'content' },
+  { path: '/hoje', label: 'Hoje', icon: Icons.Home, showInMenu: false, category: 'user' },
 
 
   // Content & Resources
   { path: '/oracao', label: 'Orações', icon: Icons.Prayer, showInMenu: true, category: 'content' },
+  { path: '/oracao/rosario', label: 'Rosário', icon: Icons.Rosary, showInMenu: false, category: 'content', parentPath: '/oracao' },
+  { path: '/oracao/exame-de-consciencia', label: 'Exame de consciência', icon: Icons.Heart, showInMenu: false, category: 'content', parentPath: '/oracao' },
   { path: '/rosary', label: 'Rosário', icon: Icons.Rosary, showInMenu: true, category: 'content' },
   { path: '/viacrucis', label: 'Via Sacra', icon: Icons.ViaCrucis, showInMenu: true, category: 'content' },
   { path: '/bible-recovery', label: 'Recovery Bíblia', icon: Icons.Stethoscope, showInMenu: false, category: 'content' },
