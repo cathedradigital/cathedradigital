@@ -1,4 +1,4 @@
-import { readFileSync, readdirSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join, relative, resolve } from "node:path";
 
 const root = resolve(process.cwd(), "src");
@@ -22,6 +22,22 @@ function walk(dir) {
 }
 
 const violations = [];
+
+const forbiddenPublicArtifacts = [
+  "public/test-report.html",
+  "public/test-report.md",
+  "public/cathedra.zip",
+  "public/indexing-report.json",
+  "public/indexing-report.html",
+  "public/security-audit.pdf",
+  "public/security-audit.md",
+  "public/audit-report.html",
+];
+for (const path of forbiddenPublicArtifacts) {
+  if (existsSync(resolve(process.cwd(), path))) {
+    violations.push(`${path}: internal report/archive must not be published from the public directory`);
+  }
+}
 for (const file of walk(root)) {
   const rel = relative(process.cwd(), file).replaceAll("\\", "/");
   if (serverOnlyFiles.has(rel)) continue;
