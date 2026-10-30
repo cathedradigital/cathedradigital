@@ -1,3 +1,4 @@
+import DOMPurify from 'dompurify';
 import React from 'react';
 
 interface Props {
@@ -20,7 +21,7 @@ export const SaintBioBlock: React.FC<Props> = ({ text, html, title = 'Vida', id 
       {title}
     </h2>
     {html ? (
-      <div className="prose prose-invert max-w-none" dangerouslySetInnerHTML={{ __html: html }} />
+      <div className="prose prose-invert max-w-none" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(html) }} />
     ) : (
       <p className="text-premium-sm text-foreground/90 leading-[1.72] whitespace-pre-line">{text}</p>
     )}
