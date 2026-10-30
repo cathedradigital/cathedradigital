@@ -13,7 +13,21 @@ async function login(page: Page, destination: string) {
   await page.getByLabel('Senha').fill(password!);
   await page.getByRole('button', { name: 'Entrar', exact: true }).click();
   const expected = new URL(destination, page.url());
-  await expect(page).toHaveURL(url => url.pathname + url.search + url.hash === expected.pathname + expected.search + expected.hash, { timeout: 15000 });
+  const authError = page.getByRole('alert');
+  await Promise.race([
+    page.waitForURL(
+      url => url.pathname + url.search + url.hash === expected.pathname + expected.search + expected.hash,
+      { timeout: 15_000 },
+    ),
+    authError.waitFor({ state: 'visible', timeout: 15_000 }).then(async () => {
+      throw new Error(
+        `Authentication failed before redirect to ${expected.pathname}: ${(await authError.innerText()).trim()}`,
+      );
+    }),
+  ]);
+  await expect(page).toHaveURL(
+    url => url.pathname + url.search + url.hash === expected.pathname + expected.search + expected.hash,
+  );
 }
 
 function watchBrowserHealth(page: Page) {
@@ -234,6 +248,13 @@ test('Catecismo: gatilho do Nexus/Yá permanece visível e acionável no mobile'
   await expect(trigger).toBeVisible();
   await expect(trigger).toBeEnabled();
   await expect(trigger).toHaveAttribute('aria-label', 'Abrir Yá para o parágrafo 10');
+});
+
+test('Catecismo: leitor mantém um único Conexo canônico', async ({ page }) => {
+  await login(page, '/catechism?p=279');
+  await expect(page.locator('#p279')).toBeVisible();
+  await expect(page.locator('[data-nexus-panel]')).toHaveCount(1);
+  await expect(page.locator('#relatio-heading')).toHaveCount(0);
 });
 
 test('Catecismo: texto oficial com entidades HTML é exibido como caracteres reais', async ({ page }) => {
