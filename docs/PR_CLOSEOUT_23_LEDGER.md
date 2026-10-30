@@ -99,3 +99,43 @@ Nenhuma PR histórica foi fechada ou integrada nesta fase de investigação. Nã
 - PR #8: a remoção de artefatos públicos é útil e a comparação indica que o PR remove os arquivos; verificar quais alterações visuais continuam ausentes antes de encerrar.
 - PR #26: a alteração de UX não pode ser integrada até resolver os erros de tipos e demonstrar que os arquivos continuam compatíveis com a arquitetura atual.
 
+
+## Resultado dos workflows históricos — lote completo
+
+| PR | CI | Auditoria/validação | E2E | Evidência / diagnóstico |
+|---:|---|---|---|---|
+| #112 | Falhou | — | — | CI Node.js falhou; precisa corrigir antes de reaproveitar mudanças de Magistério |
+| #113 | Passou | Passou | Não executado | Mergeability false; sobreposição com #112/#162/#163 e mudanças AuthGuard |
+| #116 | Passou | Passou | Falhou | Altera Bible.tsx e AtriumBibleReader; não integrar código da Bíblia |
+| #117 | Falhou | Falhou | Falhou | Alterações amplas da Bíblia, Catecismo, sincronização e migration RLS; não integrar integralmente |
+| #157 | Passou | Passou | Falhou | E2E público falhou em seletores/URL e mobile; correção seletiva foi implementada em #218 |
+| #162 | Passou | Passou | Falhou | E2E: 16 casos falharam, com timeout de navegação, deep links e links de referência duplicados |
+| #163 | Passou | Passou | Falhou | E2E falhou; sobreposição de workflow/AuthGuard/App com #162 |
+| #165 | Passou | Passou | Falhou | E2E falhou; alterações de controles mobile ainda sem validação final |
+| #166 | Passou | Passou | Falhou | Migrações de perfil/role e premium foram aplicadas no projeto atual sob versões novas #215; demais mudanças precisam de comparação |
+| #167 | Passou | Passou | Falhou | E2E falhou; alteração do robots/sitemap junto com hooks da Bíblia; não importar mudanças da Bíblia |
+| #168 | Passou | Passou | Falhou | 11 casos E2E falharam, incluindo deep link de Catecismo, links de referência duplicados e overflow mobile |
+| #171 | Passou | Passou | Falhou | 16 casos E2E falharam; navegação e links mobile |
+| #179 | Passou | Passou | Falhou | E2E: 48 falhas; login/deep links/rotas e seletores mobile |
+| #182 | Passou | Passou | Cancelado | 45 min sem conclusão; PR ampla com workflow e configuração, incluindo referências Vercel incompatíveis |
+| #186 | Não encontrado | Não encontrado | Não encontrado | Nenhum workflow retornado para o head consultado; mergeability false |
+| #190 | Passou | Passou | Falhou | E2E não iniciou: preflight Supabase retornou HTTP 400 invalid_credentials; patch inclui correção de deep link reaproveitada seletivamente em #218 |
+| #203 | Passou | Passou | Falhou | 42 falhas E2E; page.waitForURL expirou em múltiplos fluxos |
+| #206 | Passou | Passou | Não aplicável / não executado | PR contém somente documentação e perfil de agente; conteúdo revisado, sem alterações de runtime |
+
+### Implementação em andamento
+
+- PR #218 (ops/pr-consolidation-23) reaplica sobre a main atual correções seletivas das PRs #157 e #190:
+  - remove o Relatio duplicado do Catecismo;
+  - exige um único data-nexus-panel no E2E;
+  - corrige canonicalização ?paragraph=N para ?p=N;
+  - limita o observer aos artigos reais do leitor;
+  - melhora o diagnóstico do login Playwright para revelar a rejeição real do Supabase.
+- SHA atual da PR #218: 96851f98bfcfbd465f34219d0333ee1d78ddba38.
+- No SHA atual: CI success, auditoria success, Playwright público desktop/mobile ainda in_progress na última consulta. Não integrar nem fechar #157/#190 até o E2E concluir.
+
+### Decisão de segurança do lote
+
+- Nenhum merge/fechamento de PR histórica foi realizado ainda.
+- Não executar mudanças de produção Supabase nesta etapa. As consultas foram somente leitura.
+- Não publicar produção. O único alvo de deploy segue sendo Cloudflare Workers, por workflow manual após a release principal.
