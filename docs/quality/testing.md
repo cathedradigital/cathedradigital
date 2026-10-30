@@ -1,55 +1,87 @@
-# Estratégia de qualidade
+# Estratégia de qualidade e validação — Cátedra Digital
 
-## Pirâmide
+**Status:** contrato de qualidade; não é relatório de testes executados.
 
-1. typecheck;
-2. lint;
-3. testes unitários;
-4. testes de integração;
-5. E2E crítico;
-6. E2E amplo/nightly.
+## 1. Pirâmide de validação
 
-## E2E crítico
+1. TypeScript/typecheck.
+2. Lint e formatação quando aplicável.
+3. Testes unitários e de componentes.
+4. Validadores de contratos, rotas e limites de segurança.
+5. Testes de integração com serviços e banco.
+6. Playwright E2E crítico em desktop e mobile.
+7. Verificação pós-publicação dos domínios e recursos de produção.
 
-Cobrir pelo menos:
+Uma etapa não substitui outra. Build aprovado não comprova autenticação, autorização, UX ou publicação correta.
 
-- home/Hoje;
-- menu;
-- Bíblia;
-- Catecismo;
-- biblioteca;
-- busca;
-- login/logout;
-- voltar/avançar;
-- deep links;
-- refresh;
-- jornadas;
-- diário;
-- paywall quando existir.
+## 2. Fluxos críticos
 
-## Mobile
+Cobrir, conforme o escopo implementado:
 
-Validar especialmente 320, 360, 390 e 412 px.
+- Átrio e navegação principal;
+- Bíblia: catálogo, referência, capítulo/versículo, reload, back/forward e retorno contextual;
+- Catecismo: §§1, 25, 26, 2262 e 2865, aliases de URL e retorno contextual;
+- Magistério/Documentos: documento, idioma, fonte, parágrafo e retorno;
+- Nexus: conexões válidas e cobertura negativa para referências inexistentes;
+- login, logout, sessão expirada e preservação do destino interno `next`;
+- Diário e Minha Jornada: gravação confirmada, recuperação e isolamento entre contas;
+- Rezar, Formar-se e Pesquisar: fluxos principais, estados vazios e falhas;
+- links internos, SEO, console e respostas de rede inesperadas.
 
-P0:
+Não criar testes duplicados antes de localizar os testes existentes.
 
-- overflow horizontal;
-- elementos fora da viewport;
-- botões não clicáveis;
-- modal sem scroll lock;
-- sobreposição do header;
-- foco invisível.
+## 3. Matriz de dispositivos
 
-## CI
+- Desktop: viewport representativo e navegador suportado pelo workflow.
+- Mobile: **390 × 844** como viewport de referência do gate crítico.
+- Cobertura responsiva adicional pode incluir 320, 360 e 412 px conforme o componente.
 
-Falhas reais devem falhar o pipeline. Evitar `|| true` em testes de certificação, salvo quando o objetivo for explicitamente não bloqueante e isso estiver documentado.
+Verificar overflow horizontal, controles sobrepostos, foco, teclado, rolagem, legibilidade e ações acionáveis por toque.
 
-### Fronteira de segurança para E2E autenticado
+## 4. Autenticação e privacidade
 
-- O evento `pull_request` executa somente `npm run test:e2e:public`, sem injetar `E2E_TEST_EMAIL` ou `E2E_TEST_PASSWORD` no checkout do PR.
-- A suíte autenticada completa roda em `push` para `main` e pode ser iniciada manualmente em `main` com a opção explícita `run_authenticated`; o job sempre faz checkout de `main` e injeta credenciais somente nos passos que as exigem.
-- A evidência Playwright enviada como artifact deve continuar limitada a `safe-playwright-evidence/report.json`, após validação fail-closed. Nunca publicar traces, screenshots, vídeos ou diretórios brutos de teste autenticado.
+Os testes autenticados devem usar a conta de teste autorizada e os secrets do GitHub Actions. Nunca imprimir email, senha, token, cookie ou conteúdo de sessão.
 
-## Definition of Done
+Executar testes negativos de autorização e isolamento entre duas contas de teste quando o cenário exigir. Falha no preflight de autenticação deve ser classificada como falha de ambiente/configuração; não deve ser confundida com reprovação funcional do navegador.
 
-Uma funcionalidade só está pronta quando comportamento, segurança, acessibilidade, mobile e testes relevantes estiverem considerados.
+### Fronteira de credenciais no CI
+
+- O evento `pull_request` roda apenas `npm run test:e2e:public`, sem disponibilizar `E2E_TEST_EMAIL` ou `E2E_TEST_PASSWORD` ao código do PR.
+- A suíte autenticada completa roda em `push` para `main`; o disparo manual em `main` exige a opção explícita `run_authenticated`. O job autenticado faz checkout de `main` e injeta credenciais apenas nos passos que as utilizam.
+- O artifact Playwright fica limitado a `safe-playwright-evidence/report.json`, após validação fail-closed. Nunca publicar traces, screenshots, vídeos ou diretórios brutos de testes autenticados.
+
+## 5. Integridade dos testes
+
+- Não remover nem enfraquecer asserções para obter aprovação.
+- Não mascarar falhas com `|| true`, retries excessivos ou timeouts arbitrários.
+- Distinguir teste único de repetição/retry.
+- Classificar falha como produto, ambiente, dados, configuração, automação ou inconclusiva.
+- Guardar trace, screenshot, relatório e logs sanitizados quando disponíveis.
+
+## 6. Gate de liberação
+
+CI, auditoria de dependências e Playwright desktop/mobile devem estar aprovados no **mesmo SHA final**. Os resultados devem apontar para o mesmo commit; não combinar aprovação de commits diferentes.
+
+Antes de produção, verificar os três destinos configurados:
+
+- `https://cathedradigital.com.br`
+- `https://www.cathedradigital.com.br`
+- `https://cathedradigital.cathedradigital.workers.dev`
+
+Verificar também `robots.txt`, `sitemap.xml`, versão efetivamente servida, rotas críticas, autenticação e ausência de erros relevantes.
+
+## 7. Registro obrigatório
+
+Para cada execução, registrar:
+
+- workflow e URL da execução;
+- SHA exato;
+- ambiente e navegador/viewport;
+- comando ou job;
+- quantidade de testes únicos, retries, aprovados, reprovados e ignorados;
+- relatório, trace, screenshots e logs sanitizados;
+- bloqueios externos e classificação das falhas.
+
+## 8. Definition of Done
+
+Uma entrega só é aprovada quando os critérios do requisito foram satisfeitos, os testes pertinentes passaram no SHA final e a revisão exigida foi concluída. O status **publicado** exige ainda prova da versão efetivamente servida no ambiente de destino.
