@@ -79,3 +79,13 @@ PRs #1, #2, #26, #113, #117, #179, #182 e #206 foram consultadas e constam fecha
 - Novo SHA da PR #219: `23dc05b7eb550e50aab632b13db957d2bf521d93`.
 - Commit intermediário da spec crítica: `48cae267037bd08d5c059ad8660e5616b680fa14`.
 - Após a atualização, a PR continua aberta e mergeable. Nenhum workflow run/status foi retornado ainda para o novo SHA; aguardar disparo/execução antes de qualquer merge.
+
+### PR #220 — consolidação visual isolada da #163
+- Branch: `ops/closeout-magisterium-theme-ui-163`
+- SHA final: `43d62cc3fb6727c9a0fecc093a20e947d8885ea3`
+- Arquivos: `src/components/cathedra/Magisterium.tsx`, `e2e/estudar-public-smoke.spec.ts`.
+- Implementação: categorias em navegação horizontal editorial com estado acessível; temas em cartões responsivos com contagem de documentos e seleção múltipla.
+- Teste: categoria Encíclicas, estado `aria-pressed`, grupo acessível de temas, contagem e alternância.
+- PR: https://github.com/cathedradigital/cathedradigital/pull/220
+- PR #163 comentada com referência à #220; continua aberta até validação e integração.
+- Estado observado na criação: mergeable=true; ainda sem workflow runs retornados para o SHA. Não fazer merge até CI, auditoria e E2E desktop/mobile concluírem verdes.
