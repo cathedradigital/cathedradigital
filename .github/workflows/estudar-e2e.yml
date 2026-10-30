@@ -5,6 +5,7 @@ on:
     branches: ["main"]
     paths:
       - "src/**"
+      - "public/**"
       - "e2e/**"
       - "scripts/test-safe-playwright-evidence.mjs"
       - "scripts/validate-e2e-security.mjs"
