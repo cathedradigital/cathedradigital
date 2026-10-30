@@ -91,9 +91,9 @@ async function sha256Hex(value: string) {
 
 async function loadStoredBibleChapter(abbrev: string, chapter: number) {
   const supabaseUrl = Deno.env.get("SUPABASE_URL");
-  const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
-  if (!supabaseUrl || !serviceRoleKey) return null;
-  const db = createClient(supabaseUrl, serviceRoleKey, { auth: { persistSession: false, autoRefreshToken: false } });
+  const anonKey = Deno.env.get("SUPABASE_ANON_KEY");
+  if (!supabaseUrl || !anonKey) return null;
+  const db = createClient(supabaseUrl, anonKey, { auth: { persistSession: false, autoRefreshToken: false } });
   const storageAbbrevs = [abbrev, CANONICAL_ALIASES[abbrev]].filter(Boolean);
   const { data: book, error: bookError } = await db
     .from("bible_books")
@@ -110,83 +110,6 @@ async function loadStoredBibleChapter(abbrev: string, chapter: number) {
     .filter((row) => Number.isInteger(row.number) && row.number > 0 && row.text.length > 0);
   if (!verses.length) return null;
   return { book: book.name, chapter, verses, source: chapterRow.source_name || "Cathedra Bible Recovery", sourceUrl: chapterRow.source_url || "https://github.com/bibliacatolica/biblia" };
-}
-
-async function persistBibleChapter(
-  abbrev: string,
-  chapter: number,
-  verses: Array<{ number: number; text: string }>,
-  sourceUrl: string,
-) {
-  const supabaseUrl = Deno.env.get("SUPABASE_URL");
-  const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
-  if (!supabaseUrl || !serviceRoleKey) {
-    console.warn("[bible-text] persistence skipped: Supabase service configuration missing");
-    return;
-  }
-
-  const db = createClient(supabaseUrl, serviceRoleKey, {
-    auth: { persistSession: false, autoRefreshToken: false },
-  });
-  const retrievedAt = new Date().toISOString();
-
-  const storageAbbrevs = [abbrev, CANONICAL_ALIASES[abbrev]].filter(Boolean);
-  const { data: book, error: bookError } = await db
-    .from("bible_books")
-    .select("id,abbrev")
-    .in("abbrev", storageAbbrevs)
-    .limit(1)
-    .maybeSingle();
-
-  if (bookError || !book?.id) {
-    console.warn("[bible-text] persistence skipped: book not found", {
-      abbrev,
-      error: bookError?.message ?? "book_not_found",
-    });
-    return;
-  }
-
-  const { data: chapterRow, error: chapterError } = await db
-    .from("bible_chapters")
-    .upsert({
-      book_id: book.id,
-      number: chapter,
-      source_name: "Ordinarium API",
-      source_url: sourceUrl,
-      source_retrieved_at: retrievedAt,
-    }, { onConflict: "book_id,number" })
-    .select("id")
-    .single();
-
-  if (chapterError || !chapterRow?.id) {
-    console.warn("[bible-text] persistence failed at chapter", {
-      abbrev,
-      chapter,
-      error: chapterError?.message ?? "chapter_not_persisted",
-    });
-    return;
-  }
-
-  const rows = verses.map((verse) => ({
-    chapter_id: chapterRow.id,
-    number: verse.number,
-    text: verse.text,
-    source_name: "Ordinarium API",
-    source_url: sourceUrl,
-    source_retrieved_at: retrievedAt,
-  }));
-
-  const { error: verseError } = await db
-    .from("bible_verses")
-    .upsert(rows, { onConflict: "chapter_id,number" });
-
-  if (verseError) {
-    console.warn("[bible-text] persistence failed at verses", {
-      abbrev,
-      chapter,
-      error: verseError.message,
-    });
-  }
 }
 
 async function fetchUpstream(url: string, correlation: string) {
@@ -234,7 +157,6 @@ Deno.serve(async (req: Request) => {
   const chapter = typeof body.chapter === "number" ? body.chapter : Number(body.chapter);
   const translationId = typeof body.translation_id === "string" ? body.translation_id : null;
   const modernize = body.modernize === true;
-  const persist = body.persist !== false;
 
   if (!abbrev || !Number.isInteger(chapter) || chapter <= 0) {
     return errorPayload("Parâmetros inválidos: abbrev e chapter são obrigatórios.", abbrev, Number.isFinite(chapter) ? chapter : 1, correlation, 400);
@@ -317,14 +239,6 @@ Deno.serve(async (req: Request) => {
     if (!verses.length) return errorPayload(`O capítulo ${abbrev} ${chapter} não retornou versículos válidos.`, abbrev, chapter, correlation, 404);
 
     const contentHash = await sha256Hex(JSON.stringify({ book: bookName, chapter, verses }));
-    if (persist) {
-      await persistBibleChapter(
-        abbrev,
-        chapter,
-        verses,
-        upstream.url || `${ORDINARIUM_BASE}/${encodeURIComponent(API_BOOK_MAP[abbrev] ?? bookName)}/${chapter}`,
-      );
-    }
     const etag = `"${contentHash}"`;
     if (req.headers.get("if-none-match") === etag) {
       return new Response(null, { status: 304, headers: { ...cors, ETag: etag, "Cache-Control": "public, max-age=3600, stale-while-revalidate=86400" } });
