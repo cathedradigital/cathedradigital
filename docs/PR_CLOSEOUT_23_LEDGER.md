@@ -266,3 +266,23 @@ SHA atual consultado: `2e088cc149ad1a34274ad42d3ed46a1f4cf3a00d`.
 - Estudar E2E: `pending` (run 41126611460).
 - Não fechar as 14 PRs restantes até os checks aplicáveis concluírem no SHA final da release.
 - O workflow authenticated E2E continua exigindo evidência desktop e mobile no mesmo SHA; PR E2E público não substitui a execução autenticada manual.
+
+
+## Atualização de consolidação — 30/10/2026 (continuação)
+
+### PR #225 — arquivo interno removido da pasta pública
+- Merge realizado na `main`: `b918f400894d5915083d44411bdbbe6e6f9d2092`.
+- O diff remove `public/cathedra.zip` e amplia os gatilhos dos workflows E2E para alterações em `public/**`.
+- CI, auditoria final e E2E público passaram no SHA final da PR: `774fb85a7329a311c454b6941c601c201a7e8ab0`.
+- A branch da release #215 também contém a remoção do ZIP (diff contra a main atual classifica o arquivo como removido), evitando sua reintrodução no merge da release.
+
+### PR #226 — identidade Cátedra Digital nos metadados SEO
+- Merge squash realizado na `main`: `a5cb9586c21f990594e0070016ef42fdedda4953`.
+- Ajustes limitados a `src/components/RouteSeo.tsx` e `src/config/routeMeta.ts`, padronizando o nome público como “Cátedra Digital”.
+- CI, auditoria final e E2E público passaram no SHA `0febafac61cd909be8df7362676a2acb7256ce74`.
+
+### Estado da release #215
+- HEAD consultado durante esta atualização: `908002f7ee873bf32ff8b04817548bca0b01a346`.
+- A branch está divergente da main após os merges auxiliares; precisa sincronização/reconciliação e execução dos três gates no novo HEAD antes de qualquer decisão de merge.
+- O E2E público das PRs auxiliares não substitui o Playwright autenticado desktop/mobile exigido para a release.
+- Sem merge ou deploy da #215 nesta etapa.
