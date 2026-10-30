@@ -215,3 +215,34 @@ test('Documentos: Dei Filius organiza cabeçalho, idioma original e tradução',
   await expect(page.getByText('Temas', { exact: true })).toHaveCount(0);
   expect(errors, 'Dei Filius: console errors').toEqual([]);
 });
+
+
+test('Átrio: acessos principais levam às rotas canônicas de Estudar e Pesquisar', async ({ page }) => {
+  const errors: string[] = [];
+  const badResponses: string[] = [];
+  page.on('console', message => {
+    if (message.type() === 'error') errors.push(message.text());
+  });
+  page.on('response', response => {
+    if ([404, 500, 502, 503, 504].includes(response.status())) {
+      badResponses.push(`${response.status()}: ${response.url()}`);
+    }
+  });
+
+  const home = await page.goto('/');
+  expect(home?.ok(), `Átrio: HTTP ${home?.status()}`).toBeTruthy();
+
+  const estudar = page.getByRole('link', { name: /Entrar em Estudar/ });
+  await expect(estudar).toHaveAttribute('href', '/estudar');
+  await estudar.click();
+  await expect(page).toHaveURL(url => url.pathname === '/estudar');
+
+  await page.goto('/');
+  const pesquisar = page.getByRole('link', { name: /Entrar em Pesquisar/ });
+  await expect(pesquisar).toHaveAttribute('href', '/buscar');
+  await pesquisar.click();
+  await expect(page).toHaveURL(url => url.pathname === '/buscar');
+
+  expect(errors, 'Átrio: console errors').toEqual([]);
+  expect(badResponses, 'Átrio: HTTP errors').toEqual([]);
+});
