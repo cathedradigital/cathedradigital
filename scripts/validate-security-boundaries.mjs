@@ -50,6 +50,20 @@ if (!/Deno\.env\.get\(["']SUPABASE_ANON_KEY["']\)/.test(publicBibleText)) {
   );
 }
 
+
+const publicCatechismTextPath = resolve(process.cwd(), "supabase/functions/catechism-text/index.ts");
+const publicCatechismText = readFileSync(publicCatechismTextPath, "utf8");
+const forbiddenPublicCatechismPatterns = [
+  /SUPABASE_SERVICE_ROLE_KEY/,
+  /\\.from\\([^)]*\\)\\.(?:insert|upsert|update|delete)\\s*\\(/i,
+  /persistCatechismParagraph/,
+];
+if (forbiddenPublicCatechismPatterns.some((pattern) => pattern.test(publicCatechismText))) {
+  violations.push(
+    "supabase/functions/catechism-text/index.ts: public Catechism endpoint must remain read-only; persistence belongs to OIDC-protected source-sync",
+  );
+}
+
 if (violations.length) {
   console.error("Security boundary validation FAILED");
   for (const violation of violations) console.error(`- ${violation}`);
