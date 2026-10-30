@@ -218,3 +218,19 @@ Nenhuma PR histórica foi fechada ou integrada nesta fase de investigação. Nã
 - Os documentos de agente/skills desta PR são substituídos pelos contratos operacionais e pelo agente de encerramento já copiados para a release.
 - E2E histórico falhou em 48 casos no SHA antigo; parte das falhas era autenticação/URLs, agora tratada separadamente no release, mas o restante do teste depende de alterações bíblicas não autorizadas.
 - Decisão: não integrar o snapshot; encerrar como não aprovado para merge por violar limites da Bíblia e da publicação.
+
+### PR #182 — decisão técnica de encerramento
+
+- A proposta de gate de produção desta PR já foi substituída por uma versão mais segura na branch #215:
+  - workflow de publicação somente manual e limitado a main;
+  - checkout do SHA exato;
+  - npm ci, typecheck, lint, validate:links e build;
+  - validação do projeto Supabase aprovado sem expor chave;
+  - Playwright autenticado desktop e mobile com viewport 390×844;
+  - auditoria npm com bloqueio high/critical;
+  - artefatos sanitizados/sem traces brutos;
+  - baseline pré-deploy e verificação pós-deploy dos domínios, Worker, robots e sitemap.
+- A PR #182 adicionava uma chamada DELETE com artifact ID histórico hardcoded no workflow de produção; essa limpeza pontual não deve permanecer como etapa recorrente.
+- A PR #182 também tinha E2E cancelado após 45 minutos. Seu workflow E2E e cloudflare-deploy antigos não serão copiados.
+- A documentação editorial/plataforma é parcialmente substituída pelo projeto mestre atualizado e pelo ledger operacional na branch da release; o dossiê editorial específico não foi validado para publicação.
+- Decisão: encerrar como supersedida pela implementação de release gate mais forte na #215; não copiar o workflow antigo nem o cleanup hardcoded.
