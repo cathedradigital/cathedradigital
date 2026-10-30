@@ -1,6 +1,6 @@
-# Orçamento técnico do MVP — GitHub, Vercel e Supabase
+# Orçamento técnico do MVP — GitHub, Cloudflare Workers e Supabase
 
-A Cátedra deve permanecer pequena no deploy e grande no acervo. Princípio: código e UI no GitHub/Vercel; corpus documental no Supabase; arquivos grandes nunca entram no bundle do deploy.
+A Cátedra deve permanecer pequena no deploy e grande no acervo. Princípio: código e UI no GitHub/Cloudflare Workers; corpus documental no Supabase; arquivos grandes nunca entram no bundle do deploy.
 
 ## GitHub Free
 - O repositório deve conter código, migrations, documentação e metadados.
@@ -8,11 +8,11 @@ A Cátedra deve permanecer pequena no deploy e grande no acervo. Princípio: có
 - Arquivos binários grandes devem ficar fora do repositório; o GitHub recomenda armazenar arquivos gerados fora do Git e usar LFS quando necessário.
 - Evitar dezenas de branches/PRs de longa duração.
 
-## Vercel Hobby
+## Cloudflare Workers
 - O deploy deve conter somente o aplicativo compilado e seus assets necessários.
-- O corpus dos Padres, Santos e documentos não deve ser copiado para public/ nem empacotado no frontend.
-- A build agora executa scripts/check-deploy-assets.mjs, que bloqueia arquivos individuais acima de 15 MB e um total de public/ acima de 250 MB.
-- A retenção de deployments deve ser configurada no painel da Vercel; a integração disponível não possui operação para apagar deployments antigos.
+- O corpus dos Padres, Santos e documentos não deve ser copiado para `public/` nem empacotado no frontend.
+- A build executa `scripts/check-deploy-assets.mjs`, que bloqueia arquivos individuais acima de 15 MB e um total de `public/` acima de 250 MB.
+- A publicação de produção deve ocorrer somente pelo workflow Cloudflare do GitHub Actions.
 
 ## Supabase Free
 - Banco: manter o catálogo e textos apenas quando houver valor de recuperação real.
