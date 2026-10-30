@@ -156,6 +156,10 @@ const StudyJournal: React.FC = () => {
                       url = `/magisterium/${encodeURIComponent(docId)}`;
                       if (paragraphIndex && /^\d+$/.test(paragraphIndex)) {
                         url += `?p=${encodeURIComponent(paragraphIndex)}`;
+                      } else if (note.paragraph && Number.isInteger(Number(note.paragraph)) && Number(note.paragraph) > 0) {
+                        // Legacy notes store the document ID in content_id and a 1-based
+                        // paragraph in the paragraph column; the reader URL is 0-based.
+                        url += `?p=${encodeURIComponent(String(Number(note.paragraph) - 1))}`;
                       }
                     } else if (note.content_type === 'saint' && note.content_id) {
                       url = `/santos/${encodeURIComponent(note.content_id)}`;
