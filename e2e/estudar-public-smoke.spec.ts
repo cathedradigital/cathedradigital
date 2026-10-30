@@ -377,3 +377,16 @@ test('Átrio: ambientes principais mantêm destinos canônicos', async ({ page }
   await page.getByRole('link', { name: /Entrar em Pesquisar/ }).click();
   await expect(page).toHaveURL(/\/buscar$/);
 });
+
+test('Catecismo: alias de parágrafo é canonicalizado para o deep-link p', async ({ page }) => {
+  await page.goto('/catechism?paragraph=2865');
+  await expect(page).toHaveURL(/\/catechism\?p=2865$/);
+  await expect(page.locator('#p2865')).toBeVisible();
+});
+
+test('Catecismo: leitor apresenta um único painel Conexo canônico', async ({ page }) => {
+  await page.goto('/catechism?p=279');
+  await expect(page.locator('#p279')).toBeVisible();
+  await expect(page.locator('[data-nexus-panel]')).toHaveCount(1);
+  await expect(page.locator('#relatio-heading')).toHaveCount(0);
+});
