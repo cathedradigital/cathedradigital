@@ -82,8 +82,12 @@ const MagisterioLegacyRedirect = () => {
 };
 
 const LoginAliasRedirect = () => {
-  const location = useLocation();
-  return <Navigate to={`/auth${location.search}${location.hash}`} replace />;
+  React.useEffect(() => {
+    // Use the browser URL to preserve the full query and hash across the legacy alias.
+    const base = ROUTER_BASENAME === '/' ? '' : ROUTER_BASENAME;
+    window.location.replace(`${base}/auth${window.location.search}${window.location.hash}`);
+  }, []);
+  return null;
 };
 
 const queryClient = new QueryClient({
