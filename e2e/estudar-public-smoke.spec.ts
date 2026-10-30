@@ -340,3 +340,20 @@ test('SEO: robots e sitemap preservam rotas públicas e excluem rotas privadas/d
   expect(sitemap).not.toContain('?');
   expect(sitemap).not.toContain('/igreja');
 });
+
+test('Átrio: carrossel editorial navega entre fontes oficiais', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.getByRole('heading', { name: 'Notícias da Igreja' })).toBeVisible();
+
+  const sourceLink = page.getByRole('link', { name: 'Ler na fonte original' });
+  await expect(sourceLink).toHaveAttribute('href', 'https://www.vatican.va/content/leo-xiv/pt/speeches/2026/october/documents/20261007-anniversario-amoris-laetitia.html');
+
+  await page.getByRole('button', { name: 'Próxima notícia' }).click();
+  await expect(sourceLink).toHaveAttribute('href', 'https://press.vatican.va/content/salastampa/it/bollettino/pubblico/2026/10/02/0780/01454.html');
+
+  await page.getByRole('button', { name: 'Notícia anterior' }).click();
+  await expect(sourceLink).toHaveAttribute('href', 'https://www.vatican.va/content/leo-xiv/pt/speeches/2026/october/documents/20261007-anniversario-amoris-laetitia.html');
+
+  await page.getByRole('button', { name: /Mostrar notícia 3:/ }).click();
+  await expect(sourceLink).toHaveAttribute('href', 'https://www.cnbb.org.br/dom-bruno-versari-aplicacao-amoris-laetitia-no-brasil/');
+});
