@@ -59,18 +59,24 @@ if (
 }
 
 const authCondition = String(authenticatedJob.if ?? "");
-if (
-  !authCondition.includes("refs/heads/main") ||
-  !authCondition.includes("workflow_dispatch") ||
-  !authCondition.includes("inputs.run_authenticated") ||
-  !authCondition.includes("push")
-) {
-  fail("Authenticated job must require main and only push or explicit workflow_dispatch.");
+const trustedReleasePr =
+  authCondition.includes("github.event_name == 'pull_request'") &&
+  authCondition.includes("github.event.pull_request.head.repo.full_name == github.repository") &&
+  authCondition.includes("github.event.pull_request.head.ref == 'ops/manual-release-gates-403-evidence-20261030'");
+const trustedMain =
+  authCondition.includes("refs/heads/main") &&
+  authCondition.includes("workflow_dispatch") &&
+  authCondition.includes("inputs.run_authenticated") &&
+  authCondition.includes("push");
+if (!trustedMain || !trustedReleasePr) {
+  fail("Authenticated job must require main for normal runs and the exact same-repository release branch for pre-merge validation.");
 }
 const authCheckout = (authenticatedJob.steps ?? []).find(
-  (step) => step.name === "Checkout trusted main",
+  (step) => step.name?.startsWith("Checkout trusted main"),
 );
-if (authCheckout?.with?.ref !== "main") fail("Authenticated job must checkout trusted main.");
+if (authCheckout?.with?.ref !== "${{ github.event.pull_request.head.sha || 'main' }}") {
+  fail("Authenticated job must checkout the exact trusted release PR SHA, or main for post-merge runs.");
+}
 if (!(authenticatedJob.steps ?? []).some((step) => step.run === "npx playwright test")) {
   fail("Authenticated job must retain the complete Playwright suite.");
 }
@@ -97,5 +103,5 @@ if (secretReferences.some(({ stepName }) => !permittedCredentialSteps.has(stepNa
 }
 
 console.log(
-  "[e2e-security] Workflow isolation validated: PR has no E2E secrets; full suite is restricted to trusted main.",
+  "[e2e-security] Workflow isolation validated: public PR job has no secrets; authenticated suite is restricted to main or the exact trusted same-repository release PR SHA.",
 );
