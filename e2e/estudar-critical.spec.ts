@@ -12,7 +12,16 @@ async function login(page: Page, destination: string) {
   await page.getByLabel('Email').fill(email!);
   await page.getByLabel('Senha').fill(password!);
   await page.getByRole('button', { name: 'Entrar', exact: true }).click();
-  const destinationPath = destination.split('?')[0];
+  const destinationPath = new URL(destination, page.url()).pathname;
+  const authError = page.getByRole('alert');
+  await Promise.race([
+    page.waitForURL(url => url.pathname === destinationPath, { timeout: 15_000 }),
+    authError.waitFor({ state: 'visible', timeout: 15_000 }).then(async () => {
+      throw new Error(
+        `Authentication failed before redirect to ${destinationPath}: ${(await authError.innerText()).trim()}`,
+      );
+    }),
+  ]);
   await expect(page).toHaveURL(url => url.pathname === destinationPath);
 }
 
