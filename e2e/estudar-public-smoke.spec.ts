@@ -302,3 +302,22 @@ test('Auth: alias /login preserva o deep-link completo ao encaminhar para /auth'
   await expect.poll(() => new URL(page.url()).pathname).toBe('/auth');
   await expect.poll(() => new URL(page.url()).searchParams.get('next')).toBe(destination);
 });
+
+test('Magistério: filtros de tema são acessíveis e alternam sem overlays', async ({ page }) => {
+  const errors: string[] = [];
+  page.on('console', message => {
+    if (message.type() === 'error') errors.push(message.text());
+  });
+
+  const response = await page.goto('/magisterium');
+  expect(response?.ok(), `/magisterium: HTTP ${response?.status()}`).toBeTruthy();
+  const themes = page.getByRole('group', { name: 'Carrossel de temas do Magistério' });
+  await expect(themes).toBeVisible();
+  const firstTheme = themes.getByRole('button').first();
+  const before = await firstTheme.getAttribute('aria-pressed');
+  await firstTheme.click();
+  await expect(firstTheme).toHaveAttribute('aria-pressed', before === 'true' ? 'false' : 'true');
+  await firstTheme.click();
+  await expect(firstTheme).toHaveAttribute('aria-pressed', before ?? 'false');
+  expect(errors, 'Magisterium theme filters: console errors').toEqual([]);
+});
