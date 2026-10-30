@@ -1,141 +1,56 @@
-# PR Closeout Ledger — lote histórico real de 23 PRs
+# PR Closeout Ledger — lote histórico aberto
 
 Repositório: `cathedradigital/cathedradigital`  
 Agente: `.github/agents/pr-closeout-23.agent.md`  
-Branch de instalação: `agents/pr-closeout-23-open-prs`  
-Última atualização: 2026-10-30
+Branch: `agents/pr-closeout-23-open-prs`  
+Data da consulta: 2026-10-30
 
-## Escopo confirmado no GitHub
+## Escopo real verificado
 
-PRs históricas (23):  
-`#1, #2, #4, #8, #26, #112, #113, #116, #117, #157, #162, #163, #165, #166, #167, #168, #171, #179, #182, #186, #190, #203, #206`.
+A busca GitHub `repo:cathedradigital/cathedradigital is:pr is:open` retornou 15 PRs abertas. A #215 é a release principal, fora do lote. Portanto, há **14 PRs históricas abertas**, não 23:
 
-Fora do lote: **#215** (release principal) e **#217** (instalação do agente). A busca do GitHub retornou 25 PRs abertas no total: as 23 acima + #215 + #217.
+`#8, #112, #116, #157, #162, #163, #165, #166, #167, #168, #171, #186, #190, #203`.
 
-## Estado da investigação — 2026-10-30
+PRs #1, #2, #26, #113, #117, #179, #182 e #206 foram consultadas e constam fechadas sem merge; não são PRs abertas e não devem ser reabertas automaticamente. #215 preservada. #217 fora do escopo.
 
-| PR | Branch | Head SHA observado | Arquivos | Sinal inicial / risco | Estado |
-|---:|---|---|---:|---|---|
-| #1 | security/auth-hardening | 3108b74e41d4 | 7 | Troca pipeline npm por Bun; alterações de favoritos e reading marks; exige revisar migrations e compatibilidade do CI | Investigação |
-| #2 | security/production-hardening-20260910 | d658eded8ccd | 486 | Escopo excessivamente amplo; inclui centenas de testes/arquivos, seeds SQL em grande volume e mudanças de segurança; alto risco de merge integral | Investigação |
-| #4 | — | — | — | Ainda não inspecionada em profundidade | Pendente |
-| #8 | fix/ui-ux-audit | 8e50faf9d089 | 19 | Inclui ZIP e relatórios em `public/`; remover exposição de artefatos antes de integrar qualquer mudança útil | Investigação |
-| #26 | feat/estudar-module-foundation | d51206519f9d | 9 | Fundação UX do Estudar; precisa comparar com UI atual e PRs posteriores | Investigação |
-| #112 | agent/master-estudar-exact-continuity-20261003 | 7e581a84e7cd | 4 | Sobreposição de Bible.tsx e MagisteriumViewer com PRs #113/#162/#165; patch contém bloco de scroll aparentemente serializado/escapeado e requer validação de sintaxe | Investigação |
-| #113 | agent/master-estudar-final-restoration-20261003 | fb687c56d836 | 6 | Sobreposição com #112; Auth/App e logos-ai/RLS exigem revisão de segurança | Investigação |
-| #116 | audit/bible-module-complete-20261003 | 19754b2584fd | 3 | Toca Bible.tsx/AtriumBibleReader; código da Bíblia congelado, não integrar sem autorização específica | Bloqueada por limite de escopo |
-| #117 | audit/bible-complete-20261003 | b6957106ad01 | 18 | Toca vários arquivos da Bíblia e Catecismo; inclui migration RLS e workflow de sync; não integrar mudanças da Bíblia sem autorização | Bloqueada por limite de escopo |
-| #157 | fix/catecismo-p0-connection-dedup-20261006 | f0064f1646a5 | 2 | Catecismo + E2E; elegível após confirmar checks e diff atual | Investigação |
-| #162 | fix/magisterium-explicit-language-20261008 | 7698dd22f7f7 | 7 | Apesar do título, patch inclui AuthGuard/App e E2E; sobrepõe #163 e #165; validar escopo real | Investigação |
-| #163 | fix/magisterium-theme-explorer-ui-20261008 | 500de2e7747b | 6 | Sobrepõe AuthGuard/App/E2E com #162; validar conteúdo visual exclusivo | Investigação |
-| #165 | fix/magisterium-mobile-reader-controls-20261008 | da7ea36a1afa | 5 | Alterações de shell global e ReaderToolbar; sobrepõe #162; validar mobile | Investigação |
-| #166 | audit/platform-sweep-20261008 | 39be97d900da | 19 | Inclui relatórios em public/, mudanças de rotas, RLS e workflow; requer revisão integral de segurança | Investigação |
-| #167 | fix/seo-indexing-ranking-20261009 | 0617cbb8f0f6 | 12 | Toca robots/sitemap e também hooks de Bíblia/Catecismo; preservar limite da Bíblia e validar canonicals | Investigação |
-| #168 | feat/magisterium-visual-doc-audit-20261010 | 325196401ce6 | 37 | Auditoria transversal; ampla sobreposição com #26/#162/#163/#165/#166 e #182 | Investigação |
-| #171 | fix/study-e2e-root-causes-20261011 | 0a77753f13e3 | 10 | SEO schema e navegação; inclui migration de perfil psicológico e Catecismo; validar projeto Supabase único e RLS | Investigação |
-| #179 | fix/bible-nexus-hydrate-on-cache | 82740c084f6a | 12 | Toca Bible.tsx e Catecismo; inclui Auth e sanitizador; não integrar alterações da Bíblia sem autorização | Bloqueada por limite de escopo |
-| #182 | docs/platform-operating-manual-20261017 | b44211e76661 | 51 | Altera workflows, App, AuthGuard, Supabase config, Catecismo e docs; contém referência de Vercel incompatível com arquitetura atual | Investigação |
-| #186 | fix/atrium-news-home-integration-clean | 234a7776c634 | 9 | Além do carrossel, toca MagisteriumViewer e Catecismo; comparar com #182 e validar conteúdo editorial | Investigação |
-| #190 | fix/catechism-deeplink-intersection-race-main | fabb7f60b055 | 17 | Contém docs/config Vercel, vercel.json e função corpus-ingest; Auth/SEO/Catecismo; precisa separar mudanças obsoletas | Investigação |
-| #203 | test/critical-estudar-atrium-e2e | 425a5ac2d390 | 1 | Apenas E2E; elegível após verificar se os testes adicionam cobertura real e não relaxam asserções | Investigação |
-| #206 | feat/arquiteto-chefe-governanca | dd7d60d390d8 | 4 | Documentação e instruções de agente; possível sobreposição com #2 e #179; validar conteúdo | Investigação |
+## Evidências por PR
 
-## Evidência preliminar de checks
+| PR | SHA head consultado | Arquivos | Checks observados | Achados e ação |
+|---:|---|---:|---|---|
+| #8 | `8e50faf9d08924759a855ba19e7b1a6da75dedef` | 19 | CI success | Remove `public/test-report.html`, `.md`, PDF, JSON e ZIP; remove painel de diagnóstico legado; alterações de UX. Avaliar ZIP/report e impacto visual antes de integrar. |
+| #112 | `7e581a84e7cd6890dabfce55d787ab44f7669876` | 4 | CI failure | Toca `Bible.tsx`; bloqueado pela regra de Bíblia congelada. Investigar apenas para classificar e não integrar alterações bíblicas sem autorização. |
+| #116 | `19754b2584fd18bce57d5c741dc8099020decbbc` | 3 | CI success; final audit success; E2E failure | Altera `Bible.tsx` e `AtriumBibleReader.tsx`; bloqueado pela regra de Bíblia congelada. |
+| #157 | `f0064f1646a5be9cfade0b7a5993948c1f824135` | 2 | CI success; final audit success; E2E failure | Remove componente Relatio duplicado do leitor Catecismo e adiciona teste de um painel Conexo. Candidato a correção isolada, mas E2E precisa ser resolvido. |
+| #162 | `7698dd22f7f78706604b002679a3df3b6074a02b` | 7 | CI success; final audit success; E2E failure | Altera fluxo auth, workflow E2E, Playwright e idioma Magistério. Teste não comprova login; revisão semântica necessária antes de integrar. |
+| #163 | `500de2e7747b244b1817d7a6969027ea9e4d70ab` | 6 | CI success; final audit success; E2E failure | Refatora filtros do Magistério e repete alterações de auth/E2E presentes em #162. Consolidar sobreposição para não duplicar mudanças. |
+| #165 | `da7ea36a1afa5ec47bc3b8b30d6b97d5fad9a68c` | 5 | CI success; final audit success; E2E failure | Ajusta cabeçalho e controles mobile; altera também auth, App e CSS. Comparar sobreposição com #162/#163 antes de integrar. |
+| #166 | `39be97d900daaf7151183575ec21e182a9e94b9c` | 19 | CI success; final audit success; E2E failure | Auditoria ampla, migrations de segurança, auth, Catecismo, Nexus, relatórios públicos. Workflow executa public smoke somente com `--project=chromium`, apesar do texto dizer ambos os viewports. Revisar migrations/RLS e corrigir comando antes de aceitar. |
+| #167 | `0617cbb8f0f635e555308e7a5cd5c7a6e7b83f06` | 12 | CI success; final audit success; E2E failure | SEO, robots/sitemap, AuthGuard e arquivos bíblicos (`useBibleNavigation.ts`), além do Catecismo. Não integrar trecho bíblico sem autorização; revisar canonicals/robots/sitemap. |
+| #168 | `325196401ce615038e64959d4d7c17a173a81114` | 37 | CI success; final audit success; E2E failure | Auditoria visual cross-module, muitos arquivos de interface e testes, inclui `src/data/catechism.ts` e readers. Precisa ser decomposta em mudanças menores e sobreposições com #163/#165/#166. |
+| #171 | `0a77753f13e3c2199d9b0182f6aef7f0bcf98188` | 10 | Nenhum run associado retornado | Altera aliases e sincronização do Catecismo, mas também `useBibleNavigation.ts`, `SEOHead`, `seo.ts` e migrations de schema/perfil. Não integrar parte bíblica sem autorização; validar migrations contra o schema atual antes de qualquer uso. |
+| #186 | `234a7776c6343293406321038bf96d9232583a52` | 9 | Nenhum run associado retornado | Integra carrossel editorial do Átrio; altera Magistério, Catecismo e Home. Revisar sobreposição com #168 e #190; exigir checks atuais. |
+| #190 | `fabb7f60b05540974f703b853dece999a3fb8161` | 17 | CI success; final audit success; E2E failure | Correção de deep-link do Catecismo misturada com Cloudflare, E2E, `public/test-report.*`, sanitizer e `vercel.json`. Separar a correção funcional; não introduzir cadeia Vercel. |
+| #203 | `425a5ac2d390fd5b9d784142d08d4fa96fedbbb6` | 1 | CI success; final audit success; E2E failure | Altera somente `e2e/estudar-critical.spec.ts`; melhora espera de login e testa links do Átrio. Candidato a consolidar com alterações de teste das #162/#163/#166/#171/#190, após corrigir e executar E2E. |
 
-- #1, #112: nenhum status combinado retornado para o head consultado.
-- #2, #8: status Vercel success; não é evidência de build/publicação Cloudflare e não substitui os gates do projeto.
-- #26: status Vercel failure com motivo `build-rate-limit`; não é falha funcional comprovada, mas não é aprovação.
-- Os demais heads ainda aguardam coleta de status e Actions.
-- Mergeability false em várias PRs não foi interpretado como conflito semântico; precisa de comparação/atualização da base.
+## Achados transversais confirmados
+
+1. **Falha E2E recorrente:** #116, #157, #162, #163, #165, #166, #167, #168, #190 e #203 têm run E2E concluído como failure no SHA consultado. CI e auditoria final verdes não substituem E2E.
+2. **Duplicação de auth/E2E:** #162, #163, #166, #171, #190 e #203 tocam `e2e/estudar-critical.spec.ts`, `App.tsx`, `AuthGuard.tsx` ou workflow. Consolidar por comportamento esperado, não por cherry-pick cego.
+3. **Bíblia congelada:** #112, #116 e #171 contêm alterações em arquivos bíblicos. #167 também toca `useBibleNavigation.ts`. Essas partes ficam fora da integração sem autorização expressa.
+4. **Migrations sensíveis:** #166 e #171 incluem migrations relacionadas a perfil, SEO e permissões. Não executar remotamente; verificar ordem, idempotência, grants e RLS em ambiente de teste.
+5. **Artefatos públicos:** #8, #166 e #190 removem ou adicionam relatórios de teste em `public/`. Não publicar traces, dumps ou relatórios internos.
+6. **Deploy:** #190 inclui `docs/deployment/vercel.md` e remove `vercel.json`; o caminho oficial continua Cloudflare Workers.
 
 ## Próximas ações técnicas
 
-1. Comparar diffs completos e commits por grupos de sobreposição.
-2. Identificar quais alterações já chegaram à main ou à #215.
-3. Remover exposição de relatórios/ZIPs em `public/` nas alterações que forem aproveitadas.
-4. Separar mudanças válidas das mudanças incompatíveis (Vercel, troca de package manager, Bíblia congelada).
-5. Criar branch de consolidação baseada na main atual, implementar mudanças seguras e executar testes reais.
-6. Só então fechar PRs com prova de destino do conteúdo.
+- [ ] Buscar detalhes dos logs de falha E2E de cada SHA e identificar causa raiz compartilhada.
+- [ ] Inspecionar checks completos e reviews/conversas antes de decidir integração.
+- [ ] Criar branch de consolidação a partir da `main` atual.
+- [ ] Consolidar primeiro correções não-bíblicas e de baixo acoplamento (Catecismo/Conexo, Magistério, UI, SEO seguro, Átrio).
+- [ ] Isolar/omitir mudanças em arquivos da Bíblia sem autorização.
+- [ ] Corrigir o workflow de public smoke para realmente executar desktop e mobile se esse for o requisito.
+- [ ] Executar quality/CI, auditoria, build Cloudflare e Playwright desktop/mobile no mesmo SHA.
+- [ ] Integrar mudanças aprovadas, fechar PRs com comentários de destino e SHA.
+- [ ] Executar workflow manual Cloudflare e verificar produção, robots e sitemap.
 
-## Gates finais
-
-- [ ] 23 PRs investigadas por diff, commits, reviews, checks e dependências.
-- [ ] Alterações exclusivas válidas implementadas e preservadas.
-- [ ] Nenhum conteúdo da Bíblia alterado sem autorização.
-- [ ] RLS/autenticação/ownership preservados e testados.
-- [ ] Zero PR aberta dentro da allowlist.
-- [ ] #215 e #217 preservadas.
-- [ ] CI, auditoria, build Cloudflare e E2E aplicáveis aprovados no mesmo SHA.
-- [ ] Workflow manual Cloudflare executado separadamente.
-- [ ] Domínios oficiais, Worker, robots.txt e sitemap.xml verificados em produção.
-
-Nenhuma PR histórica foi fechada ou integrada nesta fase de investigação. Não marcar qualquer item como concluído sem SHA e URL de evidência.
-
-## Evidências adicionais — CI e Supabase de produção
-
-### CI histórico consultado nos SHAs das PRs
-
-| PR | Workflow | Resultado | Diagnóstico observado |
-|---:|---|---|---|
-| #1 | Node.js CI | Falhou | ESLint/Prettier: 49.725 erros e 165 avisos; branch troca npm por Bun e não é compatível com o pipeline npm atual |
-| #2 | Node.js CI | Falhou | ESLint: 18 erros e 177 avisos, incluindo Rules of Hooks e no-require-imports |
-| #4 | Node.js CI | Falhou | ESLint: 1.068 erros e 159 avisos; adiciona também workflow e script específicos de Vercel, incompatíveis com a arquitetura atual |
-| #8 | CI | Passou | A comparação com main mostra a remoção dos artefatos antigos `public/cathedra.zip`, relatórios HTML/MD/PDF e JSON de indexação; alterações visuais ainda precisam ser comparadas ao estado atual |
-| #26 | CI | Falhou | TypeScript em `src/services/corpusService.ts`: schema generated não reconhece colunas/relations de corpus; Vercel falhou por rate limit de build, não é evidência Cloudflare |
-
-### Verificação direta do projeto Supabase ativo
-
-- `list_projects` confirmou exatamente um projeto: `isojguvcnfncokoxoauk`, nome `cathedradigital`, estado `ACTIVE_HEALTHY`, PostgreSQL 17, região `sa-east-1`.
-- Consulta de catálogo em produção confirmou RLS ativo e política owner-scoped `notifications_own` para todas as operações, com `auth.uid() = user_id` em USING e WITH CHECK.
-- A mesma consulta confirmou RLS ativo e política owner-scoped `reading_marks_own` para todas as operações, com USING e WITH CHECK por `auth.uid() = user_id`.
-- A tabela `public.bible_favorites` não existe no projeto ativo (consulta ao catálogo retornou zero linhas). A migration da PR #1 pula a criação quando a tabela não existe, mas o hook proposto passa a consultar/inserir nessa tabela para usuários autenticados. Integrar esse hook isoladamente quebraria favoritos autenticados e ocultaria os favoritos locais existentes.
-- Não executar migrations de produção para tentar fazer o hook funcionar sem antes definir schema, migração de dados, RLS, unicidade, testes e compatibilidade com `useDevotionalFavorites`.
-
-### Consequências para a triagem
-
-- PR #1: a política de notifications e reading_marks já está coberta no banco ativo; a parte de favoritos depende de tabela inexistente e exige redesenho/migração antes de ser aproveitada. Não fazer merge integral.
-- PR #2: o escopo de 486 arquivos e o CI falho impedem merge integral. Separar migrations/testes realmente exclusivos depois de comparar com o estado do banco e com as migrations já aplicadas.
-- PR #4: o pipeline npm já é o padrão atual e #215 traz npm 10.9.9/lockfile; não importar o workflow Vercel.
-- PR #8: a remoção de artefatos públicos é útil e a comparação indica que o PR remove os arquivos; verificar quais alterações visuais continuam ausentes antes de encerrar.
-- PR #26: a alteração de UX não pode ser integrada até resolver os erros de tipos e demonstrar que os arquivos continuam compatíveis com a arquitetura atual.
-
-
-## Resultado dos workflows históricos — lote completo
-
-| PR | CI | Auditoria/validação | E2E | Evidência / diagnóstico |
-|---:|---|---|---|---|
-| #112 | Falhou | — | — | CI Node.js falhou; precisa corrigir antes de reaproveitar mudanças de Magistério |
-| #113 | Passou | Passou | Não executado | Mergeability false; sobreposição com #112/#162/#163 e mudanças AuthGuard |
-| #116 | Passou | Passou | Falhou | Altera Bible.tsx e AtriumBibleReader; não integrar código da Bíblia |
-| #117 | Falhou | Falhou | Falhou | Alterações amplas da Bíblia, Catecismo, sincronização e migration RLS; não integrar integralmente |
-| #157 | Passou | Passou | Falhou | E2E público falhou em seletores/URL e mobile; correção seletiva foi implementada em #218 |
-| #162 | Passou | Passou | Falhou | E2E: 16 casos falharam, com timeout de navegação, deep links e links de referência duplicados |
-| #163 | Passou | Passou | Falhou | E2E falhou; sobreposição de workflow/AuthGuard/App com #162 |
-| #165 | Passou | Passou | Falhou | E2E falhou; alterações de controles mobile ainda sem validação final |
-| #166 | Passou | Passou | Falhou | Migrações de perfil/role e premium foram aplicadas no projeto atual sob versões novas #215; demais mudanças precisam de comparação |
-| #167 | Passou | Passou | Falhou | E2E falhou; alteração do robots/sitemap junto com hooks da Bíblia; não importar mudanças da Bíblia |
-| #168 | Passou | Passou | Falhou | 11 casos E2E falharam, incluindo deep link de Catecismo, links de referência duplicados e overflow mobile |
-| #171 | Passou | Passou | Falhou | 16 casos E2E falharam; navegação e links mobile |
-| #179 | Passou | Passou | Falhou | E2E: 48 falhas; login/deep links/rotas e seletores mobile |
-| #182 | Passou | Passou | Cancelado | 45 min sem conclusão; PR ampla com workflow e configuração, incluindo referências Vercel incompatíveis |
-| #186 | Não encontrado | Não encontrado | Não encontrado | Nenhum workflow retornado para o head consultado; mergeability false |
-| #190 | Passou | Passou | Falhou | E2E não iniciou: preflight Supabase retornou HTTP 400 invalid_credentials; patch inclui correção de deep link reaproveitada seletivamente em #218 |
-| #203 | Passou | Passou | Falhou | 42 falhas E2E; page.waitForURL expirou em múltiplos fluxos |
-| #206 | Passou | Passou | Não aplicável / não executado | PR contém somente documentação e perfil de agente; conteúdo revisado, sem alterações de runtime |
-
-### Implementação em andamento
-
-- PR #218 (ops/pr-consolidation-23) reaplica sobre a main atual correções seletivas das PRs #157 e #190:
-  - remove o Relatio duplicado do Catecismo;
-  - exige um único data-nexus-panel no E2E;
-  - corrige canonicalização ?paragraph=N para ?p=N;
-  - limita o observer aos artigos reais do leitor;
-  - melhora o diagnóstico do login Playwright para revelar a rejeição real do Supabase.
-- SHA atual da PR #218: 96851f98bfcfbd465f34219d0333ee1d78ddba38.
-- No SHA atual: CI success, auditoria success, Playwright público desktop/mobile ainda in_progress na última consulta. Não integrar nem fechar #157/#190 até o E2E concluir.
-
-### Decisão de segurança do lote
-
-- Nenhum merge/fechamento de PR histórica foi realizado ainda.
-- Não executar mudanças de produção Supabase nesta etapa. As consultas foram somente leitura.
-- Não publicar produção. O único alvo de deploy segue sendo Cloudflare Workers, por workflow manual após a release principal.
+**Estado honesto:** análise inicial de metadata, arquivos, patches e runs concluída para as 14 PRs abertas. Nenhuma PR histórica foi integrada ou fechada nesta etapa. Não há publicação declarada. A execução de testes local/Playwright e a consolidação funcional ainda precisam ser realizadas.
