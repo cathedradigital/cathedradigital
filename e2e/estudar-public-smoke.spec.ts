@@ -289,3 +289,16 @@ test('Bíblia: picker mobile único e navegação livro → capítulo preserva U
   await expect(page).toHaveURL(/\/bible\?book=Gn&ch=2$/);
   await expect(page.locator('body')).toContainText(/Gênesis|Genesis/i);
 });
+
+test('Auth: rota protegida preserva query e hash no destino de retorno', async ({ page }) => {
+  await page.goto('/diario?tab=history#latest');
+  await expect.poll(() => new URL(page.url()).pathname).toBe('/auth');
+  await expect.poll(() => new URL(page.url()).searchParams.get('next')).toBe('/diario?tab=history#latest');
+});
+
+test('Auth: alias /login preserva o deep-link completo ao encaminhar para /auth', async ({ page }) => {
+  const destination = '/bible?book=joao&chapter=1&v=1#verse-1';
+  await page.goto('/login?next=' + encodeURIComponent(destination));
+  await expect.poll(() => new URL(page.url()).pathname).toBe('/auth');
+  await expect.poll(() => new URL(page.url()).searchParams.get('next')).toBe(destination);
+});
