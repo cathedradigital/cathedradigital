@@ -17,6 +17,7 @@ Uma etapa não substitui outra. Build aprovado não comprova autenticação, aut
 ## 2. Fluxos críticos
 
 Cobrir, conforme o escopo implementado:
+
 - Átrio e navegação principal;
 - Bíblia: catálogo, referência, capítulo/versículo, reload, back/forward e retorno contextual;
 - Catecismo: §§1, 25, 26, 2262 e 2865, aliases de URL e retorno contextual;
@@ -43,6 +44,12 @@ Os testes autenticados devem usar a conta de teste autorizada e os secrets do Gi
 
 Executar testes negativos de autorização e isolamento entre duas contas de teste quando o cenário exigir. Falha no preflight de autenticação deve ser classificada como falha de ambiente/configuração; não deve ser confundida com reprovação funcional do navegador.
 
+### Fronteira de credenciais no CI
+
+- O evento `pull_request` roda apenas `npm run test:e2e:public`, sem disponibilizar `E2E_TEST_EMAIL` ou `E2E_TEST_PASSWORD` ao código do PR.
+- A suíte autenticada completa roda em `push` para `main`; o disparo manual em `main` exige a opção explícita `run_authenticated`. O job autenticado faz checkout de `main` e injeta credenciais apenas nos passos que as utilizam.
+- O artifact Playwright fica limitado a `safe-playwright-evidence/report.json`, após validação fail-closed. Nunca publicar traces, screenshots, vídeos ou diretórios brutos de testes autenticados.
+
 ## 5. Integridade dos testes
 
 - Não remover nem enfraquecer asserções para obter aprovação.
@@ -56,6 +63,7 @@ Executar testes negativos de autorização e isolamento entre duas contas de tes
 CI, auditoria de dependências e Playwright desktop/mobile devem estar aprovados no **mesmo SHA final**. Os resultados devem apontar para o mesmo commit; não combinar aprovação de commits diferentes.
 
 Antes de produção, verificar os três destinos configurados:
+
 - `https://cathedradigital.com.br`
 - `https://www.cathedradigital.com.br`
 - `https://cathedradigital.cathedradigital.workers.dev`
@@ -65,6 +73,7 @@ Verificar também `robots.txt`, `sitemap.xml`, versão efetivamente servida, rot
 ## 7. Registro obrigatório
 
 Para cada execução, registrar:
+
 - workflow e URL da execução;
 - SHA exato;
 - ambiente e navegador/viewport;

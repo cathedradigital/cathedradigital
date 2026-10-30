@@ -23,6 +23,7 @@
 ## 3. Supabase e RLS
 
 Auditar cada tabela, view, função RPC e operação de storage utilizada pelo produto. Para cada objeto, registrar:
+
 - se contém dados públicos, pessoais ou administrativos;
 - roles que podem executar SELECT/INSERT/UPDATE/DELETE;
 - policy efetiva e condição de propriedade;
@@ -38,7 +39,10 @@ Executar teste de isolamento com duas contas de teste autorizadas: cada conta s�
 
 A configuração versionada em `supabase/config.toml` declara as funções `logos-ai`, `corpus-ingest`, `bible-text`, `vatican-document` e `source-sync`. A configuração de `verify_jwt` deve ser lida função por função; quando o gateway não exige JWT, a implementação precisa aplicar os controles próprios adequados à exposição pública.
 
+A função pública `bible-text` é somente leitura: consultas ao corpus usam a chave anônima e as políticas RLS públicas. A gravação do corpus fica no fluxo `source-sync`, que valida o token OIDC do GitHub e restringe o `ref` a `main` antes de usar service role.
+
 Para cada função, verificar:
+
 - método e formato de entrada;
 - autenticação e autorização;
 - validação de payload e limites;
@@ -69,6 +73,7 @@ Para cada função, verificar:
 ## 7. Critério de aprovação
 
 Uma revisão só pode ser marcada como aprovada quando houver:
+
 - inventário de objetos e funções examinados;
 - políticas efetivas e testes negativos;
 - isolamento entre contas demonstrado;

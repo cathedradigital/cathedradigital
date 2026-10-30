@@ -12,7 +12,8 @@ async function login(page: Page, destination: string) {
   await page.getByLabel('Email').fill(email!);
   await page.getByLabel('Senha').fill(password!);
   await page.getByRole('button', { name: 'Entrar', exact: true }).click();
-  expect(page.url()).toContain(destination.split('?')[0]);
+  const destinationPath = destination.split('?')[0];
+  await expect(page).toHaveURL(url => url.pathname === destinationPath);
 }
 
 function watchBrowserHealth(page: Page) {
@@ -41,8 +42,8 @@ async function openStudyJournal(page: Page, marker: string) {
 test('auth redirect preserves protected destination', async ({ page }) => {
   await page.context().clearCookies();
   await page.goto('/diario');
-  expect(page.url()).toContain('/login?next=');
-  expect(page.url()).toContain('diario');
+  await expect(page).toHaveURL(/\/auth\?next=/);
+  expect(new URL(page.url()).searchParams.get('next')).toContain('diario');
 });
 
 test('Bíblia: anotação → Diário → retorno exato ao versículo', async ({ page }) => {
@@ -182,8 +183,9 @@ test('Catecismo: fronteiras desabilitam anterior em §1 e próximo em §2865', a
 
 test('Catecismo: §2262 preserva o texto oficial e abre a referência bíblica', async ({ page }) => {
   await page.goto('/catechism?p=2262');
-  await expect(page.locator('body')).toContainText('No sermão da montanha, o Senhor lembra o preceito');
-  const bibleRef = page.getByRole('button', { name: /Mt 5, 21/i }).first();
+  const paragraph = page.locator('#p2262');
+  await expect(paragraph).toContainText('No sermão da montanha, o Senhor lembra o preceito');
+  const bibleRef = paragraph.getByRole('button', { name: /Mt 5, 21/i }).first();
   await expect(bibleRef).toBeVisible();
   await bibleRef.click();
   await expect(page).toHaveURL(/\/bible\?book=Mt&ch=5&v=21/);

@@ -21,8 +21,8 @@ const BIBLE_BOOK_MAP: Record<string, string> = {
   'Tb': 'tb', 'Tobias': 'tb',
   'Jdt': 'jdt', 'Judite': 'jdt',
   'Est': 'est', 'Ester': 'est',
-  '1Mc': '1mc', '1 Mc': '1mc', '1Macabeus': '1mc',
-  '2Mc': '2mc', '2 Mc': '2mc', '2Macabeus': '2mc',
+  '1Mc': '1mc', '1 Mc': '1mc', '1 Mac': '1mc', '1Macabeus': '1mc',
+  '2Mc': '2mc', '2 Mc': '2mc', '2 Mac': '2mc', '2Macabeus': '2mc',
   'Jó': 'job', 'Job': 'job',
   'Sl': 'sl', 'Salmos': 'sl', 'Salmo': 'sl',
   'Pr': 'pr', 'Provérbios': 'pr',
@@ -106,10 +106,10 @@ export interface ParsedSegment {
 
 // Full reference pattern: (Book) (Chapter)[, (Verse)[-(EndVerse)]]
 const FULL_REF_PATTERN = (bookNames: string[]) => 
-  new RegExp(`(?:cf\\.?\\s*)?(${bookNames.join('|')})\\s+(\\d{1,3})(?:[,.:]\\s*(\\d{1,3})(?:\\s*[-–]\\s*\\d{1,3})?)?`, 'g');
+  new RegExp(`(?:cf\\.?\\s*)?(${bookNames.join('|')})\\s+(\\d{1,3})(?:[,.:]\\s*(\\d{1,3})(?:\\s*[-–]\\s*(\\d{1,3}))?)?`, 'g');
 
 // Short reference pattern (only numbers): (Chapter)[, (Verse)[-(EndVerse)]]
-const SHORT_REF_PATTERN = new RegExp(`(\\d{1,3})(?:[,.:]\\s*(\\d{1,3})(?:\\s*[-–]\\s*\\d{1,3})?)?`, 'g');
+const SHORT_REF_PATTERN = new RegExp(`(\\d{1,3})(?:[,.:]\\s*(\\d{1,3})(?:\\s*[-–]\\s*(\\d{1,3}))?)?`, 'g');
 
 export function parseBibleReferences(text: string): ParsedSegment[] {
   if (!text) return [];
