@@ -12,6 +12,7 @@
 ## E2E crítico
 
 Cobrir pelo menos:
+
 - home/Hoje;
 - menu;
 - Bíblia;
@@ -31,6 +32,7 @@ Cobrir pelo menos:
 Validar especialmente 320, 360, 390 e 412 px.
 
 P0:
+
 - overflow horizontal;
 - elementos fora da viewport;
 - botões não clicáveis;
@@ -41,6 +43,12 @@ P0:
 ## CI
 
 Falhas reais devem falhar o pipeline. Evitar `|| true` em testes de certificação, salvo quando o objetivo for explicitamente não bloqueante e isso estiver documentado.
+
+### Fronteira de segurança para E2E autenticado
+
+- O evento `pull_request` executa somente `npm run test:e2e:public`, sem injetar `E2E_TEST_EMAIL` ou `E2E_TEST_PASSWORD` no checkout do PR.
+- A suíte autenticada completa roda em `push` para `main` e pode ser iniciada manualmente em `main` com a opção explícita `run_authenticated`; o job sempre faz checkout de `main` e injeta credenciais somente nos passos que as exigem.
+- A evidência Playwright enviada como artifact deve continuar limitada a `safe-playwright-evidence/report.json`, após validação fail-closed. Nunca publicar traces, screenshots, vídeos ou diretórios brutos de teste autenticado.
 
 ## Definition of Done
 
