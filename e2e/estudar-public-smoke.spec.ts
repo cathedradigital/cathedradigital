@@ -254,3 +254,17 @@ test('canonical public modules render on mobile and desktop without horizontal o
     }
   }
 });
+
+test('Orações: metadados do portal preservam a semântica de lista de definições', async ({ page }) => {
+  const errors: string[] = [];
+  page.on('console', message => {
+    if (message.type() === 'error') errors.push(message.text());
+  });
+
+  const response = await page.goto('/oracao/ave-maria');
+  expect(response?.ok(), `/oracao/ave-maria: HTTP ${response?.status()}`).toBeTruthy();
+  await expect(page.locator('body')).not.toContainText(/Application error|Something went wrong/i);
+  await expect(page.locator('dl > div > dt').filter({ hasText: 'Duração' })).toBeVisible();
+  await expect(page.locator('dl > div > dd').first()).toBeVisible();
+  expect(errors, 'Prayer portal: console errors').toEqual([]);
+});
