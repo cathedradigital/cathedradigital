@@ -122,8 +122,12 @@ export function mergeCuratedEdges(
     if (!resolved?.url) continue;
     if (nodeId === base.selfId) continue;
 
+    // The curated edge label can be more precise than a generic node already
+    // registered in KnowledgeGraph (for example, "Gn 1:1" instead of "Gn 1").
+    // Keep the resolved route, but prefer the editorial relation label for display.
     const curatedResolved: ResolvedNode = {
       ...resolved,
+      node: edge.title?.trim() ? { ...resolved.node, label: edge.title.trim() } : resolved.node,
       nexusEvidence: 'editorial',
       nexusRelationKind: normalizeRelationKind(edge.relationType),
       nexusExplanation: edge.note ?? 'Relação curada no grafo do Cátedra.',
