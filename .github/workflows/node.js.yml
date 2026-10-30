@@ -23,6 +23,13 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Export resolved npm lockfile for migration to reproducible installs
+        uses: actions/upload-artifact@v5
+        with:
+          name: npm-lockfile-${{ github.sha }}
+          path: package-lock.json
+          retention-days: 1
+
       - name: Audit production dependencies
         run: npm audit --omit=dev --audit-level=high
 
