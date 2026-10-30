@@ -146,3 +146,12 @@ Nenhuma PR histórica foi fechada ou integrada nesta fase de investigação. Nã
 - PR #217: **closed sem merge direto** (PR auxiliar fora do lote), com o perfil PR Closeout 23 e o ledger copiados byte a byte para esta branch de release. O agente ficará disponível na main somente após merge aprovado da #215.
 - SHA da branch de release após a cópia: `74e4ac05d5ff57561ed783279ac12509676e0f52`.
 - As outras 22 PRs da allowlist histórica continuam abertas e em investigação. Nenhuma foi fechada sem decisão de preservação.
+
+### PR #1 — decisão técnica de encerramento
+
+- O documento de autenticação/RLS foi preservado em docs/security/authentication.md na branch da release.
+- As políticas de produção notifications_own e reading_marks_own já impõem auth.uid() = user_id em USING e WITH CHECK; as migrations antigas da PR #1 para essas políticas são redundantes no projeto ativo.
+- A tabela public.bible_favorites não existe no único projeto Supabase ativo. O hook da PR #1 mudaria favoritos autenticados para consultar essa tabela inexistente, sem migração de dados do localStorage; não integrar esse hook.
+- O índice parcial de leitura (um is_last_read por usuário) ainda não existe no banco. A tabela tem 1 linha e zero duplicatas; o índice é uma melhoria válida, mas precisa de migration nova gerada pelo fluxo Supabase correto, com teste e revisão. Não aplicar DDL de produção nem inventar versão de migration nesta rodada.
+- O workflow Node.js CI da PR #1 falha com 49.725 erros Prettier/ESLint e a branch troca npm por Bun, incompatível com o release atual.
+- A PR #1 será encerrada como substituída/ parcialmente preservada: documento integrado, RLS já garantida no banco, hook de favoritos rejeitado por depender de tabela inexistente, índice parcial registrado como pendência técnica explícita.
