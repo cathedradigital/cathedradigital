@@ -1,35 +1,54 @@
 name: Estudar E2E
 
 on:
-  push:
-    branches: ["main"]
   pull_request:
     branches: ["main"]
     paths:
       - "src/**"
-      - "supabase/functions/**"
       - "e2e/**"
+      - "scripts/test-safe-playwright-evidence.mjs"
+      - "scripts/validate-e2e-security.mjs"
+      - "scripts/validate-security-boundaries.mjs"
+      - "supabase/**"
       - "playwright.config.ts"
       - "package.json"
+      - "docs/quality/testing.md"
+      - ".github/workflows/estudar-e2e.yml"
+  push:
+    branches: ["main"]
+    paths:
+      - "src/**"
+      - "e2e/**"
+      - "scripts/test-safe-playwright-evidence.mjs"
+      - "scripts/validate-e2e-security.mjs"
+      - "scripts/validate-security-boundaries.mjs"
+      - "supabase/**"
+      - "playwright.config.ts"
+      - "package.json"
+      - "docs/quality/testing.md"
       - ".github/workflows/estudar-e2e.yml"
   workflow_dispatch:
+    inputs:
+      run_authenticated:
+        description: "Executar a suíte autenticada com a conta E2E em main"
+        required: true
+        type: boolean
+        default: false
 
 concurrency:
   group: estudar-e2e-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 jobs:
-  e2e:
+  public-e2e:
     name: Browser E2E — PR
+    if: github.event_name == 'pull_request' || github.event_name == 'push' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     timeout-minutes: 45
     permissions:
       contents: read
-    env:
-      E2E_TEST_EMAIL: ${{ secrets.E2E_TEST_EMAIL }}
-      E2E_TEST_PASSWORD: ${{ secrets.E2E_TEST_PASSWORD }}
     steps:
-      - name: Checkout PR HEAD
+      - name: Checkout tested source
         uses: actions/checkout@v6
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
@@ -45,23 +64,84 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
 
-      - name: Build PR HEAD
+      - name: Build tested source
         run: npm run build
 
-      - name: Verify authenticated E2E account exists
+      - name: Verify safe evidence handling with synthetic values
+        run: node scripts/test-safe-playwright-evidence.mjs
+
+      - name: Run public Playwright suite (desktop and mobile)
+        run: npm run test:e2e:public
+
+      - name: Validate sanitized public evidence
+        id: safe_evidence
+        if: always()
+        run: node e2e/verify-safe-playwright-evidence.mjs
+
+      - name: Upload sanitized public evidence
+        if: ${{ !cancelled() && steps.safe_evidence.outcome == 'success' }}
+        uses: actions/upload-artifact@v5
+        with:
+          name: estudar-e2e-public-evidence
+          path: safe-playwright-evidence/report.json
+          retention-days: 7
+
+  authenticated-e2e:
+    name: Browser E2E — autenticado (main)
+    if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.run_authenticated))
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout trusted main
+        uses: actions/checkout@v6
+        with:
+          ref: main
+
+      - name: Setup Node 22
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22.x"
+
+      - name: Install application dependencies
+        run: npm install
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Build trusted main
+        run: npm run build
+
+      - name: Verify safe evidence handling with synthetic values
+        run: node scripts/test-safe-playwright-evidence.mjs
+
+      - name: Check authenticated E2E secrets are configured
         run: |
           test -n "$E2E_TEST_EMAIL" || { echo "::error::Missing E2E_TEST_EMAIL — authenticated E2E is blocked"; exit 1; }
           test -n "$E2E_TEST_PASSWORD" || { echo "::error::Missing E2E_TEST_PASSWORD — authenticated E2E is blocked"; exit 1; }
+        env:
+          E2E_TEST_EMAIL: ${{ secrets.E2E_TEST_EMAIL }}
+          E2E_TEST_PASSWORD: ${{ secrets.E2E_TEST_PASSWORD }}
 
-      - name: Run critical Estudar E2E
-        run: npx playwright test e2e/estudar-critical.spec.ts
+      - name: Run complete authenticated Playwright suite
+        run: npx playwright test
+        env:
+          E2E_TEST_EMAIL: ${{ secrets.E2E_TEST_EMAIL }}
+          E2E_TEST_PASSWORD: ${{ secrets.E2E_TEST_PASSWORD }}
 
-      - name: Upload Playwright evidence
-        if: ${{ !cancelled() }}
+      - name: Validate sanitized authenticated evidence
+        id: safe_evidence
+        if: always()
+        run: node e2e/verify-safe-playwright-evidence.mjs
+        env:
+          E2E_TEST_EMAIL: ${{ secrets.E2E_TEST_EMAIL }}
+          E2E_TEST_PASSWORD: ${{ secrets.E2E_TEST_PASSWORD }}
+
+      - name: Upload sanitized authenticated evidence
+        if: ${{ !cancelled() && steps.safe_evidence.outcome == 'success' }}
         uses: actions/upload-artifact@v5
         with:
-          name: estudar-e2e-evidence
-          path: |
-            playwright-report/
-            test-results/
+          name: estudar-e2e-authenticated-evidence
+          path: safe-playwright-evidence/report.json
           retention-days: 7
