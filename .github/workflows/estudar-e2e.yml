@@ -87,17 +87,17 @@ jobs:
           retention-days: 7
 
   authenticated-e2e:
-    name: Browser E2E — autenticado (main)
-    if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.run_authenticated))
+    name: Browser E2E — autenticado (main e PR de release confiável)
+    if: (github.ref == 'refs/heads/main' && (github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.run_authenticated))) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'ops/manual-release-gates-403-evidence-20261030')
     runs-on: ubuntu-latest
     timeout-minutes: 45
     permissions:
       contents: read
     steps:
-      - name: Checkout trusted main
+      - name: Checkout trusted main or the exact trusted release PR SHA
         uses: actions/checkout@v6
         with:
-          ref: main
+          ref: ${{ github.event.pull_request.head.sha || 'main' }}
 
       - name: Setup Node 22
         uses: actions/setup-node@v6
