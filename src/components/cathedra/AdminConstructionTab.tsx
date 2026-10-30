@@ -124,10 +124,14 @@ const AdminConstructionTab: React.FC = () => {
       let jsonData: Record<string, unknown>[] = [];
 
       if (fileName.endsWith('.csv')) {
-        const parsed = Papa.parse<Record<string, unknown>>(file, {
-          header: true,
-          skipEmptyLines: true,
-          dynamicTyping: false,
+        const parsed = await new Promise<Papa.ParseResult<Record<string, unknown>>>((resolve, reject) => {
+          Papa.parse<Record<string, unknown>>(file, {
+            header: true,
+            skipEmptyLines: true,
+            dynamicTyping: false,
+            complete: resolve,
+            error: reject,
+          });
         });
         if (parsed.errors.length > 0) {
           throw new Error('CSV inválido. Verifique a separação das colunas e a codificação do arquivo.');
