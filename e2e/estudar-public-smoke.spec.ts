@@ -215,3 +215,29 @@ test('Documentos: Dei Filius organiza cabeçalho, idioma original e tradução',
   await expect(page.getByText('Temas', { exact: true })).toHaveCount(0);
   expect(errors, 'Dei Filius: console errors').toEqual([]);
 });
+
+test('Magistério: filtros editoriais por categoria e temas são acessíveis e funcionais', async ({ page }) => {
+  const errors: string[] = [];
+  page.on('console', message => {
+    if (message.type() === 'error') errors.push(message.text());
+  });
+
+  const response = await page.goto('/magisterium');
+  expect(response?.ok(), `/magisterium: HTTP ${response?.status()}`).toBeTruthy();
+
+  await expect(page.getByRole('heading', { name: 'Temas do Magistério' })).toBeVisible();
+  const category = page.getByRole('button', { name: 'Encíclicas', exact: true });
+  await expect(category).toBeVisible();
+  await category.click();
+  await expect(category).toHaveAttribute('aria-pressed', 'true');
+
+  const themes = page.getByRole('group', { name: 'Carrossel de temas do Magistério' });
+  await expect(themes).toBeVisible();
+  const firstTheme = themes.getByRole('button').first();
+  await expect(firstTheme).toContainText(/documentos?/i);
+  await expect(firstTheme).toHaveAttribute('aria-pressed', 'false');
+  await firstTheme.click();
+  await expect(firstTheme).toHaveAttribute('aria-pressed', 'true');
+
+  expect(errors, 'Magistério filters: console errors').toEqual([]);
+});
