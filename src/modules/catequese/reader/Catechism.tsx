@@ -570,9 +570,13 @@ const Catechism: React.FC = memo(() => {
 
   useEffect(() => {
     const rawParagraph = getParagraphParam(searchParams);
-    if (typeof initialParagraph === 'number' && rawParagraph !== String(initialParagraph)) {
-      // Canonicalize the legacy \`?paragraph=N\` alias immediately so shared links,
-      // browser history and analytics converge on the single \`?p=N\` contract.
+    const hasLegacyAlias = searchParams.has('paragraph');
+    if (
+      typeof initialParagraph === 'number' &&
+      (hasLegacyAlias || searchParams.get('p') !== String(initialParagraph))
+    ) {
+      // Canonicalization depends on the parameter name, not just its value:
+      // ?paragraph=2865 parses to "2865" too, so the legacy alias must be removed.
       setSearchParams((prev) => {
         const next = new URLSearchParams(prev);
         next.delete('paragraph');
@@ -678,18 +682,34 @@ const Catechism: React.FC = memo(() => {
     if (viewMode !== 'reading') return;
     const observer = new IntersectionObserver(
       (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            if (deepLinkRestorePendingRef.current) return;
-            setActiveParagraphId(entry.target.id);
-            const pNum = parseInt(entry.target.id.replace('p', ''));
-            if (!isNaN(pNum)) setCurrentParagraph(pNum);
-          }
-        });
+        // An explicit deep link stays authoritative while its target is restored.
+        if (deepLinkRestorePendingRef.current || !entries.some((entry) => entry.isIntersecting)) return;
+
+        // Scope observation to this reader. A document-wide [id^="p"] selector
+        // also catches unrelated elements, and processing every intersecting
+        // entry lets the last callback entry overwrite the requested paragraph.
+        const reader = document.querySelector('[data-testid$="-conteudo"].editorial-section');
+        if (!reader) return;
+        const viewportAnchor = window.innerHeight * 0.42;
+        const visible = Array.from(reader.querySelectorAll<HTMLElement>('article[id^="p"]'))
+          .map((element) => {
+            const rect = element.getBoundingClientRect();
+            return { element, rect, distance: Math.abs(rect.top + rect.height / 2 - viewportAnchor) };
+          })
+          .filter(({ rect }) => rect.bottom > 0 && rect.top < window.innerHeight)
+          .sort((a, b) => a.distance - b.distance);
+        const active = visible[0]?.element;
+        if (!active) return;
+
+        const pNum = Number(active.id.slice(1));
+        if (!Number.isInteger(pNum) || pNum < 1 || pNum > 2865) return;
+        setActiveParagraphId(active.id);
+        setCurrentParagraph(pNum);
       },
       { threshold: 0.5, rootMargin: '-10% 0px -70% 0px' }
     );
-    document.querySelectorAll('[id^="p"]').forEach((el) => observer.observe(el));
+    const reader = document.querySelector('[data-testid$="-conteudo"].editorial-section');
+    reader?.querySelectorAll('article[id^="p"]').forEach((el) => observer.observe(el));
     return () => observer.disconnect();
   }, [viewMode, selectedSection]);
 
