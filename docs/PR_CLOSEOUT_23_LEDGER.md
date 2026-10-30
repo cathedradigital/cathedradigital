@@ -190,3 +190,14 @@ Nenhuma PR histórica foi fechada ou integrada nesta fase de investigação. Nã
 - O componente antigo src/components/cathedra/BibleReader.tsx não existe mais na main; a Bíblia usa a arquitetura atual e permanece congelada, então não restaurar esse arquivo.
 - O CI histórico falhou por tipos Supabase antigos na branch obsoleta (corpusService não reconhecia relations/colunas existentes na main atual); o Vercel status falhou por rate limit, sem relação com Cloudflare.
 - Decisão: conteúdo UX principal já substituído pela arquitetura atual; arquivo de Bíblia obsoleto não será reaplicado. Encerrar sem merge da branch antiga.
+
+### PR #113 — decisão técnica de encerramento
+
+- As mudanças funcionais principais já estão na main atual:
+  - /hoje e rotas /jornadas já são protegidas por AuthGuard;
+  - useReadingMarks já expõe error, trata erros de fetch/update/delete e filtra update/delete por user_id;
+  - ReadingJournal já exibe marksError;
+  - logos-ai já possui requirePremiumUser/hasPremiumAccess e valida a sessão antes de chamar o gateway.
+- O workflow estudar-validation.yml desta PR é redundante em relação aos workflows atuais de CI/auditoria/E2E.
+- O PR tem CI e Estudar validation verdes no SHA antigo, mas mergeability false e sobreposição de arquivos com branches posteriores.
+- Decisão: conteúdo de runtime já substituído na main; não copiar branch antiga. Encerrar como supersedida.
