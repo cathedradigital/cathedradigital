@@ -165,3 +165,20 @@ Nenhuma PR histórica foi fechada ou integrada nesta fase de investigação. Nã
 - A sobrecarga enum de auth_internal.has_role usada pela política admin existe em produção e está correta; a sobrecarga text/is_admin antiga não é usada pelas políticas atuais consultadas.
 - Nenhum merge integral dos 486 arquivos será feito. O restante do snapshot antigo (funções, seeds e testes) não foi validado individualmente contra a arquitetura atual e não será restaurado em bloco.
 - Decisão: encerrar como snapshot obsoleto/reprovado para merge, preservando a documentação de auditoria já presente na main e mantendo os controles de produção atuais. Não declarar que todo o código da branch foi integrado.
+
+### PR #4 — extração seletiva de migration válida
+
+- A PR #4 tem 1.011 arquivos alterados; o CI histórico falha com 1.068 erros/159 avisos e inclui workflows/scripts de Vercel, incompatíveis com o destino Cloudflare.
+- A investigação encontrou um defeito real: useDevotionalFavorites consulta public.bible_favorites, mas a tabela não existia no único projeto Supabase ativo.
+- A parte válida da migration antiga foi reescrita de forma mínima e aplicada ao projeto ativo:
+  - migration 20261030203257_create_bible_favorites_and_harden_reading_marks: cria bible_favorites com unicidade por user_id/content_type/content_id, RLS owner-scoped, grants mínimos e índice parcial de um last-read por usuário;
+  - migration 20261030203411_restrict_bible_favorites_grants: remove privilégios amplos herdados e deixa authenticated apenas com SELECT/INSERT/DELETE; service_role mantém ALL.
+- As migrations e a definição da tabela foram registradas na branch da release; o tipo bible_favorites foi acrescentado seletivamente a src/integrations/supabase/types.ts sem substituir o arquivo inteiro por uma geração que diverge em milhares de linhas.
+- Verificação pós-migration: tabela existe, RLS ativo, três políticas owner-scoped, nenhum grant para anon, authenticated tem somente DELETE/INSERT/SELECT, índice parcial reading_marks_one_last_read_per_user_idx existe.
+- Smoke test transacional: inserção sob claim de usuário autenticado foi aceita; após trocar o claim para outro usuário, a consulta retornou zero linhas; a transação foi revertida (nenhum dado de teste persistido).
+- Advisor de segurança após a migration continua apontando apenas leaked password protection disabled (WARN); nenhum novo finding de RLS foi criado.
+
+### Atualização da PR #1 após a correção da PR #4
+
+- A pendência do índice parcial de reading_marks registrada no comentário inicial da #1 foi resolvida pelas migrations 20261030203257 e 20261030203411.
+- A decisão de não integrar o hook useFavorites da #1 permanece: public.bible_favorites agora existe para useDevotionalFavorites, mas o hook antigo da #1 tem contrato diferente, não migra localStorage e não foi validado para a UI global de favoritos.
