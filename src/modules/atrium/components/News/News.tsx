@@ -45,11 +45,11 @@ const EDITORIAL_NEWS: NewsItem[] = [
   },
   {
     source: 'Santa Sé',
-    category: 'Agenda oficial',
+    category: 'Homilia',
     date: '14 out. 2026',
-    title: 'Missa de encerramento do encontro',
-    summary: 'Celebração indicada para as 10h na Praça de São Pedro. A página oficial reúne as informações da agenda.',
-    url: 'https://www.vatican.va/content/leo-xiv/pt/events/event.dir.html/content/vaticanevents/pt/2026/10/14/messa-amoris-laetitia.html',
+    title: 'A homilia da Missa de encerramento do encontro',
+    summary: 'A homilia, lida pelo Cardeal Luis Antonio Tagle, retoma a caridade como fundamento da vida familiar, a oração doméstica e o acolhimento das fragilidades.',
+    url: 'https://www.vatican.va/content/leo-xiv/pt/homilies/2026/documents/20261014-messa-amoris-laetitia.html',
   },
 ];
 
