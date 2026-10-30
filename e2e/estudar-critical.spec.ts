@@ -247,3 +247,10 @@ test.describe('responsive critical flow', () => {
     expect(overflow).toBe(false);
   });
 });
+
+test('Catecismo: leitor usa um único bloco de Conexo e não mantém Relatio duplicado', async ({ page }) => {
+  await login(page, '/catechism?p=279');
+  await expect(page.locator('#p279')).toBeVisible();
+  await expect(page.locator('[data-nexus-panel]')).toHaveCount(1);
+  await expect(page.locator('#relatio-heading')).toHaveCount(0);
+});
