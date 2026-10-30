@@ -89,3 +89,13 @@ PRs #1, #2, #26, #113, #117, #179, #182 e #206 foram consultadas e constam fecha
 - PR: https://github.com/cathedradigital/cathedradigital/pull/220
 - PR #163 comentada com referência à #220; continua aberta até validação e integração.
 - Estado observado na criação: mergeable=true; ainda sem workflow runs retornados para o SHA. Não fazer merge até CI, auditoria e E2E desktop/mobile concluírem verdes.
+
+### PR #221 — cobertura pública das rotas do Átrio (origem #203)
+- Branch: `ops/closeout-atrio-public-routes-203`
+- SHA: `aba8c1914f07188bfde760f6247bb1ae470ba239`
+- Arquivo: `e2e/estudar-public-smoke.spec.ts`.
+- Testa navegação por clique dos links do Átrio para `/estudar` e `/buscar`, destinos canônicos, console e HTTP.
+- A cobertura foi movida para suíte pública, portanto roda desktop e mobile nas PRs; não depende de credenciais.
+- PR: https://github.com/cathedradigital/cathedradigital/pull/221
+- Sem alterações na Bíblia, autenticação, Supabase ou deploy.
+- Estado inicial: workflows ainda não retornados pelo GitHub; aguardar CI, auditoria e E2E no SHA acima.
