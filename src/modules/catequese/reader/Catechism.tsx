@@ -618,6 +618,16 @@ const Catechism: React.FC = memo(() => {
     let cancelled = false;
     let attempts = 0;
     const maxAttempts = 8;
+    // Keep the requested deep-link authoritative until the reader receives
+    // an intentional user navigation. Programmatic scroll restoration itself
+    // must not let IntersectionObserver rewrite ?p=N at the end of a section.
+    const releaseOnUserNavigation = () => {
+      deepLinkRestorePendingRef.current = false;
+    };
+    const userNavigationEvents: Array<keyof WindowEventMap> = ['wheel', 'touchstart', 'keydown'];
+    userNavigationEvents.forEach((eventName) => {
+      window.addEventListener(eventName, releaseOnUserNavigation, { passive: true });
+    });
 
     const restoreParagraph = () => {
       if (cancelled) return;
@@ -626,7 +636,6 @@ const Catechism: React.FC = memo(() => {
       if (element) {
         element.scrollIntoView({ behavior: 'auto', block: 'center' });
         element.classList.add('bg-secondary/10');
-        deepLinkRestorePendingRef.current = false;
         window.setTimeout(() => {
           if (!cancelled) element.classList.remove('bg-secondary/10');
         }, 3000);
@@ -648,6 +657,9 @@ const Catechism: React.FC = memo(() => {
     return () => {
       cancelled = true;
       deepLinkRestorePendingRef.current = false;
+      userNavigationEvents.forEach((eventName) => {
+        window.removeEventListener(eventName, releaseOnUserNavigation);
+      });
       window.cancelAnimationFrame(frame);
     };
   }, [initialParagraph, selectedSection, viewMode]);
