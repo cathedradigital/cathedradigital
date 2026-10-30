@@ -234,3 +234,35 @@ Nenhuma PR histórica foi fechada ou integrada nesta fase de investigação. Nã
 - A PR #182 também tinha E2E cancelado após 45 minutos. Seu workflow E2E e cloudflare-deploy antigos não serão copiados.
 - A documentação editorial/plataforma é parcialmente substituída pelo projeto mestre atualizado e pelo ledger operacional na branch da release; o dossiê editorial específico não foi validado para publicação.
 - Decisão: encerrar como supersedida pela implementação de release gate mais forte na #215; não copiar o workflow antigo nem o cleanup hardcoded.
+
+## Atualização de implementação — branch candidata #215
+
+SHA atual consultado: `2e088cc149ad1a34274ad42d3ed46a1f4cf3a00d`.
+
+### PRs históricas já encerradas (9/23)
+- #1, #2, #4, #26, #113, #117, #179, #182 e #206.
+- Cada fechamento tem comentário de decisão e referência ao conteúdo preservado, rejeitado ou substituído.
+- PRs auxiliares fora do lote: #217 (instalação do agente) e #218 (implementação auxiliar do Conexo) também foram encerradas após copiar as implementações úteis para a branch #215.
+
+### PRs históricas ainda abertas (14/23)
+- #8: semântica de lista de definições no PrayerPortal; teste público E2E adicionado.
+- #112: fallback de parágrafo 1-based em notas antigas do Magistério integrado em ReadingJournal e StudyJournal.
+- #116: teste do picker mobile adicionado sem alterar código da Bíblia.
+- #157: correção de Conexo/deep-link integrada seletivamente; teste de painel único.
+- #162: AuthGuard e alias /login agora preservam destino, query e hash em navegação completa; testes públicos adicionados.
+- #163: explorador de temas do Magistério sem bolhas/overlays; teste de alternância aria-pressed.
+- #165: tamanho de fonte do leitor Magistério aplicado via style explícito e toolbar mobile com espaçamento/touch.
+- #166: migrations de segurança já aplicadas; relatórios públicos removidos; script de segurança agora impede regressão; mudanças de branding/rotas/Sidebar preservadas quando já presentes.
+- #167: robots.txt atualizado para permitir página pública Sobre e bloquear /auth e /hoje; sitemap reduzido para URLs canônicas, preservando /calendar; teste público SEO adicionado.
+- #168: identidade Cátedra Digital padronizada em header/home/auth/SEO; projeto mestre atualizado; melhorias de filtros e leitor integradas seletivamente.
+- #171: SEO metadata, rótulos editoriais Nexus e guarda de deep-link do Catecismo integrados; não alterada navegação da Bíblia.
+- #186: carrossel editorial de notícias do Átrio integrado com fontes oficiais Santa Sé/Vaticano/CNBB; dossiê editorial atualizado após a Missa de 14/10; testes de navegação adicionados.
+- #190: correção do observer/canonicalização do Catecismo integrada; teste de Conexo único e diagnóstico de autenticação reaplicados.
+- #203: navegação canônica do Átrio e helper de autenticação substituídos por validação mais rigorosa; testes públicos correspondentes adicionados.
+
+### Gates no SHA atual da release
+- CI: `in_progress` (run 41126610603).
+- Estudar final audit: `in_progress` (run 41126610618).
+- Estudar E2E: `pending` (run 41126611460).
+- Não fechar as 14 PRs restantes até os checks aplicáveis concluírem no SHA final da release.
+- O workflow authenticated E2E continua exigindo evidência desktop e mobile no mesmo SHA; PR E2E público não substitui a execução autenticada manual.
