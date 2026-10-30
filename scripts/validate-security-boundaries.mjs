@@ -55,7 +55,7 @@ const publicCatechismTextPath = resolve(process.cwd(), "supabase/functions/catec
 const publicCatechismText = readFileSync(publicCatechismTextPath, "utf8");
 const forbiddenPublicCatechismPatterns = [
   /SUPABASE_SERVICE_ROLE_KEY/,
-  /\\.from\\([^)]*\\)\\.(?:insert|upsert|update|delete)\\s*\\(/i,
+  /\.from\([^)]+\)\.(?:insert|upsert|update|delete)\s*\(/i,
   /persistCatechismParagraph/,
 ];
 if (forbiddenPublicCatechismPatterns.some((pattern) => pattern.test(publicCatechismText))) {
