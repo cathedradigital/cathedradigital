@@ -54,3 +54,22 @@ PRs #1, #2, #26, #113, #117, #179, #182 e #206 foram consultadas e constam fecha
 - [ ] Executar workflow manual Cloudflare e verificar produção, robots e sitemap.
 
 **Estado honesto:** análise inicial de metadata, arquivos, patches e runs concluída para as 14 PRs abertas. Nenhuma PR histórica foi integrada ou fechada nesta etapa. Não há publicação declarada. A execução de testes local/Playwright e a consolidação funcional ainda precisam ser realizadas.
+
+## Implementação executada nesta sessão
+
+### PR #219 — consolidação isolada da correção #157
+- Branch: `ops/closeout-conexo-catechism-157`
+- SHA final enviado: `21f9a1b690187805a8b69b1d4b894e994c5b819f`
+- Commit de código: `237380e000f34c78adcb273080b9e88e55a7aa58`
+- Commit de teste: `21f9a1b690187805a8b69b1d4b894e994c5b819f`
+- Arquivos alterados: `src/modules/catequese/reader/Catechism.tsx`, `e2e/estudar-critical.spec.ts`.
+- Mudança: removido o import e o bloco Relatio duplicado; teste adicionado para garantir um único painel Conexo em §279.
+- PR criada: https://github.com/cathedradigital/cathedradigital/pull/219
+- Estado observado logo após criação: aberta, mergeable=true, sem status/checks publicados ainda. Não fazer merge até CI, auditoria e E2E passarem no SHA final.
+- A PR #157 original permanece aberta até a validação e integração da #219; só então pode ser encerrada com referência à #219/merge commit.
+
+### Logs de E2E inspecionados
+- Run #170 / PR #157: falha no step `Run public browser smoke`, portanto os testes autenticados foram pulados. Log aponta falhas no smoke de retorno de estudo e nos controles da barra da Bíblia; não é evidência de falha no novo teste Conexo da #157.
+- Run #505 / PR #203: etapa de autenticação passou, mas a suíte crítica falhou. Um dos erros observados na versão antiga do teste esperava `/login?next=` enquanto a aplicação permaneceu em `/diario`; os demais fluxos autenticados expiraram esperando redirecionamento. A alteração da #203 é somente no teste e não corrige a proteção de rota.
+- Workflow atual em `main` usa `npm run test:e2e:public` (desktop e mobile) e suíte autenticada separada em main; o workflow antigo proposto em #166 não deve substituir essa configuração.
+
