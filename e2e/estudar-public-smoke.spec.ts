@@ -360,3 +360,20 @@ test('Átrio: carrossel editorial navega entre fontes oficiais', async ({ page }
   await page.getByRole('button', { name: /Mostrar notícia 5:/ }).click();
   await expect(sourceLink).toHaveAttribute('href', 'https://www.vatican.va/content/leo-xiv/pt/homilies/2026/documents/20261014-messa-amoris-laetitia.html');
 });
+
+test('Átrio: ambientes principais mantêm destinos canônicos', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.getByRole('link', { name: /Entrar em Estudar/ })).toHaveAttribute('href', '/estudar');
+  await expect(page.getByRole('link', { name: /Entrar em Rezar/ })).toHaveAttribute('href', '/oracao');
+  await expect(page.getByRole('link', { name: /Entrar em Formar-se/ })).toHaveAttribute('href', '/jornadas');
+  await expect(page.getByRole('link', { name: /Entrar em Pesquisar/ })).toHaveAttribute('href', '/buscar');
+
+  await page.getByRole('link', { name: /Entrar em Estudar/ }).click();
+  await expect(page).toHaveURL(/\/estudar$/);
+  await page.goto('/');
+  await page.getByRole('link', { name: /Entrar em Rezar/ }).click();
+  await expect(page).toHaveURL(/\/oracao$/);
+  await page.goto('/');
+  await page.getByRole('link', { name: /Entrar em Pesquisar/ }).click();
+  await expect(page).toHaveURL(/\/buscar$/);
+});
