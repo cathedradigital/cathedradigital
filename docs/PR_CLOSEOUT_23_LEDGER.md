@@ -73,3 +73,9 @@ PRs #1, #2, #26, #113, #117, #179, #182 e #206 foram consultadas e constam fecha
 - Run #505 / PR #203: etapa de autenticação passou, mas a suíte crítica falhou. Um dos erros observados na versão antiga do teste esperava `/login?next=` enquanto a aplicação permaneceu em `/diario`; os demais fluxos autenticados expiraram esperando redirecionamento. A alteração da #203 é somente no teste e não corrige a proteção de rota.
 - Workflow atual em `main` usa `npm run test:e2e:public` (desktop e mobile) e suíte autenticada separada em main; o workflow antigo proposto em #166 não deve substituir essa configuração.
 
+
+### Atualização da PR #219 — cobertura desktop/mobile
+- O teste de regressão Conexo foi movido da spec autenticada para `e2e/estudar-public-smoke.spec.ts`, pois o workflow de PR executa a suíte pública nos projetos desktop e mobile; a suíte autenticada é executada somente em main/dispatch.
+- Novo SHA da PR #219: `23dc05b7eb550e50aab632b13db957d2bf521d93`.
+- Commit intermediário da spec crítica: `48cae267037bd08d5c059ad8660e5616b680fa14`.
+- Após a atualização, a PR continua aberta e mergeable. Nenhum workflow run/status foi retornado ainda para o novo SHA; aguardar disparo/execução antes de qualquer merge.
