@@ -1,240 +1,132 @@
-# Cátedra Digital — Deployment & Operations Guide
+# Cátedra Digital — publicação e operação
 
-## Cloudflare Workers — produção
+**Alvo oficial:** Cloudflare Workers  
+**Worker:** `cathedradigital`  
+**Repositório:** `cathedradigital/cathedradigital`  
+**Branch de produção:** `main`
 
-A implantação atual usa **TanStack Start + Cloudflare Vite Plugin + Wrangler**. O fluxo de produção não usa Nitro nem `.output/server/`.
+## 1. Arquitetura de publicação
 
-### Build local
+O projeto utiliza TanStack Start, Vite, Cloudflare Vite Plugin e Wrangler. A configuração versionada está em `wrangler.jsonc`, na raiz, com entrypoint `src/server.ts`.
 
-```bash
-npm install
-npm run build
-```
-
-O build deve terminar sem erros antes da publicação.
-
-### Deploy local/manual
-
-```bash
-npm run deploy:cloudflare
-```
-
-ou:
-
-```bash
-npm run build
-npx wrangler deploy
-```
-
-O `wrangler.jsonc` na raiz é a configuração de publicação do Worker.
-
----
-
-## Cloudflare Workers Builds
-
-Para o Worker **cathedradigital**, a configuração do serviço deve apontar para:
-
-- **Repository:** `cathedradigital/cathedradigital`
-- **Production branch:** `main`
-- **Root directory:** raiz do repositório
-- **Build command:** `npm run build`
-- **Deploy command:** `npx wrangler deploy`
-
-O deploy command deve publicar o Worker usando o `wrangler.jsonc` da raiz.
-
-> Importante: não use `npx nitro deploy --prebuilt` nem `wrangler deploy .output/server/`. Esses comandos pertencem a uma configuração anterior e não correspondem à configuração atual do projeto.
-
----
-
-## URLs de produção
-
-Após uma publicação válida, verificar:
-
-- Worker: `cathedradigital`
-- workers.dev: `https://cathedradigital.cathedradigital.workers.dev/`
-- domínio: `https://cathedradigital.com.br/`
-- www: `https://www.cathedradigital.com.br/`
-
-Se o workers.dev retornar 404 ou a página de erro da plataforma, primeiro verificar o **último deployment/build do Worker** no Cloudflare antes de investigar Supabase.
-
----
-
-## Configuração do Worker
-
-O arquivo `wrangler.jsonc` deve permanecer na raiz e define:
-
-- nome do Worker;
-- compatibility date;
-- `nodejs_compat`;
-- entrypoint do TanStack Start;
-- workers.dev;
-- preview URLs;
-- domínios de produção;
-- observabilidade.
-
-A configuração atual usa o entrypoint customizado do TanStack Start:
-
-```json
-"main": "src/server.ts"
-```
-
-O `src/server.ts` delega ao entrypoint oficial do TanStack Start e acrescenta tratamento de erro para o Worker.
-
----
-
-## Variáveis de ambiente
-
-As variáveis necessárias ao runtime devem ser configuradas no Cloudflare conforme o ambiente.
-
-Nunca colocar chaves privadas, tokens de serviço ou segredos diretamente no código-fonte ou neste documento.
-
-Variáveis públicas do cliente devem ser tratadas como públicas. Segredos de servidor devem permanecer somente no ambiente do Worker.
-
----
-
-## Checklist antes da publicação
-
-### Código
-- [ ] `npm install` concluído
-- [ ] `npm run build` concluído
-- [ ] TypeScript sem erros
-- [ ] validações internas sem erros
-- [ ] configuração `wrangler.jsonc` presente na raiz
-
-### Cloudflare
-- [ ] Worker conectado ao repositório correto
-- [ ] branch `main`
-- [ ] root directory na raiz
-- [ ] build command `npm run build`
-- [ ] deploy command `npx wrangler deploy`
-- [ ] último deployment concluído com sucesso
-- [ ] workers.dev respondendo
-- [ ] domínio personalizado respondendo
-
-### Runtime
-- [ ] aplicação inicia sem exceção no Worker
-- [ ] rotas principais carregam
-- [ ] assets estáticos carregam
-- [ ] autenticação é testável
-- [ ] conexão com Supabase é testável
-
----
-
-## Verificação pós-deploy
-
-Primeiro teste o Worker:
-
-```bash
-curl -I https://cathedradigital.cathedradigital.workers.dev/
-```
-
-Depois teste o domínio:
-
-```bash
-curl -I https://cathedradigital.com.br/
-```
-
-Se houver erro:
-
-1. abrir o último build/deployment no Cloudflare;
-2. conferir o **Build log**;
-3. conferir o **Deploy log**;
-4. conferir os logs do Worker;
-5. só depois investigar dependências externas.
-
----
-
-## Troubleshooting
-
-### Build falhou
-
-Executar localmente:
-
-```bash
-rm -rf node_modules
-npm install
-npm run build
-```
-
-Se o build local passar e o Cloudflare falhar, comparar:
-
-- versão do Node;
-- diretório raiz;
-- comando de build;
-- comando de deploy;
-- variáveis de build;
-- versão do Wrangler.
-
-### Deploy terminou, mas workers.dev não abre
-
-Verificar:
-
-1. se existe um deployment publicado;
-2. se o deployment corresponde ao commit mais recente da `main`;
-3. se o Worker possui o nome `cathedradigital`;
-4. se o workers.dev está habilitado;
-5. se o log do Worker mostra exceção durante o startup;
-6. se o domínio está apontando para o Worker correto.
-
-### 404
-
-Um 404 no workers.dev não deve ser tratado automaticamente como problema do React. Primeiro confirmar no Cloudflare se o Worker está efetivamente publicado e se a requisição está chegando ao Worker.
-
-### Erro durante startup
-
-Verificar especialmente código executado durante SSR/startup que dependa de APIs exclusivas do navegador, como `window`, `document`, `localStorage`, `navigator` ou `sessionStorage`.
-
-Essas APIs só devem ser acessadas quando o código estiver rodando no navegador.
-
----
-
-## Supabase
-
-Supabase é uma dependência da aplicação, mas a primeira etapa da recuperação do deploy é fazer o Worker abrir corretamente.
-
-Ordem de diagnóstico:
-
-**GitHub → Workers Build → Deploy → Worker runtime → workers.dev → domínio → Supabase**
-
-Não usar um erro do Supabase para mascarar uma falha de publicação do Worker.
-
----
-
-## Rollback
-
-Para voltar a um commit conhecido e funcional, use o histórico do GitHub/Cloudflare e publique novamente o commit desejado.
-
-Não use comandos Nitro ou o diretório `.output/server/` para rollback deste projeto.
-
----
-
-## Referências
-
-- Cloudflare Workers / Wrangler: https://developers.cloudflare.com/workers/
-- Cloudflare Vite Plugin: https://developers.cloudflare.com/workers/vite-plugin/
-- TanStack Start: https://tanstack.com/start
-- Supabase: https://supabase.com/docs
-
----
-
-## Regra operacional
-
-Para este projeto, a publicação Cloudflare deve seguir uma única cadeia:
+A cadeia oficial é:
 
 ```text
-GitHub main
-   ↓
-Cloudflare Workers Builds
-   ↓
-npm run build
-   ↓
-npx wrangler deploy
-   ↓
+GitHub
+  └─ main / SHA candidato
+       ↓
+GitHub Actions — workflow Cloudflare
+       ↓
+Node.js 22 + npm install
+       ↓
+typecheck → lint → validate:links → build
+       ↓
+Wrangler / Cloudflare Workers
+       ↓
 Worker cathedradigital
-   ↓
-workers.dev
-   ↓
-cathedradigital.com.br
+       ↓
+workers.dev + domínios oficiais
 ```
 
-Se essa cadeia quebrar, corrigir o ponto exato da quebra antes de alterar módulos da aplicação.
+Vercel e Lovable não são alvos oficiais de produção. Não criar uma segunda cadeia de publicação.
+
+## 2. Comportamento atualmente versionado
+
+O arquivo `.github/workflows/cloudflare-deploy.yml` em `main` declara:
+- disparo por push em `main` e execução manual (`workflow_dispatch`);
+- validação da presença das credenciais Cloudflare;
+- instalação com `npm install`;
+- validação de autorização com Wrangler;
+- consulta DNS;
+- typecheck, lint, validação de rotas e build;
+- deploy do Worker;
+- checagem dos três endpoints.
+
+**Limite importante:** o workflow atualmente versionado não executa, por si só, auditoria completa de dependências nem Playwright autenticado desktop/mobile antes do deploy. A PR #213 propõe um fluxo manual com gates adicionais, mas uma proposta em PR não é comportamento ativo de `main`. Verificar o estado e os checks reais antes de qualquer liberação.
+
+Até a adoção e validação de um gate completo, não tratar o workflow atual como certificação integral de release. A política operacional da Cátedra exige CI, auditoria e Playwright aprovados no mesmo SHA, além da autorização de publicação.
+
+## 3. Comandos locais
+
+Instalação de dependências:
+
+```bash
+npm install
+```
+
+Validações disponíveis no `package.json`:
+
+```bash
+npm run typecheck
+npm run lint
+npm run validate:modules
+npm run validate:links
+npm run validate:security
+npm run build
+```
+
+O comando `npm run deploy:cloudflare` executa build seguido de `wrangler deploy`. Ele é uma operação de publicação, não um teste local. Não executá-lo como parte de uma revisão documental ou antes de todos os gates e da autorização explícita.
+
+## 4. Configuração do Worker
+
+O `wrangler.jsonc` define:
+- nome `cathedradigital`;
+- compatibility date e `nodejs_compat`;
+- entrypoint `src/server.ts`;
+- workers.dev e preview URLs;
+- domínios personalizados;
+- observabilidade.
+
+Os secrets Cloudflare devem permanecer nos ambientes de secrets apropriados. Nunca registrar valores em documentação, commits ou logs.
+
+## 5. Supabase
+
+A aplicação utiliza um único projeto Supabase. A referência de projeto versionada está em `supabase/config.toml`; o cliente da aplicação está em `src/integrations/supabase/client.ts`.
+
+As variáveis de build/runtime devem ser configuradas no ambiente correto, sem copiar valores privados para o repositório. A chave publicável não é uma service-role key. Operações privilegiadas permanecem server-side.
+
+## 6. Endpoints de produção
+
+Após publicação autorizada, verificar:
+- `https://cathedradigital.com.br/`
+- `https://www.cathedradigital.com.br/`
+- `https://cathedradigital.cathedradigital.workers.dev/`
+
+Verificar também:
+- `/robots.txt`;
+- `/sitemap.xml`;
+- rotas e deep links críticos;
+- login e retorno ao destino;
+- versão/commit efetivamente servido;
+- erros de console e rede.
+
+Uma resposta HTTP 200 não prova, isoladamente, que a versão correta e os fluxos funcionais estejam publicados. Um HTTP 403 nos domínios personalizados também não prova funcionamento da interface.
+
+## 7. Critérios antes de liberar
+
+- [ ] SHA final identificado.
+- [ ] CI aprovado nesse SHA.
+- [ ] Auditoria de dependências aprovada nesse SHA, sem vulnerabilidades bloqueadoras não tratadas.
+- [ ] Playwright crítico desktop e mobile aprovado nesse SHA.
+- [ ] Artefatos sanitizados e logs preservados.
+- [ ] Fluxos de autenticação e deep links verificados.
+- [ ] Nenhum bloqueador de segurança aberto.
+- [ ] Autorização explícita para merge/publicação.
+- [ ] Pós-deploy validado nos três endpoints e nos recursos SEO.
+
+Se qualquer item estiver pendente, o estado é **BLOQUEADO PARA LIBERAÇÃO**.
+
+## 8. Rollback e incidentes
+
+Em caso de regressão, interromper a liberação, preservar logs e identificar o último deployment/commit comprovadamente funcional. Executar rollback somente pelo procedimento autorizado do Cloudflare, registrando o SHA e a versão efetivamente servida.
+
+Não usar comandos Nitro ou `.output/server/` como procedimento de publicação deste projeto.
+
+## 9. Referências
+
+- `wrangler.jsonc`
+- `src/server.ts`
+- `vite.config.ts`
+- `package.json`
+- `.github/workflows/cloudflare-deploy.yml`
+- PR #213 — proposta de workflow manual com gates adicionais
