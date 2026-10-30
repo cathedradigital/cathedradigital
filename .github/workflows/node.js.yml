@@ -21,17 +21,10 @@ jobs:
           node-version: "22.x"
 
       - name: Install dependencies
-        run: npm install
-
-      - name: Export resolved npm lockfile for migration to reproducible installs
-        uses: actions/upload-artifact@v5
-        with:
-          name: npm-lockfile-${{ github.sha }}
-          path: package-lock.json
-          retention-days: 1
+        run: npm ci
 
       - name: Audit production dependencies
-        run: npm audit --omit=dev --audit-level=high
+        run: npm audit --audit-level=high
 
       - name: Typecheck
         run: npm run typecheck
