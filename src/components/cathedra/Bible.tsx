@@ -1888,7 +1888,7 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
 
                           <div className="flex flex-col items-center gap-0.5 mt-0.5 w-5 sm:w-6 shrink-0">
                             <span className="text-[10px] sm:text-[11px] font-serif font-bold text-secondary/40 tabular-nums">{v.number}</span>
-                            {cicCitationMap.verses.has(`${selectedChapter}-${v.number}`) && (
+                            {cicReferenceMap.verses.has(`${selectedChapter}-${v.number}`) && (
                               <div
                                 role="img"
                                 aria-label="Versículo com citação do Catecismo"
