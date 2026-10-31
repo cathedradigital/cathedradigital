@@ -88,9 +88,9 @@ const robotsPath = resolve(root, 'public/robots.txt');
 
 try {
   const sitemap = readFileSync(sitemapPath, 'utf8');
-  const sitemapUrls = [...sitemap.matchAll(/<loc>(.*?)<\\/loc>/g)].map((match) => match[1].trim());
+  const sitemapUrls = [...sitemap.matchAll(/<loc>(.*?)<\/loc>/g)].map((match) => match[1].trim());
   const uniqueSitemapUrls = new Set(sitemapUrls);
-  if (!/<urlset\\b/.test(sitemap) || sitemapUrls.length === 0) {
+  if (!/<urlset\b/.test(sitemap) || sitemapUrls.length === 0) {
     errors.push('public/sitemap.xml: missing urlset or loc entries');
   }
   if (uniqueSitemapUrls.size !== sitemapUrls.length) {
@@ -108,10 +108,10 @@ try {
 
 try {
   const robots = readFileSync(robotsPath, 'utf8');
-  if (!/^User-agent:\\s*\\*/m.test(robots)) {
+  if (!/^User-agent:\s*\*/m.test(robots)) {
     errors.push('public/robots.txt: missing wildcard User-agent directive');
   }
-  if (!/^Sitemap:\\s*https:\\/\\/www\\.cathedradigital\\.com\\.br\\/sitemap\\.xml\\s*$/m.test(robots)) {
+  if (!/^Sitemap:\s*https:\/\/www\.cathedradigital\.com\.br\/sitemap\.xml\s*$/m.test(robots)) {
     errors.push('public/robots.txt: Sitemap directive does not match the canonical sitemap URL');
   }
 } catch (error) {
