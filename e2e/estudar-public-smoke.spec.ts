@@ -293,7 +293,7 @@ test('Desktop: carrossel inferior permanece oculto', async ({ page }) => {
 
 test('Átrio: notícias atuais mostram data, fonte e link original', async ({ page }) => {
   await page.goto('/');
-  const news = page.getByRole('region', { name: 'Notícias da Igreja' });
+  const news = page.locator('section[aria-label="Notícias da Igreja"]');
   await expect(news).toBeVisible();
   await expect(news.getByRole('heading', { name: 'Notícias da Igreja' })).toBeVisible();
   await expect(news.getByRole('heading', { name: 'Leão XIV: a IA jamais deve decidir sobre a vida humana' })).toBeVisible();
