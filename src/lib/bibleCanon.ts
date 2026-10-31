@@ -25,7 +25,7 @@ export interface BibleBook {
 }
 
 export const BIBLE_CANON: readonly BibleBook[] = [
-  // Antigo Testamento — protocanônicos
+  // Antigo Testamento — ordem do cânon católico (73 livros).
   { abbr: 'Gn', name: 'Gênesis', bollsId: 1, testament: 'OT' },
   { abbr: 'Ex', name: 'Êxodo', bollsId: 2, testament: 'OT' },
   { abbr: 'Lv', name: 'Levítico', bollsId: 3, testament: 'OT' },
@@ -42,15 +42,22 @@ export const BIBLE_CANON: readonly BibleBook[] = [
   { abbr: '2Cr', name: '2 Crônicas', bollsId: 14, testament: 'OT' },
   { abbr: 'Ed', name: 'Esdras', bollsId: 15, testament: 'OT' },
   { abbr: 'Ne', name: 'Neemias', bollsId: 16, testament: 'OT' },
+  { abbr: 'Tb', name: 'Tobias', bollsId: 67, testament: 'OT', deuterocanonical: true },
+  { abbr: 'Jdt', name: 'Judite', bollsId: 68, testament: 'OT', deuterocanonical: true },
   { abbr: 'Et', name: 'Ester', bollsId: 17, testament: 'OT' },
+  { abbr: '1Mc', name: '1 Macabeus', bollsId: 72, testament: 'OT', deuterocanonical: true },
+  { abbr: '2Mc', name: '2 Macabeus', bollsId: 73, testament: 'OT', deuterocanonical: true },
   { abbr: 'Jó', name: 'Jó', bollsId: 18, testament: 'OT' },
   { abbr: 'Sl', name: 'Salmos', bollsId: 19, testament: 'OT' },
   { abbr: 'Pv', name: 'Provérbios', bollsId: 20, testament: 'OT' },
   { abbr: 'Ec', name: 'Eclesiastes', bollsId: 21, testament: 'OT' },
   { abbr: 'Ct', name: 'Cântico dos Cânticos', bollsId: 22, testament: 'OT' },
+  { abbr: 'Sb', name: 'Sabedoria', bollsId: 69, testament: 'OT', deuterocanonical: true },
+  { abbr: 'Eclo', name: 'Eclesiástico', bollsId: 70, testament: 'OT', deuterocanonical: true },
   { abbr: 'Is', name: 'Isaías', bollsId: 23, testament: 'OT' },
   { abbr: 'Jr', name: 'Jeremias', bollsId: 24, testament: 'OT' },
   { abbr: 'Lm', name: 'Lamentações', bollsId: 25, testament: 'OT' },
+  { abbr: 'Br', name: 'Baruc', bollsId: 71, testament: 'OT', deuterocanonical: true },
   { abbr: 'Ez', name: 'Ezequiel', bollsId: 26, testament: 'OT' },
   { abbr: 'Dn', name: 'Daniel', bollsId: 27, testament: 'OT' },
   { abbr: 'Os', name: 'Oseias', bollsId: 28, testament: 'OT' },
@@ -66,7 +73,7 @@ export const BIBLE_CANON: readonly BibleBook[] = [
   { abbr: 'Zc', name: 'Zacarias', bollsId: 38, testament: 'OT' },
   { abbr: 'Ml', name: 'Malaquias', bollsId: 39, testament: 'OT' },
 
-  // Novo Testamento
+  // Novo Testamento — ordem canônica.
   { abbr: 'Mt', name: 'Mateus', bollsId: 40, testament: 'NT' },
   { abbr: 'Mc', name: 'Marcos', bollsId: 41, testament: 'NT' },
   { abbr: 'Lc', name: 'Lucas', bollsId: 42, testament: 'NT' },
@@ -94,15 +101,6 @@ export const BIBLE_CANON: readonly BibleBook[] = [
   { abbr: '3Jo', name: '3 João', bollsId: 64, testament: 'NT' },
   { abbr: 'Jd', name: 'Judas', bollsId: 65, testament: 'NT' },
   { abbr: 'Ap', name: 'Apocalipse', bollsId: 66, testament: 'NT' },
-
-  // Deuterocanônicos (cânon católico) — Bolls expõe esses IDs na NAA católica
-  { abbr: 'Tb', name: 'Tobias', bollsId: 67, testament: 'OT', deuterocanonical: true },
-  { abbr: 'Jdt', name: 'Judite', bollsId: 68, testament: 'OT', deuterocanonical: true },
-  { abbr: 'Sb', name: 'Sabedoria', bollsId: 69, testament: 'OT', deuterocanonical: true },
-  { abbr: 'Eclo', name: 'Eclesiástico', bollsId: 70, testament: 'OT', deuterocanonical: true },
-  { abbr: 'Br', name: 'Baruc', bollsId: 71, testament: 'OT', deuterocanonical: true },
-  { abbr: '1Mc', name: '1 Macabeus', bollsId: 72, testament: 'OT', deuterocanonical: true },
-  { abbr: '2Mc', name: '2 Macabeus', bollsId: 73, testament: 'OT', deuterocanonical: true },
 ];
 
 /** Aliases comuns aceitos em URLs/imports antigos. */
