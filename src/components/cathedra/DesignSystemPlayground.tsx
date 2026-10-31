@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { CathedraCard } from './CathedraCard';
-import { CathedraButton } from './CathedraButton';
-import { CathedraInput } from './CathedraInput';
-import { CathedraOverlay } from './CathedraOverlay';
+import { CátedraCard } from './CátedraCard';
+import { CátedraButton } from './CátedraButton';
+import { CátedraInput } from './CátedraInput';
+import { CátedraOverlay } from './CátedraOverlay';
 import { SectionHeader } from './SectionHeader';
 import { Icons } from '@/constants';
 import SEOHead from '@/components/SEOHead';
@@ -13,8 +13,8 @@ const DesignSystemPlayground: React.FC = () => {
   return (
     <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
       <SEOHead 
-        title="Design System Playground | Cathedra" 
-        description="Ambiente de testes e documentação dos componentes do Cathedra Digital."
+        title="Design System Playground | Cátedra" 
+        description="Ambiente de testes e documentação dos componentes do Cátedra Digital."
         path="/design-system"
       />
       
@@ -81,31 +81,31 @@ const DesignSystemPlayground: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-spacing-xl">
             <div className="space-y-spacing-md">
               <span className="h5 opacity-40">Primary Button</span>
-              <CathedraButton variant="primary" className="w-full">Iniciar</CathedraButton>
+              <CátedraButton variant="primary" className="w-full">Iniciar</CátedraButton>
             </div>
             <div className="space-y-spacing-md">
               <span className="h5 opacity-40">Secondary Button</span>
-              <CathedraButton variant="secondary" className="w-full">Apoiar</CathedraButton>
+              <CátedraButton variant="secondary" className="w-full">Apoiar</CátedraButton>
             </div>
             <div className="space-y-spacing-md">
               <span className="h5 opacity-40">Outline Button</span>
-              <CathedraButton variant="outline" className="w-full">Detalhes</CathedraButton>
+              <CátedraButton variant="outline" className="w-full">Detalhes</CátedraButton>
             </div>
             <div className="space-y-spacing-md">
               <span className="h5 opacity-40">Ghost Button</span>
-              <CathedraButton variant="ghost" className="w-full">Voltar</CathedraButton>
+              <CátedraButton variant="ghost" className="w-full">Voltar</CátedraButton>
             </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-spacing-2xl pt-spacing-2xl">
             <div className="space-y-spacing-xl">
               <span className="h5 opacity-40">Input Fields</span>
-              <CathedraInput 
+              <CátedraInput 
                 label="Email" 
                 placeholder="exemplo@igreja.org" 
                 icon={<Icons.Mail className="w-spacing-md h-spacing-md" />}
               />
-              <CathedraInput 
+              <CátedraInput 
                 label="Senha" 
                 type="password" 
                 placeholder="••••••••" 
@@ -115,10 +115,10 @@ const DesignSystemPlayground: React.FC = () => {
             </div>
             <div className="space-y-spacing-xl flex flex-col justify-end">
               <span className="h5 opacity-40">Overlays & Modals</span>
-              <CathedraCard variant="interactive" className="p-spacing-2xl flex flex-col items-center justify-center gap-spacing-lg" onClick={() => setIsOverlayOpen(true)}>
+              <CátedraCard variant="interactive" className="p-spacing-2xl flex flex-col items-center justify-center gap-spacing-lg" onClick={() => setIsOverlayOpen(true)}>
                 <Icons.Maximize className="w-spacing-xl h-spacing-xl text-secondary" />
                 <h4 className="text-center">Abrir Overlay Premium</h4>
-              </CathedraCard>
+              </CátedraCard>
             </div>
           </div>
         </section>
@@ -127,29 +127,29 @@ const DesignSystemPlayground: React.FC = () => {
         <section className="space-y-spacing-3xl">
           <SectionHeader title="Ratio et Regula" subtitle="Princípios para manter o silêncio visual." align="left" />
           <div className="grid grid-cols-1 md:grid-cols-3 gap-spacing-xl">
-            <CathedraCard padding="sm" className="space-y-spacing-md">
+            <CátedraCard padding="sm" className="space-y-spacing-md">
               <h5 className="text-secondary">Silêncio Visual</h5>
               <p className="text-premium-sm opacity-60">
                 Evite elementos desnecessários. O espaço em branco é um elemento de design ativo que convida à reflexão.
               </p>
-            </CathedraCard>
-            <CathedraCard padding="sm" className="space-y-spacing-md">
+            </CátedraCard>
+            <CátedraCard padding="sm" className="space-y-spacing-md">
               <h5 className="text-secondary">Ritmo Vertical</h5>
               <p className="text-premium-sm opacity-60">
                 Utilize as classes <code className="text-secondary">stack-spacing</code> e <code className="text-secondary">section-spacing</code> para garantir consistência.
               </p>
-            </CathedraCard>
-            <CathedraCard padding="sm" className="space-y-spacing-md">
+            </CátedraCard>
+            <CátedraCard padding="sm" className="space-y-spacing-md">
               <h5 className="text-secondary">Feedback Tátil</h5>
               <p className="text-premium-sm opacity-60">
                 Toda interação deve ter uma resposta sutil e orgânica, simulando a sensação de um objeto real.
               </p>
-            </CathedraCard>
+            </CátedraCard>
           </div>
         </section>
       </div>
 
-      <CathedraOverlay isOpen={isOverlayOpen} onClose={() => setIsOverlayOpen(false)}>
+      <CátedraOverlay isOpen={isOverlayOpen} onClose={() => setIsOverlayOpen(false)}>
         <div className="space-y-spacing-2xl">
           <SectionHeader title="Santuário Digital" subtitle="Um espaço de oração e estudo sem distrações." />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-spacing-2xl">
@@ -158,12 +158,12 @@ const DesignSystemPlayground: React.FC = () => {
               Utiliza desfoque de fundo (blur) e tipografia generosa.
             </p>
             <div className="space-y-spacing-lg">
-              <CathedraButton className="w-full">Confirmar Itinerário</CathedraButton>
-              <CathedraButton variant="outline" className="w-full" onClick={() => setIsOverlayOpen(false)}>Fechar</CathedraButton>
+              <CátedraButton className="w-full">Confirmar Itinerário</CátedraButton>
+              <CátedraButton variant="outline" className="w-full" onClick={() => setIsOverlayOpen(false)}>Fechar</CátedraButton>
             </div>
           </div>
         </div>
-      </CathedraOverlay>
+      </CátedraOverlay>
     </div>
   );
 };
