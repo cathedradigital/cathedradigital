@@ -98,7 +98,7 @@ try {
     errors.push(`public/sitemap.xml: duplicate loc URLs: ${[...new Set(duplicates)].join(', ')}`);
   }
   for (const url of sitemapUrls) {
-    if (!url.startsWith('https://www.cathedradigital.com.br/')) {
+    if (url !== 'https://www.cathedradigital.com.br' && !url.startsWith('https://www.cathedradigital.com.br/')) {
       errors.push(`public/sitemap.xml: URL does not use the canonical HTTPS host: ${url}`);
     }
   }
