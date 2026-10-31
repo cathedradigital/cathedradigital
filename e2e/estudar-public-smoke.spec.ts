@@ -463,3 +463,20 @@ test('Rezar ativo oferece entrada para liturgia, devoções e oração pessoal',
   await page.getByRole('link', { name: /Rosário/ }).click();
   await expect(page).toHaveURL(/\/oracao\/rosario$/);
 });
+
+test('SEO: robots e sitemap são servidos com URLs canônicas únicas', async ({ request }) => {
+  const robotsResponse = await request.get('/robots.txt');
+  expect(robotsResponse.ok(), 'robots.txt deve responder HTTP 2xx').toBeTruthy();
+  const robots = await robotsResponse.text();
+  expect(robots).toMatch(/^User-agent:\\s*\\*/m);
+  expect(robots).toContain('Sitemap: https://www.cathedradigital.com.br/sitemap.xml');
+
+  const sitemapResponse = await request.get('/sitemap.xml');
+  expect(sitemapResponse.ok(), 'sitemap.xml deve responder HTTP 2xx').toBeTruthy();
+  const sitemap = await sitemapResponse.text();
+  expect(sitemap).toMatch(/<urlset\\b/);
+  const urls = [...sitemap.matchAll(/<loc>(.*?)<\\/loc>/g)].map((match) => match[1].trim());
+  expect(urls.length).toBeGreaterThan(0);
+  expect(new Set(urls).size, 'sitemap não pode conter URLs duplicadas').toBe(urls.length);
+  expect(urls.every((url) => url === 'https://www.cathedradigital.com.br' || url.startsWith('https://www.cathedradigital.com.br/'))).toBe(true);
+});
