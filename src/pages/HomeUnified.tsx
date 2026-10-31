@@ -13,6 +13,7 @@ import {
 } from '@/modules/atrium/hooks';
 import { useSpiritualJourney } from '@/hooks/useSpiritualJourney';
 import { useAuth } from '@/hooks/useAuth';
+import AtriumNews from '@/modules/atrium/components/News/News';
 
 const ENV_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
   BookOpen, HandHeart, GraduationCap, Search, Compass,
@@ -296,6 +297,9 @@ const HomeUnified: React.FC = () => {
             )}
           </section>
         )}
+        <section aria-label="Notícias da Igreja" className="mx-auto max-w-7xl px-5 pb-16 md:px-10 md:pb-24">
+          <AtriumNews />
+        </section>
       </main>
 
         <footer className="border-t border-border/60 bg-muted/20">
