@@ -5,7 +5,7 @@ import { Icons } from '../../constants';
 /**
  * Página LGPD — descreve o cumprimento da Lei nº 13.709/2018.
  * Complementa a Política de Privacidade com foco nos direitos do titular
- * e nas bases legais utilizadas pela Cathedra.
+ * e nas bases legais utilizadas pela Cátedra.
  */
 const LGPDPage: React.FC = () => (
   <div className="w-full max-w-3xl mx-auto space-y-spacing-2xl py-spacing-xl animate-in fade-in slide-in-from-bottom-4 duration-700">
@@ -20,7 +20,7 @@ const LGPDPage: React.FC = () => (
         Conformidade com a LGPD
       </h1>
       <p className="text-muted-foreground text-premium-lg">
-        A Cathedra Digital trata dados pessoais em conformidade com a Lei Geral de Proteção de Dados
+        A Cátedra Digital trata dados pessoais em conformidade com a Lei Geral de Proteção de Dados
         brasileira. Esta página resume nossas práticas; para o detalhamento completo consulte a{' '}
         <Link to="/legal/privacy" className="text-primary hover:underline">
           Política de Privacidade
@@ -31,7 +31,7 @@ const LGPDPage: React.FC = () => (
 
     <Section title="1. Papéis e responsabilidades">
       <p>
-        A Cathedra Digital atua como <strong>controladora</strong> dos dados que coleta diretamente dos
+        A Cátedra Digital atua como <strong>controladora</strong> dos dados que coleta diretamente dos
         usuários. Provedores de infraestrutura (autenticação, banco de dados, e-mail, pagamentos) atuam
         como <strong>operadores</strong> sob contrato.
       </p>
@@ -71,7 +71,7 @@ const LGPDPage: React.FC = () => (
 
     <Section title="5. Incidentes de segurança">
       <p>
-        Em caso de incidente que possa acarretar risco relevante aos titulares, a Cathedra comunica a
+        Em caso de incidente que possa acarretar risco relevante aos titulares, a Cátedra comunica a
         ANPD e os titulares afetados em prazo razoável, informando a natureza dos dados envolvidos,
         os riscos e as medidas adotadas para reverter ou mitigar os efeitos.
       </p>
