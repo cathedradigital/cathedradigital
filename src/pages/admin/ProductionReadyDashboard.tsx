@@ -59,14 +59,14 @@ export default function ProductionReadyDashboard() {
   return (
     <div className="container mx-auto py-8 max-w-6xl space-y-8">
       <Helmet>
-        <title>Production Ready Dashboard · Cathedra</title>
+        <title>Production Ready Dashboard · Cátedra</title>
       </Helmet>
 
       <header className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div className="space-y-1">
           <Badge variant="outline" className="text-primary font-mono mb-2">FASE 5 — CONSOLIDAÇÃO</Badge>
           <h1 className="text-3xl font-black tracking-tight font-display">Production Ready Dashboard</h1>
-          <p className="text-muted-foreground">Status global de certificação e integridade do Cathedra Digital 3.0.</p>
+          <p className="text-muted-foreground">Status global de certificação e integridade do Cátedra Digital 3.0.</p>
         </div>
         <div className="flex items-center gap-4 bg-card border border-border p-4 rounded-premium">
           <div className="text-right">
