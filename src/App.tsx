@@ -5,6 +5,7 @@ import { HelmetProvider } from '@/lib/helmet-compat';
 import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation, useParams } from '@/lib/rr-compat';
 import { resolveSpaceForPath } from '@/lib/spaces/resolveSpace';
 import { MODULE_NAVIGATION } from '@/config/moduleNavigation';
+import { MobileModuleCarousel } from './components/mobile/MobileModuleCarousel';
 
 import { AnimatePresence, motion, MotionConfig } from 'framer-motion';
 import { QueryClient } from '@tanstack/react-query';
@@ -634,6 +635,8 @@ const AppLayout: React.FC = () => {
         </Suspense>
 
         {/* Arquitetura estabilizada: Layout único, Card único, Navegação única e Tema único. */}
+
+        <MobileModuleCarousel />
 
         <main
           id="main-content"
