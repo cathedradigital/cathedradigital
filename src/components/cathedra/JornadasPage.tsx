@@ -245,7 +245,7 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
             <div className="flex justify-end mb-spacing-md">
               <Dialog>
                 <DialogTrigger asChild>
-                  <Button variant="outline" size="sm" className="rounded-premium-full gap-spacing-xs text-[10px] font-black uppercase tracking-widest border-primary/20 hover:bg-primary/5">
+                  <Button variant="outline" size="sm" className="rounded-premium-full gap-spacing-xs text-[12px] font-semibold uppercase tracking-[0.1em] border-primary/20 hover:bg-primary/5">
                     <Icons.Bell className="w-spacing-sm h-spacing-sm" /> Lembrete
                   </Button>
                 </DialogTrigger>
