@@ -251,3 +251,19 @@ test('Catecismo: leitor usa um único bloco de Conexo e não mantém Relatio dup
   expect(populatedNexusPanels + processingNexusPanels).toBe(1);
   await expect(page.locator('#relatio-heading')).toHaveCount(0);
 });
+
+
+test('Catecismo: alias paragraph=N é canonicalizado para p=N sem perder o deep-link', async ({ page }) => {
+  const errors: string[] = [];
+  page.on('console', message => {
+    if (message.type() === 'error') errors.push(message.text());
+  });
+
+  const response = await page.goto('/catechism?paragraph=2865');
+  expect(response?.ok(), `/catechism?paragraph=2865: HTTP ${response?.status()}`).toBeTruthy();
+  await expect(page).toHaveURL(/\/catechism\?p=2865$/);
+  await expect(page.locator('#p2865')).toBeVisible();
+  await page.waitForTimeout(250);
+  await expect(page).toHaveURL(/\/catechism\?p=2865$/);
+  expect(errors, 'Catechism deep-link: console errors').toEqual([]);
+});
