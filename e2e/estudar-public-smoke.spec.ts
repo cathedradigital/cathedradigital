@@ -267,3 +267,25 @@ test('Catecismo: alias paragraph=N é canonicalizado para p=N sem perder o deep-
   await expect(page).toHaveURL(/\/catechism\?p=2865$/);
   expect(errors, 'Catechism deep-link: console errors').toEqual([]);
 });
+
+
+test('Mobile: carrossel inferior alterna entre os ambientes canônicos', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/');
+
+  const carousel = page.getByTestId('mobile-module-carousel');
+  await expect(carousel).toBeVisible();
+  await expect(carousel).toHaveCSS('position', 'fixed');
+  await expect(carousel).toHaveCSS('bottom', '0px');
+  await expect(carousel.getByRole('button', { name: 'Abrir módulo Estudar' })).toBeVisible();
+
+  await carousel.getByRole('button', { name: 'Abrir módulo Estudar' }).click();
+  await expect(page).toHaveURL(/\/estudar$/);
+  await expect(carousel.getByRole('button', { name: 'Abrir módulo Estudar' })).toHaveAttribute('aria-current', 'page');
+});
+
+test('Desktop: carrossel inferior permanece oculto', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 800 });
+  await page.goto('/');
+  await expect(page.getByTestId('mobile-module-carousel')).toBeHidden();
+});
