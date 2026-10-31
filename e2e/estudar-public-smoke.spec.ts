@@ -397,16 +397,36 @@ test('Sanctorum: catálogo público carrega santos com fonte e status editorial'
   const response = await page.goto('/santos');
   expect(response?.ok(), `/santos: HTTP ${response?.status()}`).toBeTruthy();
 
-  await page.getByRole('tab', { name: 'Todos' }).click();
-  await expect(page.getByRole('heading', { name: 'Base Sanctorum' })).toBeVisible();
+  const allTab = page.getByRole('tab', { name: 'Todos' });
+  await expect(allTab, 'Sanctorum: aba Todos deve estar disponível no catálogo').toBeVisible({ timeout: 10_000 });
+
+  const allSaintsResponsePromise = page.waitForResponse(
+    candidate => {
+      const url = new URL(candidate.url());
+      return url.pathname.endsWith('/rest/v1/saints')
+        && candidate.request().method() === 'GET'
+        && url.searchParams.get('limit') === '100';
+    },
+    { timeout: 15_000 },
+  );
+
+  await allTab.scrollIntoViewIfNeeded();
+  await allTab.click({ timeout: 10_000 });
+
+  const allSaintsResponse = await allSaintsResponsePromise;
+  expect(allSaintsResponse.status(), 'Sanctorum: consulta pública da lista deve retornar HTTP 200').toBe(200);
+  const rows = await allSaintsResponse.json() as Array<{ id?: string }>;
+  expect(rows.some(row => row.id === 'santo-agostinho'), 'Sanctorum: Santo Agostinho deve existir na resposta pública').toBeTruthy();
+
+  await expect(page.getByRole('heading', { name: 'Base Sanctorum' })).toBeVisible({ timeout: 10_000 });
 
   const augustine = page.getByRole('button', { name: /Santo Agostinho de Hipona/ });
-  await expect(augustine).toBeVisible();
-  await augustine.click();
+  await expect(augustine, 'Sanctorum: ficha de Santo Agostinho deve aparecer na lista').toBeVisible({ timeout: 10_000 });
+  await augustine.click({ timeout: 10_000 });
 
-  await expect(page.locator('body')).toContainText('Agostinho nasceu em Tagaste');
-  await expect(page.getByText('Ficha em curadoria', { exact: true })).toBeVisible();
-  await expect(page.locator('body')).toContainText('Santa Sé');
+  await expect(page.locator('body')).toContainText('Agostinho nasceu em Tagaste', { timeout: 15_000 });
+  await expect(page.getByText('Ficha em curadoria', { exact: true })).toBeVisible({ timeout: 10_000 });
+  await expect(page.locator('body')).toContainText('Santa Sé', { timeout: 10_000 });
 });
 
 
