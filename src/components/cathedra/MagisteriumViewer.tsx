@@ -270,10 +270,8 @@ const MagisteriumViewer: React.FC = () => {
     }
   }, [content?.text, sourceLanguage, lang, translationLoading, translationCacheKey]);
 
-  useEffect(() => {
-    if (!content?.text || sourceLanguage === lang || translatedText || translationLoading) return;
-    void translateDocument();
-  }, [content?.text, sourceLanguage, lang, translatedText, translationLoading, translateDocument]);
+  // Tradução é sob demanda: não chamar o provedor externo ao abrir cada documento.
+  // Isso evita consumo involuntário e rate-limit (HTTP 429) antes de o leitor escolher traduzir.
 
 
   useEffect(() => {
