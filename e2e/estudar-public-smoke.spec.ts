@@ -391,3 +391,20 @@ test('Rezar no protótipo encaminha cada opção para seu módulo real', async (
     await expect(page).toHaveURL(new RegExp(destination.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '$'));
   }
 });
+
+
+test('Sanctorum: catálogo público carrega santos com fonte e status editorial', async ({ page }) => {
+  const response = await page.goto('/santos');
+  expect(response?.ok(), `/santos: HTTP ${response?.status()}`).toBeTruthy();
+
+  await page.getByRole('tab', { name: 'Todos' }).click();
+  await expect(page.getByRole('heading', { name: 'Base Sanctorum' })).toBeVisible();
+
+  const augustine = page.getByRole('button', { name: /Santo Agostinho de Hipona/ });
+  await expect(augustine).toBeVisible();
+  await augustine.click();
+
+  await expect(page.locator('body')).toContainText('Agostinho nasceu em Tagaste');
+  await expect(page.getByRole('status')).toContainText('Ficha em curadoria');
+  await expect(page.locator('body')).toContainText('Santa Sé');
+});
