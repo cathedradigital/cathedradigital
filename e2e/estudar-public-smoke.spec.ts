@@ -332,7 +332,7 @@ test('Home: identidade visual usa a marca Cátedra Digital', async ({ page }) =>
   const homeBrand = page.locator('main [aria-label="Cátedra Digital"]').first();
   await expect(homeBrand).toBeVisible();
   await expect(homeBrand.getByText('Cátedra Digital', { exact: true })).toBeVisible();
-  await expect(page.locator('footer')).toContainText(/Cátedra[\\s\\S]*DIGITAL/i);
+  await expect(page.getByRole('contentinfo', { name: 'Rodapé' })).toContainText(/Cátedra[\\s\\S]*DIGITAL/i);
   await expect(page).toHaveTitle(/Cátedra Digital/i);
 });
 
