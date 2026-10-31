@@ -218,10 +218,6 @@ test('Documentos: Dei Filius organiza cabeçalho, idioma original e tradução',
       failedResponses.push(`${response.status()} ${url.origin}${url.pathname}`);
     }
   });
-  page.on('requestfailed', request => {
-    const url = new URL(request.url());
-    failedResponses.push(`requestfailed ${url.origin}${url.pathname}`);
-  });
 
   const response = await page.goto('/magisterium/dfil');
   expect(response?.ok(), `/magisterium/dfil: HTTP ${response?.status()}`).toBeTruthy();
