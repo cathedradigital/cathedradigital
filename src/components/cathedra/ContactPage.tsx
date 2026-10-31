@@ -39,7 +39,7 @@ const CHANNELS: Channel[] = [
   {
     icon: <Icons.Feather className="w-spacing-lg h-spacing-lg" />,
     title: 'Imprensa e conteúdo editorial',
-    desc: 'Entrevistas, reportagens e uso de material editorial da Cathedra em publicações.',
+    desc: 'Entrevistas, reportagens e uso de material editorial da Cátedra em publicações.',
     actionLabel: 'imprensa@cathedradigital.com.br',
     href: 'mailto:imprensa@cathedradigital.com.br',
     external: true,
@@ -54,7 +54,7 @@ const ContactPage: React.FC = () => (
         <span className="text-premium-xs font-black uppercase tracking-[0.2em] text-primary">Contato</span>
       </div>
       <h1 className="text-premium-4xl md:text-premium-5xl font-serif font-bold text-foreground tracking-tight">
-        Fale com a Cathedra
+        Fale com a Cátedra
       </h1>
       <p className="text-muted-foreground text-premium-lg max-w-2xl mx-auto">
         Escolha o canal certo — respondemos em até 3 dias úteis. Para direitos LGPD, o prazo é de até
