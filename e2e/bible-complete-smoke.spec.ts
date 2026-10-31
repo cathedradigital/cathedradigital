@@ -110,6 +110,13 @@ test.describe('Bíblia — catálogo completo', () => {
     await expect(page.getByTestId('cic-chapter-marker-28')).toHaveCount(0);
     expect(BIBLE_TO_CIC['Gn:28']).toBeUndefined();
     expect(BIBLE_TO_CIC['Gn:32']).toEqual([2573]);
+
+    // Abbreviations in the editorial map must normalize to the visible catalogue.
+    await page.goto('/bible?book=1Co&ch=13');
+    await expect(page.locator('[data-testid="verse-text-1"]')).toBeVisible({ timeout: 30_000 });
+    await expect(page.getByTestId('bible-cic-chapter-references')).toBeVisible();
+    await expect(page.getByTestId('bible-cic-reference-1823')).toBeVisible();
+    await expect(page.getByTestId('bible-cic-reference-1826')).toBeVisible();
   });
 
   test('deep-link destaca o versículo solicitado', async ({ page }) => {
