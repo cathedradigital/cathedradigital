@@ -210,7 +210,7 @@ test('Documentos: Dei Filius organiza cabeçalho, idioma original e tradução',
   await expect(page.locator('body')).not.toContainText(/Application error|Something went wrong/i);
   await expect(page.getByRole('heading', { name: /Dei Filius/i }).first()).toBeVisible();
   await expect(page.getByText(/Fonte oficial/i).first()).toBeVisible();
-  await expect(page.getByText(/Idioma original · Latina/i)).toBeVisible();
+  await expect(page.getByText(/Idioma original · Portuguesa/i)).toBeVisible();
   await expect(page.getByTestId('magisterium-translate')).toBeVisible();
   await expect(page.getByText('Temas', { exact: true })).toHaveCount(0);
   expect(errors, 'Dei Filius: console errors').toEqual([]);
