@@ -255,14 +255,14 @@ const InstitutionalVideoSection = () => {
             <Button 
               className="relative w-full aspect-[4/5] sm:aspect-video rounded-[32px] overflow-hidden border border-border bg-black shadow-premium cursor-pointer group-hover:scale-[1.01] transition-all duration-700 text-left focus:outline-none focus-visible:ring-4 focus-visible:ring-primary/50"
               onClick={handlePlay}
-              aria-label="Abrir vídeo de apresentação da Catedra Digital"
+              aria-label="Abrir vídeo de apresentação da Cathedra Digital"
             >
               {isVisible && !videoError ? (
                 <video
                   ref={videoRef}
                   src={videoAsset.url}
                   poster="https://images.unsplash.com/photo-1548610762-656391d1ad4d?auto=format&fit=crop&q=80&w=1200"
-                  aria-label="Vídeo de apresentação da Catedra Digital"
+                  aria-label="Vídeo de apresentação da Cathedra Digital"
                   muted
                   loop
                   autoPlay
@@ -304,7 +304,7 @@ const InstitutionalVideoSection = () => {
                     Assistir Apresentação
                   </h3>
                   <p className="text-white/60 text-premium-small font-medium tracking-wide uppercase">
-                    Mergulhe na Proposta da Catedra
+                    Mergulhe na Proposta da Cathedra
                   </p>
                 </div>
               </div>
@@ -355,7 +355,7 @@ const InstitutionalVideoSection = () => {
             onClick={handleClose}
             role="dialog"
             aria-modal="true"
-            aria-label="Vídeo Institucional Catedra Digital"
+            aria-label="Vídeo Institucional Cathedra Digital"
           >
             <motion.div
               ref={modalContainerRef}
