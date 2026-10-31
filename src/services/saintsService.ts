@@ -5,7 +5,7 @@ import { combinedSimilarity } from '@/lib/similarity';
 // Colunas mínimas para listagens/cards (evita puxar full_bio, works e refs
 // pesados). Detalhes (getSaintById) continuam com select('*').
 const LIST_COLUMNS =
-  'id, name, title, category, feast_day, feast_month, feast_day_num, image, patron_of, virtues, born, died, bio';
+  'id, name, title, category, feast_day, feast_month, feast_day_num, image, patron_of, virtues, born, died, bio, source_metadata, editorial_score';
 
 const DETAIL_COLUMNS = '*';
 
@@ -203,6 +203,7 @@ const parseJson = <T>(v: any, fallback: T): T => {
 };
 
 export const formatSaint = (dbSaint: any): Saint => {
+  const sourceMetadata = parseJson<Record<string, any>>(dbSaint.source_metadata, {});
   return {
     ...dbSaint,
     feastDay: dbSaint.feast_day,
@@ -215,18 +216,18 @@ export const formatSaint = (dbSaint: any): Saint => {
     catechismRefs: dbSaint.catechism_refs || [],
     churchDocRefs: Array.isArray(dbSaint.church_doc_refs) ? dbSaint.church_doc_refs : parseJson(dbSaint.church_doc_refs, []),
     // Sanctorum 2.0
-    biographyFull: parseJson(dbSaint.biography_full, {}),
-    historicalContext: dbSaint.historical_context ?? undefined,
-    century: dbSaint.century ?? undefined,
-    timeline: parseJson(dbSaint.timeline, []),
-    miracles: parseJson(dbSaint.miracles, []),
-    iconography: parseJson(dbSaint.iconography, {}),
-    patronages: dbSaint.patronages || [],
-    curiosities: dbSaint.curiosities || [],
-    sources: parseJson(dbSaint.sources, []),
-    spiritualPractice: parseJson(dbSaint.spiritual_practice, {}),
-    quotesRich: parseJson(dbSaint.quotes_rich, []),
-    contentStatus: dbSaint.content_status ?? 'stub',
+    biographyFull: parseJson(dbSaint.biography_full ?? sourceMetadata.biography_full, {}),
+    historicalContext: dbSaint.historical_context ?? sourceMetadata.historical_context ?? undefined,
+    century: dbSaint.century ?? sourceMetadata.century ?? undefined,
+    timeline: parseJson(dbSaint.timeline ?? sourceMetadata.timeline, []),
+    miracles: parseJson(dbSaint.miracles ?? sourceMetadata.miracles, []),
+    iconography: parseJson(dbSaint.iconography ?? sourceMetadata.iconography, {}),
+    patronages: dbSaint.patronages || sourceMetadata.patronages || [],
+    curiosities: dbSaint.curiosities || sourceMetadata.curiosities || [],
+    sources: parseJson(dbSaint.sources ?? sourceMetadata.sources, []),
+    spiritualPractice: parseJson(dbSaint.spiritual_practice ?? sourceMetadata.spiritual_practice, {}),
+    quotesRich: parseJson(dbSaint.quotes_rich ?? sourceMetadata.quotes_rich, []),
+    contentStatus: (dbSaint.content_status ?? sourceMetadata.content_status) as Saint['contentStatus'],
     // v3 — Biblioteca Viva
     country: dbSaint.country ?? undefined,
     vocation: dbSaint.vocation ?? undefined,
@@ -238,7 +239,7 @@ export const formatSaint = (dbSaint: any): Saint => {
     legacy: dbSaint.legacy ?? undefined,
     // Sprint 3.2.1 — narrativa espiritual
     spiritualitySummary: dbSaint.spirituality_summary ?? undefined,
-    keyEvents: parseJson(dbSaint.key_events, []),
+    keyEvents: parseJson(dbSaint.key_events ?? sourceMetadata.key_events, []),
   };
 
 };

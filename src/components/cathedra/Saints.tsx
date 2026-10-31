@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect, lazy, Suspense } from 'react';
+import React, { useState, useMemo, useEffect, useRef, lazy, Suspense } from 'react';
 import { SpaceLayout, SpaceHeader, SpaceFooter } from './space/SpaceLayout';
 import { useSearchParams, useParams, useNavigate } from '@/lib/rr-compat';
 import { useOfficialSaint } from '@/hooks/useSaints';
@@ -48,6 +48,7 @@ const Saints = React.forwardRef<HTMLDivElement, { legacyReader?: boolean }>((pro
     resolveSanctorumDateParam(rawDateParam);
   const [selectedDate, setSelectedDate] = useState<Date>(initialDate);
   const [selectedSaint, setSelectedSaint] = useState<Saint | null>(null);
+  const detailRequestRef = useRef(0);
   const [autoReflect, setAutoReflect] = useState(false);
   const [search, setSearch] = useState('');
   const { handleKeyDown: handleTabKeyDown } = useTabNavigation();
@@ -193,8 +194,14 @@ const Saints = React.forwardRef<HTMLDivElement, { legacyReader?: boolean }>((pro
   };
 
   const handleOpenSaint = (saint: Saint, shouldReflect: boolean = false) => {
+    const requestId = ++detailRequestRef.current;
     setAutoReflect(shouldReflect);
     setSelectedSaint(saint);
+    void getSaintById(saint.id).then((fullSaint) => {
+      if (requestId === detailRequestRef.current && fullSaint) {
+        setSelectedSaint(fullSaint);
+      }
+    });
   };
 
   const saintsForSelectedDate = useMemo(() => {
@@ -659,10 +666,6 @@ const Saints = React.forwardRef<HTMLDivElement, { legacyReader?: boolean }>((pro
                         key={saint.id} 
                         saint={saint} 
                         onClick={() => handleOpenSaint(saint, false)}
-                        onMouseEnter={() => {
-                          import('./SaintDetail');
-                          getSaintById(saint.id);
-                        }}
                       />
                     ))}
                   </StaggeredList>
@@ -676,7 +679,7 @@ const Saints = React.forwardRef<HTMLDivElement, { legacyReader?: boolean }>((pro
           {selectedSaint && (
             <SaintDetail 
               saint={selectedSaint} 
-              onClose={() => setSelectedSaint(null)} 
+              onClose={() => { detailRequestRef.current += 1; setSelectedSaint(null); }} 
               autoReflect={autoReflect}
               legacy={legacyReader}
             />
@@ -697,11 +700,10 @@ const Saints = React.forwardRef<HTMLDivElement, { legacyReader?: boolean }>((pro
 
 Saints.displayName = 'Saints';
 
-const SaintCard: React.FC<{ saint: SaintWithScore; onClick: () => void; onMouseEnter?: () => void }> = ({ saint, onClick, onMouseEnter }) => {
+const SaintCard: React.FC<{ saint: SaintWithScore; onClick: () => void }> = ({ saint, onClick }) => {
   return (
     <Button
       onClick={onClick}
-      onMouseEnter={onMouseEnter}
       className="group bg-card border border-border rounded-[2rem] overflow-hidden hover:border-primary/50 hover:shadow-premium-hover hover:-translate-y-1 transition-all duration-500 text-left flex flex-col h-full focus-visible:ring-2 focus-visible:ring-primary outline-none"
     >
       <div className="relative h-spacing-4xl overflow-hidden">
