@@ -1048,9 +1048,9 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
       const [abbr, chapter] = key.split('-');
       if (abbr !== selectedBook.abbr || Number(chapter) !== selectedChapter) return [];
       return connections
-        .filter((connection: any) => connection.type === 'catechism')
-        .map((connection: any) => Number.parseInt(String(connection.id), 10))
-        .filter((paragraph: number) => Number.isInteger(paragraph) && paragraph > 0);
+        .filter((connection) => connection.type === 'catechism')
+        .map((connection) => Number.parseInt(String(connection.id), 10))
+        .filter((paragraph) => Number.isInteger(paragraph) && paragraph > 0);
     });
     return Array.from(new Set([...editorial, ...indexed])).sort((a, b) => a - b);
   }, [selectedBook, selectedChapter, dynamicConnections]);
