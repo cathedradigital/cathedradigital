@@ -489,7 +489,7 @@ const Magisterium: React.FC = () => {
       <MobileTopBar kicker="Cathedra" title="Documentos" transparent />
       <div data-catedra-module="documents" className="estudar-module-landing min-w-0 w-full overflow-x-hidden">
       <SEOHead 
-        title="Magistério da Igreja | Cathedra" 
+        title="Magistério da Igreja | Cátedra" 
         description="Acesse os documentos fundamentais da Igreja Católica em uma experiência premium." 
         path="/magisterium"
         type="collection"
@@ -502,7 +502,7 @@ const Magisterium: React.FC = () => {
           "description": "Coleção de encíclicas, constituições e documentos oficiais da Igreja.",
           "publisher": {
             "@type": "Organization",
-            "name": "Cathedra Digital"
+            "name": "Cátedra Digital"
           }
         })}
       </script>
