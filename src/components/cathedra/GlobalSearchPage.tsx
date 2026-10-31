@@ -356,7 +356,7 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                       text={g.definition ?? ''}
                       reference={g.term}
                       url={`${window.location.origin}/glossario#${encodeURIComponent(g.term)}`}
-                      title={`Cathedra — ${g.term}`}
+                      title={`Cátedra Digital — ${g.term}`}
                     />
                   }
                 />
