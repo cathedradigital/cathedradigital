@@ -323,7 +323,7 @@ const MagisteriumViewer: React.FC = () => {
 
       // PDFs oficiais não passam pelo extrator HTML da Edge Function.
       // Eles são exibidos diretamente no leitor, mantendo a fonte do Vaticano.
-      if (/\\.pdf(?:$|[?#])/i.test(url)) {
+      if (/\.pdf(?:$|[?#])/i.test(url)) {
         setContent(null);
         setError(null);
         setLoading(false);
@@ -671,7 +671,7 @@ const MagisteriumViewer: React.FC = () => {
   }, [content, translatedText, showingTranslation]);
 
   const canonicalUrl = id ? MAGISTERIUM_URLS[id] : undefined;
-  const isPdfDocument = Boolean(canonicalUrl && /\\.pdf(?:$|[?#])/i.test(canonicalUrl));
+  const isPdfDocument = Boolean(canonicalUrl && /\.pdf(?:$|[?#])/i.test(canonicalUrl));
 
   if (loading) {
     return (
