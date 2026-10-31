@@ -70,7 +70,7 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: deploy
-      - name: Validate production endpoints
+      - name: Validate production endpoints and SEO resources
         shell: bash
         run: |
           set -euo pipefail
@@ -79,29 +79,42 @@ jobs:
             "https://www.cathedradigital.com.br"
             "https://cathedradigital.cathedradigital.workers.dev"
           )
-          for url in "${endpoints[@]}"; do
-            echo "Checking $url"
-            body_file="$(mktemp)"
-            status="$(curl --silent --show-error --location --retry 2 --retry-all-errors --connect-timeout 10 --max-time 30 --output "$body_file" --write-out "%{http_code}" "$url" || true)"
-            size="$(wc -c < "$body_file")"
-            rm -f "$body_file"
 
-            case "$url" in
-              *workers.dev)
-                test "$status" = "200"
-                test "$size" -gt 100
-                echo "OK $url -> HTTP $status ($size bytes)"
-                ;;
-              *)
-                if [ "$status" = "200" ]; then
-                  test "$size" -gt 100
-                  echo "OK $url -> HTTP $status ($size bytes)"
-                elif [ "$status" = "403" ]; then
-                  echo "REACHABLE $url -> HTTP 403 (custom-domain protection; deployment is live)"
-                else
-                  echo "::error::$url returned unexpected HTTP $status"
-                  exit 1
-                fi
-                ;;
-            esac
+          check_public_url() {
+            local url="$1"
+            local expected="$2"
+            local body_file headers_file status size markers
+            body_file="$(mktemp)"
+            headers_file="$(mktemp)"
+            status="$(curl --silent --show-error --location --retry 2 --retry-all-errors --connect-timeout 10 --max-time 30 --dump-header "$headers_file" --output "$body_file" --write-out "%{http_code}" "$url" || true)"
+            size="$(wc -c < "$body_file")"
+
+            echo "=== $url -> HTTP $status ($size bytes) ==="
+            if [ "$status" != "200" ] || [ "$size" -lt "$expected" ]; then
+              echo "Response headers (safe subset):"
+              awk 'BEGIN { IGNORECASE=1 } /^HTTP\// || /^(server|cf-ray|cf-mitigated|cf-cache-status|content-type|location|cf-access-denied|www-authenticate):/ { print }' "$headers_file"
+              markers="$(grep -oiE 'access denied|you have been blocked|error 1020|authentication required|login required|forbidden|cloudflare' "$body_file" | sort -u | head -n 10 | tr '\n' ', ' || true)"
+              echo "Body markers: ${markers:-none}"
+              rm -f "$body_file" "$headers_file"
+              echo "::error::$url is not publicly accessible with HTTP 200"
+              return 1
+            fi
+
+            rm -f "$body_file" "$headers_file"
+            echo "OK $url"
+          }
+
+          for url in "${endpoints[@]}"; do
+            check_public_url "$url" 100
           done
+
+          check_public_url "https://cathedradigital.com.br/robots.txt" 1
+          check_public_url "https://cathedradigital.com.br/sitemap.xml" 100
+          check_public_url "https://www.cathedradigital.com.br/robots.txt" 1
+          check_public_url "https://www.cathedradigital.com.br/sitemap.xml" 100
+
+          robots="$(curl --fail --silent --show-error --connect-timeout 10 --max-time 20 https://cathedradigital.com.br/robots.txt)"
+          sitemap="$(curl --fail --silent --show-error --connect-timeout 10 --max-time 20 https://cathedradigital.com.br/sitemap.xml)"
+          grep -Eiq '^User-agent:' <<< "$robots"
+          grep -Eiq '<(urlset|sitemapindex)([ >])' <<< "$sitemap"
+          echo "OK robots.txt directives and sitemap XML structure"
