@@ -8,7 +8,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { AppRoute } from '@/types';
 import { LangContext } from '@/contexts/LangContext';
 import { useSaintsToday, useOfficialSaint } from '@/hooks/useSaints';
-import { CathedraButton } from './CathedraButton';
+import { CátedraButton } from './CátedraButton';
 import { useDashboardData } from '@/hooks/useDashboardData';
 import SEOHead from '@/components/SEOHead';
 import { useQuery } from '@tanstack/react-query';
@@ -130,11 +130,11 @@ const HojePage: React.FC = () => {
 
 
       <SEOHead 
-        title={`Sanctuarium - ${new Date().toLocaleDateString('pt-BR')} | Cathedra`} 
+        title={`Sanctuarium - ${new Date().toLocaleDateString('pt-BR')} | Cátedra`} 
         description="Refúgio digital contemplativo guiado pela Fé. Liturgia, Ritual e Sabedoria em silêncio visual." 
         path="/hoje" 
         image="https://isojguvcnfncokoxoauk.supabase.co/storage/v1/object/public/public-assets/og-hoje.png"
-        keywords="mosteiro digital, ritual diário, cathedra digital, silêncio espiritual, contemplação"
+        keywords="mosteiro digital, ritual diário, Cátedra Digital, silêncio espiritual, contemplação"
         breadcrumbs={[
           { name: "Sanctuarium", path: "/hoje" }
         ]}
@@ -240,22 +240,22 @@ const HojePage: React.FC = () => {
                 <div className="h-[0.5px] flex-1 bg-gradient-to-r from-primary/[0.08] to-transparent" />
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-spacing-xl w-full">
-                 <CathedraButton 
+                 <CátedraButton 
                     variant="outline" 
                     className="h-spacing-4xl rounded-[2.5rem] border-primary/[0.03] hover:bg-primary/[0.01] transition-all flex flex-col items-center justify-center gap-spacing-md group"
                     onClick={() => navigate(AppRoute.BIBLE)}
                  >
                     <Icons.Bible className="w-spacing-xl h-spacing-xl text-primary/20 group-hover:text-primary transition-all" strokeWidth={1.2} size={20} aria-hidden="true" />
                     <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/40 group-hover:text-primary transition-all">Bíblia</span>
-                 </CathedraButton>
-                 <CathedraButton 
+                 </CátedraButton>
+                 <CátedraButton 
                     variant="outline" 
                     className="h-spacing-4xl rounded-[2.5rem] border-primary/[0.03] hover:bg-primary/[0.01] transition-all flex flex-col items-center justify-center gap-spacing-md group"
                     onClick={() => navigate(AppRoute.CATECHISM)}
                  >
                     <Icons.Catechism className="w-spacing-xl h-spacing-xl text-primary/20 group-hover:text-primary transition-all" strokeWidth={1.2} size={20} aria-hidden="true" />
                     <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/40 group-hover:text-primary transition-all">Catecismo</span>
-                 </CathedraButton>
+                 </CátedraButton>
               </div>
             </section>
           </div>
