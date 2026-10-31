@@ -321,6 +321,15 @@ const MagisteriumViewer: React.FC = () => {
         return;
       }
 
+      // PDFs oficiais não passam pelo extrator HTML da Edge Function.
+      // Eles são exibidos diretamente no leitor, mantendo a fonte do Vaticano.
+      if (/\.pdf(?:$|[?#])/i.test(url)) {
+        setContent(null);
+        setError(null);
+        setLoading(false);
+        return;
+      }
+
       try {
         const { data, error: invokeError } = await supabase.functions.invoke('vatican-document', {
           body: { url },
@@ -661,6 +670,9 @@ const MagisteriumViewer: React.FC = () => {
     return normalizeDocumentText(content.text);
   }, [content, translatedText, showingTranslation]);
 
+  const canonicalUrl = id ? MAGISTERIUM_URLS[id] : undefined;
+  const isPdfDocument = Boolean(canonicalUrl && /\.pdf(?:$|[?#])/i.test(canonicalUrl));
+
   if (loading) {
     return (
       <div className="max-w-spacing-4xl mx-auto px-spacing-md py-spacing-3xl flex flex-col items-center justify-center space-y-spacing-lg">
@@ -673,8 +685,45 @@ const MagisteriumViewer: React.FC = () => {
     );
   }
 
+  if (isPdfDocument && canonicalUrl) {
+    return (
+      <section
+        data-testid="magisterium-pdf-reader"
+        aria-label="Leitor de documento PDF do Magistério"
+        className="w-full max-w-5xl mx-auto px-spacing-md py-spacing-xl space-y-spacing-md"
+      >
+        <div className="flex flex-wrap items-center justify-between gap-spacing-sm">
+          <div>
+            <h2 className="font-serif text-xl font-semibold text-foreground">
+              {docMeta?.title ?? 'Documento do Magistério'}
+            </h2>
+            <p className="text-sm text-muted-foreground">Documento oficial em PDF · Fonte: Vaticano</p>
+          </div>
+          <a
+            href={canonicalUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            data-testid="magisterium-pdf-open-source"
+            className="inline-flex min-h-11 items-center rounded-full border border-primary/30 px-4 text-sm font-semibold text-primary hover:bg-primary/5"
+          >
+            Abrir PDF no Vaticano
+          </a>
+        </div>
+        <iframe
+          data-testid="magisterium-pdf-frame"
+          title={docMeta?.title ?? 'Documento do Magistério em PDF'}
+          src={canonicalUrl}
+          className="w-full rounded-xl border border-border bg-background"
+          style={{ height: 'min(78vh, 1100px)', minHeight: '560px' }}
+        />
+        <p className="text-xs text-muted-foreground text-center">
+          Se o leitor incorporado não estiver disponível neste aparelho, use “Abrir PDF no Vaticano”.
+        </p>
+      </section>
+    );
+  }
+
   if (error || !content) {
-    const canonicalUrl = id ? MAGISTERIUM_URLS[id] : undefined;
     return (
       <div
         data-testid="magisterium-error-fallback"
