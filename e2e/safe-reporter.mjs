@@ -41,6 +41,14 @@ export default class SafePlaywrightReporter {
       typeof test.parent?.project === "function" ? test.parent.project()?.name : undefined;
     const rawMessage = result.error?.message ?? "";
     const safeErrorDetail = redactText(rawMessage).slice(0, 4000);
+    const safeErrorStack = redactText(result.error?.stack ?? "").slice(0, 6000);
+    const summarizeSteps = (steps = [], depth = 0) =>
+      steps.slice(0, 80).map((step) => ({
+        title: redactText(step.title ?? "step").slice(0, 300),
+        durationMs: Number.isFinite(step.duration) ? step.duration : null,
+        error: step.error ? redactText(step.error.message ?? step.error).slice(0, 1500) : null,
+        ...(depth < 3 && step.steps?.length ? { steps: summarizeSteps(step.steps, depth + 1) } : {}),
+      }));
 
     const record = {
       title: redactText(titlePath.filter(Boolean).join(" › ")),
@@ -55,6 +63,8 @@ export default class SafePlaywrightReporter {
         ? {
             name: redactText(result.error.name ?? "Error"),
             detail: safeErrorDetail,
+            stack: safeErrorStack,
+            steps: summarizeSteps(result.steps ?? []),
           }
         : null,
     };
