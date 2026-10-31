@@ -1,5 +1,4 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
-import { createClient } from "npm:@supabase/supabase-js@2";
 import { extractParagraph, isPlausibleCatechismParagraph } from "./parser.ts";
 
 const VATICAN_BASE = "https://www.vatican.va/archive/cathechism_po/index_new/";
@@ -33,33 +32,6 @@ function json(body: unknown, status = 200) {
   });
 }
 
-
-async function persistCatechismParagraph(paragraph: number, content: string, sourceUrl: string) {
-  const supabaseUrl = Deno.env.get("SUPABASE_URL");
-  const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
-  if (!supabaseUrl || !serviceRoleKey) {
-    console.warn("[catechism-text] persistence skipped: Supabase service configuration missing");
-    return;
-  }
-
-  const db = createClient(supabaseUrl, serviceRoleKey, {
-    auth: { persistSession: false, autoRefreshToken: false },
-  });
-  const { error } = await db.from("catechism_official").upsert({
-    paragraph,
-    content,
-    source_name: "Santa Sé · vatican.va",
-    source_url: sourceUrl,
-    source_retrieved_at: new Date().toISOString(),
-  }, { onConflict: "paragraph" });
-
-  if (error) {
-    console.warn("[catechism-text] persistence failed", {
-      paragraph,
-      error: error.message,
-    });
-  }
-}
 
 function pageFor(paragraph: number) {
   return PAGES.find(([from, to]) => paragraph >= from && paragraph <= to);
@@ -103,7 +75,6 @@ Deno.serve(async (req: Request) => {
       }, 422);
     }
 
-    await persistCatechismParagraph(paragraph, content, url);
 
     return json({
       paragraph,

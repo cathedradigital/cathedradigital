@@ -1,4 +1,4 @@
-import { readFileSync, readdirSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join, relative, resolve } from "node:path";
 
 const root = resolve(process.cwd(), "src");
@@ -22,6 +22,28 @@ function walk(dir) {
 }
 
 const violations = [];
+
+const forbiddenPublicArtifacts = [
+  "public/test-report.html",
+  "public/test-report.md",
+  "public/test-summary.pdf",
+  "public/cathedra.zip",
+  "public/glossary-indexing-report.json",
+  "public/security-rescan-history.json",
+  "public/security-rescan-report.json",
+  "public/seo-checklist-report.json",
+  "public/visual-audit-report.json",
+  "public/indexing-report.json",
+  "public/indexing-report.html",
+  "public/security-audit.pdf",
+  "public/security-audit.md",
+  "public/audit-report.html",
+];
+for (const path of forbiddenPublicArtifacts) {
+  if (existsSync(resolve(process.cwd(), path))) {
+    violations.push(`${path}: internal report/archive must not be published from the public directory`);
+  }
+}
 for (const file of walk(root)) {
   const rel = relative(process.cwd(), file).replaceAll("\\", "/");
   if (serverOnlyFiles.has(rel)) continue;
@@ -42,6 +64,18 @@ const forbiddenPublicBiblePatterns = [
 if (forbiddenPublicBiblePatterns.some((pattern) => pattern.test(publicBibleText))) {
   violations.push(
     "supabase/functions/bible-text/index.ts: public Bible endpoint must remain read-only",
+  );
+}
+const publicCatechismTextPath = resolve(process.cwd(), "supabase/functions/catechism-text/index.ts");
+const publicCatechismText = readFileSync(publicCatechismTextPath, "utf8");
+const forbiddenPublicCatechismPatterns = [
+  /SUPABASE_SERVICE_ROLE_KEY/,
+  /\.from\([^)]+\)\.(?:insert|upsert|update|delete)\s*\(/i,
+  /persistCatechismParagraph/,
+];
+if (forbiddenPublicCatechismPatterns.some((pattern) => pattern.test(publicCatechismText))) {
+  violations.push(
+    "supabase/functions/catechism-text/index.ts: public Catechism endpoint must remain read-only; persistence belongs to OIDC-protected source-sync",
   );
 }
 if (!/Deno\.env\.get\(["']SUPABASE_ANON_KEY["']\)/.test(publicBibleText)) {
