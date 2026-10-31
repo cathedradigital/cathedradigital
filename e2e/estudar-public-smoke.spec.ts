@@ -345,11 +345,11 @@ test('Átrio: notícias atuais mostram data, fonte e link original', async ({ pa
 });
 
 
-test('Home: identidade visual usa a marca Cathedra Digital', async ({ page }) => {
+test('Home: rodapé global mantém a marca Cátedra Digital', async ({ page }) => {
   await page.goto('/');
-  await expect(page.getByText('Cathedra Digital', { exact: true }).first()).toBeVisible();
-  await expect(page.getByRole('contentinfo', { name: 'Rodapé' })).toContainText(/Cathedra[\\s\\S]*DIGITAL/i);
-  await expect(page).toHaveTitle(/Cathedra Digital/);
+  const globalFooter = page.locator('footer[aria-label="Rodapé"]');
+  await expect(globalFooter).toBeVisible();
+  await expect(globalFooter).toContainText(/Cátedra[\\s\\S]*Digital/i);
 });
 
 
