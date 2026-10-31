@@ -119,7 +119,7 @@ export const BreviaryHourInline: React.FC<Props> = ({ prayer }) => {
       {/* Hero editorial */}
       <header className="mx-auto max-w-3xl text-center mb-spacing-lg px-spacing-sm">
         <p className="font-stitch-body text-[10px] font-black uppercase tracking-[0.3em] text-primary">
-          Cathedra · Liturgia das Horas
+          Cátedra · Liturgia das Horas
         </p>
         <h1 className="mt-spacing-2xs font-display font-bold text-premium-3xl md:text-premium-5xl text-foreground">
           {prayer.title}
