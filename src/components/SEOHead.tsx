@@ -28,10 +28,7 @@ interface SEOHeadProps {
 const SEOHead = ({ title, description, path, keywords, type = 'website', breadcrumbs, faqs, image }: SEOHeadProps) => {
   const { data: seoSettings } = useSEO();
   
-  const configuredSiteTitle = seoSettings?.site_title
-    ?.replace(/Cátedra Digital/gi, 'Cathedra Digital')
-    .replace(/Catedra Digital/gi, 'Cathedra Digital');
-  const siteTitle = configuredSiteTitle || 'Cathedra Digital';
+  const siteTitle = seoSettings?.site_title?.trim() || 'Cátedra Digital';
   const displayTitle = title ? `${title} — ${siteTitle}` : siteTitle;
   const displayDescription = description || seoSettings?.site_description || 'Aprofunde sua fé católica com Bíblia Sagrada, Catecismo da Igreja, vidas dos santos, liturgia diária e IA teológica.';
   const displayKeywords = keywords || seoSettings?.site_keywords || '';
@@ -168,7 +165,7 @@ const SEOHead = ({ title, description, path, keywords, type = 'website', breadcr
 
       <meta property="og:type" content={type} />
       <meta property="og:url" content={url} />
-      <meta property="og:site_name" content="Cathedra Digital" />
+      <meta property="og:site_name" content="Cátedra Digital" />
       <meta property="og:title" content={displayTitle} />
       <meta property="og:description" content={displayDescription} />
       <meta property="og:image" content={displayImage} />
