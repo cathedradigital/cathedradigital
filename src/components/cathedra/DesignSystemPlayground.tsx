@@ -13,8 +13,8 @@ const DesignSystemPlayground: React.FC = () => {
   return (
     <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
       <SEOHead 
-        title="Design System Playground | Cathedra" 
-        description="Ambiente de testes e documentação dos componentes do Cathedra Digital."
+        title="Design System Playground | Cátedra" 
+        description="Ambiente de testes e documentação dos componentes do Cátedra Digital."
         path="/design-system"
       />
       

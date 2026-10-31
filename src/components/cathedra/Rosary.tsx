@@ -255,7 +255,7 @@ const Rosary: React.FC = () => {
       >
         <header className="text-center space-y-spacing-md pt-spacing-md">
           <p className="text-[10px] font-black uppercase tracking-[0.28em] text-secondary">
-            Rosarium · Cathedra
+            Rosarium · Cátedra
           </p>
           <h1 className="font-display text-premium-4xl md:text-premium-6xl text-foreground tracking-tight">
             Santo Rosário

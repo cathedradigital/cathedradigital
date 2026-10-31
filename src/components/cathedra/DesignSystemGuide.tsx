@@ -40,7 +40,7 @@ const DesignSystemGuide: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-background py-spacing-3xl md:py-spacing-4xl px-spacing-lg transition-colors duration-1000">
-      <SEOHead title="Design System Documentation | Cathedra" description="Tokens, regras e componentes do ecossistema visual Cathedra Digital." path="/design-system" />
+      <SEOHead title="Design System Documentation | Cátedra" description="Tokens, regras e componentes do ecossistema visual Cátedra Digital." path="/design-system" />
       
       <div className="w-full space-y-spacing-4xl">
         {/* Header */}
@@ -60,7 +60,7 @@ const DesignSystemGuide: React.FC = () => {
               transition={{ delay: 0.1 }}
               className="text-premium-7xl md:text-premium-9xl font-display font-light text-primary leading-none tracking-tighter"
             >
-              Cathedra <br />
+              Cátedra <br />
               <span className="text-secondary/60 italic font-serif">Artes Docendi</span>
             </motion.h1>
             <p className="font-serif italic text-muted-foreground/60 text-premium-xl leading-relaxed">
@@ -147,7 +147,7 @@ const DesignSystemGuide: React.FC = () => {
                 ))}
               </div>
               <p className="text-[10px] text-muted-foreground/60 leading-relaxed italic">
-                O Cathedra utiliza um sistema de espaçamento baseado em 8px para garantir ritmo vertical e horizontal consistente.
+                O Cátedra utiliza um sistema de espaçamento baseado em 8px para garantir ritmo vertical e horizontal consistente.
               </p>
             </CathedraCard>
 

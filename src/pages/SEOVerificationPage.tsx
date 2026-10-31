@@ -213,9 +213,9 @@ const SEOVerificationPage = () => {
 
   const getDynamicImage = (title: string, customImage?: string) => {
     if (customImage) return customImage;
-    const encodedTitle = encodeURIComponent(title || 'Cathedra Digital');
+    const encodedTitle = encodeURIComponent(title || 'Cátedra Digital');
     const cacheKey = new Date().toISOString().split('T')[0].substring(0, 7); // yyyy-mm
-    return `https://placehold.jp/40/1a1a1a/ffffff/1200x630.png?text=${encodedTitle}%0A%0ACathedra%20Digital&css=%7B%22font-family%22%3A%22serif%22%7D&v=${cacheKey}`;
+    return `https://placehold.jp/40/1a1a1a/ffffff/1200x630.png?text=${encodedTitle}%0A%0ACátedra%20Digital&css=%7B%22font-family%22%3A%22serif%22%7D&v=${cacheKey}`;
   };
 
   const copyToClipboard = (text: string, label: string) => {
@@ -239,7 +239,7 @@ const SEOVerificationPage = () => {
   };
 
   const getMetaTagsCode = (page: SEOPageData) => {
-    const title = page.title || `${page.name} — Cathedra Digital`;
+    const title = page.title || `${page.name} — Cátedra Digital`;
     const description = page.description || '';
     const image = page.metaTags?.ogImage || getDynamicImage(title, page.image);
     const url = `${BASE_URL}${page.path}`;
@@ -266,7 +266,7 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
   };
 
   const getSocialTagsOnly = (page: SEOPageData, type: 'facebook' | 'twitter') => {
-    const title = page.title || `${page.name} — Cathedra Digital`;
+    const title = page.title || `${page.name} — Cátedra Digital`;
     const description = page.description || '';
     const image = page.metaTags?.ogImage || getDynamicImage(title, page.image);
     const url = `${BASE_URL}${page.path}`;
@@ -448,7 +448,7 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
                                 {BASE_URL.replace('https://', '')} <span className="text-[10px]">▼</span>
                               </div>
                               <div className="text-[20px] text-[#1a0dab] dark:text-[#8ab4f8] hover:underline cursor-pointer font-medium leading-tight mb-spacing-2xs">
-                                {page.title || 'Título não detectado'} — Cathedra Digital
+                                {page.title || 'Título não detectado'} — Cátedra Digital
                               </div>
                               <div className="text-[14px] text-[#4d5156] dark:text-[#bdc1c6] line-clamp-spacing-xs">
                                 {page.description || 'Descrição não detectada. Execute o Scan para ler os metadados reais da página.'}
@@ -531,7 +531,7 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
                             </div>
                             <div className="p-spacing-sm border-t border-border/50 bg-[#f2f3f5] dark:bg-[#242526]">
                               <div className="text-[11px] text-muted-foreground uppercase truncate tracking-tight">CATHEDRADIGITAL.COM.BR</div>
-                              <div className="text-premium-sm font-bold truncate mt-spacing-3xs">{page.title || page.name} — Cathedra Digital</div>
+                              <div className="text-premium-sm font-bold truncate mt-spacing-3xs">{page.title || page.name} — Cátedra Digital</div>
                               <div className="text-premium-xs text-muted-foreground line-clamp-spacing-2xs mt-spacing-3xs">{page.description || 'Descrição não disponível'}</div>
                             </div>
                           </div>
@@ -615,7 +615,7 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
                 <strong>1. Cache de Imagem:</strong> As imagens dinâmicas utilizam o parâmetro <code>v=yyyy-mm</code>. Isso garante que as redes sociais não usem versões antigas por muito tempo, mas mantém a estabilidade durante o mês atual.
               </p>
               <p>
-                <strong>2. Fallback Automático:</strong> O Cathedra Digital agora fornece múltiplos metatags <code>og:image</code>. Caso o serviço dinâmico falhe ou demore a responder, os crawlers automaticamente tentarão o segundo link (Imagem padrão da Icons.Home).
+                <strong>2. Fallback Automático:</strong> O Cátedra Digital agora fornece múltiplos metatags <code>og:image</code>. Caso o serviço dinâmico falhe ou demore a responder, os crawlers automaticamente tentarão o segundo link (Imagem padrão da Icons.Home).
               </p>
               <p>
                 <strong>3. Auditoria Real:</strong> Use o botão <strong>Scan</strong> para ler o HTML que está sendo servido atualmente para cada rota. Isso valida se o <code>react-helmet-async</code> está configurado corretamente para aquela página.

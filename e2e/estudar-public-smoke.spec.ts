@@ -12,7 +12,7 @@ test('public browser smoke: landing and login render', async ({ page }) => {
   });
 
   await page.goto('/');
-  await expect(page).toHaveTitle(/Cathedra/i);
+  await expect(page).toHaveTitle(/Cátedra/i);
   await page.goto('/login');
   await expect(page.getByLabel('Email')).toBeVisible();
   await expect(page.getByLabel('Senha')).toBeVisible();
@@ -321,12 +321,12 @@ test('Átrio: notícias atuais mostram data, fonte e link original', async ({ pa
 });
 
 
-test('Home: identidade visual usa a marca Cathedra Digital', async ({ page }) => {
+test('Home: identidade visual usa a marca Cátedra Digital', async ({ page }) => {
   await page.goto('/');
-  await expect(page.getByText('Cathedra Digital', { exact: true }).first()).toBeVisible();
+  await expect(page.getByText('Cátedra Digital', { exact: true }).first()).toBeVisible();
   await expect(page.getByText('Cátedra', { exact: true }).first()).toBeVisible();
   await expect(page.locator('footer').getByText('Cátedra', { exact: true }).first()).toBeVisible();
-  await expect(page).toHaveTitle(/Cathedra Digital/);
+  await expect(page).toHaveTitle(/Cátedra Digital/);
 });
 
 
@@ -360,7 +360,7 @@ test('Aparições e devoções marianas: avaliação e fonte são específicas p
   const aparecidaSource = page.getByRole('link', { name: 'Consultar publicação do Estado da Cidade do Vaticano' });
   await expect(aparecidaSource).toHaveAttribute('href', /vaticanstate\.va/);
 
-  await page.getByRole('button', { name: 'Voltar' }).click();
+  await page.getByLabel('Aparição — Nossa Senhora').getByRole('button', { name: 'Voltar', exact: true }).click();
   await page.getByText('Nossa Senhora de Lourdes', { exact: true }).first().click();
   await expect(page.getByText('Decreto episcopal de reconhecimento (1862)')).toBeVisible();
   await expect(page.getByRole('link', { name: 'Ler o decreto no Santuário de Lourdes' })).toHaveAttribute('href', /lourdes-france\.org/);
@@ -405,7 +405,7 @@ test('Sanctorum: catálogo público carrega santos com fonte e status editorial'
   await augustine.click();
 
   await expect(page.locator('body')).toContainText('Agostinho nasceu em Tagaste');
-  await expect(page.getByRole('status')).toContainText('Ficha em curadoria');
+  await expect(page.getByText('Ficha em curadoria', { exact: true })).toBeVisible();
   await expect(page.locator('body')).toContainText('Santa Sé');
 });
 

@@ -401,7 +401,7 @@ const UpgradePage: React.FC = () => {
   return (
     <div className="min-h-[80dvh] flex flex-col items-center justify-center py-spacing-2xl md:py-spacing-3xl px-spacing-md relative overflow-hidden">
       <Helmet>
-        <title>Cathedra PRO — Eleve sua Vida Espiritual</title>
+        <title>Cátedra PRO — Eleve sua Vida Espiritual</title>
       </Helmet>
 
       {/* Decorative background elements */}
@@ -420,7 +420,7 @@ const UpgradePage: React.FC = () => {
         >
           <div className="inline-flex items-center gap-spacing-xs px-spacing-sm py-spacing-2xs bg-primary/10 border border-primary/20 rounded-premium text-primary">
             <Icons.Crown className="w-spacing-md h-spacing-md" />
-            <span className="text-premium-xs font-black uppercase tracking-widest">Cathedra PRO</span>
+            <span className="text-premium-xs font-black uppercase tracking-widest">Cátedra PRO</span>
           </div>
         </motion.div>
 
@@ -435,7 +435,7 @@ const UpgradePage: React.FC = () => {
             Sua caminhada de fé merece <span className="text-primary italic">profundidade</span>.
           </h1>
           <p className="text-premium-lg md:text-premium-xl text-muted-foreground font-serif italic max-w-spacing-xl mx-auto leading-relaxed">
-            O Cathedra PRO foi desenhado para quem deseja ir além do essencial e vivenciar a plenitude da nossa tradição.
+            O Cátedra PRO foi desenhado para quem deseja ir além do essencial e vivenciar a plenitude da nossa tradição.
           </p>
         </motion.div>
 

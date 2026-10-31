@@ -278,8 +278,8 @@ const PopesPage: React.FC = () => {
     ? `Sanctorum · Papa reinante em ${year}`
     : `Sanctorum · Papas · ${year}`;
   const reigningTitle = reigningPope
-    ? `${reigningPope.name} — ${reigningPope.title} · Os Papas · Cathedra Digital`
-    : `Os Papas · ${year} · Cathedra Digital`;
+    ? `${reigningPope.name} — ${reigningPope.title} · Os Papas · Cátedra Digital`
+    : `Os Papas · ${year} · Cátedra Digital`;
   const reigningDescription = reigningPope
     ? `${reigningPope.name} (${reigningPope.reign}) — ${reigningPope.bio}`.slice(0, 160)
     : `Sucessores de Pedro em ${year}. Conheça vida, lema e legado dos principais papas.`;
@@ -355,7 +355,7 @@ const PopesPage: React.FC = () => {
         <title>{reigningTitle}</title>
         <meta name="description" content={reigningDescription} />
         <meta property="og:type" content="profile" />
-        <meta property="og:site_name" content="Cathedra Digital" />
+        <meta property="og:site_name" content="Cátedra Digital" />
         <meta property="og:title" content={reigningTitle} />
         <meta property="og:description" content={reigningDescription} />
         <meta property="og:url" content={popeCanonical} />

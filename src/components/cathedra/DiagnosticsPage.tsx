@@ -53,7 +53,7 @@ const DiagnosticsPage: React.FC = () => {
           <span className="text-premium-xs font-black uppercase tracking-[0.2em]">Painel de Controle</span>
         </div>
         <h1 className="text-premium-3xl md:text-premium-5xl font-serif font-bold text-foreground">Diagnóstico de Sistema</h1>
-        <p className="text-muted-foreground font-serif italic max-w-spacing-lg mx-auto">Monitoramento em tempo real dos serviços da Cathedra Digital.</p>
+        <p className="text-muted-foreground font-serif italic max-w-spacing-lg mx-auto">Monitoramento em tempo real dos serviços da Cátedra Digital.</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-spacing-lg">

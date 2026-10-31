@@ -39,7 +39,7 @@ export function generateNovenaProgressPdf(novena: Novena, progress: NovenaProgre
   };
 
   // Cabeçalho
-  writeParagraph('Cathedra Digital', { size: 9 });
+  writeParagraph('Cátedra Digital', { size: 9 });
   writeParagraph(novena.title, { size: 22, bold: true, gap: 2 });
   if (novena.latin) writeParagraph(novena.latin, { size: 11, italic: true, gap: 6 });
 

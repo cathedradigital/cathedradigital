@@ -167,7 +167,7 @@ export default function SEOAdmin() {
 
   const exportPdf = () => {
     const doc = new jsPDF();
-    doc.setFontSize(16); doc.text("Relatório SEO — Cathedra Digital", 14, 18);
+    doc.setFontSize(16); doc.text("Relatório SEO — Cátedra Digital", 14, 18);
     doc.setFontSize(10); doc.setTextColor(120);
     doc.text(`Gerado em ${new Date().toLocaleString("pt-BR")}`, 14, 24);
     doc.setTextColor(0);

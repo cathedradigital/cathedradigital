@@ -10,8 +10,8 @@ const TransparencyPage: React.FC = () => {
   return (
     <ContemplativeLayout>
       <SEOHead 
-        title="Transparência e Integridade | Cathedra" 
-        description="Saiba como os conteúdos da Cathedra são gerados e revisados. O conteúdo editorial e doutrinal é curado por humanos; o Cáter é um recurso separado de consulta assistida por IA."
+        title="Transparência e Integridade | Cátedra" 
+        description="Saiba como os conteúdos da Cátedra são gerados e revisados. O conteúdo editorial e doutrinal é curado por humanos; o Cáter é um recurso separado de consulta assistida por IA."
         path="/transparencia"
       />
       
@@ -46,7 +46,7 @@ const TransparencyPage: React.FC = () => {
               <h2 className="text-premium-xl font-bold uppercase tracking-wider">Curadoria humana e IA com função delimitada</h2>
             </div>
             <p className="text-foreground/80 leading-relaxed font-serif text-premium-lg">
-              A Cathedra Digital mantém a <strong>curadoria humana</strong> dos conteúdos editoriais e doutrinais. O Cáter, por sua vez, é um recurso separado de consulta assistida por IA, limitado às fontes verificáveis recuperadas na Cátedra. 
+              A Cátedra Digital mantém a <strong>curadoria humana</strong> dos conteúdos editoriais e doutrinais. O Cáter, por sua vez, é um recurso separado de consulta assistida por IA, limitado às fontes verificáveis recuperadas na Cátedra. 
             </p>
             <p className="text-foreground/80 leading-relaxed">
               A IA não é apresentada como autoridade eclesial: sua função é consultar, organizar e explicar fontes recuperadas, enquanto a autoridade do conteúdo permanece nas fontes e na curadoria editorial humana.

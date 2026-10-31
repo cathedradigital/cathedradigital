@@ -1033,7 +1033,7 @@ const Catechism: React.FC = memo(() => {
   return (
     <ContemplativeLayout maxW="max-w-5xl w-full">
       <div data-catedra-module="catechism" className="min-w-0 w-full overflow-x-hidden">
-      <SEOHead title="Catecismo da Igreja Católica | Cathedra Digital" description="Doutrina católica organizada por parágrafos." path="/catechism" />
+      <SEOHead title="Catecismo da Igreja Católica | Cátedra Digital" description="Doutrina católica organizada por parágrafos." path="/catechism" />
       <div className="w-full space-y-8 md:space-y-14 pb-spacing-2xl md:pb-spacing-4xl">
         {/* HERO Noir & Gold */}
         <div className="text-center space-y-4 pt-spacing-sm md:pt-spacing-xl">
