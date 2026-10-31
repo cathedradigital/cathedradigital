@@ -132,11 +132,11 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
   return (
     <>
     <Helmet>
-      <title>{`${saint.name}${saint.title ? ' — ' + saint.title : ''} · Sanctorum · Cathedra Digital`}</title>
+      <title>{`${saint.name}${saint.title ? ' — ' + saint.title : ''} · Sanctorum · Cátedra Digital`}</title>
       <meta name="description" content={seoDescription} />
       <link rel="canonical" href={canonicalUrl} />
       <meta property="og:type" content="profile" />
-      <meta property="og:site_name" content="Cathedra Digital" />
+      <meta property="og:site_name" content="Cátedra Digital" />
       <meta property="og:title" content={`${saint.name}${saint.title ? ' — ' + saint.title : ''}`} />
       <meta property="og:description" content={seoDescription} />
       <meta property="og:url" content={canonicalUrl} />
