@@ -422,8 +422,14 @@ test('Sanctorum: catálogo público carrega santos com fonte e status editorial'
 
   const augustine = page.getByRole('button', { name: /Santo Agostinho de Hipona/ });
   await expect(augustine, 'Sanctorum: ficha de Santo Agostinho deve aparecer na lista').toBeVisible({ timeout: 10_000 });
-  await augustine.evaluate(element => element.scrollIntoView({ block: 'center', inline: 'nearest' }));
-  await augustine.click({ timeout: 10_000 });
+  await augustine.evaluate(element => {
+    element.scrollIntoView({ block: 'center', inline: 'nearest' });
+    // Deixa o cabeçalho sticky fora da área de clique e aguarda sua transição.
+    window.scrollBy({ top: -160, behavior: 'instant' });
+  });
+  await expect(augustine).toBeInViewport();
+  // Clique em uma área limpa da imagem do card, sem texto/elementos internos.
+  await augustine.click({ position: { x: 24, y: 24 }, timeout: 10_000 });
 
   await expect(page.locator('body')).toContainText('Agostinho nasceu em Tagaste', { timeout: 15_000 });
   await expect(page.getByText('Ficha em curadoria', { exact: true })).toBeVisible({ timeout: 10_000 });
