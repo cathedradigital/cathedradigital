@@ -72,15 +72,15 @@ const AtriumBibliotecaPage: React.FC = () => {
       }}
     >
       <Helmet>
-        <title>Cathedra Digital — Biblioteca</title>
+        <title>Cátedra Digital — Biblioteca</title>
         <meta
           name="description"
           content="Navegue pelos ecos sagrados de dois milênios: dos Padres Apostólicos ao Magistério contemporâneo, a sabedoria curada da Igreja."
         />
-        <meta property="og:title" content="Cathedra Digital — Biblioteca" />
+        <meta property="og:title" content="Cátedra Digital — Biblioteca" />
       </Helmet>
 
-      <MobileTopBar kicker="Cathedra Digital" title="Biblioteca" transparent />
+      <MobileTopBar kicker="Cátedra Digital" title="Biblioteca" transparent />
 
       <SpaceLayout>
         <EditorialHero density="minimal">
