@@ -6,19 +6,21 @@ import { ChevronRight } from 'lucide-react';
 const BASE = '/prototype-2.0';
 
 const OFICIO = [
-  { label: 'Missa', ref: 'laudes' },
-  { label: 'Laudes', ref: 'laudes' },
-  { label: 'Meio-dia', ref: 'laudes' },
-  { label: 'Vésperas', ref: 'laudes' },
-  { label: 'Completas', ref: 'laudes' },
+  { label: 'Missa', to: '/missal' },
+  { label: 'Laudes', to: '/breviary?h=laudes' },
+  { label: 'Meio-dia · Sexta', to: '/breviary?h=sexta' },
+  { label: 'Vésperas', to: '/breviary?h=vesperas' },
+  { label: 'Completas', to: '/breviary?h=completas' },
 ];
 
 const DEVOCOES = [
-  { label: 'Rosário', ref: 'laudes' },
-  { label: 'Via-Sacra', ref: 'laudes' },
-  { label: 'Ladainhas', ref: 'laudes' },
-  { label: 'Lectio Divina', ref: 'jo15' },
-  { label: 'Exame de consciência', ref: 'laudes' },
+  { label: 'Rosário', to: '/oracao/rosario' },
+  { label: 'Via-Sacra', to: '/viacrucis' },
+  { label: 'Ladainhas', to: '/litanies' },
+  { label: 'Lectio Divina', to: '/lectio' },
+  { label: 'Exame de consciência', to: '/oracao/exame-de-consciencia' },
+  { label: 'Novenas', to: '/novenas' },
+  { label: 'Livro de orações', to: '/oracao' },
 ];
 
 const Rezar: React.FC = () => {
@@ -30,7 +32,7 @@ const Rezar: React.FC = () => {
           {OFICIO.map((o) => (
             <li key={o.label}>
               <Link
-                to={`${BASE}/leitor?ref=${o.ref}&prece=1`}
+                to={o.to}
                 className="flex items-center justify-between p-3 text-sm hover:bg-muted/40"
               >
                 {o.label} <ChevronRight size={16} />
@@ -46,7 +48,7 @@ const Rezar: React.FC = () => {
           {DEVOCOES.map((d) => (
             <li key={d.label}>
               <Link
-                to={`${BASE}/leitor?ref=${d.ref}&prece=1`}
+                to={d.to}
                 className="flex items-center justify-between p-3 text-sm hover:bg-muted/40"
               >
                 {d.label} <ChevronRight size={16} />

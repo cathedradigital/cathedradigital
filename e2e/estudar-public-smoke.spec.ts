@@ -338,3 +338,56 @@ test('Mobile: conteúdo reserva espaço para a navegação inferior', async ({ p
   );
   expect(Number.parseFloat(paddingBottom)).toBeGreaterThan(0);
 });
+
+
+test('Aparições e devoções marianas: avaliação e fonte são específicas por registro', async ({ page }) => {
+  const errors: string[] = [];
+  const failedResponses: string[] = [];
+  page.on('console', message => {
+    if (message.type() === 'error') errors.push(message.text());
+  });
+  page.on('response', response => {
+    if (response.status() >= 400) failedResponses.push(`${response.status()}: ${response.url()}`);
+  });
+
+  const response = await page.goto('/aparicoes');
+  expect(response?.ok(), `/aparicoes: HTTP ${response?.status()}`).toBeTruthy();
+  await expect(page.getByRole('heading', { name: 'Aparições e devoções marianas' })).toBeVisible();
+
+  await page.getByText('Nossa Senhora Aparecida', { exact: true }).first().click();
+  await expect(page.getByText('Devoção mariana ligada à descoberta de uma imagem')).toBeVisible();
+  await expect(page.locator('body')).toContainText('não em um relato de aparição ou visão');
+  const aparecidaSource = page.getByRole('link', { name: 'Consultar publicação do Estado da Cidade do Vaticano' });
+  await expect(aparecidaSource).toHaveAttribute('href', /vaticanstate\.va/);
+
+  await page.getByRole('button', { name: 'Voltar' }).click();
+  await page.getByText('Nossa Senhora de Lourdes', { exact: true }).first().click();
+  await expect(page.getByText('Decreto episcopal de reconhecimento (1862)')).toBeVisible();
+  await expect(page.getByRole('link', { name: 'Ler o decreto no Santuário de Lourdes' })).toHaveAttribute('href', /lourdes-france\.org/);
+
+  expect(errors, 'Aparições: erros de console').toEqual([]);
+  expect(failedResponses, 'Aparições: respostas HTTP com erro').toEqual([]);
+});
+
+test('Rezar no protótipo encaminha cada opção para seu módulo real', async ({ page }) => {
+  const routes = [
+    ['Missa', '/missal'],
+    ['Laudes', '/breviary?h=laudes'],
+    ['Meio-dia · Sexta', '/breviary?h=sexta'],
+    ['Vésperas', '/breviary?h=vesperas'],
+    ['Completas', '/breviary?h=completas'],
+    ['Rosário', '/oracao/rosario'],
+    ['Via-Sacra', '/viacrucis'],
+    ['Ladainhas', '/litanies'],
+    ['Lectio Divina', '/lectio'],
+    ['Exame de consciência', '/oracao/exame-de-consciencia'],
+    ['Novenas', '/novenas'],
+    ['Livro de orações', '/oracao'],
+  ] as const;
+
+  for (const [label, destination] of routes) {
+    await page.goto('/prototype-2.0/rezar');
+    await page.getByRole('link', { name: label, exact: false }).click();
+    await expect(page).toHaveURL(new RegExp(destination.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '$'));
+  }
+});
