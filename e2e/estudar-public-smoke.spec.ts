@@ -312,3 +312,13 @@ test('Home: identidade visual usa a marca Cátedra Digital', async ({ page }) =>
   await expect(page.locator('footer').getByText('Cátedra', { exact: true }).first()).toBeVisible();
   await expect(page).toHaveTitle(/Cátedra Digital/);
 });
+
+
+test('Mobile: conteúdo reserva espaço para a navegação inferior', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/');
+  const paddingBottom = await page.locator('#main-content').evaluate((element) =>
+    window.getComputedStyle(element).paddingBottom,
+  );
+  expect(Number.parseFloat(paddingBottom)).toBeGreaterThan(0);
+});
