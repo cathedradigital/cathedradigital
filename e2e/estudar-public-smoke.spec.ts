@@ -289,3 +289,13 @@ test('Desktop: carrossel inferior permanece oculto', async ({ page }) => {
   await page.goto('/');
   await expect(page.getByTestId('mobile-module-carousel')).toBeHidden();
 });
+
+
+test('Mobile: conteúdo reserva espaço para a navegação inferior', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/');
+  const paddingBottom = await page.locator('#main-content').evaluate((element) =>
+    window.getComputedStyle(element).paddingBottom,
+  );
+  expect(Number.parseFloat(paddingBottom)).toBeGreaterThan(0);
+});
