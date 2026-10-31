@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { CátedraCard } from '@/components/cathedra/CátedraCard';
-import { CátedraButton } from '@/components/cathedra/CátedraButton';
+import { CathedraCard } from '@/components/cathedra/CathedraCard';
+import { CathedraButton } from '@/components/cathedra/CathedraButton';
 import { Icons } from '@/constants';
 import SEOHead from '@/components/SEOHead';
 import { ThemeControlPanel } from './DesignSystemControlPanel';
@@ -78,7 +78,7 @@ const DesignSystemGuide: React.FC = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-spacing-xl">
             {tokens.colors.map((color) => (
-              <CátedraCard 
+              <CathedraCard 
                 key={color.name} 
                 id={color.variable.replace('--', '')}
                 padding="md" 
@@ -96,7 +96,7 @@ const DesignSystemGuide: React.FC = () => {
                     <p className="text-premium-xs text-muted-foreground leading-relaxed">{color.desc}</p>
                   </div>
                 </div>
-              </CátedraCard>
+              </CathedraCard>
             ))}
           </div>
         </section>
@@ -135,7 +135,7 @@ const DesignSystemGuide: React.FC = () => {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-spacing-2xl">
-            <CátedraCard padding="lg" className="space-y-spacing-xl">
+            <CathedraCard padding="lg" className="space-y-spacing-xl">
               <h3 className="h4 text-primary">Escala de Espaçamento</h3>
               <div className="space-y-spacing-lg">
                 {tokens.spacing.map((s) => (
@@ -149,18 +149,18 @@ const DesignSystemGuide: React.FC = () => {
               <p className="text-[10px] text-muted-foreground/60 leading-relaxed italic">
                 O Cátedra utiliza um sistema de espaçamento baseado em 8px para garantir ritmo vertical e horizontal consistente.
               </p>
-            </CátedraCard>
+            </CathedraCard>
 
             <div className="space-y-spacing-xl">
-              <CátedraCard padding="md" className="space-y-spacing-md">
+              <CathedraCard padding="md" className="space-y-spacing-md">
                 <h5 className="text-secondary uppercase tracking-widest text-[9px] font-bold">Layout Margins</h5>
                 <div className="aspect-video bg-primary/[0.02] border border-dashed border-primary/10 rounded-premium flex items-center justify-center p-spacing-xl">
                   <div className="w-full h-full border border-dashed border-secondary/40 rounded-premium-sm flex items-center justify-center text-[10px] font-mono text-secondary/60">
                     ContemplativeLayout max-w-spacing-4xl
                   </div>
                 </div>
-              </CátedraCard>
-              <CátedraCard padding="md" className="space-y-spacing-md">
+              </CathedraCard>
+              <CathedraCard padding="md" className="space-y-spacing-md">
                 <h5 className="text-secondary uppercase tracking-widest text-[9px] font-bold">Stacking Rhythm</h5>
                 <div className="space-y-spacing-md">
                   <div className="h-spacing-xl bg-primary/5 rounded-premium-full w-full" />
@@ -168,7 +168,7 @@ const DesignSystemGuide: React.FC = () => {
                   <div className="h-spacing-xl bg-primary/5 rounded-premium-full w-spacing-xs/3" />
                   <p className="text-[10px] text-center text-muted-foreground font-mono pt-spacing-xs">.stack-spacing (space-y-spacing-3xl)</p>
                 </div>
-              </CátedraCard>
+              </CathedraCard>
             </div>
           </div>
         </section>
@@ -216,17 +216,17 @@ const DesignSystemGuide: React.FC = () => {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-spacing-3xl">
-            <CátedraCard padding="xl" className="space-y-spacing-2xl">
+            <CathedraCard padding="xl" className="space-y-spacing-2xl">
               <h3 className="h4 text-primary">Buttons Protocol</h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-spacing-lg">
-                <CátedraButton variant="primary">Primary Action</CátedraButton>
-                <CátedraButton variant="secondary">Secondary Action</CátedraButton>
-                <CátedraButton variant="outline">Outline View</CátedraButton>
-                <CátedraButton variant="ghost">Ghost State</CátedraButton>
+                <CathedraButton variant="primary">Primary Action</CathedraButton>
+                <CathedraButton variant="secondary">Secondary Action</CathedraButton>
+                <CathedraButton variant="outline">Outline View</CathedraButton>
+                <CathedraButton variant="ghost">Ghost State</CathedraButton>
               </div>
-            </CátedraCard>
+            </CathedraCard>
 
-            <CátedraCard padding="xl" variant="interactive" className="flex flex-col items-center justify-center text-center space-y-spacing-xl bg-secondary/[0.02]">
+            <CathedraCard padding="xl" variant="interactive" className="flex flex-col items-center justify-center text-center space-y-spacing-xl bg-secondary/[0.02]">
               <div className="w-spacing-3xl h-spacing-3xl rounded-premium-full bg-secondary/10 flex items-center justify-center animate-pulse">
                 <Icons.Zap className="w-spacing-xl h-spacing-xl text-secondary" />
               </div>
@@ -236,7 +236,7 @@ const DesignSystemGuide: React.FC = () => {
                   Passe o mouse sobre este card para sentir o feedback premium: elevação sutil, sombreamento profundo e blur dinâmico.
                 </p>
               </div>
-            </CátedraCard>
+            </CathedraCard>
           </div>
         </section>
 
