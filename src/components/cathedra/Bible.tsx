@@ -6,6 +6,7 @@ import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react'
 import html2canvas from 'html2canvas';
 import { BIBLE_DATA, BibleBook } from '@/data/bible-books';
 import { BIBLE_TO_CIC } from '@/data/cross-references';
+import { normalizeAbbr } from '@/lib/bibleCanon';
 import { Helmet } from '@/lib/helmet-compat';
 import { Link, useNavigate, useSearchParams } from '@/lib/rr-compat';
 import { useBibleNavigation } from '@/hooks/bible/useBibleNavigation';
@@ -1021,7 +1022,7 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
 
     Object.entries(BIBLE_TO_CIC).forEach(([ref]) => {
       const [abbr, chapterRaw] = ref.split(':');
-      if (abbr !== selectedBook.abbr) return;
+      if (normalizeAbbr(abbr) !== normalizeAbbr(selectedBook.abbr)) return;
       const chapter = Number(chapterRaw);
       if (Number.isFinite(chapter)) chapters.add(chapter);
     });
@@ -1030,7 +1031,7 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
     Object.entries(mergedConnections).forEach(([key, conns]) => {
       if (key === 'all') return;
       const [abbr, ch, v] = key.split('-');
-      if (abbr !== selectedBook.abbr) return;
+      if (normalizeAbbr(abbr) !== normalizeAbbr(selectedBook.abbr)) return;
       const hasCIC = conns.some(c => c.type === 'catechism');
       if (!hasCIC) return;
       const chNum = Number(ch);
@@ -1043,10 +1044,14 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
 
   const chapterCatechismParagraphs = useMemo(() => {
     if (!selectedBook) return [];
-    const editorial = BIBLE_TO_CIC[`${selectedBook.abbr}:${selectedChapter}`] ?? [];
+    const editorial = Object.entries(BIBLE_TO_CIC).flatMap(([ref, paragraphs]) => {
+      const [abbr, chapter] = ref.split(':');
+      if (normalizeAbbr(abbr) !== normalizeAbbr(selectedBook.abbr) || Number(chapter) !== selectedChapter) return [];
+      return paragraphs;
+    });
     const indexed = Object.entries(dynamicConnections).flatMap(([key, connections]) => {
       const [abbr, chapter] = key.split('-');
-      if (abbr !== selectedBook.abbr || Number(chapter) !== selectedChapter) return [];
+      if (normalizeAbbr(abbr) !== normalizeAbbr(selectedBook.abbr) || Number(chapter) !== selectedChapter) return [];
       return connections
         .filter((connection) => connection.type === 'catechism')
         .map((connection) => Number.parseInt(String(connection.id), 10))
