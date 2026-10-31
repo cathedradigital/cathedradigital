@@ -82,6 +82,42 @@ for (const file of files(srcRoot)) {
   }
 }
 
+// Valida também o sitemap publicado para impedir URLs duplicadas ou host canônico divergente.
+const sitemapPath = resolve(root, 'public/sitemap.xml');
+const robotsPath = resolve(root, 'public/robots.txt');
+
+try {
+  const sitemap = readFileSync(sitemapPath, 'utf8');
+  const sitemapUrls = [...sitemap.matchAll(/<loc>(.*?)<\\/loc>/g)].map((match) => match[1].trim());
+  const uniqueSitemapUrls = new Set(sitemapUrls);
+  if (!/<urlset\\b/.test(sitemap) || sitemapUrls.length === 0) {
+    errors.push('public/sitemap.xml: missing urlset or loc entries');
+  }
+  if (uniqueSitemapUrls.size !== sitemapUrls.length) {
+    const duplicates = sitemapUrls.filter((url, index) => sitemapUrls.indexOf(url) !== index);
+    errors.push(`public/sitemap.xml: duplicate loc URLs: ${[...new Set(duplicates)].join(', ')}`);
+  }
+  for (const url of sitemapUrls) {
+    if (!url.startsWith('https://www.cathedradigital.com.br/')) {
+      errors.push(`public/sitemap.xml: URL does not use the canonical HTTPS host: ${url}`);
+    }
+  }
+} catch (error) {
+  errors.push(`public/sitemap.xml: unable to read sitemap (${error.message})`);
+}
+
+try {
+  const robots = readFileSync(robotsPath, 'utf8');
+  if (!/^User-agent:\\s*\\*/m.test(robots)) {
+    errors.push('public/robots.txt: missing wildcard User-agent directive');
+  }
+  if (!/^Sitemap:\\s*https:\\/\\/www\\.cathedradigital\\.com\\.br\\/sitemap\\.xml\\s*$/m.test(robots)) {
+    errors.push('public/robots.txt: Sitemap directive does not match the canonical sitemap URL');
+  }
+} catch (error) {
+  errors.push(`public/robots.txt: unable to read robots file (${error.message})`);
+}
+
 if (errors.length) {
   console.error('Internal route link validation FAILED');
   for (const error of errors) console.error(`- ${error}`);
