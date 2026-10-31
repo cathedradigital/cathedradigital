@@ -329,6 +329,11 @@ const ReadingJournal: React.FC = () => {
                           if (paragraphIndex !== undefined && /^\d+$/.test(paragraphIndex)) {
                             params.set('p', paragraphIndex);
                             url += `?${params.toString()}`;
+                          } else if (note.paragraph && Number.isInteger(Number(note.paragraph)) && Number(note.paragraph) > 0) {
+                            // Compatibilidade com anotações antigas: content_id pode conter apenas docId.
+                            // paragraph é 1-based no banco; o leitor usa índice 0-based em ?p.
+                            params.set('p', String(Number(note.paragraph) - 1));
+                            url += `?${params.toString()}`;
                           }
                         } else if (note.content_type === 'saint' && note.content_id) {
                           url = `/santos/${encodeURIComponent(note.content_id)}`;
