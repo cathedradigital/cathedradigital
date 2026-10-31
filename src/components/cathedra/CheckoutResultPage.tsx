@@ -102,7 +102,7 @@ const CheckoutResultPage: React.FC = () => {
       icon: <Icons.CheckCircle2 className="w-spacing-xl h-spacing-xl text-primary" />,
       iconBg: 'bg-primary/10',
       title: 'Pagamento aprovado!',
-      description: 'Seu acesso PRO foi liberado. Aproveite todos os recursos exclusivos do Cathedra.',
+      description: 'Seu acesso PRO foi liberado. Aproveite todos os recursos exclusivos do Cátedra.',
       primaryAction: { label: 'Ir para o Dashboard', route: AppRoute.DASHBOARD },
       secondaryAction: { label: 'Explorar Trilhas', route: AppRoute.TRILHAS },
     },
@@ -164,7 +164,7 @@ const CheckoutResultPage: React.FC = () => {
           <div className="space-y-spacing-sm">
             <div className="flex justify-between items-center">
               <span className="text-premium-sm text-muted-foreground">Descrição</span>
-              <span className="text-premium-sm font-bold text-foreground">{txData.description || 'Contribuição Cathedra'}</span>
+              <span className="text-premium-sm font-bold text-foreground">{txData.description || 'Contribuição Cátedra'}</span>
             </div>
             <div className="flex justify-between items-center">
               <span className="text-premium-sm text-muted-foreground">Valor</span>
