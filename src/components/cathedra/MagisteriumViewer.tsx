@@ -198,7 +198,7 @@ const MagisteriumViewer: React.FC = () => {
 
   const sourceLanguage = useMemo<Language>(() => {
     const knownSourceLanguages: Record<string, Language> = {
-      dfil: 'la',
+      dfil: 'pt',
       paet: 'la',
       bdeus: 'la',
     };
