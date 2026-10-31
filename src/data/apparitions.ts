@@ -155,7 +155,7 @@ export const APPARITIONS: Apparition[] = [
     image: '😢',
     imageSrc: laSaletteImg,
     color: 'from-violet-500/20 to-violet-600/5 border-violet-500/30',
-    ...APPARITION_EDITORIAL.la-salette
+    ...APPARITION_EDITORIAL['la-salette']
   },
   {
     id: 'lourdes',
