@@ -4,12 +4,12 @@
 # This script intentionally contains NO credentials. Authenticate with the
 # Supabase CLI before running it (for example: `supabase login`).
 #
-# Production project: isojguvcnfncokoxoauk
-# Production URL: https://isojguvcnfncokoxoauk.supabase.co
+# Production project: gpwrpmoniglarqwfyryp
+# Production URL: https://gpwrpmoniglarqwfyryp.supabase.co
 
 set -euo pipefail
 
-PROJECT_ID="isojguvcnfncokoxoauk"
+PROJECT_ID="gpwrpmoniglarqwfyryp"
 
 if ! command -v supabase >/dev/null 2>&1; then
   echo "Supabase CLI is required. Install it and run: supabase login"
