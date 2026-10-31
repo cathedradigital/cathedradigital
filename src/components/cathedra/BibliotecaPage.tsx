@@ -373,7 +373,7 @@ const BibliotecaPage: React.FC = () => {
                   >
                     <span>{t.label}</span>
                     {count !== undefined && count > 0 && (
-                      <span className="text-[9px] text-primary/40">{count}</span>
+                      <span className="text-[11px] text-primary/50">{count}</span>
                     )}
                   </button>
                 </li>

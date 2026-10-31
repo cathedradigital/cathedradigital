@@ -289,3 +289,26 @@ test('Desktop: carrossel inferior permanece oculto', async ({ page }) => {
   await page.goto('/');
   await expect(page.getByTestId('mobile-module-carousel')).toBeHidden();
 });
+
+
+test('Átrio: notícias atuais mostram data, fonte e link original', async ({ page }) => {
+  await page.goto('/');
+  const news = page.locator('section[aria-label="Notícias da Igreja"]');
+  await expect(news).toBeVisible();
+  await expect(news.getByRole('heading', { name: 'Notícias da Igreja' })).toBeVisible();
+  await expect(news.getByRole('heading', { name: 'Leão XIV: a IA jamais deve decidir sobre a vida humana' })).toBeVisible();
+  await expect(news.getByText('30 out. 2026').first()).toBeVisible();
+  await expect(news.getByRole('link', { name: 'Ler na fonte original' })).toHaveAttribute(
+    'href',
+    'https://www.vaticannews.va/pt/papa/news/2026-10/papa-leao-xiv-audiencia-academia-vida-inteligencia-artificial.html',
+  );
+});
+
+
+test('Home: identidade visual usa a marca Cátedra Digital', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.getByText('Cátedra Digital', { exact: true }).first()).toBeVisible();
+  await expect(page.getByText('Cátedra', { exact: true }).first()).toBeVisible();
+  await expect(page.locator('footer').getByText('Cátedra', { exact: true }).first()).toBeVisible();
+  await expect(page).toHaveTitle(/Cátedra Digital/);
+});
