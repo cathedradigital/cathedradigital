@@ -105,7 +105,7 @@ const APPARITION_EDITORIAL: Record<string, Partial<DeepContent>> = {
 export const APPARITIONS: Apparition[] = [
   {
     id: 'guadalupe',
-    kind: 'apparition',
+    kind: 'apparition' as const,
     ecclesialAssessment: {
       label: "Tradição guadalupana recordada pela Santa Sé",
       detail: "A catequese do Papa Francisco recorda a tradição das aparições a São Juan Diego em 1531. Esta referência vaticana é apresentada como testemunho da tradição, não como um decreto específico de reconhecimento.",
@@ -132,7 +132,7 @@ export const APPARITIONS: Apparition[] = [
   },
   {
     id: 'la-salette',
-    kind: 'apparition',
+    kind: 'apparition' as const,
     ecclesialAssessment: {
       label: "Reconhecimento pelo Bispo de Grenoble (1851)",
       detail: "Em 19 de setembro de 1851, Dom Philibert de Bruillard publicou um mandamento após investigação e reconheceu a aparição, autorizando o culto no local.",
@@ -159,7 +159,7 @@ export const APPARITIONS: Apparition[] = [
   },
   {
     id: 'lourdes',
-    kind: 'apparition',
+    kind: 'apparition' as const,
     ecclesialAssessment: {
       label: "Decreto episcopal de reconhecimento (1862)",
       detail: "Em 18 de janeiro de 1862, Dom Bertrand-Sévère Laurence, Bispo de Tarbes, publicou o decreto que reconheceu as aparições após a investigação eclesiástica.",
@@ -186,7 +186,7 @@ export const APPARITIONS: Apparition[] = [
   },
   {
     id: 'knock',
-    kind: 'apparition',
+    kind: 'apparition' as const,
     ecclesialAssessment: {
       label: "Duas comissões eclesiásticas de inquérito",
       detail: "O Santuário de Knock documenta as comissões de 1879–80 e 1935–36 e seus pareceres sobre a credibilidade dos testemunhos. Esta ficha descreve as investigações registradas pela fonte do santuário, sem transformar o resultado das comissões em uma declaração universal de autenticidade sobrenatural.",
@@ -213,7 +213,7 @@ export const APPARITIONS: Apparition[] = [
   },
   {
     id: 'fatima',
-    kind: 'apparition',
+    kind: 'apparition' as const,
     ecclesialAssessment: {
       label: "Carta pastoral do Bispo de Leiria (1930)",
       detail: "Em 13 de outubro de 1930, Dom José Alves Correia da Silva declarou dignas de crédito as visões das crianças na Cova da Iria, após o processo canônico diocesano.",
@@ -240,7 +240,7 @@ export const APPARITIONS: Apparition[] = [
   },
   {
     id: 'aparecida',
-    kind: 'image-devotion',
+    kind: 'image-devotion' as const,
     ecclesialAssessment: {
       label: "Devoção mariana ligada à descoberta de uma imagem",
       detail: "A publicação do Estado da Cidade do Vaticano explica que o Santuário de Aparecida tem origem na descoberta de uma imagem em 1717, e não em um relato de aparição ou visão. Por isso, Aparecida é apresentada aqui como devoção mariana, não como aparição.",
@@ -267,7 +267,7 @@ export const APPARITIONS: Apparition[] = [
   },
   {
     id: 'kibeho',
-    kind: 'apparition',
+    kind: 'apparition' as const,
     ecclesialAssessment: {
       label: "Declaração definitiva do Bispo de Gikongoro (2001)",
       detail: "Em 29 de junho de 2001, Dom Augustin Misago publicou a declaração definitiva sobre os acontecimentos de Kibeho, identificando as três videntes iniciais reconhecidas no documento.",
@@ -294,7 +294,7 @@ export const APPARITIONS: Apparition[] = [
   },
   {
     id: 'akita',
-    kind: 'apparition',
+    kind: 'apparition' as const,
     ecclesialAssessment: {
       label: "Carta pastoral do Bispo de Niigata (1984)",
       detail: "Em 22 de abril de 1984, Dom John Shojiro Ito reconheceu o caráter sobrenatural dos acontecimentos relativos à estátua e autorizou a veneração na diocese, expressamente enquanto aguardava um julgamento definitivo da Santa Sé. O registro é apresentado como decisão diocesana histórica, não como definição da Santa Sé.",

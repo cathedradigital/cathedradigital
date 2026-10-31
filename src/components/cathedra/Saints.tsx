@@ -141,7 +141,14 @@ const Saints = React.forwardRef<HTMLDivElement, { legacyReader?: boolean }>((pro
   });
 
   // Mode-based Saints (Writers, Popes, All)
-  const { data: modeSaints = [], isLoading: isLoadingMode } = useQuery({
+  const {
+    data: modeSaints = [],
+    isLoading: isLoadingMode,
+    isError: isModeError,
+    error: modeError,
+    refetch: refetchMode,
+    isFetching: isFetchingMode,
+  } = useQuery({
     queryKey: ['saints-mode', viewMode],
     queryFn: async () => {
       if (viewMode === 'writers') return getSaintsByCategoryOrThrow('doctor');
