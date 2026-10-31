@@ -308,5 +308,7 @@ test('Átrio: notícias atuais mostram data, fonte e link original', async ({ pa
 test('Home: identidade visual usa a marca Cátedra Digital', async ({ page }) => {
   await page.goto('/');
   await expect(page.getByText('Cátedra Digital', { exact: true }).first()).toBeVisible();
+  await expect(page.getByText('Cátedra', { exact: true }).first()).toBeVisible();
+  await expect(page.locator('footer').getByText('Cátedra', { exact: true }).first()).toBeVisible();
   await expect(page).toHaveTitle(/Cátedra Digital/);
 });
