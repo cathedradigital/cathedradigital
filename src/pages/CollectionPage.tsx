@@ -340,14 +340,14 @@ export default function CollectionPage() {
   return (
     <>
       <Helmet>
-        <title>{collection.title} · Cathedra</title>
+        <title>{collection.title} · Cátedra</title>
         <meta
           name="description"
           content={
             editorialGoal ??
             collection.subtitle ??
             collection.description ??
-            `Coleção ${collection.title} — Cathedra Digital.`
+            `Coleção ${collection.title} — Cátedra Digital.`
           }
         />
         <meta property="og:title" content={collection.title} />
