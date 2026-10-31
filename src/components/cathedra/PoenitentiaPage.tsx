@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Icons } from '../../constants';
-import { CathedraCard } from './CathedraCard';
+import { CátedraCard } from './CátedraCard';
 import { useDevotionalFavorites } from '@/hooks/useDevotionalFavorites';
 import { usePrayerEngineSession } from '@/prayer-engine/usePrayerEngineSession';
 import ReaderContinuation from '@/components/shared/ReaderContinuation';
@@ -99,7 +99,7 @@ const PoenitentiaPage: React.FC<Props> = ({ prayer, kicker }) => {
     <>
       {prayer && (
         <MobileTopBar
-          kicker={kicker ?? 'Cathedra · Sacramentum Poenitentiae'}
+          kicker={kicker ?? 'Cátedra · Sacramentum Poenitentiae'}
           title={prayer.title}
           showBack
         />
@@ -158,7 +158,7 @@ const PoenitentiaPage: React.FC<Props> = ({ prayer, kicker }) => {
         ))}
       </div>
 
-      <CathedraCard padding="lg" className="animate-in fade-in slide-in-from-bottom-spacing-md duration-700 relative overflow-hidden">
+      <CátedraCard padding="lg" className="animate-in fade-in slide-in-from-bottom-spacing-md duration-700 relative overflow-hidden">
         <div className="absolute top-spacing-0 right-0 p-spacing-2xl opacity-[0.02]">
           <Icons.Cross className="w-spacing-4xl h-spacing-4xl -mr-spacing-3xl -mt-spacing-3xl rotate-12" />
         </div>
@@ -242,10 +242,10 @@ const PoenitentiaPage: React.FC<Props> = ({ prayer, kicker }) => {
             </Button>
           </div>
         </div>
-      </CathedraCard>
+      </CátedraCard>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-spacing-xl">
-        <CathedraCard padding="md" className="space-y-spacing-lg">
+        <CátedraCard padding="md" className="space-y-spacing-lg">
           <div className="flex items-center gap-spacing-md">
             <div className="w-spacing-2xl h-spacing-2xl rounded-premium bg-primary/10 flex items-center justify-center text-primary">
               <Icons.User className="w-spacing-lg h-spacing-lg" />
@@ -255,8 +255,8 @@ const PoenitentiaPage: React.FC<Props> = ({ prayer, kicker }) => {
           <p className="text-muted-foreground font-serif leading-relaxed italic">
             Ao entrar no confessionário, diga: "Abençoai-me, Padre, porque pequei. Minha última confissão foi há (tempo)."
           </p>
-        </CathedraCard>
-        <CathedraCard padding="md" className="space-y-spacing-lg">
+        </CátedraCard>
+        <CátedraCard padding="md" className="space-y-spacing-lg">
           <div className="flex items-center gap-spacing-md">
             <div className="w-spacing-2xl h-spacing-2xl rounded-premium bg-primary/10 flex items-center justify-center text-primary">
               <Icons.Heart className="w-spacing-lg h-spacing-lg" />
@@ -266,7 +266,7 @@ const PoenitentiaPage: React.FC<Props> = ({ prayer, kicker }) => {
           <p className="text-muted-foreground font-serif leading-relaxed italic">
             No final, o sacerdote dirá: "Eu te absolvo de teus pecados em nome do Pai, e do Filho, e do Espírito Santo." Responda: "Amém."
           </p>
-        </CathedraCard>
+        </CátedraCard>
       </div>
 
       {prayer && (
