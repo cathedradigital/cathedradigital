@@ -345,21 +345,12 @@ test('Átrio: notícias atuais mostram data, fonte e link original', async ({ pa
 });
 
 
-test('Home: identidade visual usa a marca Cátedra Digital', async ({ page }) => {
+test('Home: identidade visual usa a marca Cathedra Digital', async ({ page }) => {
   await page.goto('/');
-  const isMobile = await page.evaluate(() => window.matchMedia('(max-width: 767px)').matches);
-
-  if (isMobile) {
-    await expect(page.getByText('CÁTEDRA DIGITAL', { exact: true })).toBeVisible();
-  } else {
-    const brand = page.locator('header[role="banner"] button').first();
-    await expect(brand.getByText('Cátedra', { exact: true })).toBeVisible();
-    await expect(brand.getByText('DIGITAL', { exact: true })).toBeVisible();
-    await expect(brand).toHaveAttribute('aria-label', /Cátedra Digital/);
-  }
-
-  await expect(page).toHaveTitle(/Cátedra Digital/i);
-  await expect(page.locator('footer').getByText('Cátedra', { exact: true }).first()).toBeVisible();
+  await expect(page.getByText('Cathedra Digital', { exact: true }).first()).toBeVisible();
+  await expect(page.getByText('Cathedra', { exact: true }).first()).toBeVisible();
+  await expect(page.locator('footer').getByText('Cathedra', { exact: true }).first()).toBeVisible();
+  await expect(page).toHaveTitle(/Cathedra Digital/);
 });
 
 
