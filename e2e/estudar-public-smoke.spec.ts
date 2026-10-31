@@ -202,8 +202,15 @@ test('Bíblia: leitura mantém espaçamento compacto e Nexus sem bolhas excessiv
 test('Documentos: Dei Filius organiza cabeçalho, idioma original e tradução', async ({ page }) => {
   const errors: string[] = [];
   const failedResponses: string[] = [];
+  const translationRequests: string[] = [];
   page.on('console', message => {
     if (message.type() === 'error') errors.push(message.text());
+  });
+  page.on('request', request => {
+    const url = new URL(request.url());
+    if (url.pathname.endsWith('/functions/v1/document-translate')) {
+      translationRequests.push(url.origin + url.pathname);
+    }
   });
   page.on('response', response => {
     if (response.status() >= 400) {
@@ -226,6 +233,7 @@ test('Documentos: Dei Filius organiza cabeçalho, idioma original e tradução',
   await expect(page.getByText('Temas', { exact: true })).toHaveCount(0);
   expect(errors, 'Dei Filius: console errors').toEqual([]);
   expect(failedResponses, 'Dei Filius: failed HTTP resources (origin and path only)').toEqual([]);
+  expect(translationRequests, 'Dei Filius: translation must be initiated by the reader').toEqual([]);
 });
 
 test('Magistério: filtros editoriais por categoria e temas são acessíveis e funcionais', async ({ page }) => {
