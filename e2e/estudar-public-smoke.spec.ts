@@ -360,7 +360,7 @@ test('Aparições e devoções marianas: avaliação e fonte são específicas p
   const aparecidaSource = page.getByRole('link', { name: 'Consultar publicação do Estado da Cidade do Vaticano' });
   await expect(aparecidaSource).toHaveAttribute('href', /vaticanstate\.va/);
 
-  await page.getByRole('button', { name: 'Voltar' }).click();
+  await page.getByLabel('Aparição — Nossa Senhora').getByRole('button', { name: 'Voltar', exact: true }).click();
   await page.getByText('Nossa Senhora de Lourdes', { exact: true }).first().click();
   await expect(page.getByText('Decreto episcopal de reconhecimento (1862)')).toBeVisible();
   await expect(page.getByRole('link', { name: 'Ler o decreto no Santuário de Lourdes' })).toHaveAttribute('href', /lourdes-france\.org/);
@@ -405,7 +405,7 @@ test('Sanctorum: catálogo público carrega santos com fonte e status editorial'
   await augustine.click();
 
   await expect(page.locator('body')).toContainText('Agostinho nasceu em Tagaste');
-  await expect(page.getByRole('status')).toContainText('Ficha em curadoria');
+  await expect(page.getByText('Ficha em curadoria', { exact: true })).toBeVisible();
   await expect(page.locator('body')).toContainText('Santa Sé');
 });
 
