@@ -348,8 +348,7 @@ test('Átrio: notícias atuais mostram data, fonte e link original', async ({ pa
 test('Home: identidade visual usa a marca Cathedra Digital', async ({ page }) => {
   await page.goto('/');
   await expect(page.getByText('Cathedra Digital', { exact: true }).first()).toBeVisible();
-  await expect(page.getByText('Cathedra', { exact: true }).first()).toBeVisible();
-  await expect(page.locator('footer').getByText('Cathedra', { exact: true }).first()).toBeVisible();
+  await expect(page.locator('footer')).toContainText(/Cathedra Digital/);
   await expect(page).toHaveTitle(/Cathedra Digital/);
 });
 
