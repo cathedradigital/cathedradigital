@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { BIBLE_DATA } from '../src/data/bible-books';
+import { BIBLE_TO_CIC } from '../src/data/cross-references';
 
 const books = Object.values(BIBLE_DATA).flatMap((categories) =>
   categories.flatMap((category) => category.books),
@@ -64,6 +65,12 @@ test.describe('Bíblia — catálogo completo', () => {
       expect(findBookByAbbr(canonical.abbr)?.name).toBe(canonical.name);
       expect(normalizeAbbr(canonical.abbr)).toBe(canonical.abbr);
     }
+
+    // The visible catalogue and the canonical source of truth must share
+    // the same 73-book Catholic order, including deuterocanonical books.
+    expect(books.map((book) => normalizeAbbr(book.abbr))).toEqual(
+      BIBLE_CANON.map((book) => book.abbr),
+    );
   });
 
   test('parser resolve abreviações católicas e intervalos de versículos', async () => {
@@ -85,6 +92,31 @@ test.describe('Bíblia — catálogo completo', () => {
       expect(ref?.verse, input).toBe(verse);
       expect(ref?.endVerse, input).toBe(endVerse);
     }
+  });
+
+  test('Gênesis mostra referências reais e o marcador acompanha o capítulo correto', async ({ page }) => {
+    await page.goto('/bible?book=Gn&ch=1');
+    await expect(page.locator('[data-testid="verse-text-1"]')).toBeVisible({ timeout: 30_000 });
+    await expect(page.getByTestId('bible-cic-chapter-references')).toBeVisible();
+    for (const paragraph of [279, 290, 355, 373]) {
+      await expect(page.getByTestId(`bible-cic-reference-${paragraph}`)).toHaveAttribute(
+        'href',
+        `/catechism?p=${paragraph}`,
+      );
+    }
+
+    await page.goto('/bible?book=Gn');
+    await expect(page.getByTestId('cic-chapter-marker-32')).toBeVisible();
+    await expect(page.getByTestId('cic-chapter-marker-28')).toHaveCount(0);
+    expect(BIBLE_TO_CIC['Gn:28']).toBeUndefined();
+    expect(BIBLE_TO_CIC['Gn:32']).toEqual([2573]);
+
+    // Abbreviations in the editorial map must normalize to the visible catalogue.
+    await page.goto('/bible?book=1Co&ch=13');
+    await expect(page.locator('[data-testid="verse-text-1"]')).toBeVisible({ timeout: 30_000 });
+    await expect(page.getByTestId('bible-cic-chapter-references')).toBeVisible();
+    await expect(page.getByTestId('bible-cic-reference-1823')).toBeVisible();
+    await expect(page.getByTestId('bible-cic-reference-1826')).toBeVisible();
   });
 
   test('deep-link destaca o versículo solicitado', async ({ page }) => {

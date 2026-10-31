@@ -52,7 +52,7 @@ export function BiblePickerSheet({
   initialSelection,
 }: BiblePickerSheetProps) {
   const navigate = useNavigate();
-  const [testament, setTestament] = useState<Testament>("Novo Testamento");
+  const [testament, setTestament] = useState<Testament>("Antigo Testamento");
   const [book, setBook] = useState<BibleBook | null>(null);
 
   useEffect(() => {

@@ -6,6 +6,7 @@ import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react'
 import html2canvas from 'html2canvas';
 import { BIBLE_DATA, BibleBook } from '@/data/bible-books';
 import { BIBLE_TO_CIC } from '@/data/cross-references';
+import { normalizeAbbr } from '@/lib/bibleCanon';
 import { Helmet } from '@/lib/helmet-compat';
 import { Link, useNavigate, useSearchParams } from '@/lib/rr-compat';
 import { useBibleNavigation } from '@/hooks/bible/useBibleNavigation';
@@ -1014,14 +1015,14 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
   // 1) the curated Nexus graph drives exact verse dots;
   // 2) the existing editorial chapter map drives chapter dots when it has a CIC reference.
   // Chapter-only entries are deliberately not converted into fake verse relations.
-  const cicCitationMap = useMemo(() => {
+  const cicReferenceMap = useMemo(() => {
     const chapters = new Set<number>();
     const verses = new Set<string>();
     if (!selectedBook) return { chapters, verses };
 
     Object.entries(BIBLE_TO_CIC).forEach(([ref]) => {
       const [abbr, chapterRaw] = ref.split(':');
-      if (abbr !== selectedBook.abbr) return;
+      if (normalizeAbbr(abbr) !== normalizeAbbr(selectedBook.abbr)) return;
       const chapter = Number(chapterRaw);
       if (Number.isFinite(chapter)) chapters.add(chapter);
     });
@@ -1030,7 +1031,7 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
     Object.entries(mergedConnections).forEach(([key, conns]) => {
       if (key === 'all') return;
       const [abbr, ch, v] = key.split('-');
-      if (abbr !== selectedBook.abbr) return;
+      if (normalizeAbbr(abbr) !== normalizeAbbr(selectedBook.abbr)) return;
       const hasCIC = conns.some(c => c.type === 'catechism');
       if (!hasCIC) return;
       const chNum = Number(ch);
@@ -1040,6 +1041,24 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
 
     return { chapters, verses };
   }, [KNOWLEDGE_CONNECTIONS, dynamicConnections, selectedBook]);
+
+  const chapterCatechismParagraphs = useMemo(() => {
+    if (!selectedBook) return [];
+    const editorial = Object.entries(BIBLE_TO_CIC).flatMap(([ref, paragraphs]) => {
+      const [abbr, chapter] = ref.split(':');
+      if (normalizeAbbr(abbr) !== normalizeAbbr(selectedBook.abbr) || Number(chapter) !== selectedChapter) return [];
+      return paragraphs;
+    });
+    const indexed = Object.entries(dynamicConnections).flatMap(([key, connections]) => {
+      const [abbr, chapter] = key.split('-');
+      if (normalizeAbbr(abbr) !== normalizeAbbr(selectedBook.abbr) || Number(chapter) !== selectedChapter) return [];
+      return connections
+        .filter((connection) => connection.type === 'catechism')
+        .map((connection) => Number.parseInt(String(connection.id), 10))
+        .filter((paragraph) => Number.isInteger(paragraph) && paragraph > 0);
+    });
+    return Array.from(new Set([...editorial, ...indexed])).sort((a, b) => a - b);
+  }, [selectedBook, selectedChapter, dynamicConnections]);
 
 
   // Pre-fetch all connections for the selected book (powers gold-dot indicators on the chapter grid)
@@ -1694,11 +1713,12 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
                         selectedChapter === ch ? "bg-secondary" : "bg-secondary/40"
                       )} />
                     )}
-                    {!missing && cicCitationMap.chapters.has(ch) && (
+                    {!missing && cicReferenceMap.chapters.has(ch) && (
                       <div
                         className="w-1.5 h-1.5 rounded-full bg-amber-400 shadow-[0_0_4px_rgba(251,191,36,0.7)]"
-                        title="Contém citação do Catecismo (CIC)"
-                        aria-label="Capítulo com citação do Catecismo"
+                        title="Possui parágrafos relacionados no Catecismo"
+                        aria-label="Capítulo com referências relacionadas ao Catecismo"
+                        data-testid={`cic-chapter-marker-${ch}`}
                       />
                     )}
                   </div>
@@ -1781,6 +1801,37 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
                     </p>
                   )}
 
+                  {chapterCatechismParagraphs.length > 0 && (
+                    <section
+                      data-testid="bible-cic-chapter-references"
+                      aria-label={`Parágrafos do Catecismo relacionados a ${selectedBook.name} ${selectedChapter}`}
+                      className="mx-auto max-w-3xl rounded-2xl border border-amber-400/25 bg-amber-50/70 p-3 sm:p-4"
+                    >
+                      <div className="flex items-center gap-2">
+                        <span className="h-2 w-2 shrink-0 rounded-full bg-amber-400" aria-hidden="true" />
+                        <h3 className="text-xs font-bold uppercase tracking-[0.12em] text-primary/80">
+                          Catecismo da Igreja Católica
+                        </h3>
+                      </div>
+                      <p className="mt-1.5 text-xs text-primary/60">
+                        Parágrafos relacionados a este capítulo:
+                      </p>
+                      <div className="mt-3 flex flex-wrap gap-2">
+                        {chapterCatechismParagraphs.map((paragraph) => (
+                          <Link
+                            key={paragraph}
+                            to={`/catechism?p=${paragraph}`}
+                            data-testid={`bible-cic-reference-${paragraph}`}
+                            data-cic-paragraph={paragraph}
+                            className="inline-flex min-h-9 items-center rounded-full border border-amber-500/25 bg-white px-3 py-1.5 text-xs font-semibold text-primary/80 transition-colors hover:border-amber-500/60 hover:bg-amber-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500"
+                          >
+                            §{paragraph}
+                          </Link>
+                        ))}
+                      </div>
+                    </section>
+                  )}
+
                   {/* As conexões Nexus são carregadas em segundo plano e não criam
                       um bloco de infraestrutura na leitura. */}
 
@@ -1842,7 +1893,7 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
 
                           <div className="flex flex-col items-center gap-0.5 mt-0.5 w-5 sm:w-6 shrink-0">
                             <span className="text-[10px] sm:text-[11px] font-serif font-bold text-secondary/40 tabular-nums">{v.number}</span>
-                            {cicCitationMap.verses.has(`${selectedChapter}-${v.number}`) && (
+                            {cicReferenceMap.verses.has(`${selectedChapter}-${v.number}`) && (
                               <div
                                 role="img"
                                 aria-label="Versículo com citação do Catecismo"
