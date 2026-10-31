@@ -642,7 +642,7 @@ const AppLayout: React.FC = () => {
           id="main-content"
           ref={mainContentRef}
           tabIndex={-1}
-          className="outline-none catedra-module-shell"
+          className={`outline-none catedra-module-shell ${!location.pathname.startsWith('/bible') && !location.pathname.startsWith('/prototype-2.0') ? 'pb-[calc(5rem+env(safe-area-inset-bottom,0px))] md:pb-0' : ''}`}
           data-space={resolveSpaceForPath(location.pathname) ?? undefined}
           data-catedra-module={activeModule?.key ?? undefined}
           style={activeModule ? {
