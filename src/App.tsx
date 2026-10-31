@@ -320,6 +320,7 @@ const PrototypeLeitor = lazy(() => import('./pages/prototype-2.0/screens/Leitor'
 const PrototypePesquisa = lazy(() => import('./pages/prototype-2.0/screens/Pesquisa'));
 const PrototypeFormacao = lazy(() => import('./pages/prototype-2.0/screens/Formacao'));
 const PrototypeRezar = lazy(() => import('./pages/prototype-2.0/screens/Rezar'));
+const RezarHomePage = lazy(() => import('./pages/RezarHomePage'));
 const PrototypeMinhaJornada = lazy(() => import('./pages/prototype-2.0/screens/MinhaJornada'));
 const CollectionPage = lazy(() => import('./pages/CollectionPage'));
 const CollectionCertificatePage = lazy(() => import('./pages/collections/CollectionCertificatePage'));
@@ -773,7 +774,7 @@ const AppLayout: React.FC = () => {
               <Route path="/oracao/:slug" element={<Suspense fallback={<LoadingFallback />}><DevocionalMobileShell title="Oração" kicker="Cathedra · Orações"><PrayerDetailPage /></DevocionalMobileShell></Suspense>} />
               <Route path="/oracao-legacy" element={<Suspense fallback={<LoadingFallback />}><DevocionalMobileShell title="Oração" kicker="Cathedra · Orações (legado)"><PrayerPage /></DevocionalMobileShell></Suspense>} />
               <Route path="/prayers" element={<Navigate to="/oracao" replace />} />
-              <Route path="/rezar" element={<Navigate to="/oracao" replace />} />
+              <Route path="/rezar" element={<Suspense fallback={<LoadingFallback />}><DevocionalMobileShell title="Rezar" kicker="Cathedra · Oração"><RezarHomePage /></DevocionalMobileShell></Suspense>} />
               <Route path="/lectio" element={<Suspense fallback={<LoadingFallback />}><LectioDivina /></Suspense>} />
               <Route path="/contemplatio" element={<Suspense fallback={<LoadingFallback />}><ContemplatioPage /></Suspense>} />
               <Route path="/contemplacao" element={<Navigate to="/contemplatio" replace />} />              <Route path="/oracao/exame-de-consciencia" element={<Suspense fallback={<LoadingFallback />}><DevocionalMobileShell title="Exame de consciência" kicker="Cathedra · Preparação para a Confissão"><PoenitentiaPage /></DevocionalMobileShell></Suspense>} />

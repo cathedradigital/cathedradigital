@@ -408,3 +408,16 @@ test('Sanctorum: catálogo público carrega santos com fonte e status editorial'
   await expect(page.getByRole('status')).toContainText('Ficha em curadoria');
   await expect(page.locator('body')).toContainText('Santa Sé');
 });
+
+
+test('Rezar ativo oferece entrada para liturgia, devoções e oração pessoal', async ({ page }) => {
+  const response = await page.goto('/rezar');
+  expect(response?.ok(), `/rezar: HTTP ${response?.status()}`).toBeTruthy();
+  await expect(page.getByRole('heading', { name: 'Rezar' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Liturgia da Igreja' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Devoções' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Oração e meditação' })).toBeVisible();
+
+  await page.getByRole('link', { name: /Rosário/ }).click();
+  await expect(page).toHaveURL(/\/oracao\/rosario$/);
+});
