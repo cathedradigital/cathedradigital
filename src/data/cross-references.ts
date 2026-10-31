@@ -10,8 +10,8 @@ export interface CrossRef {
 
 // Bible → Catechism (book:chapter → CIC paragraphs)
 export const BIBLE_TO_CIC: Record<string, number[]> = {
-  'Gn:1': [290, 355, 385],
-  'Gn:2': [355, 371, 373],
+  'Gn:1': [279, 290, 355, 373],
+  'Gn:2': [371],
   'Gn:3': [385, 389, 396, 397, 399],
   'Gn:4': [401, 2259],
   'Gn:8': [701],
@@ -21,7 +21,7 @@ export const BIBLE_TO_CIC: Record<string, number[]> = {
   'Gn:17': [527, 1150],
   'Gn:18': [2571],
   'Gn:22': [145, 2572],
-  'Gn:28': [2573],
+  'Gn:32': [2573],
   'Ex:3': [205, 207],
   'Ex:12': [1334, 1340],
   'Ex:14': [1221],
