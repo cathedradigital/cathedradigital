@@ -36,7 +36,7 @@ const AparicoesPage: React.FC = () => {
             kicker={`${selectedApparition.country} · ${selectedApparition.year}`}
             title={selectedApparition.title}
             subtitle={selectedApparition.location}
-            meta={selectedApparition.approved ? "Aprovada pela Igreja" : "Em análise"}
+            meta={selectedApparition.ecclesialAssessment.label}
             rule
           />
         }
@@ -132,6 +132,19 @@ const AparicoesPage: React.FC = () => {
             </blockquote>
           </section>
 
+          {/* Avaliação eclesial e fonte documental */}
+          <section className="rounded-premium border border-border bg-card p-spacing-lg space-y-3">
+            <h3 className="font-serif text-lg font-bold text-foreground">Avaliação eclesial e documentação</h3>
+            <p className="text-sm leading-relaxed text-muted-foreground">{selectedApparition.ecclesialAssessment.detail}</p>
+            <div className="text-xs text-muted-foreground">
+              <p><strong>Autoridade:</strong> {selectedApparition.ecclesialAssessment.authority}</p>
+              <p><strong>Data:</strong> {selectedApparition.ecclesialAssessment.date}</p>
+            </div>
+            <a href={selectedApparition.ecclesialAssessment.sourceUrl} target="_blank" rel="noopener noreferrer" className="inline-flex text-sm font-semibold text-primary underline underline-offset-4">
+              {selectedApparition.ecclesialAssessment.sourceLabel}
+            </a>
+          </section>
+
           {/* Seção 4: Profundidade Teológica */}
           {selectedApparition.textoBase && (
             <section className="pt-spacing-lg border-t border-border">
@@ -157,12 +170,12 @@ const AparicoesPage: React.FC = () => {
   // Overview
   return (
     <ReaderShell
-      ariaLabel="Aparições de Nossa Senhora"
+      ariaLabel="Aparições e devoções marianas"
       hero={
         <EditorialHero
           kicker="Patrimônio da Fé"
-          title="Aparições de Nossa Senhora"
-          subtitle="Manifestações da Mãe de Deus aprovadas pela Igreja, convidando a humanidade à oração e conversão."
+          title="Aparições e devoções marianas"
+          subtitle="Relatos de aparições e devoções marianas. A avaliação eclesial e suas fontes são apresentadas individualmente."
           rule
         />
       }
@@ -201,7 +214,7 @@ const AparicoesPage: React.FC = () => {
                   <img src={apparition.imageSrc} alt={apparition.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-60" />
                   <div className="absolute bottom-4 left-4 right-4">
-                     <span className="text-[10px] font-black text-white/90 uppercase tracking-[0.2em]">{apparition.country} · {apparition.year}</span>
+                     <span className="text-[10px] font-black text-white/90 uppercase tracking-[0.2em]">{apparition.country} · {apparition.year} · {apparition.kind === "image-devotion" ? "Devoção mariana" : "Aparição"}</span>
                      <h3 className="text-xl font-serif font-bold text-white mt-1 leading-tight">{apparition.title}</h3>
                   </div>
                 </div>
@@ -229,9 +242,10 @@ const AparicoesPage: React.FC = () => {
           <Icons.Shield className="w-6 h-6 text-secondary mx-auto" />
           <h3 className="text-lg font-serif font-bold text-foreground">Revelação Privada e Fé Pública</h3>
           <p className="text-premium-sm text-muted-foreground leading-[1.8] max-w-2xl mx-auto italic">
-            "A função delas não é completar a Revelação definitiva de Cristo, mas ajudar a vivê-la mais plenamente em determinada época da história" (CIC §67). As aparições marianas aqui catalogadas são aprovadas pela autoridade eclesiástica competente como dignas de fé.
+            "A função delas não é completar a Revelação definitiva de Cristo, mas ajudar a vivê-la mais plenamente em determinada época da história" (CIC §67). Os registros distinguem aparições, tradições e devoções, com a documentação e a avaliação eclesial indicadas caso a caso. Revelações privadas não pertencem ao depósito da fé.
           </p>
         </div>
+        <p className="mx-auto max-w-3xl text-center text-xs leading-relaxed text-muted-foreground">As Normas do Dicastério para a Doutrina da Fé, em vigor desde 19 de maio de 2024, esclarecem que um <em>Nihil obstat</em> não declara a autenticidade sobrenatural do fenômeno. <a href="https://press.vatican.va/content/salastampa/en/bollettino/pubblico/2024/05/17/240517h.html" target="_blank" rel="noopener noreferrer" className="underline underline-offset-4">Consultar as Normas de 2024</a>.</p>
       </div>
     </ReaderShell>
   );
