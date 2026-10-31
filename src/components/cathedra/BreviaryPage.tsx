@@ -113,7 +113,7 @@ function buildOfficeJsonLd(params: {
     },
     organizer: {
       '@type': 'Organization',
-      name: 'Cathedra Digital',
+      name: 'Cátedra Digital',
       url: CANONICAL_BASE,
     },
     about: seasonNote ?? 'Officium Divinum',
@@ -127,8 +127,8 @@ function buildOfficeJsonLd(params: {
     inLanguage: 'pt-BR',
     datePublished: office?.generated_at ?? new Date(isoDate + 'T06:00:00').toISOString(),
     dateModified: office?.generated_at ?? new Date().toISOString(),
-    author: { '@type': 'Organization', name: 'Cathedra Digital' },
-    publisher: { '@type': 'Organization', name: 'Cathedra Digital', url: CANONICAL_BASE },
+    author: { '@type': 'Organization', name: 'Cátedra Digital' },
+    publisher: { '@type': 'Organization', name: 'Cátedra Digital', url: CANONICAL_BASE },
     mainEntityOfPage: { '@type': 'WebPage', '@id': canonical },
     description,
   };
@@ -430,7 +430,7 @@ const BreviaryPage: React.FC = () => {
         slug="liturgia-das-horas"
         title="Liturgia das Horas"
         estimatedSeconds={20 * 60}
-        kicker="Cathedra · Officium Divinum"
+        kicker="Cátedra · Officium Divinum"
         backHref="/oracao"
         showRhythm={false}
         theme={hourTheme.theme}
