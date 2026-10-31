@@ -280,7 +280,7 @@ test('Mobile: carrossel inferior alterna entre os ambientes canônicos', async (
   await expect(carousel.getByRole('button', { name: 'Abrir módulo Estudar' })).toBeVisible();
 
   await carousel.getByRole('button', { name: 'Abrir módulo Estudar' }).click();
-  await expect(page).toHaveURL(/\\/estudar$/);
+  await expect(page).toHaveURL(/\/estudar$/);
   await expect(carousel.getByRole('button', { name: 'Abrir módulo Estudar' })).toHaveAttribute('aria-current', 'page');
 });
 
