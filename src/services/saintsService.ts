@@ -90,7 +90,7 @@ export const searchSaints = async (query: string): Promise<SaintWithScore[]> => 
   return (data || []).map(formatSaint).map(attachScore);
 };
 
-export const getSaintsByCategory = async (category: string): Promise<Saint[]> => {
+export const getSaintsByCategoryOrThrow = async (category: string): Promise<Saint[]> => {
   const { data, error } = await supabase
     .from('saints')
     .select(LIST_COLUMNS)
@@ -100,10 +100,19 @@ export const getSaintsByCategory = async (category: string): Promise<Saint[]> =>
 
   if (error) {
     console.error('Error fetching saints by category:', error);
-    return [];
+    throw new Error(error.message || 'Falha ao carregar a categoria de santos.');
   }
 
   return (data || []).map(formatSaint);
+};
+
+// Compatibilidade com consumidores antigos que preferem fallback vazio.
+export const getSaintsByCategory = async (category: string): Promise<Saint[]> => {
+  try {
+    return await getSaintsByCategoryOrThrow(category);
+  } catch {
+    return [];
+  }
 };
 
 export const getSaintsByVirtue = async (virtue: string): Promise<Saint[]> => {
@@ -131,7 +140,7 @@ export const findSaintByVirtues = async (virtues: string[]): Promise<Saint | nul
   return null;
 };
 
-export const getAllSaints = async (limit: number = 100): Promise<Saint[]> => {
+export const getAllSaintsOrThrow = async (limit: number = 100): Promise<Saint[]> => {
   const { data, error } = await supabase
     .from('saints')
     .select(LIST_COLUMNS)
@@ -141,10 +150,19 @@ export const getAllSaints = async (limit: number = 100): Promise<Saint[]> => {
 
   if (error) {
     console.error('Error fetching all saints:', error);
-    return [];
+    throw new Error(error.message || 'Falha ao carregar o acervo de santos.');
   }
 
   return (data || []).map(formatSaint);
+};
+
+// Compatibilidade com consumidores antigos que preferem fallback vazio.
+export const getAllSaints = async (limit: number = 100): Promise<Saint[]> => {
+  try {
+    return await getAllSaintsOrThrow(limit);
+  } catch {
+    return [];
+  }
 };
 
 export const getSaintBySubtitle = async (subtitle: string): Promise<Saint | null> => {

@@ -12,7 +12,7 @@ import { SaintCardSkeleton, SaintGridSkeleton } from './SacredSkeleton';
 import { CATEGORY_LABELS } from './SaintDetail.categories';
 const SaintDetail = lazy(() => import('./SaintDetail'));
 import { type Saint } from '@/data/saints';
-import { getSaintsByDate, getSaintsByDateOrThrow, searchSaints, getSaintsByCategory, getAllSaints, getSaintById, formatSaint, type SaintWithScore } from '@/services/saintsService';
+import { getSaintsByDate, getSaintsByDateOrThrow, searchSaints, getSaintsByCategoryOrThrow, getAllSaintsOrThrow, getSaintById, formatSaint, type SaintWithScore } from '@/services/saintsService';
 import SaintsFetchError from './SaintsFetchError';
 import SaintsOfflineFallback from './SaintsOfflineFallback';
 
@@ -144,9 +144,9 @@ const Saints = React.forwardRef<HTMLDivElement, { legacyReader?: boolean }>((pro
   const { data: modeSaints = [], isLoading: isLoadingMode } = useQuery({
     queryKey: ['saints-mode', viewMode],
     queryFn: async () => {
-      if (viewMode === 'writers') return getSaintsByCategory('doctor');
-      if (viewMode === 'popes') return getSaintsByCategory('pope');
-      if (viewMode === 'all' || viewMode === 'cloud') return getAllSaints(100);
+      if (viewMode === 'writers') return getSaintsByCategoryOrThrow('doctor');
+      if (viewMode === 'popes') return getSaintsByCategoryOrThrow('pope');
+      if (viewMode === 'all' || viewMode === 'cloud') return getAllSaintsOrThrow(100);
       return [];
     },
     enabled: ['writers', 'popes', 'all', 'cloud'].includes(viewMode),
@@ -635,6 +635,16 @@ const Saints = React.forwardRef<HTMLDivElement, { legacyReader?: boolean }>((pro
               <div className="max-w-5xl mx-auto px-spacing-md">
                 {isLoadingMode ? (
                   <div className="flex justify-center py-spacing-3xl"><Icons.Cross className="w-spacing-xl h-spacing-xl animate-spin opacity-20" /></div>
+                ) : isModeError ? (
+                  <div role="alert" data-testid="saints-mode-fetch-error" className="mx-auto max-w-2xl rounded-premium border border-destructive/30 bg-destructive/5 p-spacing-xl text-center space-y-spacing-md">
+                    <p className="font-serif text-lg text-foreground">Não foi possível carregar este acervo.</p>
+                    <p className="text-sm text-muted-foreground">{modeError instanceof Error ? modeError.message : 'Verifique sua conexão e tente novamente.'}</p>
+                    <Button onClick={() => { void refetchMode(); }} disabled={isFetchingMode} variant="secondary">
+                      {isFetchingMode ? 'Tentando…' : 'Tentar novamente'}
+                    </Button>
+                  </div>
+                ) : modeSaints.length === 0 ? (
+                  <p className="py-spacing-2xl text-center text-sm text-muted-foreground">Nenhum registro encontrado neste acervo.</p>
                 ) : (
                   <StaggeredList className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-spacing-lg">
                     {modeSaints.map(saint => (
