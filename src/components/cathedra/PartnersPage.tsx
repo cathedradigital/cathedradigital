@@ -252,7 +252,7 @@ const ApplicationDialog: React.FC<ApplicationDialogProps> = ({ trigger, idScope 
           <div className="bg-muted/30 p-spacing-md rounded-premium flex gap-spacing-sm text-premium-xs text-muted-foreground leading-relaxed">
             <Icons.Info className="w-spacing-md h-spacing-md shrink-0 text-primary" />
             <p>
-              Cada candidatura passa por análise editorial. Apenas parceiros aprovados são exibidos publicamente no Cathedra.
+              Cada candidatura passa por análise editorial. Apenas parceiros aprovados são exibidos publicamente no Cátedra.
             </p>
           </div>
 
@@ -307,7 +307,7 @@ const PartnerCard: React.FC<{ partner: Partner; index: number }> = ({ partner, i
           {partner.name}
         </CardTitle>
         <CardDescription className="text-premium-sm line-clamp-spacing-sm leading-relaxed">
-          {partner.description ?? 'Parceiro do Cathedra.'}
+          {partner.description ?? 'Parceiro do Cátedra.'}
         </CardDescription>
       </CardContent>
       {partner.website_url && (
@@ -447,7 +447,7 @@ const PartnersPage: React.FC = () => {
           </span>
         }
         title="Parceiros & Patrocinadores"
-        subtitle="Instituições, editoras e comunidades que caminham conosco na difusão da Fé e da Cultura Católica através do Cathedra."
+        subtitle="Instituições, editoras e comunidades que caminham conosco na difusão da Fé e da Cultura Católica através do Cátedra."
       />
 
       {hasPartners && (
@@ -534,7 +534,7 @@ const PartnersPage: React.FC = () => {
               Quer sustentar esta missão?
             </h2>
             <p className="text-muted-foreground leading-relaxed">
-              Torne-se patrocinador e ajude a manter o Cathedra gratuito, sério e acessível a milhares de fiéis em todo o mundo.
+              Torne-se patrocinador e ajude a manter o Cátedra gratuito, sério e acessível a milhares de fiéis em todo o mundo.
             </p>
             <div className="pt-spacing-md flex flex-col sm:flex-row gap-spacing-md justify-center">
               <ApplicationDialog
