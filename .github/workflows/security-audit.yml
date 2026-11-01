@@ -23,6 +23,9 @@ jobs:
         with:
           node-version: "22.x"
 
+      - name: Generate an ephemeral lockfile for dependency resolution
+        run: npm install --package-lock-only --ignore-scripts --no-audit --no-fund
+
       - name: Run npm audit and preserve the report
         id: audit
         continue-on-error: true
