@@ -43,8 +43,8 @@ jobs:
             console.log(`- ${name}: ${item.severity}; direct=${item.isDirect}; fixAvailable=${JSON.stringify(item.fixAvailable)}`);
           }
 
-          if ((counts.critical ?? 0) > 0 || (counts.high ?? 0) > 0) {
-            console.error('Release blocked: critical/high dependency vulnerabilities must be fixed or formally resolved.');
+          if ((counts.total ?? 0) > 0) {
+            console.error('Release blocked: every dependency vulnerability must be fixed or formally risk-accepted before production.');
             process.exit(1);
           }
           NODE
