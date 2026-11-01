@@ -253,12 +253,18 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
           >
             {/* Mobile Header — Noir & Gold wordmark */}
             <header className="flex items-center justify-between gap-3 mb-3 pb-3" style={{ borderBottom: '1px solid rgba(201,168,76,0.25)' }}>
-              <div 
-                className="flex items-baseline gap-2 cursor-pointer group outline-none" 
+              <div
+                className="flex items-baseline gap-2 cursor-pointer group rounded-md outline-none focus-visible:ring-2 focus-visible:ring-[#c9a84c] focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                 onClick={(e) => handleNav('/', e)}
                 role="button"
                 tabIndex={0}
-                onKeyDown={(e) => e.key === 'Enter' && handleNav('/', e)}
+                aria-label="Cátedra Digital — Início"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    handleNav('/', e);
+                  }
+                }}
               >
                 <Icons.Logo className="w-12 h-12 text-primary" />
                 <div className="flex flex-col leading-none gap-1">
