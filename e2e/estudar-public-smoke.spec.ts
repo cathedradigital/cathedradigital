@@ -199,6 +199,24 @@ test('Bíblia: leitura mantém espaçamento compacto e Nexus sem bolhas excessiv
 });
 
 
+test('Magistério: Código de Direito Canônico abre o PDF oficial no leitor', async ({ page }) => {
+  const officialPdf = 'https://www.vatican.va/archive/cod-iuris-canonici/portuguese/codex-iuris-canonici_po.pdf';
+  const pdfResponsePromise = page.waitForResponse(
+    response => response.url() === officialPdf && response.request().resourceType() === 'document',
+    { timeout: 20_000 },
+  );
+
+  const response = await page.goto('/magisterium/cdc');
+  expect(response?.ok(), `/magisterium/cdc: HTTP ${response?.status()}`).toBeTruthy();
+  await expect(page.getByTestId('magisterium-pdf-reader')).toBeVisible();
+  await expect(page.getByTestId('magisterium-pdf-frame')).toHaveAttribute('src', officialPdf);
+  await expect(page.getByTestId('magisterium-pdf-open-source')).toHaveAttribute('href', officialPdf);
+
+  const pdfResponse = await pdfResponsePromise;
+  expect(pdfResponse.ok(), `PDF oficial: HTTP ${pdfResponse.status()}`).toBeTruthy();
+  expect(pdfResponse.headers()['content-type']).toContain('application/pdf');
+});
+
 test('Documentos: Dei Filius organiza cabeçalho, idioma original e tradução', async ({ page }) => {
   const errors: string[] = [];
   const failedResponses: string[] = [];
