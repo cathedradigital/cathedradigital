@@ -90,7 +90,8 @@ const HomeMainDoors: React.FC<HomeMainDoorsProps> = ({ t, className }) => {
           tabIndex={0}
           role="button"
           aria-label={`${door.label}: ${door.description}`}
-          className="relative flex flex-col items-center text-center gap-spacing-lg group cursor-pointer transition-all duration-1000 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary/10 rounded-[2.5rem] p-spacing-xl md:p-spacing-2xl hover:bg-primary/[0.01] hover:shadow-premium-sm"
+          aria-keyshortcuts={door.shortcut ? `Alt+${door.shortcut.toUpperCase()}` : undefined}
+          className="relative flex flex-col items-center text-center gap-spacing-lg group cursor-pointer transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-4 focus-visible:ring-offset-background rounded-[2.5rem] p-spacing-xl md:p-spacing-2xl hover:bg-primary/[0.01] hover:shadow-premium-sm"
         >
           <div className="relative w-spacing-3xl h-spacing-3xl md:w-spacing-4xl md:h-spacing-4xl rounded-premium-full flex items-center justify-center text-primary/20 group-hover:text-primary transition-all duration-1000 ease-in-out border border-primary/[0.05] bg-primary/[0.01] group-hover:bg-primary/[0.03] overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.05] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
