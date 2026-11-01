@@ -31,4 +31,4 @@ Se não existir uma conta premium real, o fluxo premium permanece bloqueado e ne
 - mobile 390px no fluxo crítico;
 - screenshots/traces somente em falhas.
 
-O workflow é acionado somente em PR para `main` ou manualmente. Não há deploy, cron ou monitoramento permanente.
+O workflow roda em PR para `main`, em `push` para `main` e por `workflow_dispatch`. Em PR, executa apenas a suíte pública; em `main`, executa a suíte pública e a autenticada com os secrets E2E. No disparo manual, a suíte autenticada exige `run_authenticated=true`. O workflow não faz deploy nem cria cron ou monitoramento permanente.
