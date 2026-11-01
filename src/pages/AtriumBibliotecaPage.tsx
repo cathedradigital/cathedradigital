@@ -66,10 +66,6 @@ const AtriumBibliotecaPage: React.FC = () => {
   return (
     <div
       className="min-h-screen w-full bg-stitch-background text-stitch-on-background" data-catedra-module="library"
-      style={{
-        backgroundImage:
-          'url("https://www.transparenttextures.com/patterns/p6.png")',
-      }}
     >
       <Helmet>
         <title>Cátedra Digital — Biblioteca</title>
@@ -223,7 +219,7 @@ const AtriumBibliotecaPage: React.FC = () => {
                 className="pointer-events-none absolute inset-0 opacity-[0.05]"
                 style={{
                   backgroundImage:
-                    'url("https://www.transparenttextures.com/patterns/parchment.png")',
+                    'radial-gradient(ellipse at 18% 22%, hsl(var(--stitch-secondary) / 0.35), transparent 68%)',
                 }}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-stitch-primary via-stitch-primary/40 to-transparent" />
