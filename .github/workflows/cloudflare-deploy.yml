@@ -104,8 +104,14 @@ jobs:
       - name: Validate internal routes
         run: npm run validate:links
 
-      - name: Build
-        run: npm run build
+      - name: Validate explicit Supabase build target and build
+        run: |
+          set -euo pipefail
+          set -a
+          . ./.env.production
+          set +a
+          node scripts/validate-supabase-build-env.mjs
+          npm run build
 
       - name: Deploy Worker
         uses: cloudflare/wrangler-action@v4
