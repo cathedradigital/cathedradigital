@@ -274,9 +274,6 @@ const JornadaCompletePage: React.FC = () => {
   return (
     <div
       className="min-h-screen w-full bg-stitch-background text-stitch-on-background"
-      style={{
-        backgroundImage: 'url("https://www.transparenttextures.com/patterns/p6.png")',
-      }}
     >
       <Helmet>
         <title>Jornada concluída — {journey.title} — Cátedra</title>
@@ -391,7 +388,7 @@ const JornadaCompletePage: React.FC = () => {
               className="relative overflow-hidden border border-stitch-secondary/30 bg-stitch-surface-container-lowest p-8 text-center md:p-12"
               style={{
                 backgroundImage:
-                  'url("https://www.transparenttextures.com/patterns/parchment.png")',
+                  'radial-gradient(ellipse at 50% 0%, hsl(var(--stitch-secondary) / 0.14), transparent 72%)',
               }}
             >
               <div className="pointer-events-none absolute inset-3 border border-stitch-secondary/20" />
@@ -608,7 +605,7 @@ const JornadaCompletePage: React.FC = () => {
               className="relative overflow-hidden border border-stitch-secondary/30 bg-stitch-surface-container-lowest p-6 text-center"
               style={{
                 backgroundImage:
-                  'url("https://www.transparenttextures.com/patterns/parchment.png")',
+                  'radial-gradient(ellipse at 50% 0%, hsl(var(--stitch-secondary) / 0.14), transparent 72%)',
               }}
             >
               <div className="pointer-events-none absolute inset-2 border border-stitch-secondary/20" />
