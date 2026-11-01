@@ -447,9 +447,13 @@ test('Sanctorum: catálogo público carrega santos com fonte e status editorial'
 
   const augustine = page.getByRole('button', { name: /Santo Agostinho de Hipona/ });
   await expect(augustine, 'Sanctorum: ficha de Santo Agostinho deve aparecer na lista').toBeVisible({ timeout: 10_000 });
-  // Use the browser's native visibility scroll; manually offsetting the page
-  // after scrolling could move the card back outside the viewport on mobile.
-  await augustine.scrollIntoViewIfNeeded();
+  // Scroll the actual card into the visual viewport before interaction.
+  // An explicit center alignment handles long alphabetical catalogues consistently
+  // in both the desktop document and the mobile viewport.
+  await augustine.evaluate((element) => {
+    element.scrollIntoView({ block: 'center', inline: 'nearest', behavior: 'instant' });
+  });
+  await expect(augustine, 'Sanctorum: ficha de Santo Agostinho deve ficar na área visível').toBeInViewport();
   // Clique em uma área limpa da imagem do card, sem texto/elementos internos.
   await augustine.click({ position: { x: 24, y: 24 }, timeout: 10_000 });
 
