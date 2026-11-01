@@ -936,13 +936,10 @@ const AppLayout: React.FC = () => {
                       <Route path="/admin/bible-abbr-validate" element={<BibleAbbrValidatePage />} />
                       <Route path="/admin/bible-perf" element={<BiblePerfDashboard />} />
                       <Route path="/admin/bible-cache-timeseries" element={<BibleCacheTimeseriesDashboard />} />
-                     <Route path="/admin/bible-perf-breakdown" element={<Navigate to="/admin/bible-perf-breakdown" replace />} />
                      <Route path="/admin/bible-perf-breakdown" element={<BiblePerfBreakdown />} />
-                     <Route path="/admin/bible-sources" element={<Navigate to="/admin/bible-sources" replace />} />
                       <Route path="/admin/bible-sources" element={<BibleSourcesAudit />} />
                       <Route path="/admin/bible-diagnostic-runs" element={<BibleDiagnosticRuns />} />
                       <Route path="/admin/bible-import" element={<BibleImportAdmin />} />
-                      <Route path="/admin/bible-import" element={<Navigate to="/admin/bible-import" replace />} />
                       <Route path="/admin/bible-import-missing" element={<BibleImportMissing />} />
                       <Route path="/admin/bible-import-jobs" element={<BibleImportJobs />} />
                       <Route path="/admin/bible-import-jobs/:id" element={<BibleImportJobDetail />} />
@@ -950,7 +947,6 @@ const AppLayout: React.FC = () => {
                       <Route path="/admin/client-errors" element={<ClientErrors />} />
                       <Route path="/admin/runtime-errors" element={<RuntimeErrors />} />
                       <Route path="/admin/bible-sprint1" element={<BibleSprint1Admin />} />
-                      <Route path="/admin/seo-status" element={<SEOStatusPage />} />
                       <Route path="/admin/seo-status" element={<SEOStatusPage />} />
                       <Route path="/admin/seo" element={<SEOAdminPage />} />
                       <Route path="/admin/integrations" element={<IntegrationsStatusPage />} />
@@ -980,9 +976,7 @@ const AppLayout: React.FC = () => {
                       <Route path="/admin/editorial-closure-validator" element={<EditorialClosureValidator />} />
                       <Route path="/admin/editorial-closure-runs" element={<EditorialClosureRuns />} />
                       <Route path="/admin/instagram-gallery" element={<Suspense fallback={<LoadingFallback />}><InstagramGalleryPage /></Suspense>} />
-                <Route path="/admin/site-health" element={<SiteHealthDashboard />} />
                 <Route path="/admin/security-docs" element={<SecurityDocumentation />} />
-                      <Route path="/admin/audit-logs" element={<Suspense fallback={<LoadingFallback />}><AuditLogsPage /></Suspense>} />
                       <Route path="/admin/audit-logs" element={<Suspense fallback={<LoadingFallback />}><AuditLogsPage /></Suspense>} />
                       <Route path="/admin/site-health" element={<SiteHealthDashboard />} />
 
