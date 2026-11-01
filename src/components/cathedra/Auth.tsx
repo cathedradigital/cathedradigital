@@ -79,7 +79,7 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
       }
 
       if (mode === 'signup') {
-        const { error: signUpError } = await supabase.auth.signUp({
+        const { data: signupData, error: signUpError } = await supabase.auth.signUp({
           email,
           password,
           options: {
@@ -92,14 +92,14 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
           return;
         }
 
-        setSuccess('Conta criada! Fazendo login...');
-        const { data: loginData, error: loginError } = await supabase.auth.signInWithPassword({ email, password });
-        if (loginError) {
-          setSuccess('Conta criada com sucesso! Você já pode fazer login.');
-          setMode('login');
-        } else {
-          handledSessionUserId.current = loginData.user?.id ?? null;
+        // Com confirmação de email habilitada, o Supabase não cria sessão
+        // imediatamente. Não tentar autenticar antes da confirmação.
+        if (signupData.session && signupData.user) {
+          handledSessionUserId.current = signupData.user.id;
           handleSignupSuccess();
+        } else {
+          setSuccess('Conta criada! Enviamos um link de confirmação para seu e-mail. Confirme o endereço para entrar na Cátedra.');
+          setMode('login');
         }
         return;
       }
@@ -353,7 +353,7 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
                   const { error: oauthError } = await supabase.auth.signInWithOAuth({
                     provider: 'google',
                     options: {
-                      redirectTo: `${window.location.origin}${AppRoute.LOGIN}${nextQuery}`,
+                      redirectTo: `${AUTH_REDIRECT_ORIGIN}${AppRoute.LOGIN}${nextQuery}`,
                       queryParams: { prompt: 'select_account' },
                     },
                   });
@@ -402,7 +402,7 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
                   const { error: oauthError } = await supabase.auth.signInWithOAuth({
                     provider: 'apple',
                     options: {
-                      redirectTo: `${window.location.origin}${AppRoute.LOGIN}${nextQuery}`,
+                      redirectTo: `${AUTH_REDIRECT_ORIGIN}${AppRoute.LOGIN}${nextQuery}`,
                     },
                   });
                   if (oauthError) {
