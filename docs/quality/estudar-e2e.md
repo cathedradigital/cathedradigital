@@ -1,10 +1,10 @@
 # Estudar — E2E mínimo de fechamento
 
-Este caminho existe exclusivamente para validar o PR antes do merge. Ele não cria preview de produção, não altera main e não deixa infraestrutura persistente.
+Este caminho valida o PR antes do merge e a versão de `main` após integração. Em PR, testa o HEAD do PR sem secrets de autenticação; em `main`, valida o código confiável e executa a suíte autenticada. Não cria preview de produção nem deixa infraestrutura persistente.
 
 ## Execução
 
-O workflow `.github/workflows/estudar-e2e.yml` faz checkout do HEAD do PR, instala as dependências existentes, instala `@playwright/test` somente no runner CI (`--no-save`), instala apenas Chromium, executa o build e sobe `vite preview` localmente no próprio runner. Depois executa os fluxos críticos e publica apenas os artefatos de evidência por 7 dias.
+O workflow `.github/workflows/estudar-e2e.yml` faz checkout do HEAD do PR na validação de PR e checkout de `main` confiável na execução pós-merge. Instala as dependências, instala Chromium, valida a configuração Supabase, executa o build e sobe `vite preview` localmente no runner. A suíte autenticada só recebe secrets nos passos protegidos de `main`; a evidência publicada é sanitizada e retida por 7 dias.
 
 ## Segredos necessários
 
