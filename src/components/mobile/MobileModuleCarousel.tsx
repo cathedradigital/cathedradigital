@@ -56,7 +56,7 @@ export function MobileModuleCarousel() {
   const touchStartX = useRef<number | null>(null);
   const touchStartY = useRef<number | null>(null);
   const didSwipe = useRef(false);
-  const swipeResetTimer = useRef<ReturnType<typeof window.setTimeout> | null>(null);
+  const swipeResetTimer = useRef<number | null>(null);
 
   const destinations = useMemo<Destination[]>(() => [
     { key: 'atrium', label: 'Átrio', path: '/', icon: House, accent: '#c6a45c' },
