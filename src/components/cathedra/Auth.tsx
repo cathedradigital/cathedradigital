@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Helmet } from '@/lib/helmet-compat';
 import { Icons } from '../../constants';
 import { supabase } from '@/lib/db';
+import { useAuth } from '@/hooks/useAuth';
 import { useNavigate, useSearchParams } from '@/lib/rr-compat';
 import { AppRoute } from '@/types';
 import { ArrowLeft, Loader2 } from 'lucide-react';
@@ -28,15 +29,26 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
   const [searchParams] = useSearchParams();
   const nextPath = safeNextPath(searchParams.get('next'));
   const nextQuery = nextPath ? `?next=${encodeURIComponent(nextPath)}` : '';
-  const handleSuccess = () => {
+  const { user: sessionUser, loading: sessionLoading } = useAuth();
+  const handledSessionUserId = useRef<string | null>(null);
+  const handleSuccess = useCallback(() => {
     if (nextPath) navigate(nextPath, { replace: true });
     else onSuccess();
-  };
-  const handleSignupSuccess = () => {
+  }, [nextPath, navigate, onSuccess]);
+  const handleSignupSuccess = useCallback(() => {
     if (nextPath) navigate(nextPath, { replace: true });
     else if (onSignupSuccess) onSignupSuccess();
     else onSuccess();
-  };
+  }, [nextPath, navigate, onSignupSuccess, onSuccess]);
+
+  // O callback OAuth retorna a /auth depois que o Supabase restaura a sessão.
+  // A navegação ocorre somente após o AuthProvider confirmar o usuário.
+  useEffect(() => {
+    if (sessionLoading || !sessionUser) return;
+    if (handledSessionUserId.current === sessionUser.id) return;
+    handledSessionUserId.current = sessionUser.id;
+    handleSuccess();
+  }, [sessionUser, sessionLoading, handleSuccess]);
   const [mode, setMode] = useState<'login' | 'signup' | 'forgot'>('login');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -76,20 +88,22 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
         }
 
         setSuccess('Conta criada! Fazendo login...');
-        const { error: loginError } = await supabase.auth.signInWithPassword({ email, password });
+        const { data: loginData, error: loginError } = await supabase.auth.signInWithPassword({ email, password });
         if (loginError) {
           setSuccess('Conta criada com sucesso! Você já pode fazer login.');
           setMode('login');
         } else {
+          handledSessionUserId.current = loginData.user?.id ?? null;
           handleSignupSuccess();
         }
         return;
       }
 
-      const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
+      const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({ email, password });
       if (signInError) {
         setError(signInError.message === 'Invalid login credentials' ? 'Email ou senha incorretos.' : signInError.message);
       } else {
+        handledSessionUserId.current = signInData.user?.id ?? null;
         handleSuccess();
       }
     } catch (authError) {
