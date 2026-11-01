@@ -16,10 +16,10 @@ on:
       - "docs/quality/testing.md"
       - ".github/workflows/estudar-e2e.yml"
       - ".github/workflows/cloudflare-deploy.yml"
-      - ".github/workflows/cloudflare-deploy.yml"
   push:
     branches: ["main"]
     paths:
+      - ".github/workflows/cloudflare-deploy.yml"
       - "src/**"
       - "public/**"
       - "e2e/**"
