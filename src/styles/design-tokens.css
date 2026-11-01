@@ -1,0 +1,335 @@
+@layer base {
+  :root {
+    /* --- Core Visual Tokens: Cathedra Premium System --- */
+    
+    /* 1. Colors (HSL) */
+    --background: 36 33% 98%; /* Revertendo para o tom sóbrio anterior */
+
+    --foreground: 222 35% 13%; /* Aumentado de 10% para 15% para suavizar mas manter contraste */
+
+    
+    --card: 36 40% 99.5%;
+    --card-foreground: 222 35% 13%;
+    
+    --primary: 222 100% 18%; 
+    --primary-foreground: 45 40% 98%;
+    
+    --secondary: 43 62% 38%; /* Escurecido de 45% para 35% para melhor contraste no mobile */
+    --secondary-foreground: 45 40% 98%;
+
+    
+    --muted: 36 20% 95%;
+    --muted-foreground: 222 15% 35%; /* Aumentado de 35% para 25% para conformidade WCAG AA */ 
+    
+    --accent: 43 55% 92%;
+    --accent-foreground: 222 60% 18%;
+    
+    --border: 222 18% 86%;
+    --input: 222 18% 84%;
+    --ring: 43 62% 38%;
+
+    /* ---------------------------------------------------------------
+     * Brand gold — dois tons para respeitar WCAG AA:
+     *  --gold          = tom pleno (#c9a84c). Uso em BACKGROUNDS,
+     *                    borders, ícones e texto sobre fundo escuro
+     *                    (Cathedra Noir). NÃO usar como texto sobre
+     *                    fundo claro — falha AA (ratio 4.5:1 < 4.5+ eps).
+     *  --gold-text     = tom escurecido para TEXTO SOBRE FUNDO CLARO
+     *                    (~ratio 6.8:1 sobre #ffffff). Usar sempre que
+     *                    o dourado carregar texto em superfície clara.
+     * --------------------------------------------------------------- */
+    --gold: #c9a84c;
+    --gold-text: #8a7020;
+    --gold-text-strong: #6d5a1a;
+    /* Gold para TEXTO sobre fundo ESCURO (#000/#0B1F3A). ~ratio 8.5:1 sobre #000. */
+    --gold-on-dark: #e6c96b;
+    
+    /* 2. Spacing Scale (8pt-based) */
+    --spacing-3xs: 0.125rem; /* 2px */
+    --spacing-2xs: 0.25rem;  /* 4px */
+    --spacing-xs: 0.5rem;   /* 8px */
+    --spacing-sm: 0.75rem;  /* 12px */
+    --spacing-md: 1rem;     /* 16px */
+    --spacing-lg: 1.5rem;   /* 24px */
+    --spacing-xl: 2rem;     /* 32px */
+    --spacing-2xl: 3rem;    /* 48px */
+    --spacing-3xl: 4rem;    /* 64px */
+    --spacing-4xl: 6rem;    /* 96px */
+    
+    /* 3. Borders & Radius */
+    --radius-sm: 0.5rem;
+    --radius-md: 1rem;
+    --radius-lg: 1.5rem;
+    --radius-xl: 2rem;
+    --radius-premium: 2.5rem;
+    --radius: 1.5rem;
+    
+    --border-thin: 1px;
+    --border-medium: 1.5px;
+
+    
+    /* 4. Shadows */
+    --shadow-premium-sm: 0 1px 2px 0 rgb(0 0 0 / 0.02);
+    --shadow-premium-md: 0 2px 4px -1px rgb(0 0 0 / 0.01);
+    --shadow-premium: 0 4px 20px -10px rgba(0, 0, 0, 0.01);
+    --shadow-premium-hover: 0 10px 30px -15px rgba(0, 0, 0, 0.02);
+    
+    /* 5. Typography Scale */
+    --text-premium-xs: 0.75rem;
+    --text-premium-sm: 0.875rem;
+    --text-premium-base: 1rem;
+    --text-premium-lg: 1.125rem;
+    --text-premium-xl: 1.25rem;
+    --text-premium-2xl: 1.5rem;
+    --text-premium-3xl: 1.875rem;
+    --text-premium-4xl: 2.25rem;
+    --text-premium-5xl: 3rem;
+    
+    --font-weight-light: 300;
+    --font-weight-normal: 400;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    
+    --letter-spacing-tight: -0.02em;
+    --letter-spacing-wide: 0.05em;
+    --letter-spacing-widest: 0.25em;
+
+    /* 6. Layout Constants */
+    --layout-max-width: 1400px;
+    --layout-padding: var(--spacing-xl);
+    --layout-padding-mobile: var(--spacing-sm);
+    --layout-content-width-mobile: 85vw;
+    --header-height: 40px;
+    --bottom-nav-height: 52px;
+    
+    /* 8. Icons */
+    --icon-size-sm: 16px;
+    --icon-size-md: 20px;
+    --icon-size-lg: 24px;
+    --icon-size-xl: 32px;
+    --icon-stroke-width: 1.2;
+    
+    /* 7. Transitions */
+    --transition-premium: 500ms cubic-bezier(0.16, 1, 0.3, 1);
+    --transition-fast: 200ms ease;
+
+    /* 9. Editorial Tokens (Conceito C — Logos 2030) */
+    --reading-column: 68ch;
+    --reading-column-narrow: 58ch;
+    --space-editorial: 6rem;
+    --space-editorial-lg: 9rem;
+
+    /* SP4 Onda A — Escala unificada de espaçamento (usar em novos módulos e em migração dos existentes) */
+    --sp-xs: 0.25rem;   /* 4px  */
+    --sp-s:  0.5rem;    /* 8px  */
+    --sp-m:  1rem;      /* 16px — item */
+    --sp-l:  1.5rem;    /* 24px */
+    --sp-xl: 2.5rem;    /* 40px — bloco */
+    --sp-xxl: 4rem;     /* 64px — seção */
+    --rule-gold: 43 45% 54%;
+    /* Dourado legível como TEXTO (AA sobre fundo claro). O `--rule-gold`
+       permanece reservado a filetes, bordas e halos. */
+    --rule-gold-ink: 43 62% 30%;
+    --rule-gold-soft: hsl(var(--rule-gold) / 0.2);
+    --rule-gold-hair: hsl(var(--rule-gold) / 0.12);
+    --font-display: 'Cormorant Garamond', ui-serif, Georgia, serif;
+    --font-body: 'Karla', ui-sans-serif, system-ui, sans-serif;
+
+    /* ==================================================================
+     * STITCH TOKENS (Sprint R0 — Reskin foundation)
+     * Namespace isolado: consumido via classes `stitch-*` / `bg-stitch-*`.
+     * NÃO substitui os tokens semânticos existentes. Cada sprint de reskin
+     * (R1..R7) opta por consumir estes tokens na sua rota-alvo.
+     * Fonte: Google Stitch HTMLs (M3 palette). HSL derivado dos hexes.
+     * ================================================================ */
+    --stitch-primary: 222 100% 11%;             /* #00113a */
+    --stitch-on-primary: 0 0% 100%;             /* #ffffff */
+    --stitch-primary-container: 220 100% 20%;   /* #002366 */
+    --stitch-on-primary-container: 224 55% 65%; /* #758dd5 */
+    --stitch-primary-fixed: 228 100% 93%;       /* #dbe1ff */
+    --stitch-inverse-primary: 224 100% 85%;     /* #b3c5ff */
+
+    --stitch-secondary: 48 100% 23%;            /* #735c00 */
+    --stitch-on-secondary: 0 0% 100%;
+    --stitch-secondary-container: 48 99% 68%;   /* #fed65b */
+    --stitch-on-secondary-container: 48 100% 23%; /* #745c00 */
+    --stitch-secondary-fixed: 45 100% 76%;      /* #ffe088 */
+    --stitch-secondary-fixed-dim: 47 79% 60%;   /* #e9c349 */
+
+    --stitch-tertiary: 36 41% 6%;               /* #191308 */
+    --stitch-tertiary-fixed: 35 46% 87%;        /* #eee1ce */
+    --stitch-on-tertiary-fixed: 42 39% 10%;     /* #211b0f */
+
+    --stitch-background: 20 25% 98%;            /* #fbf9f8 */
+    --stitch-on-background: 180 2% 11%;         /* #1b1c1c */
+    --stitch-surface: 20 25% 98%;
+    --stitch-on-surface: 180 2% 11%;
+    --stitch-on-surface-variant: 230 8% 29%;    /* #444650 */
+
+    --stitch-surface-container-lowest: 0 0% 100%;
+    --stitch-surface-container-low: 15 14% 96%; /* #f6f3f2 */
+    --stitch-surface-container: 0 6% 93%;       /* #f0eded */
+    --stitch-surface-container-high: 20 6% 91%; /* #eae8e7 */
+    --stitch-surface-container-highest: 20 4% 89%; /* #e4e2e1 */
+    --stitch-surface-variant: 20 4% 89%;
+    --stitch-surface-dim: 0 4% 85%;             /* #dcd9d9 */
+    --stitch-surface-bright: 20 25% 98%;
+    --stitch-surface-tint: 224 40% 45%;         /* #435b9f */
+
+    --stitch-outline: 232 6% 48%;               /* #757682 */
+    --stitch-outline-variant: 233 11% 80%;      /* #c5c6d2 */
+
+    --stitch-inverse-surface: 0 0% 19%;         /* #303030 */
+    --stitch-inverse-on-surface: 0 6% 95%;      /* #f3f0f0 */
+
+    --stitch-error: 0 75% 42%;                  /* #ba1a1a */
+    --stitch-on-error: 0 0% 100%;
+    --stitch-error-container: 6 100% 92%;       /* #ffdad6 */
+    --stitch-on-error-container: 355 100% 29%;  /* #93000a */
+
+    /* Stitch scale */
+    --stitch-radius-default: 0.125rem;
+    --stitch-radius-lg: 0.25rem;
+    --stitch-radius-xl: 0.5rem;
+    --stitch-radius-full: 0.75rem;
+    --stitch-container-max: 1120px;
+    --stitch-margin-edge: 64px;
+    --stitch-margin-mobile: 20px;
+    --stitch-gutter: 32px;
+    --stitch-editorial-stack: 48px;
+
+    /* Stitch mobile primitives (M1) */
+    --stitch-mobile-topbar-h: 56px;
+    --stitch-mobile-bottomnav-h: 72px;
+    --stitch-mobile-touch-min: 44px;
+    --stitch-mobile-safe-top: env(safe-area-inset-top, 0px);
+    --stitch-mobile-safe-bottom: env(safe-area-inset-bottom, 0px);
+    --stitch-mobile-blur: saturate(180%) blur(14px);
+
+    /* Stitch tipografia (mapeada às fontes já carregadas do projeto) */
+    --font-stitch-display: 'EB Garamond', 'Cormorant Garamond', ui-serif, Georgia, serif;
+    --font-stitch-body: 'EB Garamond', ui-serif, Georgia, serif;
+    --font-stitch-label: 'Karla', ui-sans-serif, system-ui, sans-serif;
+  }
+
+  /* Dark mode Stitch — pares oficiais M3 (invertidos). Ativa dentro de .dark. */
+  .dark, [data-theme='dark'] {
+    --stitch-primary: 224 100% 85%;
+    --stitch-on-primary: 222 100% 11%;
+    --stitch-primary-container: 220 100% 20%;
+    --stitch-on-primary-container: 228 100% 93%;
+
+    --stitch-secondary: 47 79% 60%;
+    --stitch-on-secondary: 48 100% 12%;
+    --stitch-secondary-container: 48 100% 23%;
+    --stitch-on-secondary-container: 48 99% 68%;
+
+    --stitch-background: 180 2% 11%;
+    --stitch-on-background: 0 6% 95%;
+    --stitch-surface: 180 2% 11%;
+    --stitch-on-surface: 0 6% 95%;
+    --stitch-on-surface-variant: 233 11% 80%;
+
+    --stitch-surface-container-lowest: 180 4% 7%;
+    --stitch-surface-container-low: 180 2% 13%;
+    --stitch-surface-container: 180 2% 15%;
+    --stitch-surface-container-high: 180 2% 18%;
+    --stitch-surface-container-highest: 180 2% 22%;
+    --stitch-surface-dim: 180 2% 11%;
+    --stitch-surface-bright: 180 2% 22%;
+
+    --stitch-outline: 232 6% 55%;
+    --stitch-outline-variant: 230 8% 29%;
+
+    --stitch-inverse-surface: 0 6% 95%;
+    --stitch-inverse-on-surface: 0 0% 19%;
+  }
+
+
+  .dark, [data-theme='dark'] {
+    --background: 220 15% 9%;
+    --foreground: 45 10% 95%; /* Maior brilho no dark para legibilidade */
+    
+    --card: 220 15% 10%;
+    --card-foreground: 45 10% 88%;
+    
+    --primary: 42 15% 70%;
+    --primary-foreground: 220 15% 5%;
+    
+    --border: 45 15% 90% / 0.08;
+    --shadow-premium: 0 20px 80px -20px rgba(0, 0, 0, 0.5);
+    --rule-gold-ink: 43 60% 72%;
+  }
+
+  /* Reading Themes - Consolidated with Core */
+  .reading-theme-paper { 
+    --background: 220 15% 96%; 
+    --foreground: 220 25% 10%;
+    --primary: 220 30% 12%;
+    background-color: #f1f3f5 !important;
+    color: #1a1a1a !important;
+  }
+
+  .reading-theme-sepia { 
+    --background: 38 35% 92%; 
+    --foreground: 25 20% 20%; 
+    --primary: 25 20% 15%;
+    --border: 25 20% 10% / 0.1;
+    background-color: #E8E2D2 !important;
+    color: #2b2621 !important;
+  }
+  .reading-theme-dark { 
+    --background: 220 15% 12%; 
+    --foreground: 45 10% 88%; 
+    --primary: 42 15% 70%;
+    --border: 45 15% 90% / 0.05;
+    background-color: #1A1C1E !important;
+    color: #e0e0e0 !important;
+  }
+  .reading-theme-night { 
+    --background: 220 20% 7%; 
+    --foreground: 45 10% 70%; 
+    --primary: 42 15% 50%;
+    --border: 45 15% 90% / 0.03;
+    background-color: #0D0E10 !important;
+    color: #b0b0b0 !important;
+  }
+
+  .high-contrast, [data-contrast='high'] {
+    --background: 0 0% 100% !important;
+    --foreground: 0 0% 0% !important;
+    --primary: 0 0% 0% !important;
+    /* Pares de legibilidade: sem eles, superfícies sólidas herdam o
+       foreground do tema anterior e produzem texto escuro sobre escuro. */
+    --primary-foreground: 0 0% 100% !important;
+    --secondary: 43 42% 28% !important;
+    --secondary-foreground: 0 0% 100% !important;
+    --card: 0 0% 100% !important;
+    --card-foreground: 0 0% 0% !important;
+    --muted-foreground: 0 0% 20% !important;
+    --accent-foreground: 0 0% 0% !important;
+    --border: 0 0% 0% / 0.8 !important;
+    --radius: 0 !important;
+    --radius-premium: 0 !important;
+    --shadow-premium: none !important;
+  }
+
+  .high-contrast.reading-theme-paper, [data-contrast='high'].reading-theme-paper { background-color: #ffffff !important; color: #000000 !important; }
+  .high-contrast.reading-theme-sepia, [data-contrast='high'].reading-theme-sepia { background-color: #ffffff !important; color: #000000 !important; }
+  .high-contrast.reading-theme-dark, [data-contrast='high'].reading-theme-dark { background-color: #000000 !important; color: #ffffff !important; }
+  .high-contrast.reading-theme-night, [data-contrast='high'].reading-theme-night { background-color: #000000 !important; color: #ffffff !important; }
+
+  .dark.high-contrast, .dark[data-contrast='high'] {
+    --background: 0 0% 0% !important;
+    --foreground: 0 0% 100% !important;
+    --primary: 0 0% 100% !important;
+    --primary-foreground: 0 0% 0% !important;
+    --secondary: 43 60% 78% !important;
+    --secondary-foreground: 0 0% 0% !important;
+    --card: 0 0% 0% !important;
+    --card-foreground: 0 0% 100% !important;
+    --muted-foreground: 0 0% 85% !important;
+    --accent-foreground: 0 0% 100% !important;
+    --border: 0 0% 100% / 0.8 !important;
+  }
+}
