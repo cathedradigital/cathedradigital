@@ -30,7 +30,7 @@ export const SpaceLayout: React.FC<SpaceLayoutProps> = ({ children, className })
   <section
     data-space-layout="true"
     className={cn(
-      'mx-auto w-full max-w-[1120px] px-5 pt-6 pb-24 md:px-16 md:pt-14 md:pb-16 animate-fade-in',
+      'mx-auto w-full max-w-[1120px] px-5 pt-6 pb-[calc(var(--stitch-mobile-bottomnav-h)+var(--stitch-mobile-safe-bottom)+2rem)] md:px-16 md:pt-14 md:pb-16 animate-fade-in',
       className,
     )}
   >
