@@ -834,7 +834,7 @@ const AppLayout: React.FC = () => {
               <Route path="/transactions" element={<Suspense fallback={<LoadingFallback />}><AuthGuard><UserTransactionsPage /></AuthGuard></Suspense>} />
               <Route path="/transactions/my" element={<Navigate to="/transactions" replace />} />
               <Route path="/partners" element={<Suspense fallback={<LoadingFallback />}><PartnersPage /></Suspense>} />
-              <Route path="/admin/parceiros" element={<Suspense fallback={<LoadingFallback />}><PartnersAdmin /></Suspense>} />
+              <Route path="/admin/parceiros" element={<Suspense fallback={<LoadingFallback />}><AdminGuard><PartnersAdmin /></AdminGuard></Suspense>} />
               <Route path="/transparencia" element={<Suspense fallback={<LoadingFallback />}><TransparencyPage /></Suspense>} />
 
               {/* Institucional */}
