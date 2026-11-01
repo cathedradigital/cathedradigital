@@ -1,0 +1,58 @@
+name: Security Audit
+
+on:
+  push:
+    branches: ["main"]
+
+permissions:
+  contents: read
+
+jobs:
+  npm-audit:
+    name: Dependency vulnerability audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22.x"
+
+      - name: Run npm audit and preserve the report
+        id: audit
+        continue-on-error: true
+        run: npm audit --json > npm-audit.json
+
+      - name: Summarize and enforce high/critical findings
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+
+          const report = JSON.parse(fs.readFileSync('npm-audit.json', 'utf8'));
+          const counts = report.metadata?.vulnerabilities;
+          if (!counts) {
+            console.error('npm audit did not return a valid vulnerability summary.');
+            process.exit(2);
+          }
+
+          console.log(`npm audit: ${counts.total} total; ${counts.critical} critical; ${counts.high} high; ${counts.moderate} moderate; ${counts.low} low.`);
+          for (const [name, item] of Object.entries(report.vulnerabilities ?? {})) {
+            console.log(`- ${name}: ${item.severity}; direct=${item.isDirect}; fixAvailable=${JSON.stringify(item.fixAvailable)}`);
+          }
+
+          if ((counts.critical ?? 0) > 0 || (counts.high ?? 0) > 0) {
+            console.error('Release blocked: critical/high dependency vulnerabilities must be fixed or formally resolved.');
+            process.exit(1);
+          }
+          NODE
+
+      - name: Upload npm audit report
+        if: always() && hashFiles('npm-audit.json') != ''
+        uses: actions/upload-artifact@v5
+        with:
+          name: npm-audit-report
+          path: npm-audit.json
+          retention-days: 14
