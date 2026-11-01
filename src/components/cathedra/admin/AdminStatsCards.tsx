@@ -10,9 +10,9 @@ interface AdminStatsCardsProps {
 
 export const AdminStatsCards: React.FC<AdminStatsCardsProps> = ({ stats }) => {
   const cards = [
-    { title: 'Total de Usuários', value: stats.totalUsers, icon: Icons.Users, trend: `+${Math.round(stats.totalUsers * 0.05)} novos` },
-    { title: 'Usuários PRO', value: stats.premiumUsers, icon: Icons.Star, subValue: `${Math.round((stats.premiumUsers / stats.totalUsers) * 100)}% conversão`, color: 'text-amber-500' },
-    { title: 'Receita Total', value: `R$ ${stats.totalRevenue.toLocaleString()}`, icon: Icons.DollarSign, subValue: `R$ ${stats.pendingRevenue.toLocaleString()} pendente`, color: 'text-emerald-500' },
+    { title: 'Total de Usuários', value: stats.totalUsers, icon: Icons.Users },
+    { title: 'Usuários PRO', value: stats.premiumUsers, icon: Icons.Star, subValue: `${stats.totalUsers > 0 ? Math.round((stats.premiumUsers / stats.totalUsers) * 100) : 0}% do total`, color: 'text-amber-500' },
+    { title: 'Receita (100 recentes)', value: `R$ ${stats.totalRevenue.toLocaleString()}`, icon: Icons.DollarSign, subValue: `R$ ${stats.pendingRevenue.toLocaleString()} pendente nas 100 recentes`, color: 'text-emerald-500' },
     { title: 'Taxa de Retorno', value: `${stats.returnRate.toFixed(1)}%`, icon: Icons.RefreshCw, trend: 'Últimos 30 dias', color: 'text-blue-500' },
   ];
 
