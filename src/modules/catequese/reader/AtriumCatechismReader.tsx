@@ -54,9 +54,6 @@ const CatechismLanding: React.FC = () => {
   return (
     <div
       className="min-h-screen w-full bg-stitch-background text-stitch-on-background"
-      style={{
-        backgroundImage: 'url("https://www.transparenttextures.com/patterns/p6.png")',
-      }}
      data-catedra-module-root data-catedra-module="catechism">
       <Helmet>
         <title>Cathedra — Catecismo da Igreja Católica</title>
