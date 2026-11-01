@@ -491,3 +491,10 @@ test('SEO: robots e sitemap são servidos com URLs canônicas únicas', async ({
   expect(new Set(urls).size, 'sitemap não pode conter URLs duplicadas').toBe(urls.length);
   expect(urls.every((url) => url === 'https://www.cathedradigital.com.br' || url.startsWith('https://www.cathedradigital.com.br/'))).toBe(true);
 });
+
+test('Administração: rota de parceiros não expõe painel a visitantes', async ({ page }) => {
+  await page.context().clearCookies();
+  await page.goto('/admin/parceiros');
+  await expect(page).toHaveURL(url => url.pathname === '/');
+  await expect(page.locator('body')).not.toContainText(/Administração de Parceiros|Gerenciar Parceiros/i);
+});
