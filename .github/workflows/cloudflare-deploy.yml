@@ -140,7 +140,7 @@ jobs:
 
             if [ "$status" != "200" ] || [ "$size" -lt "$expected" ]; then
               echo "Response headers (safe subset):"
-              awk 'BEGIN { IGNORECASE=1 } /^HTTP\\// || /^(server|cf-ray|cf-mitigated|cf-cache-status|content-type|location|cf-access-denied|www-authenticate):/ { print }' "$headers_file"
+              awk 'BEGIN { IGNORECASE=1 } /^HTTP\// || /^(server|cf-ray|cf-mitigated|cf-cache-status|content-type|location|cf-access-denied|www-authenticate):/ { print }' "$headers_file"
               rm -f "$body_file" "$headers_file"
               echo "::error::$url failed production HTTP validation"
               return 1
