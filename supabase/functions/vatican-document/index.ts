@@ -75,42 +75,82 @@ function extractText(html: string): string {
 async function fetchDocument(url: URL) {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
+  const visited = new Set<string>();
+  let currentUrl = url;
+
   try {
-    const response = await fetch(url, {
-      signal: controller.signal,
-      redirect: "follow",
-      headers: {
-        "Accept": "text/html,application/xhtml+xml",
-        "Accept-Language": "pt-BR,pt;q=0.9,en;q=0.5",
-        "User-Agent": "CathedraDigital/1.0 (magisterium reader)",
-      },
-    });
+    for (let redirectCount = 0; redirectCount <= 5; redirectCount += 1) {
+      const current = currentUrl.toString();
+      if (visited.has(current)) {
+        return { ok: false, status: 508, reason: "Ciclo de redirecionamento detectado." };
+      }
+      visited.add(current);
 
-    const contentType = response.headers.get("content-type") ?? "";
-    const body = await response.text();
-    const bytes = new TextEncoder().encode(body).byteLength;
+      const response = await fetch(currentUrl, {
+        signal: controller.signal,
+        // Redirecionamentos são validados individualmente antes de qualquer novo fetch.
+        redirect: "manual",
+        headers: {
+          "Accept": "text/html,application/xhtml+xml",
+          "Accept-Language": "pt-BR,pt;q=0.9,en;q=0.5",
+          "User-Agent": "CathedraDigital/1.0 (magisterium reader)",
+        },
+      });
 
-    if (!response.ok) {
-      return { ok: false, status: response.status, reason: `HTTP ${response.status}` };
-    }
-    if (bytes > MAX_HTML_BYTES) {
-      return { ok: false, status: 413, reason: "Documento excede o limite de leitura." };
-    }
-    if (!contentType.includes("html")) {
-      return { ok: false, status: 415, reason: `Formato não suportado: ${contentType || "desconhecido"}` };
+      if ([301, 302, 303, 307, 308].includes(response.status)) {
+        const location = response.headers.get("location");
+        if (!location) {
+          return { ok: false, status: response.status, reason: "Redirecionamento sem destino informado." };
+        }
+        if (redirectCount === 5) {
+          return { ok: false, status: 508, reason: "Limite de redirecionamentos excedido." };
+        }
+
+        let nextUrl: URL;
+        try {
+          nextUrl = new URL(location, currentUrl);
+        } catch {
+          return { ok: false, status: 502, reason: "Destino de redirecionamento inválido." };
+        }
+
+        // Reaplica HTTPS + allowlist ao destino resolvido; nunca segue para host externo.
+        const validatedNextUrl = normalizeUrl(nextUrl.toString());
+        if (!validatedNextUrl) {
+          return { ok: false, status: 502, reason: "Redirecionamento para domínio não permitido." };
+        }
+        currentUrl = validatedNextUrl;
+        continue;
+      }
+
+      const contentType = response.headers.get("content-type") ?? "";
+      const body = await response.text();
+      const bytes = new TextEncoder().encode(body).byteLength;
+
+      if (!response.ok) {
+        return { ok: false, status: response.status, reason: `HTTP ${response.status}` };
+      }
+      if (bytes > MAX_HTML_BYTES) {
+        return { ok: false, status: 413, reason: "Documento excede o limite de leitura." };
+      }
+      if (!contentType.includes("html")) {
+        return { ok: false, status: 415, reason: `Formato não suportado: ${contentType || "desconhecido"}` };
+      }
+
+      const text = extractText(body);
+      if (text.length < MIN_TEXT_LENGTH) {
+        return { ok: false, status: 422, reason: `Conteúdo legível insuficiente (${text.length} caracteres).` };
+      }
+
+      return {
+        ok: true,
+        status: response.status,
+        title: extractTitle(body, currentUrl.pathname.split("/").pop() || "Documento do Magistério"),
+        text,
+        url: currentUrl.toString(),
+      };
     }
 
-    const text = extractText(body);
-    if (text.length < MIN_TEXT_LENGTH) {
-      return { ok: false, status: 422, reason: `Conteúdo legível insuficiente (${text.length} caracteres).` };
-    }
-
-    return {
-      ok: true,
-      status: response.status,
-      title: extractTitle(body, url.pathname.split("/").pop() || "Documento do Magistério"),
-      text,
-    };
+    return { ok: false, status: 508, reason: "Limite de redirecionamentos excedido." };
   } finally {
     clearTimeout(timeout);
   }
@@ -146,7 +186,7 @@ Deno.serve(async (req: Request) => {
             meta: {
               step: "fetch_ok",
               content_length: result.text.length,
-              winning_url: candidate,
+              winning_url: result.url,
               attempts,
               correlation,
             },
