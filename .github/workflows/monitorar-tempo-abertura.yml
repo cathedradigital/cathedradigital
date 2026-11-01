@@ -29,17 +29,17 @@ jobs:
           node-version: "22.x"
 
       - name: Install isolated Playwright runner
-        run: npm install --no-save --package-lock=false playwright@1.64.1
+        run: npm install --prefix /tmp/startup-monitor --no-save playwright@1.64.1
 
       - name: Install Chromium
-        run: npx playwright install --with-deps chromium
+        run: /tmp/startup-monitor/node_modules/.bin/playwright install --with-deps chromium
 
       - name: Measure production startup
         id: measure
         shell: bash
         run: |
           mkdir -p startup-evidence
-          node <<'NODE'
+          NODE_PATH=/tmp/startup-monitor/node_modules node <<'NODE'
           const { chromium, devices } = require('playwright');
           const fs = require('node:fs');
 
@@ -85,12 +85,12 @@ jobs:
                           return r.width > 0 && r.height > 0 && s.visibility !== 'hidden' && s.display !== 'none';
                         });
                     return hasVisibleContent ? true : false;
-                  }, { timeout: 20000 }).then(() => Date.now() - startedAt).catch(() => null);
+                  }, null, { timeout: 20000 }).then(() => Date.now() - startedAt).catch(() => null);
 
                   const splashGoneMs = await page.waitForFunction(() => {
                     const splash = document.querySelector('[aria-hidden="true"][class*="fixed"][class*="inset-0"]');
                     return !splash || getComputedStyle(splash).display === 'none' || getComputedStyle(splash).visibility === 'hidden';
-                  }, { timeout: 10000 }).then(() => Date.now() - startedAt).catch(() => null);
+                  }, null, { timeout: 10000 }).then(() => Date.now() - startedAt).catch(() => null);
 
                   const timing = await page.evaluate(() => {
                     const nav = performance.getEntriesByType('navigation')[0];
