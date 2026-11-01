@@ -110,6 +110,7 @@ export const useAdminDashboardData = (page = 0, pageSize = 20) => {
         growthPromise,
       ]);
 
+      if (statsRes.error) throw statsRes.error;
       if (profilesRes.error) throw profilesRes.error;
       if (premiumRes.error) throw premiumRes.error;
       if (activeTodayRes.error) throw activeTodayRes.error;
@@ -120,7 +121,9 @@ export const useAdminDashboardData = (page = 0, pageSize = 20) => {
       if (installsRes.error) throw installsRes.error;
       if (opensRes.error) throw opensRes.error;
       if (transactionsRes.error) throw transactionsRes.error;
+      if (journalRes.error) throw journalRes.error;
       if (journeysStartedRes.error) throw journeysStartedRes.error;
+      if (crmRes.error) throw crmRes.error;
 
       const profiles = profilesRes.data || [];
       const transactions = transactionsRes.data || [];
@@ -140,6 +143,22 @@ export const useAdminDashboardData = (page = 0, pageSize = 20) => {
       const activeLast30Days = activeLast30Res.count || 0;
       const inactiveUsers = inactiveRes.count || 0;
       const returnRate = totalCount > 0 ? ((totalCount - inactiveUsers) / totalCount) * 100 : 0;
+
+      // A série financeira permanece limitada às 100 transações mais recentes
+      // até existir uma agregação SQL/RPC confiável no banco.
+      const revenueData = [3, 2, 1, 0].map(weeksAgo => {
+        const start = new Date(now);
+        start.setDate(now.getDate() - (weeksAgo + 1) * 7);
+        const end = new Date(now);
+        end.setDate(now.getDate() - weeksAgo * 7);
+        const amount = transactions
+          .filter(t => {
+            const date = new Date(t.created_at);
+            return t.status === 'approved' && date >= start && date <= end;
+          })
+          .reduce((acc, curr) => acc + Number(curr.amount), 0);
+        return { name: `Sem ${4 - weeksAgo}`, amount };
+      });
 
       const dioceseMap = new Map<string, number>();
       const stateMap = new Map<string, number>();
