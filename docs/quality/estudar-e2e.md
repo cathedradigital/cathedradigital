@@ -16,7 +16,7 @@ O workflow `.github/workflows/estudar-e2e.yml` faz checkout do HEAD do PR na val
 
 `E2E_TEST_EMAIL` e `E2E_TEST_PASSWORD` devem ser de uma conta de teste real, separada de contas pessoais e sem privilégios administrativos.
 
-Antes de compilar, o workflow valida Project ID, URL e chave publicável contra `src/integrations/supabase/publicConfig.ts`; divergências bloqueiam o build sem imprimir a chave. Os secrets E2E precisam autenticar uma conta de teste já existente no mesmo projeto oficial comprovado.
+Antes de compilar, o workflow valida Project ID, URL e chave publicável contra `src/integrations/supabase/publicConfig.ts`; divergências bloqueiam o build sem imprimir a chave. Antes de iniciar os testes de navegador autenticados, `e2e/auth-preflight.mjs` valida uma vez as credenciais contra o Auth do projeto configurado. Se o Supabase responder `invalid_credentials`, o job falha imediatamente com código de diagnóstico sanitizado; não inicia dezenas de testes que falhariam em cascata. Se o preflight passar, a suíte Playwright completa continua obrigatória. Nenhum token, e-mail ou senha é registrado. Os secrets E2E precisam autenticar uma conta de teste já existente no mesmo projeto oficial comprovado.
 
 Se não existir uma conta premium real, o fluxo premium permanece bloqueado e nenhuma conta é criada automaticamente.
 

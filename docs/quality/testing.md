@@ -42,7 +42,7 @@ Verificar overflow horizontal, controles sobrepostos, foco, teclado, rolagem, le
 
 Os testes autenticados devem usar a conta de teste autorizada e os secrets do GitHub Actions. Nunca imprimir email, senha, token, cookie ou conteúdo de sessão.
 
-Executar testes negativos de autorização e isolamento entre duas contas de teste quando o cenário exigir. Falha no preflight de autenticação deve ser classificada como falha de ambiente/configuração; não deve ser confundida com reprovação funcional do navegador.
+Executar testes negativos de autorização e isolamento entre duas contas de teste quando o cenário exigir. Falha no preflight de autenticação deve ser classificada como falha de ambiente/configuração; não deve ser confundida com reprovação funcional do navegador. O preflight valida credenciais uma vez e falha rápido em `invalid_credentials`; ele não substitui os testes de UI, que continuam obrigatórios quando a autenticação funciona.
 
 ### Fronteira de credenciais no CI
 
