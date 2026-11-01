@@ -60,7 +60,7 @@ Executar testes negativos de autorização e isolamento entre duas contas de tes
 
 ## 6. Gate de liberação
 
-CI, auditoria de dependências e Playwright desktop/mobile devem estar aprovados no **mesmo SHA final**. Os resultados devem apontar para o mesmo commit; não combinar aprovação de commits diferentes.
+CI, auditoria final, auditoria de dependências e Playwright desktop/mobile (incluindo a suíte autenticada em `main`) devem estar aprovados no **mesmo SHA final**. O workflow de publicação Cloudflare verifica os quatro resultados e faz checkout exatamente desse SHA. Os resultados devem apontar para o mesmo commit; não combinar aprovação de commits diferentes.
 
 Antes de produção, verificar os três destinos configurados:
 
