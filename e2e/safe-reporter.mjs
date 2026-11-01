@@ -35,6 +35,11 @@ export default class SafePlaywrightReporter {
     this.tests = [];
   }
 
+  onError(error) {
+    const message = redactText(error?.message ?? error ?? "Unknown Playwright runner error").slice(0, 4000);
+    process.stdout.write(`[e2e-safe] runner-error: ${message}\n`);
+  }
+
   onTestEnd(test, result) {
     const titlePath = typeof test.titlePath === "function" ? test.titlePath() : [test.title];
     const project =
