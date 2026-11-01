@@ -157,7 +157,11 @@ const AdminDashboard: React.FC = () => {
     return (
       <div className="space-y-spacing-xl pb-spacing-xl">
         <Suspense fallback={<Skeleton className="h-[400px] rounded-premium-full" />}>
-          <AdminCrmUserProfile user={selectedUser} onBack={() => setSelectedUser(null)} />
+          <AdminCrmUserProfile
+            user={selectedUser}
+            onBack={() => setSelectedUser(null)}
+            onUserUpdated={() => { void queryClient.invalidateQueries({ queryKey: ['admin-dashboard-stats'] }); }}
+          />
         </Suspense>
       </div>
     );
