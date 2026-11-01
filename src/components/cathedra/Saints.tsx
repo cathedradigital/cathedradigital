@@ -706,7 +706,7 @@ const SaintCard: React.FC<{ saint: SaintWithScore; onClick: () => void }> = ({ s
       onClick={onClick}
       className="group bg-card border border-border rounded-[2rem] overflow-hidden hover:border-primary/50 hover:shadow-premium-hover hover:-translate-y-1 transition-all duration-500 text-left flex flex-col h-full focus-visible:ring-2 focus-visible:ring-primary outline-none"
     >
-      <div className="relative h-spacing-4xl overflow-hidden">
+      <div className="pointer-events-none relative h-spacing-4xl overflow-hidden">
         <SacredImage 
           src={saint.image || ''} 
           category={saint.category}
