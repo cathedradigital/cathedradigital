@@ -309,6 +309,26 @@ test('Catecismo: alias paragraph=N é canonicalizado para p=N sem perder o deep-
 });
 
 
+test('Catecismo: deep-link §2262 carrega o texto oficial sem depender do scroll', async ({ page }) => {
+  const errors: string[] = [];
+  page.on('console', message => {
+    if (message.type() === 'error') errors.push(message.text());
+  });
+
+  const response = await page.goto('/catechism?p=2262');
+  expect(response?.ok(), `/catechism?p=2262: HTTP ${response?.status()}`).toBeTruthy();
+
+  const paragraph = page.locator('#p2262');
+  await expect(paragraph).toBeVisible();
+  await expect(paragraph).toContainText('No sermão da montanha, o Senhor lembra o preceito');
+  await expect(paragraph).toContainText('Não matarás');
+  await expect(paragraph.getByRole('button', { name: /Mt 5, 21/i }).first()).toBeVisible();
+  await expect(paragraph).not.toContainText('Rolar para carregar §2262');
+
+  expect(errors, 'Catecismo §2262: console errors').toEqual([]);
+});
+
+
 test('Mobile: carrossel inferior alterna entre os ambientes canônicos', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/');
