@@ -43,7 +43,7 @@ on:
         default: false
 
 concurrency:
-  group: estudar-e2e-${{ github.event.pull_request.number || github.ref }}
+  group: estudar-e2e-${{ github.event.pull_request.number || github.ref }}-${{ github.sha }}
   cancel-in-progress: true
 
 jobs:
