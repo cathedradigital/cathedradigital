@@ -2,7 +2,7 @@ name: Deploy Cloudflare
 
 on:
   workflow_run:
-    workflows: ["CI", "Estudar E2E", "Security Audit"]
+    workflows: ["CI", "Estudar E2E", "Security Audit", "Estudar final audit"]
     types: [completed]
     branches: ["main"]
 
@@ -30,7 +30,7 @@ jobs:
               return;
             }
 
-            const required = ["CI", "Estudar E2E", "Security Audit"];
+            const required = ["CI", "Estudar E2E", "Security Audit", "Estudar final audit"];
             const { data } = await github.rest.actions.listWorkflowRunsForRepo({
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -53,7 +53,7 @@ jobs:
 
             await core.summary
               .addHeading("Release gates")
-              .addRaw(`All required workflows passed on SHA ${sha}: CI, authenticated/public Playwright, and Security Audit.`)
+              .addRaw(`All required workflows passed on SHA ${sha}: CI, final audit, authenticated/public Playwright, and Security Audit.`)
               .write();
 
       - name: Checkout the exact validated SHA
