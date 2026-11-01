@@ -1,0 +1,186 @@
+name: Monitorar tempo de abertura
+
+on:
+  schedule:
+    - cron: "0 12 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: monitorar-tempo-abertura
+  cancel-in-progress: false
+
+jobs:
+  measure-production-startup:
+    name: Medir abertura em produção (desktop e mobile)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v6
+        with:
+          ref: main
+
+      - name: Setup Node 22
+        uses: actions/setup-node@v6
+        with:
+          node-version: "22.x"
+
+      - name: Install isolated Playwright runner
+        run: npm install --no-save --package-lock=false playwright@1.64.1
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Measure production startup
+        id: measure
+        shell: bash
+        run: |
+          mkdir -p startup-evidence
+          node <<'NODE'
+          const { chromium, devices } = require('playwright');
+          const fs = require('node:fs');
+
+          const targets = [
+            { name: 'dominio-principal', url: 'https://cathedradigital.com.br' },
+            { name: 'www', url: 'https://www.cathedradigital.com.br' },
+            { name: 'worker-direto', url: 'https://cathedradigital.cathedradigital.workers.dev' },
+          ];
+          const profiles = [
+            { name: 'desktop', viewport: { width: 1365, height: 900 }, isMobile: false },
+            { name: 'mobile-390x844', viewport: { width: 390, height: 844 }, isMobile: true },
+          ];
+
+          (async () => {
+            const browser = await chromium.launch({ headless: true });
+            const results = [];
+            for (const target of targets) {
+              for (const profile of profiles) {
+                const context = await browser.newContext({
+                  viewport: profile.viewport,
+                  isMobile: profile.isMobile,
+                  deviceScaleFactor: profile.isMobile ? 2 : 1,
+                  reducedMotion: 'reduce',
+                });
+                const page = await context.newPage();
+                const startedAt = Date.now();
+                let responseStatus = null;
+                let navigationError = null;
+                try {
+                  const response = await page.goto(target.url, {
+                    waitUntil: 'domcontentloaded',
+                    timeout: 45000,
+                  });
+                  responseStatus = response ? response.status() : null;
+
+                  const firstUsefulContentMs = await page.waitForFunction(() => {
+                    const text = document.body?.innerText?.trim() || '';
+                    const hasVisibleContent = text.length >= 80 &&
+                      [...document.body.querySelectorAll('h1, main, [role="main"]')]
+                        .some(el => {
+                          const r = el.getBoundingClientRect();
+                          const s = getComputedStyle(el);
+                          return r.width > 0 && r.height > 0 && s.visibility !== 'hidden' && s.display !== 'none';
+                        });
+                    return hasVisibleContent ? true : false;
+                  }, { timeout: 20000 }).then(() => Date.now() - startedAt).catch(() => null);
+
+                  const splashGoneMs = await page.waitForFunction(() => {
+                    const splash = document.querySelector('[aria-hidden="true"][class*="fixed"][class*="inset-0"]');
+                    return !splash || getComputedStyle(splash).display === 'none' || getComputedStyle(splash).visibility === 'hidden';
+                  }, { timeout: 10000 }).then(() => Date.now() - startedAt).catch(() => null);
+
+                  const timing = await page.evaluate(() => {
+                    const nav = performance.getEntriesByType('navigation')[0];
+                    if (!nav) return null;
+                    return {
+                      responseStartMs: Math.round(nav.responseStart),
+                      domContentLoadedMs: Math.round(nav.domContentLoadedEventEnd),
+                      loadEventMs: Math.round(nav.loadEventEnd),
+                      transferSizeBytes: nav.transferSize || null,
+                    };
+                  }).catch(() => null);
+
+                  const title = await page.title().catch(() => '');
+                  const bodyTextLength = await page.locator('body').innerText().then(t => t.trim().length).catch(() => 0);
+                  results.push({
+                    target: target.name,
+                    url: target.url,
+                    profile: profile.name,
+                    status: responseStatus,
+                    title,
+                    firstUsefulContentMs,
+                    splashGoneMs,
+                    navigation: timing,
+                    bodyTextLength,
+                    elapsedMs: Date.now() - startedAt,
+                    error: null,
+                  });
+                } catch (error) {
+                  navigationError = String(error).slice(0, 500);
+                  results.push({
+                    target: target.name,
+                    url: target.url,
+                    profile: profile.name,
+                    status: responseStatus,
+                    firstUsefulContentMs: null,
+                    splashGoneMs: null,
+                    navigation: null,
+                    elapsedMs: Date.now() - startedAt,
+                    error: navigationError,
+                  });
+                } finally {
+                  await context.close();
+                }
+              }
+            }
+            await browser.close();
+
+            const report = {
+              measuredAt: new Date().toISOString(),
+              commit: process.env.GITHUB_SHA || null,
+              branch: process.env.GITHUB_REF_NAME || null,
+              thresholds: {
+                firstUsefulContentWarningMs: 5000,
+                firstUsefulContentFailureMs: 12000,
+              },
+              results,
+            };
+            fs.writeFileSync('startup-evidence/report.json', JSON.stringify(report, null, 2));
+
+            const lines = [
+              '## Monitoramento diário — abertura da Cátedra Digital',
+              '',
+              `- SHA do workflow: ${report.commit}`,
+              `- Medição: ${report.measuredAt}`,
+              '',
+              '| Destino | Dispositivo | HTTP | Primeiro conteúdo útil | Splash encerrado |',
+              '|---|---|---:|---:|---:|',
+            ];
+            for (const item of results) {
+              lines.push(`| ${item.target} | ${item.profile} | ${item.status ?? 'sem resposta'} | ${item.firstUsefulContentMs == null ? 'não medido' : item.firstUsefulContentMs + ' ms'} | ${item.splashGoneMs == null ? 'não medido' : item.splashGoneMs + ' ms'} |`);
+            }
+            lines.push('', 'A medição é feita na produção, sem login. "Primeiro conteúdo útil" exige texto visível e um título/área principal visível. Falhas de rede ou bloqueio do domínio são registradas como não medido, não como lentidão.');
+            fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, lines.join('\n') + '\n');
+
+            const failed = results.filter(r => r.status !== 200 || r.firstUsefulContentMs == null || r.firstUsefulContentMs > 12000);
+            if (failed.length) {
+              console.error(`Atenção: ${failed.length} medição(ões) sem resposta 200 ou sem conteúdo útil em até 12 s.`);
+              process.exitCode = 1;
+            }
+          })().catch(error => {
+            console.error(error);
+            process.exitCode = 1;
+          });
+          NODE
+
+      - name: Upload measurements
+        if: always()
+        uses: actions/upload-artifact@v5
+        with:
+          name: startup-performance-${{ github.run_number }}
+          path: startup-evidence/report.json
+          if-no-files-found: warn
+          retention-days: 30
