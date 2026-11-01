@@ -78,6 +78,7 @@ const AtriumJornadasPage: React.FC = () => {
       setLoading(true);
       setLoadError(null);
       setProgressError(null);
+      setProgressMap({});
       try {
         const { data, error } = await supabase
           .from('view_journeys_with_stats')
