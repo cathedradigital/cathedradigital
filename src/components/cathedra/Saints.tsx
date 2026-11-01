@@ -713,15 +713,15 @@ const SaintCard: React.FC<{ saint: SaintWithScore; onClick: () => void }> = ({ s
           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
           alt={saint.name} 
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-        <div className="absolute bottom-spacing-md left-spacing-lg flex items-center gap-spacing-xs">
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+        <div className="pointer-events-none absolute bottom-spacing-md left-spacing-lg flex items-center gap-spacing-xs">
           <span className="text-premium-xs font-black uppercase tracking-widest text-white/90 bg-primary/80 px-spacing-xs py-spacing-3xs rounded-premium-full ">
             {CATEGORY_LABELS[saint.category] || saint.category}
           </span>
         </div>
         <RelevanceBadge
           score={saint.similarityScore}
-          className="absolute top-spacing-sm right-spacing-sm "
+          className="pointer-events-none absolute top-spacing-sm right-spacing-sm "
         />
       </div>
       
