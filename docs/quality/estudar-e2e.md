@@ -8,12 +8,15 @@ O workflow `.github/workflows/estudar-e2e.yml` faz checkout do HEAD do PR, insta
 
 ## Segredos necessários
 
-- `VITE_SUPABASE_URL`
-- `VITE_SUPABASE_PUBLISHABLE_KEY`
+- `VITE_SUPABASE_PROJECT_ID` (explicit build target, sourced from `.env.production`)
+- `VITE_SUPABASE_URL` (must match the project ID)
+- `VITE_SUPABASE_PUBLISHABLE_KEY` (must match `publicConfig.ts`; publishable key only)
 - `E2E_TEST_EMAIL`
 - `E2E_TEST_PASSWORD`
 
 `E2E_TEST_EMAIL` e `E2E_TEST_PASSWORD` devem ser de uma conta de teste real, separada de contas pessoais e sem privilégios administrativos.
+
+Antes de compilar, o workflow valida Project ID, URL e chave publicável contra `src/integrations/supabase/publicConfig.ts`; divergências bloqueiam o build sem imprimir a chave. Os secrets E2E precisam autenticar uma conta de teste já existente no mesmo projeto oficial comprovado.
 
 Se não existir uma conta premium real, o fluxo premium permanece bloqueado e nenhuma conta é criada automaticamente.
 
