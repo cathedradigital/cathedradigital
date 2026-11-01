@@ -834,7 +834,7 @@ const AppLayout: React.FC = () => {
               <Route path="/transactions" element={<Suspense fallback={<LoadingFallback />}><AuthGuard><UserTransactionsPage /></AuthGuard></Suspense>} />
               <Route path="/transactions/my" element={<Navigate to="/transactions" replace />} />
               <Route path="/partners" element={<Suspense fallback={<LoadingFallback />}><PartnersPage /></Suspense>} />
-              <Route path="/admin/parceiros" element={<Suspense fallback={<LoadingFallback />}><PartnersAdmin /></Suspense>} />
+              <Route path="/admin/parceiros" element={<Suspense fallback={<LoadingFallback />}><AdminGuard><PartnersAdmin /></AdminGuard></Suspense>} />
               <Route path="/transparencia" element={<Suspense fallback={<LoadingFallback />}><TransparencyPage /></Suspense>} />
 
               {/* Institucional */}
@@ -916,33 +916,30 @@ const AppLayout: React.FC = () => {
                 <Suspense fallback={<LoadingFallback />}>
                   <AdminGuard>
                     <Routes>
-                      <Route path="/" element={<AdminDashboard />} />
-                       <Route path="/knowledge-audit" element={<GlobalKnowledgeAudit />} />
-                       <Route path="/acervo/audit" element={<AcervoAuditPage />} />
-                      <Route path="/production-ready" element={<ProductionReadyDashboard />} />
-                      <Route path="/security" element={<SecurityDashboard />} />
-                      <Route path="/cid-compliance" element={<CidComplianceDashboardPage />} />
-                      <Route path="/language" element={<LanguageAdmin />} />
-                      <Route path="/seo-verify" element={<SEOVerificationPage />} />
-                      <Route path="/a11y-audit" element={<A11yAuditPage />} />
-                      <Route path="/visual-audit" element={<VisualAuditPage />} />
-                      <Route path="/telemetry" element={<TelemetryDashboard />} />
-                      <Route path="/ui-errors" element={<NavigationErrorInspector />} />
-                      <Route path="/audit" element={<AuditDashboard />} />
-                      <Route path="/integrity" element={<IntegrityReport />} />
-                      <Route path="/security-alerts" element={<SecurityAlertsPage />} />
-                      <Route path="/bible-coverage" element={<BibleCoverageAdmin />} />
-                      <Route path="/bible-cache" element={<BibleCacheAdminPage />} />
-                      <Route path="/bible-abbr-validate" element={<BibleAbbrValidatePage />} />
-                      <Route path="/bible-perf" element={<BiblePerfDashboard />} />
+                      <Route path="/admin" element={<AdminDashboard />} />
+                       <Route path="/admin/knowledge-audit" element={<GlobalKnowledgeAudit />} />
+                       <Route path="/admin/acervo/audit" element={<AcervoAuditPage />} />
+                      <Route path="/admin/production-ready" element={<ProductionReadyDashboard />} />
+                      <Route path="/admin/security" element={<SecurityDashboard />} />
+                      <Route path="/admin/cid-compliance" element={<CidComplianceDashboardPage />} />
+                      <Route path="/admin/language" element={<LanguageAdmin />} />
+                      <Route path="/admin/seo-verify" element={<SEOVerificationPage />} />
+                      <Route path="/admin/a11y-audit" element={<A11yAuditPage />} />
+                      <Route path="/admin/visual-audit" element={<VisualAuditPage />} />
+                      <Route path="/admin/telemetry" element={<TelemetryDashboard />} />
+                      <Route path="/admin/ui-errors" element={<NavigationErrorInspector />} />
+                      <Route path="/admin/audit" element={<AuditDashboard />} />
+                      <Route path="/admin/integrity" element={<IntegrityReport />} />
+                      <Route path="/admin/security-alerts" element={<SecurityAlertsPage />} />
+                      <Route path="/admin/bible-coverage" element={<BibleCoverageAdmin />} />
+                      <Route path="/admin/bible-cache" element={<BibleCacheAdminPage />} />
+                      <Route path="/admin/bible-abbr-validate" element={<BibleAbbrValidatePage />} />
+                      <Route path="/admin/bible-perf" element={<BiblePerfDashboard />} />
                       <Route path="/admin/bible-cache-timeseries" element={<BibleCacheTimeseriesDashboard />} />
-                     <Route path="/bible-perf-breakdown" element={<Navigate to="/admin/bible-perf-breakdown" replace />} />
                      <Route path="/admin/bible-perf-breakdown" element={<BiblePerfBreakdown />} />
-                     <Route path="/bible-sources" element={<Navigate to="/admin/bible-sources" replace />} />
                       <Route path="/admin/bible-sources" element={<BibleSourcesAudit />} />
                       <Route path="/admin/bible-diagnostic-runs" element={<BibleDiagnosticRuns />} />
                       <Route path="/admin/bible-import" element={<BibleImportAdmin />} />
-                      <Route path="/bible-import" element={<Navigate to="/admin/bible-import" replace />} />
                       <Route path="/admin/bible-import-missing" element={<BibleImportMissing />} />
                       <Route path="/admin/bible-import-jobs" element={<BibleImportJobs />} />
                       <Route path="/admin/bible-import-jobs/:id" element={<BibleImportJobDetail />} />
@@ -950,14 +947,13 @@ const AppLayout: React.FC = () => {
                       <Route path="/admin/client-errors" element={<ClientErrors />} />
                       <Route path="/admin/runtime-errors" element={<RuntimeErrors />} />
                       <Route path="/admin/bible-sprint1" element={<BibleSprint1Admin />} />
-                      <Route path="/seo-status" element={<SEOStatusPage />} />
                       <Route path="/admin/seo-status" element={<SEOStatusPage />} />
                       <Route path="/admin/seo" element={<SEOAdminPage />} />
                       <Route path="/admin/integrations" element={<IntegrationsStatusPage />} />
                       <Route path="/admin/bible-translations-readiness" element={<BibleTranslationsReadiness />} />
                       <Route path="/admin/saints" element={<SaintsAdmin />} />
                       <Route path="/admin/pg-stat-statements" element={<PgStatStatements />} />
-                      <Route path="/axe-contrast" element={<AxeContrastReport />} />
+                      <Route path="/admin/axe-contrast" element={<AxeContrastReport />} />
                       <Route path="/admin/nexus" element={<NexusAdmin />} />
                       <Route path="/admin/nexus-audit" element={<NexusAuditPage />} />
                       <Route path="/admin/editorial-integrity" element={<EditorialIntegrityPage />} />
@@ -980,11 +976,9 @@ const AppLayout: React.FC = () => {
                       <Route path="/admin/editorial-closure-validator" element={<EditorialClosureValidator />} />
                       <Route path="/admin/editorial-closure-runs" element={<EditorialClosureRuns />} />
                       <Route path="/admin/instagram-gallery" element={<Suspense fallback={<LoadingFallback />}><InstagramGalleryPage /></Suspense>} />
-                <Route path="/admin/site-health" element={<SiteHealthDashboard />} />
                 <Route path="/admin/security-docs" element={<SecurityDocumentation />} />
                       <Route path="/admin/audit-logs" element={<Suspense fallback={<LoadingFallback />}><AuditLogsPage /></Suspense>} />
-                      <Route path="/audit-logs" element={<Suspense fallback={<LoadingFallback />}><AuditLogsPage /></Suspense>} />
-                      <Route path="/site-health" element={<SiteHealthDashboard />} />
+                      <Route path="/admin/site-health" element={<SiteHealthDashboard />} />
 
 
 

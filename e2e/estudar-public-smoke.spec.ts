@@ -12,7 +12,7 @@ test('public browser smoke: landing and login render', async ({ page }) => {
   });
 
   await page.goto('/');
-  await expect(page).toHaveTitle(/Cátedra/i);
+  await expect(page).toHaveTitle(/Cathedra/i);
   await page.goto('/login');
   await expect(page.getByLabel('Email')).toBeVisible();
   await expect(page.getByLabel('Senha')).toBeVisible();
@@ -345,13 +345,13 @@ test('Átrio: notícias atuais mostram data, fonte e link original', async ({ pa
 });
 
 
-test('Home: identidade visual usa a marca Cátedra Digital', async ({ page }) => {
+test('Home: identidade visual usa a marca Cathedra Digital', async ({ page }) => {
   await page.goto('/');
-  const homeBrand = page.locator('main [aria-label="Cátedra Digital"]').first();
+  const homeBrand = page.locator('main [aria-label="Cathedra Digital"]').first();
   await expect(homeBrand).toBeVisible();
-  await expect(homeBrand.getByText('Cátedra Digital', { exact: true })).toBeVisible();
-  await expect(page.getByRole('contentinfo', { name: 'Rodapé' })).toContainText(/Cátedra[\\s\\S]*DIGITAL/i);
-  await expect(page).toHaveTitle(/Cátedra Digital/i);
+  await expect(homeBrand.getByText('Cathedra Digital', { exact: true })).toBeVisible();
+  await expect(page.getByRole('contentinfo', { name: 'Rodapé' })).toContainText(/Cathedra[\\s\\S]*DIGITAL/i);
+  await expect(page).toHaveTitle(/Cathedra Digital/i);
 });
 
 

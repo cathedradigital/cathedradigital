@@ -278,7 +278,7 @@ const Footer: React.FC = React.memo(() => {
                     lineHeight: 1,
                   }}
                 >
-                  Cátedra
+                  Cathedra
                 </span>
               </div>
               <span
@@ -336,7 +336,7 @@ const Footer: React.FC = React.memo(() => {
 
           {/* Coluna 2 — Navegação principal */}
           <FooterSection
-            title={lang === 'pt' ? 'Cátedra' : 'Cátedra'}
+            title={lang === 'pt' ? 'Cathedra' : 'Cathedra'}
             id="navigation"
             isMobile={isMobile}
             openId={openId}
@@ -548,7 +548,7 @@ const Footer: React.FC = React.memo(() => {
                 textTransform: 'uppercase',
               }}
             >
-              © {new Date().getFullYear()} <span style={{ color: GOLD_TEXT }}>●</span> Cátedra Digital <span style={{ color: GOLD_TEXT }}>·</span> Omnia ad maiorem Dei gloriam
+              © {new Date().getFullYear()} <span style={{ color: GOLD_TEXT }}>●</span> Cathedra Digital <span style={{ color: GOLD_TEXT }}>·</span> Omnia ad maiorem Dei gloriam
             </p>
             <p
               className="flex items-center gap-2"
