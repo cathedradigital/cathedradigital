@@ -78,31 +78,37 @@ const AtriumJornadasPage: React.FC = () => {
       setLoading(true);
       setLoadError(null);
       setProgressError(null);
-      const { data, error } = await supabase
-        .from('view_journeys_with_stats')
-        .select('*')
-        .order('sort_order', { ascending: true });
-      if (error) {
-        console.error('AtriumJornadas load error:', error);
-        if (!cancelled) setLoadError('Não foi possível carregar as jornadas.');
-      }
-      if (!cancelled && data) setJourneys(data as JourneyRow[]);
+      try {
+        const { data, error } = await supabase
+          .from('view_journeys_with_stats')
+          .select('*')
+          .order('sort_order', { ascending: true });
+        if (error) {
+          console.error('AtriumJornadas load error:', error);
+          if (!cancelled) setLoadError('Não foi possível carregar as jornadas.');
+        }
+        if (!cancelled && data) setJourneys(data as JourneyRow[]);
 
-      if (user) {
-        const progressRes = await JourneyService.listUserJourneyProgress(user.id);
-        if (progressRes.error) {
-          console.error('AtriumJornadas progress load error:', progressRes.error);
-          if (!cancelled) setProgressError('O progresso pessoal não pôde ser carregado.');
+        if (user) {
+          const progressRes = await JourneyService.listUserJourneyProgress(user.id);
+          if (progressRes.error) {
+            console.error('AtriumJornadas progress load error:', progressRes.error);
+            if (!cancelled) setProgressError('O progresso pessoal não pôde ser carregado.');
+          }
+          if (!cancelled && progressRes.data) {
+            const m: Record<string, number> = {};
+            progressRes.data.forEach((p) => {
+              m[p.journey_id] = (m[p.journey_id] || 0) + 1;
+            });
+            setProgressMap(m);
+          }
         }
-        if (!cancelled && progressRes.data) {
-          const m: Record<string, number> = {};
-          progressRes.data.forEach((p) => {
-            m[p.journey_id] = (m[p.journey_id] || 0) + 1;
-          });
-          setProgressMap(m);
-        }
+      } catch (error) {
+        console.error('AtriumJornadas unexpected load failure:', error);
+        if (!cancelled) setLoadError('Não foi possível carregar as jornadas. Tente novamente.');
+      } finally {
+        if (!cancelled) setLoading(false);
       }
-      if (!cancelled) setLoading(false);
     })();
     return () => {
       cancelled = true;
