@@ -536,7 +536,7 @@ export const EditorialBookCover: React.FC<EditorialBookCoverProps> = ({
       className="pointer-events-none absolute inset-0 opacity-[0.18] mix-blend-overlay"
       style={{
         backgroundImage:
-          "url('https://www.transparenttextures.com/patterns/lined-paper.png')",
+          'repeating-linear-gradient(0deg, transparent 0 23px, hsl(var(--stitch-secondary) / 0.10) 24px, transparent 25px)',
       }}
     />
     {/* Lombada (highlight à esquerda) */}
