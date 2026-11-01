@@ -55,7 +55,7 @@ export const useAdminDashboardData = (page = 0, pageSize = 20) => {
       const iso30 = thirtyDaysAgoStart.toISOString();
       const todayStart = new Date(now);
       todayStart.setHours(0, 0, 0, 0);
-      const inactiveCutoff = new Date(now.getTime() - 48 * 60 * 60 * 1000);
+      // Inatividade e taxa de retorno usam a mesma janela de 30 dias.
 
       const from = page * pageSize;
       const to = from + pageSize - 1;
@@ -98,7 +98,7 @@ export const useAdminDashboardData = (page = 0, pageSize = 20) => {
         supabase.from('profiles').select('id', { count: 'exact', head: true }).eq('is_premium', true),
         supabase.from('profiles').select('id', { count: 'exact', head: true }).gte('last_visit', todayStart.toISOString()),
         supabase.from('profiles').select('id', { count: 'exact', head: true }).gte('last_visit', iso30),
-        supabase.from('profiles').select('id', { count: 'exact', head: true }).or(`last_visit.is.null,last_visit.lt.${inactiveCutoff.toISOString()}`),
+        supabase.from('profiles').select('id', { count: 'exact', head: true }).or(`last_visit.is.null,last_visit.lt.${iso30}`),
         supabase.from('app_metrics').select('id', { count: 'exact', head: true }).eq('metric_type', 'visit').gte('created_at', iso30),
         supabase.from('app_metrics').select('id', { count: 'exact', head: true }).eq('metric_type', 'download').gte('created_at', iso30),
         supabase.from('app_metrics').select('id', { count: 'exact', head: true }).eq('metric_type', 'pwa_install').gte('created_at', iso30),
@@ -142,7 +142,7 @@ export const useAdminDashboardData = (page = 0, pageSize = 20) => {
       const activeToday = activeTodayRes.count || 0;
       const activeLast30Days = activeLast30Res.count || 0;
       const inactiveUsers = inactiveRes.count || 0;
-      const returnRate = totalCount > 0 ? ((totalCount - inactiveUsers) / totalCount) * 100 : 0;
+      const returnRate = totalCount > 0 ? (activeLast30Days / totalCount) * 100 : 0;
 
       // A série financeira permanece limitada às 100 transações mais recentes
       // até existir uma agregação SQL/RPC confiável no banco.
