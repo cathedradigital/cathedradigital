@@ -15,6 +15,7 @@ on:
       - "playwright.config.ts"
       - "package.json"
       - "docs/quality/testing.md"
+      - "docs/quality/estudar-e2e.md"
       - ".github/workflows/estudar-e2e.yml"
       - ".github/workflows/cloudflare-deploy.yml"
   push:
@@ -27,6 +28,7 @@ on:
       - "scripts/test-safe-playwright-evidence.mjs"
       - "scripts/validate-e2e-security.mjs"
       - "scripts/validate-security-boundaries.mjs"
+      - "scripts/validate-supabase-build-env.mjs"
       - "supabase/**"
       - "playwright.config.ts"
       - "package.json"
