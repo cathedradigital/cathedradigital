@@ -74,12 +74,15 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
       }
 
       if (mode === 'signup') {
-        const { error: signUpError } = await supabase.auth.signUp({
+        const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
           email,
           password,
           options: {
             data: { name },
-            emailRedirectTo: `${window.location.origin}${nextPath ?? ''}`,
+            // A confirmação deve retornar à aplicação, nunca ao Site URL local
+            // padrão do Supabase. O AuthProvider restaura a sessão e o Auth
+            // aplica o destino interno validado em nextPath.
+            emailRedirectTo: `${window.location.origin}/auth${nextQuery}`,
           },
         });
         if (signUpError) {
@@ -87,14 +90,15 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
           return;
         }
 
-        setSuccess('Conta criada! Fazendo login...');
-        const { data: loginData, error: loginError } = await supabase.auth.signInWithPassword({ email, password });
-        if (loginError) {
-          setSuccess('Conta criada com sucesso! Você já pode fazer login.');
-          setMode('login');
-        } else {
-          handledSessionUserId.current = loginData.user?.id ?? null;
+        if (signUpData.session) {
+          handledSessionUserId.current = signUpData.user?.id ?? null;
+          setSuccess('Conta criada com sucesso!');
           handleSignupSuccess();
+        } else {
+          // Com confirmação de e-mail habilitada, o Supabase não cria sessão.
+          // Não tentamos um login imediato com a conta ainda não confirmada.
+          setSuccess('Conta criada! Enviamos um link de confirmação para seu e-mail. Confirme o endereço para entrar na Cátedra.');
+          setMode('login');
         }
         return;
       }
