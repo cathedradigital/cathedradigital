@@ -49,7 +49,7 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
         <FadeUp>
           <header className="text-center space-y-spacing-md mb-spacing-lg md:mb-spacing-2xl">
             <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-primary/30">
-              Cathedra Digital
+              Cátedra Digital
             </p>
             <h1 className="text-premium-3xl md:text-premium-6xl font-display font-light text-primary tracking-tight">
               {profile?.name ? `Salve, ${profile.name.split(' ')[0]}` : t('pax_et_bonum')}

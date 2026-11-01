@@ -51,7 +51,7 @@ const Index = () => {
         Se for apenas uma pergunta ou conversa, responda no chat em português, sem alterar nenhum arquivo.
         Nunca insira o texto enviado como conteúdo dentro do site ou da página.
 
-        TEXTO DO USUÁRIO: CATHEDRA MISSION CONTROL — ONDA 2.2
+        TEXTO DO USUÁRIO: CÁTEDRA MISSION CONTROL — ONDA 2.2
         VALIDAÇÃO DOS DADOS REAIS APÓS REATIVAÇÃO DA CLOUD
 
         A infraestrutura da Lovable Cloud foi reativada.
@@ -335,16 +335,16 @@ const Index = () => {
         title="Espiritualidade & Teologia"
         description="Bíblia Sagrada, Catecismo, Magistério e IA teológica em uma plataforma contemplativa para a vida espiritual moderna."
         path="/"
-        keywords="bíblia católica premium, catecismo online, magistério da igreja, leitura bíblica diária, logos ia, espiritualidade minimalista, portal teológico sofisticado, cathedra digital"
+        keywords="bíblia católica premium, catecismo online, magistério da igreja, leitura bíblica diária, logos ia, espiritualidade minimalista, portal teológico sofisticado, Cátedra Digital"
         image="https://isojguvcnfncokoxoauk.supabase.co/storage/v1/object/public/public-assets/og-premium-home.png"
         breadcrumbs={[
           { name: "Home", path: "/" }
         ]}
         faqs={[
-          { question: "O CATHEDRA é gratuito?", answer: "Sim! O acesso à Bíblia, Catecismo, Santos, Liturgia e Orações é totalmente gratuito. Recursos avançados como o Logos IA e análises aprofundadas estão disponíveis no plano Premium." },
+          { question: "O CÁTEDRA é gratuito?", answer: "Sim! O acesso à Bíblia, Catecismo, Santos, Liturgia e Orações é totalmente gratuito. Recursos avançados como o Logos IA e análises aprofundadas estão disponíveis no plano Premium." },
           { question: "Preciso ser católico para usar?", answer: "Não. Embora o conteúdo seja baseado na tradição católica, qualquer pessoa interessada em estudar a Bíblia, a história dos santos ou a teologia cristã é bem-vinda." },
-          { question: "Posso usar offline?", answer: "Sim! O CATHEDRA é um Progressive Web App (PWA). Após o primeiro acesso, grande parte do conteúdo fica disponível mesmo sem conexão à internet." },
-          { question: "Como funciona o Logos IA?", answer: "É um assistente de inteligência artificial para consulta teológica que recupera fontes da CATHEDRA e apresenta as referências usadas. Ele auxilia os estudos e não é uma autoridade eclesial." }
+          { question: "Posso usar offline?", answer: "Sim! O CÁTEDRA é um Progressive Web App (PWA). Após o primeiro acesso, grande parte do conteúdo fica disponível mesmo sem conexão à internet." },
+          { question: "Como funciona o Logos IA?", answer: "É um assistente de inteligência artificial para consulta teológica que recupera fontes da CÁTEDRA e apresenta as referências usadas. Ele auxilia os estudos e não é uma autoridade eclesial." }
         ]}
       />
 

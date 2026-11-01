@@ -18,7 +18,7 @@ export const EXTERNAL_URLS = {
 } as const;
 
 export const APP_METADATA = {
-  NAME: 'CATHEDRA Digital',
+  NAME: 'Cátedra Digital',
   SLOGAN: 'Digital Sanctuarium',
   CREATOR: 'Evaldo.os',
 } as const;

@@ -18,14 +18,14 @@ import {
 
 export const LANDING_FAQS: Array<{ question: string; answer: string }> = [
   {
-    question: "O que é a Cathedra Digital?",
+    question: "O que é a Cátedra Digital?",
     answer:
       "Um Sanctuarium Digital: biblioteca viva da Tradição católica reunindo Escritura, Catecismo, Magistério, Liturgia, Orações e Santos, todos interligados por uma rede semântica editorial (Nexus). Não é rede social nem app devocional genérico — é um espaço de estudo e oração contemplativa.",
   },
   {
     question: "O conteúdo é gratuito?",
     answer:
-      "Sim. Bíblia, Catecismo, Liturgia diária, Orações fundamentais e cinco mensagens diárias com o Logos AI são gratuitos para sempre. O plano Cathedra PRO libera Logos AI ilimitado, Rosário e Via Sacra Premium, Jornadas Ouro e outras camadas de aprofundamento.",
+      "Sim. Bíblia, Catecismo, Liturgia diária, Orações fundamentais e cinco mensagens diárias com o Logos AI são gratuitos para sempre. O plano Cátedra PRO libera Logos AI ilimitado, Rosário e Via Sacra Premium, Jornadas Ouro e outras camadas de aprofundamento.",
   },
   {
     question: "Como funciona a curadoria? Posso confiar no que leio?",
@@ -35,7 +35,7 @@ export const LANDING_FAQS: Array<{ question: string; answer: string }> = [
   {
     question: "Como funciona o Logos AI?",
     answer:
-      "É um assistente de estudo teológico ancorado nas fontes da Cathedra. Não inventa doutrina: cada resposta cita Escritura, Catecismo e Magistério, e você pode abrir os trechos originais dentro do próprio app. Peregrinos têm 5 mensagens por dia; assinantes PRO, uso ilimitado.",
+      "É um assistente de estudo teológico ancorado nas fontes da Cátedra. Não inventa doutrina: cada resposta cita Escritura, Catecismo e Magistério, e você pode abrir os trechos originais dentro do próprio app. Peregrinos têm 5 mensagens por dia; assinantes PRO, uso ilimitado.",
   },
   {
     question: "Para onde vai o dinheiro dos assinantes PRO?",

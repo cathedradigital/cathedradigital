@@ -1,4 +1,4 @@
-# Cátedra Digital — Cathedra Digital
+# Cátedra Digital — Formação católica para todos os dias.
 
 **Formação católica para todos os dias.**
 

@@ -1,5 +1,5 @@
 /**
- * Tela "Bem-vindo à Cathedra" — exibida apenas no primeiro acesso do usuário.
+ * Tela "Bem-vindo à Cátedra" — exibida apenas no primeiro acesso do usuário.
  *
  * Overlay não bloqueante que apresenta os 5 caminhos canônicos: Formação,
  * Oração, Bíblia, Liturgia e Catequese. Marca a exibição por usuário para
@@ -77,7 +77,7 @@ const WelcomeFirstAccess: React.FC = () => {
           id="welcome-first-access-title"
           className="font-serif text-3xl md:text-4xl text-foreground mb-spacing-xs"
         >
-          Bem-vindo à Cathedra
+          Bem-vindo à Cátedra
         </h1>
         <p className="text-muted-foreground mb-spacing-lg">
           Escolha por onde deseja começar. Você poderá navegar livremente entre todos os caminhos depois.

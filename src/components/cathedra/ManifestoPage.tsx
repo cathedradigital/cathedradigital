@@ -3,7 +3,7 @@ import { Link } from '@/lib/rr-compat';
 import { Icons } from '../../constants';
 
 /**
- * Manifesto da Cathedra — página de identidade fundacional.
+ * Manifesto da Cátedra — página de identidade fundacional.
  * Segue a estética institucional (mesma linguagem de AboutPage),
  * mas com respiração maior: uma linha por afirmação, tipografia serif ampla.
  */
@@ -16,7 +16,7 @@ const ManifestoPage: React.FC = () => (
         <span className="text-premium-xs font-black uppercase tracking-[0.2em] text-primary">Manifesto</span>
       </div>
       <h1 className="text-premium-4xl md:text-premium-6xl font-serif font-bold text-foreground tracking-tight">
-        Manifesto da Cathedra
+        Manifesto da Cátedra
       </h1>
       <p className="text-muted-foreground text-premium-lg">
         A convicção que sustenta cada linha, cada verbete, cada oração.
@@ -42,7 +42,7 @@ const ManifestoPage: React.FC = () => (
       <div className="w-spacing-2xl h-spacing-3xs bg-primary/30 mx-auto rounded-premium my-spacing-2xl" />
 
       <p className="text-premium-xl md:text-premium-2xl text-muted-foreground italic leading-loose max-w-2xl mx-auto">
-        A Cathedra Digital nasceu para unir <span className="text-foreground font-semibold">Escritura</span>,{' '}
+        A Cátedra Digital nasceu para unir <span className="text-foreground font-semibold">Escritura</span>,{' '}
         <span className="text-foreground font-semibold">Tradição</span>,{' '}
         <span className="text-foreground font-semibold">Liturgia</span>,{' '}
         <span className="text-foreground font-semibold">Oração</span> e{' '}
@@ -66,7 +66,7 @@ const ManifestoPage: React.FC = () => (
           {
             icon: <Icons.Heart className="w-spacing-lg h-spacing-lg" />,
             title: 'A oração no centro',
-            desc: 'Antes de ser plataforma de estudo, a Cathedra é um lugar para rezar. A tecnologia serve à contemplação.',
+            desc: 'Antes de ser plataforma de estudo, a Cátedra é um lugar para rezar. A tecnologia serve à contemplação.',
           },
           {
             icon: <Icons.Star className="w-spacing-lg h-spacing-lg" />,
@@ -103,7 +103,7 @@ const ManifestoPage: React.FC = () => (
           to="/about"
           className="px-spacing-md py-spacing-xs text-premium-sm font-medium text-primary hover:underline"
         >
-          Sobre a Cathedra
+          Sobre a Cátedra
         </Link>
         <Link
           to="/legal"

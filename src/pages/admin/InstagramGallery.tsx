@@ -71,7 +71,7 @@ export default function InstagramGalleryPage() {
   return (
     <div className="min-h-screen bg-[#f5f0e0] text-[#0B1F3A] p-8">
       <header className="max-w-6xl mx-auto mb-8">
-        <p className="text-xs uppercase tracking-[0.2em] text-[#c9a84c] mb-2">Cathedra · Instagram</p>
+        <p className="text-xs uppercase tracking-[0.2em] text-[#c9a84c] mb-2">Cátedra · Instagram</p>
         <h1 className="text-4xl font-serif mb-2">Galeria de Artes da Campanha</h1>
         <p className="text-sm opacity-70">
           Todas as artes geradas para as ondas 1-3. Clique em uma peça para baixar em resolução completa.
@@ -142,7 +142,7 @@ export default function InstagramGalleryPage() {
       </ul>
 
       <footer className="max-w-6xl mx-auto mt-12 text-xs opacity-60">
-        {filtered.length} peça(s) exibida(s) · Cathedra Digital · Uso interno editorial
+        {filtered.length} peça(s) exibida(s) · Cátedra Digital · Uso interno editorial
       </footer>
     </div>
   );

@@ -158,7 +158,7 @@ const SecurityAuditPage = () => {
 
       <footer className="text-center pt-spacing-xl">
         <p className="text-premium-xs font-black uppercase tracking-widest text-muted-foreground opacity-50">
-          Cathedra Digital — Protocolo de Segurança v1.2
+          Cátedra Digital — Protocolo de Segurança v1.2
         </p>
       </footer>
     </div>

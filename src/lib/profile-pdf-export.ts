@@ -38,7 +38,7 @@ export async function exportProfilePdf({ userName, userEmail, donations, audit }
   // Cabeçalho
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(18);
-  doc.text('Cathedra — Relatório Pessoal', 40, 50);
+  doc.text('Cátedra — Relatório Pessoal', 40, 50);
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(10);
   doc.text(`Usuário: ${userName || '—'}  ·  ${userEmail}`, 40, 68);
@@ -98,7 +98,7 @@ export async function exportProfilePdf({ userName, userEmail, donations, audit }
     doc.setFontSize(8);
     doc.setTextColor(120);
     doc.text(
-      `Cathedra Digital · pág. ${i}/${pageCount} · Documento gerado localmente`,
+      `Cátedra Digital · pág. ${i}/${pageCount} · Documento gerado localmente`,
       40,
       doc.internal.pageSize.getHeight() - 24,
     );

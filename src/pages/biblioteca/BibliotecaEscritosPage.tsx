@@ -60,16 +60,16 @@ const BibliotecaEscritosPage: React.FC = () => {
   return (
     <section className="min-h-screen bg-background">
       <Helmet>
-        <title>Biblioteca Patrística — Obras dos Santos · Cathedra</title>
+        <title>Biblioteca Patrística — Obras dos Santos · Cátedra</title>
         <meta
           name="description"
-          content="Leia as obras completas dos Padres, Doutores e Místicos da Igreja. Biblioteca Patrística Cathedra: Confissões, Suma Teológica, História de uma Alma e mais."
+          content="Leia as obras completas dos Padres, Doutores e Místicos da Igreja. Biblioteca Patrística Cátedra: Confissões, Suma Teológica, História de uma Alma e mais."
         />
         <link rel="canonical" href="https://cathedradigital.com.br/biblioteca/escritos" />
       </Helmet>
 
       <EditorialHero
-        kicker="Cathedra · Biblioteca Viva"
+        kicker="Cátedra · Biblioteca Viva"
         title="Biblioteca Patrística"
         subtitle="Os escritos dos santos, lidos como eles escreveram."
         parchment

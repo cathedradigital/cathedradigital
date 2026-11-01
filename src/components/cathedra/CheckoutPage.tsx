@@ -16,7 +16,7 @@ const PLANS = [
     label: 'Mensal',
     price: 19.9,
     period: '/mês',
-    title: 'Cathedra PRO – Mensal',
+    title: 'Cátedra PRO – Mensal',
     highlight: false,
     badge: null,
     chargePrice: 19.9,
@@ -27,7 +27,7 @@ const PLANS = [
     price: 15.92,
     period: '/mês',
     totalLabel: 'R$ 191,04/ano',
-    title: 'Cathedra PRO – Anual',
+    title: 'Cátedra PRO – Anual',
     highlight: true,
     badge: 'Economize 20%',
     chargePrice: 191.04,
@@ -133,7 +133,7 @@ const CheckoutPage: React.FC = () => {
     setDonationLoading(true);
     try {
       const { data, error } = await supabase.functions.invoke('mercadopago-create-preference', {
-        body: { planId: 'donation', price: donationAmount, title: 'Doação voluntária – Cathedra Digital', origin: window.location.origin },
+        body: { planId: 'donation', price: donationAmount, title: 'Doação voluntária – Cátedra Digital', origin: window.location.origin },
       });
       if (error) throw error;
       if (data?.error) throw new Error(data.error);
@@ -154,7 +154,7 @@ const CheckoutPage: React.FC = () => {
       <div className="text-center space-y-spacing-md">
         <div className="inline-flex items-center gap-spacing-xs px-spacing-sm py-spacing-2xs bg-primary/10 rounded-premium">
           <Icons.Zap className="w-spacing-md h-spacing-md text-primary" />
-          <span className="text-premium-xs font-black uppercase tracking-[0.2em] text-primary">Cathedra PRO</span>
+          <span className="text-premium-xs font-black uppercase tracking-[0.2em] text-primary">Cátedra PRO</span>
         </div>
         <h1 className="text-premium-4xl md:text-premium-6xl font-serif font-bold text-foreground tracking-tight">
           Eleve sua experiência <br />
@@ -318,7 +318,7 @@ const CheckoutPage: React.FC = () => {
             </div>
             <CardTitle className="text-premium-xl font-serif font-bold">Doação Voluntária</CardTitle>
             <CardDescription className="text-premium-sm w-full mx-auto">
-              Não quer assinar o PRO? Apoie o Cathedra com uma contribuição livre.
+              Não quer assinar o PRO? Apoie o Cátedra com uma contribuição livre.
               Cada doação ajuda a manter o app gratuito para todos.
             </CardDescription>
           </CardHeader>

@@ -79,7 +79,7 @@ const AcervoHomePage: React.FC = () => {
   return (
     <div className="min-h-screen bg-background" data-space="atrium">
       <Helmet>
-        <title>Acervo Cathedra — Ecossistema Espiritual Vivo</title>
+        <title>Acervo Cátedra — Ecossistema Espiritual Vivo</title>
         <meta
           name="description"
           content="O Ecossistema Espiritual Vivo: Bíblia, Catecismo, Magistério e vida dos santos organizados para sua caminhada."
@@ -93,7 +93,7 @@ const AcervoHomePage: React.FC = () => {
           align="center"
         >
           <EditorialHero.Eyebrow>Ecossistema Vivo · Átrio do Conhecimento</EditorialHero.Eyebrow>
-          <EditorialHero.Title>Biblioteca do Cathedra</EditorialHero.Title>
+          <EditorialHero.Title>Biblioteca do Cátedra</EditorialHero.Title>
           <EditorialHero.Subtitle>Toda a riqueza da fé católica em um ambiente onde tudo se conecta.</EditorialHero.Subtitle>
         </EditorialHero>
 
@@ -157,10 +157,10 @@ const AcervoHomePage: React.FC = () => {
              </div>
           </aside>
 
-          {/* Coluna Direita: Hoje no Cathedra (Biblioteca Viva) */}
+          {/* Coluna Direita: Hoje no Cátedra (Biblioteca Viva) */}
           <section className="lg:col-span-8 space-y-spacing-md order-1 lg:order-2">
             <h2 className="text-premium-small font-black uppercase tracking-[0.2em] text-primary">
-              Hoje no Cathedra
+              Hoje no Cátedra
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-spacing-md">
               {/* SSoT: Papa Atual */}

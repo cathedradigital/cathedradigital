@@ -19,7 +19,7 @@ const OfflinePage: React.FC = () => {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[80dvh] p-spacing-lg text-center space-y-spacing-xl animate-in fade-in duration-700">
-      <SEOHead title="Você está Offline" description="O Cathedra Digital continua disponível em modo offline." path="/offline" />
+      <SEOHead title="Você está Offline" description="A Cátedra Digital continua disponível em modo offline." path="/offline" />
       
       <div className="relative">
         <div className="w-spacing-4xl h-spacing-4xl rounded-premium bg-primary/5 flex items-center justify-center border border-primary/10">

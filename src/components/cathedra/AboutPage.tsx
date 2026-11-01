@@ -13,7 +13,7 @@ const AboutPage: React.FC = () => (
         <Icons.Cross className="w-spacing-md h-spacing-md text-primary" />
         <span className="text-premium-xs font-black uppercase tracking-[0.2em] text-primary">Manifesto & Identidade</span>
       </div>
-      <h1 className="text-premium-4xl md:text-premium-6xl font-serif font-bold text-foreground tracking-tight">Sobre a Cathedra Digital</h1>
+      <h1 className="text-premium-4xl md:text-premium-6xl font-serif font-bold text-foreground tracking-tight">Sobre a Cátedra Digital</h1>
       <p className="text-muted-foreground text-premium-lg">Unindo a tradição milenar da Igreja à vanguarda tecnológica para a glória de Deus.</p>
     </div>
 
@@ -55,7 +55,7 @@ const AboutPage: React.FC = () => (
           <h2 className="text-premium-3xl font-serif font-bold text-foreground">Nossa Missão</h2>
         </div>
         <div className="space-y-spacing-md text-muted-foreground leading-relaxed text-premium-lg">
-          <p>A Cathedra Digital nasceu de uma convicção profunda: a riqueza incomensurável da tradição católica — sua teologia, liturgia, moral e espiritualidade — deve ser acessível a todo fiel, sem diluição e sem complicação.</p>
+          <p>A Cátedra Digital nasceu de uma convicção profunda: a riqueza incomensurável da tradição católica — sua teologia, liturgia, moral e espiritualidade — deve ser acessível a todo fiel, sem diluição e sem complicação.</p>
           <p>Nosso objetivo primordial é fornecer uma plataforma de formação contínua, onde cada recurso é meticulosamente desenhado para conduzir o usuário da simples leitura à profunda compreensão, e da compreensão à vivência cristã autêntica.</p>
         </div>
       </div>
@@ -69,7 +69,7 @@ const AboutPage: React.FC = () => (
           <h2 className="text-premium-3xl font-serif font-bold text-foreground">Nossa História</h2>
         </div>
         <div className="space-y-spacing-md text-muted-foreground leading-relaxed text-premium-lg">
-          <p>O projeto Cathedra começou como uma busca pessoal por consolidar os tesouros da Igreja em uma interface digna da beleza de seu conteúdo. O que era um repositório de estudos transformou-se em um ecossistema digital completo.</p>
+          <p>O projeto Cátedra começou como uma busca pessoal por consolidar os tesouros da Igreja em uma interface digna da beleza de seu conteúdo. O que era um repositório de estudos transformou-se em um ecossistema digital completo.</p>
           <p>Desde a primeira linha de código, o foco foi a fidelidade ao Magistério. Passamos de uma simples ferramenta de busca para uma inteligência a serviço da Tradição, ajudando milhares de pessoas a redescobrirem a profundidade de sua fé no cotidiano digital.</p>
         </div>
       </div>
@@ -114,7 +114,7 @@ const AboutPage: React.FC = () => (
     {/* Pillars / Features */}
     <div className="space-y-spacing-2xl">
       <div className="text-center space-y-spacing-xs">
-        <h2 className="text-premium-3xl font-serif font-bold text-foreground">Os Pilares da Cathedra</h2>
+        <h2 className="text-premium-3xl font-serif font-bold text-foreground">Os Pilares da Cátedra</h2>
         <p className="text-muted-foreground">O que nos diferencia em cada detalhe.</p>
       </div>
 
@@ -146,7 +146,7 @@ const AboutPage: React.FC = () => (
           <h3 className="text-premium-xl font-serif font-bold text-foreground">Por que existe</h3>
         </div>
         <p className="text-premium-sm text-muted-foreground leading-relaxed">
-          A fé merece uma casa digital à altura da sua profundidade. A Cathedra existe para que
+          A fé merece uma casa digital à altura da sua profundidade. A Cátedra existe para que
           Escritura, Tradição, Liturgia e Oração sejam encontradas em um só lugar — sem diluição,
           sem ruído, sem dependência de plataformas que não compartilham a mesma missão.
         </p>
@@ -193,7 +193,7 @@ const AboutPage: React.FC = () => (
           
           <div className="space-y-spacing-md text-muted-foreground text-premium-lg leading-relaxed font-serif">
             <p>
-              A Cathedra Digital foi concebida por <span className="text-foreground font-bold">Evaldo.os</span> como uma resposta ao chamado de evangelização na era digital. Unindo a paixão pela tecnologia de ponta com a veneração pela Tradição Católica de dois mil anos.
+              A Cátedra Digital foi concebida por <span className="text-foreground font-bold">Evaldo.os</span> como uma resposta ao chamado de evangelização na era digital. Unindo a paixão pela tecnologia de ponta com a veneração pela Tradição Católica de dois mil anos.
             </p>
             <p>
               "Nossa missão é fornecer as ferramentas mais avançadas para que cada católico possa aprofundar sua fé, estudar as escrituras e viver a liturgia com clareza, beleza e profundidade."

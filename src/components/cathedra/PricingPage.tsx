@@ -17,9 +17,9 @@ const fadeUp = {
 
 const PRICE_MONTHLY = 15.92;
 const PRICE_YEARLY = 191.04;
-const PAGE_TITLE = 'Planos — Cathedra Digital · R$ 15,92/mês';
+const PAGE_TITLE = 'Planos — Cátedra Digital · R$ 15,92/mês';
 const PAGE_DESCRIPTION =
-  'Cathedra PRO por R$ 15,92/mês (R$ 191,04/ano · economize 20%). Compare o plano gratuito Peregrino e o PRO: Bíblia, Catecismo, Liturgia, IA Colloquium e trilhas de formação.';
+  'Cátedra PRO por R$ 15,92/mês (R$ 191,04/ano · economize 20%). Compare o plano gratuito Peregrino e o PRO: Bíblia, Catecismo, Liturgia, IA Colloquium e trilhas de formação.';
 const CANONICAL_URL = 'https://www.cathedradigital.com.br/pricing';
 
 export type Feature = { label: string; free: boolean };
@@ -82,14 +82,14 @@ export const FeatureList: React.FC<{ variant: 'free' | 'pro' }> = ({ variant }) 
 const priceJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'Product',
-  name: 'Cathedra PRO',
+  name: 'Cátedra PRO',
   description:
-    'Assinatura Cathedra PRO: acesso completo à formação católica, Colloquium IA, trilhas e conteúdos avançados.',
-  brand: { '@type': 'Brand', name: 'Cathedra Digital' },
+    'Assinatura Cátedra PRO: acesso completo à formação católica, Colloquium IA, trilhas e conteúdos avançados.',
+  brand: { '@type': 'Brand', name: 'Cátedra Digital' },
   offers: [
     {
       '@type': 'Offer',
-      name: 'Cathedra PRO — Mensal',
+      name: 'Cátedra PRO — Mensal',
       price: PRICE_MONTHLY.toFixed(2),
       priceCurrency: 'BRL',
       availability: 'https://schema.org/InStock',
@@ -98,7 +98,7 @@ const priceJsonLd = {
     },
     {
       '@type': 'Offer',
-      name: 'Cathedra PRO — Anual',
+      name: 'Cátedra PRO — Anual',
       price: PRICE_YEARLY.toFixed(2),
       priceCurrency: 'BRL',
       availability: 'https://schema.org/InStock',
@@ -200,7 +200,7 @@ const PricingPage: React.FC = () => {
                 <div className="w-14 h-14 mx-auto rounded-2xl bg-primary/10 flex items-center justify-center">
                   <Icons.Sparkles className="w-6 h-6 text-primary" aria-hidden="true" />
                 </div>
-                <CardTitle className="text-2xl font-serif">Cathedra PRO</CardTitle>
+                <CardTitle className="text-2xl font-serif">Cátedra PRO</CardTitle>
                 <div>
                   <span className="text-5xl font-display font-bold text-primary">R$ 15</span>
                   <span className="text-xl font-bold text-primary">,92</span>

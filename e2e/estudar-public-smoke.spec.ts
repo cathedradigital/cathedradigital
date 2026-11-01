@@ -12,7 +12,7 @@ test('public browser smoke: landing and login render', async ({ page }) => {
   });
 
   await page.goto('/');
-  await expect(page).toHaveTitle(/Cathedra/i);
+  await expect(page).toHaveTitle(/Cátedra/i);
   await page.goto('/login');
   await expect(page.getByLabel('Email')).toBeVisible();
   await expect(page.getByLabel('Senha')).toBeVisible();
@@ -199,6 +199,24 @@ test('Bíblia: leitura mantém espaçamento compacto e Nexus sem bolhas excessiv
 });
 
 
+test('Magistério: Código de Direito Canônico abre o PDF oficial no leitor', async ({ page }) => {
+  const officialPdf = 'https://www.vatican.va/archive/cod-iuris-canonici/portuguese/codex-iuris-canonici_po.pdf';
+  const pdfResponsePromise = page.waitForResponse(
+    response => response.url() === officialPdf && response.request().resourceType() === 'document',
+    { timeout: 20_000 },
+  );
+
+  const response = await page.goto('/magisterium/cdc');
+  expect(response?.ok(), `/magisterium/cdc: HTTP ${response?.status()}`).toBeTruthy();
+  await expect(page.getByTestId('magisterium-pdf-reader')).toBeVisible();
+  await expect(page.getByTestId('magisterium-pdf-frame')).toHaveAttribute('src', officialPdf);
+  await expect(page.getByTestId('magisterium-pdf-open-source')).toHaveAttribute('href', officialPdf);
+
+  const pdfResponse = await pdfResponsePromise;
+  expect(pdfResponse.ok(), `PDF oficial: HTTP ${pdfResponse.status()}`).toBeTruthy();
+  expect(pdfResponse.headers()['content-type']).toContain('application/pdf');
+});
+
 test('Documentos: Dei Filius organiza cabeçalho, idioma original e tradução', async ({ page }) => {
   const errors: string[] = [];
   const failedResponses: string[] = [];
@@ -262,6 +280,12 @@ test('Catecismo: leitor usa um único bloco de Conexo e não mantém Relatio dup
   const response = await page.goto('/catechism?p=279');
   expect(response?.ok(), `/catechism?p=279: HTTP ${response?.status()}`).toBeTruthy();
   await expect(page.locator('#p279')).toBeVisible();
+  await expect.poll(
+    async () =>
+      (await page.locator('[data-nexus-panel]').count()) +
+      (await page.getByRole('heading', { name: 'Nexus Theologicus em Processamento' }).count()),
+    { timeout: 10_000 },
+  ).toBe(1);
   const populatedNexusPanels = await page.locator('[data-nexus-panel]').count();
   const processingNexusPanels = await page.getByRole('heading', { name: 'Nexus Theologicus em Processamento' }).count();
   expect(populatedNexusPanels + processingNexusPanels).toBe(1);
@@ -321,12 +345,13 @@ test('Átrio: notícias atuais mostram data, fonte e link original', async ({ pa
 });
 
 
-test('Home: identidade visual usa a marca Cathedra Digital', async ({ page }) => {
+test('Home: identidade visual usa a marca Cátedra Digital', async ({ page }) => {
   await page.goto('/');
-  await expect(page.getByText('Cathedra Digital', { exact: true }).first()).toBeVisible();
-  await expect(page.getByText('Cátedra', { exact: true }).first()).toBeVisible();
-  await expect(page.locator('footer').getByText('Cátedra', { exact: true }).first()).toBeVisible();
-  await expect(page).toHaveTitle(/Cathedra Digital/);
+  const homeBrand = page.locator('main [aria-label="Cátedra Digital"]').first();
+  await expect(homeBrand).toBeVisible();
+  await expect(homeBrand.getByText('Cátedra Digital', { exact: true })).toBeVisible();
+  await expect(page.getByRole('contentinfo', { name: 'Rodapé' })).toContainText(/Cátedra[\\s\\S]*DIGITAL/i);
+  await expect(page).toHaveTitle(/Cátedra Digital/i);
 });
 
 
@@ -360,7 +385,7 @@ test('Aparições e devoções marianas: avaliação e fonte são específicas p
   const aparecidaSource = page.getByRole('link', { name: 'Consultar publicação do Estado da Cidade do Vaticano' });
   await expect(aparecidaSource).toHaveAttribute('href', /vaticanstate\.va/);
 
-  await page.getByRole('button', { name: 'Voltar' }).click();
+  await page.getByLabel('Aparição — Nossa Senhora').getByRole('button', { name: 'Voltar', exact: true }).click();
   await page.getByText('Nossa Senhora de Lourdes', { exact: true }).first().click();
   await expect(page.getByText('Decreto episcopal de reconhecimento (1862)')).toBeVisible();
   await expect(page.getByRole('link', { name: 'Ler o decreto no Santuário de Lourdes' })).toHaveAttribute('href', /lourdes-france\.org/);
@@ -397,16 +422,43 @@ test('Sanctorum: catálogo público carrega santos com fonte e status editorial'
   const response = await page.goto('/santos');
   expect(response?.ok(), `/santos: HTTP ${response?.status()}`).toBeTruthy();
 
-  await page.getByRole('tab', { name: 'Todos' }).click();
-  await expect(page.getByRole('heading', { name: 'Base Sanctorum' })).toBeVisible();
+  const allTab = page.getByRole('tab', { name: 'Todos' });
+  await expect(allTab, 'Sanctorum: aba Todos deve estar disponível no catálogo').toBeVisible({ timeout: 10_000 });
+
+  const allSaintsResponsePromise = page.waitForResponse(
+    candidate => {
+      const url = new URL(candidate.url());
+      return url.pathname.endsWith('/rest/v1/saints')
+        && candidate.request().method() === 'GET'
+        && url.searchParams.get('limit') === '100';
+    },
+    { timeout: 15_000 },
+  );
+
+  await allTab.scrollIntoViewIfNeeded();
+  await allTab.click({ timeout: 10_000 });
+
+  const allSaintsResponse = await allSaintsResponsePromise;
+  expect(allSaintsResponse.status(), 'Sanctorum: consulta pública da lista deve retornar HTTP 200').toBe(200);
+  const rows = await allSaintsResponse.json() as Array<{ id?: string }>;
+  expect(rows.some(row => row.id === 'santo-agostinho'), 'Sanctorum: Santo Agostinho deve existir na resposta pública').toBeTruthy();
+
+  await expect(page.getByRole('heading', { name: 'Base Sanctorum' })).toBeVisible({ timeout: 10_000 });
 
   const augustine = page.getByRole('button', { name: /Santo Agostinho de Hipona/ });
-  await expect(augustine).toBeVisible();
-  await augustine.click();
+  await expect(augustine, 'Sanctorum: ficha de Santo Agostinho deve aparecer na lista').toBeVisible({ timeout: 10_000 });
+  await augustine.evaluate(element => {
+    element.scrollIntoView({ block: 'center', inline: 'nearest' });
+    // Deixa o cabeçalho sticky fora da área de clique e aguarda sua transição.
+    window.scrollBy({ top: -160, behavior: 'instant' });
+  });
+  await expect(augustine).toBeInViewport();
+  // Clique em uma área limpa da imagem do card, sem texto/elementos internos.
+  await augustine.click({ position: { x: 24, y: 24 }, timeout: 10_000 });
 
-  await expect(page.locator('body')).toContainText('Agostinho nasceu em Tagaste');
-  await expect(page.getByRole('status')).toContainText('Ficha em curadoria');
-  await expect(page.locator('body')).toContainText('Santa Sé');
+  await expect(page.locator('body')).toContainText('Agostinho nasceu em Tagaste', { timeout: 15_000 });
+  await expect(page.getByText('Ficha em curadoria', { exact: true })).toBeVisible({ timeout: 10_000 });
+  await expect(page.locator('body')).toContainText('Santa Sé', { timeout: 10_000 });
 });
 
 
@@ -420,4 +472,21 @@ test('Rezar ativo oferece entrada para liturgia, devoções e oração pessoal',
 
   await page.getByRole('link', { name: /Rosário/ }).click();
   await expect(page).toHaveURL(/\/oracao\/rosario$/);
+});
+
+test('SEO: robots e sitemap são servidos com URLs canônicas únicas', async ({ request }) => {
+  const robotsResponse = await request.get('/robots.txt');
+  expect(robotsResponse.ok(), 'robots.txt deve responder HTTP 2xx').toBeTruthy();
+  const robots = await robotsResponse.text();
+  expect(robots).toMatch(/^User-agent:\s*\*/m);
+  expect(robots).toContain('Sitemap: https://www.cathedradigital.com.br/sitemap.xml');
+
+  const sitemapResponse = await request.get('/sitemap.xml');
+  expect(sitemapResponse.ok(), 'sitemap.xml deve responder HTTP 2xx').toBeTruthy();
+  const sitemap = await sitemapResponse.text();
+  expect(sitemap).toMatch(/<urlset\b/);
+  const urls = [...sitemap.matchAll(/<loc>(.*?)<\/loc>/g)].map((match) => match[1].trim());
+  expect(urls.length).toBeGreaterThan(0);
+  expect(new Set(urls).size, 'sitemap não pode conter URLs duplicadas').toBe(urls.length);
+  expect(urls.every((url) => url === 'https://www.cathedradigital.com.br' || url.startsWith('https://www.cathedradigital.com.br/'))).toBe(true);
 });

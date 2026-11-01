@@ -19,7 +19,7 @@ const DOCS: LegalDoc[] = [
   {
     path: '/legal/lgpd',
     label: 'LGPD — Lei Geral de Proteção de Dados',
-    desc: 'Como a Cathedra cumpre a Lei nº 13.709/2018: bases legais, DPO, incidentes e canal do titular.',
+    desc: 'Como a Cátedra cumpre a Lei nº 13.709/2018: bases legais, DPO, incidentes e canal do titular.',
     icon: <Icons.Shield className="w-spacing-lg h-spacing-lg" />,
   },
   {
@@ -49,7 +49,7 @@ const LegalCenterPage: React.FC = () => (
         Centro Legal & Privacidade
       </h1>
       <p className="text-muted-foreground text-premium-lg max-w-2xl mx-auto">
-        Todos os documentos institucionais da Cathedra Digital em um só lugar — clareza, respeito ao usuário
+        Todos os documentos institucionais da Cátedra Digital em um só lugar — clareza, respeito ao usuário
         e conformidade com a legislação brasileira.
       </p>
     </header>

@@ -691,7 +691,7 @@ const GlossaryTermPage: React.FC = () => {
   return (
     <>
       <Helmet>
-        <title>{`${term.term} — Léxico Teológico | Cathedra`}</title>
+        <title>{`${term.term} — Léxico Teológico | Cátedra`}</title>
         <meta name="description" content={description} />
         {canonical && <link rel="canonical" href={canonical} />}
         <meta property="og:title" content={`${term.term} — Léxico Teológico`} />
@@ -709,7 +709,7 @@ const GlossaryTermPage: React.FC = () => {
                 description,
                 inDefinedTermSet: {
                   '@type': 'DefinedTermSet',
-                  name: 'Léxico Teológico Cathedra',
+                  name: 'Léxico Teológico Cátedra',
                   url: 'https://www.cathedradigital.com.br/glossario',
                 },
                 url: canonical,
@@ -725,10 +725,10 @@ const GlossaryTermPage: React.FC = () => {
                 mainEntityOfPage: canonical,
                 dateModified: term.updated_at,
                 ...(term.reviewed_at && { dateReviewed: term.reviewed_at }),
-                author: { '@type': 'Organization', name: 'Cathedra Digital' },
+                author: { '@type': 'Organization', name: 'Cátedra Digital' },
                 publisher: {
                   '@type': 'Organization',
-                  name: 'Cathedra Digital',
+                  name: 'Cátedra Digital',
                   url: 'https://www.cathedradigital.com.br',
                 },
               },
@@ -739,7 +739,7 @@ const GlossaryTermPage: React.FC = () => {
       </Helmet>
 
       <ReaderToolbar
-        kicker="Cathedra · Léxico"
+        kicker="Cátedra · Léxico"
         title={term.term}
         subtitle={term.category ?? undefined}
         backHref="/glossario"

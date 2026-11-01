@@ -74,7 +74,7 @@ const LanguageAdmin: React.FC = () => {
           <input 
             value={newTerm}
             onChange={(e) => setNewTerm(e.target.value)}
-            placeholder="Termo (ex: Cathedra)"
+            placeholder="Termo (ex: Cátedra)"
             className="bg-muted/50 border-none rounded-xl p-3 text-sm focus:ring-1 focus:ring-secondary/20"
           />
           <input 

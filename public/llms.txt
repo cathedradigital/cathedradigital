@@ -1,8 +1,8 @@
-# Cathedra Digital
+# Cátedra Digital
 
 > Plataforma católica de vida interior: Bíblia, Catecismo, Magistério, Liturgia, oração e formação espiritual em português.
 
-A Cathedra Digital reúne em um só lugar a Sagrada Escritura, o Catecismo da Igreja Católica, documentos do Magistério, a liturgia diária, vidas de santos, devoções tradicionais e ferramentas de estudo teológico. Tudo interligado por referências cruzadas (Nexus Theologicus) para aprofundar a vida espiritual sem perder o contexto.
+A Cátedra Digital reúne em um só lugar a Sagrada Escritura, o Catecismo da Igreja Católica, documentos do Magistério, a liturgia diária, vidas de santos, devoções tradicionais e ferramentas de estudo teológico. Tudo interligado por referências cruzadas (Nexus Theologicus) para aprofundar a vida espiritual sem perder o contexto.
 
 ## Pages
 
@@ -34,7 +34,7 @@ A Cathedra Digital reúne em um só lugar a Sagrada Escritura, o Catecismo da Ig
 - [Logos AI](/logos): Assistente teológico católico.
 - [Busca](/buscar): Busca global em todo o acervo.
 - [Hoje](/hoje): Painel espiritual diário.
-- [Sobre](/about): Sobre a Cathedra Digital.
+- [Sobre](/about): Sobre a Cátedra Digital.
 - [Planos](/pricing): Planos e assinaturas.
 - [Transparência](/transparencia): Modelo de doação e transparência financeira.
 - [Parceiros](/partners): Instituições parceiras.

@@ -228,7 +228,7 @@ export const Logo = forwardRef<HTMLDivElement, { className?: string, variant?: '
     )}>
       <img 
         src={cathedraLogo} 
-        alt="CATHEDRA Digital" 
+        alt="Cátedra Digital" 
         loading="eager" fetchPriority="high"
         width="64"
         height="64"

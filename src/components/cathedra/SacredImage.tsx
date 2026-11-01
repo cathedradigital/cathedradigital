@@ -92,7 +92,7 @@ const SacredImage = React.forwardRef<HTMLDivElement, SacredImageProps>(({ src, a
     <div ref={ref} className={`relative bg-[#0c0a09] overflow-hidden ${className}`}>
       {/* Gradient background — always visible as base layer / fallback */}
       <div
-        className={`absolute inset-0 z-0 transition-opacity duration-1000 ${isLoaded && !error ? 'opacity-0' : 'opacity-100'}`}
+        className={`pointer-events-none absolute inset-0 z-0 transition-opacity duration-1000 ${isLoaded && !error ? 'opacity-0' : 'opacity-100'}`}
         style={{ backgroundColor: colors.base }}
       >
         <div className="absolute inset-[-50%] opacity-60" style={{ background: `radial-gradient(circle at 40% 40%, ${colors.accent} 0%, transparent 70%)`, animation: 'drift-slow 15s ease-in-out infinite' }} />

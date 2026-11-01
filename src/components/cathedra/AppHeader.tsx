@@ -80,7 +80,7 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
           <button
             type="button"
             className="flex items-baseline gap-spacing-sm cursor-pointer group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20 focus-visible:ring-offset-2 rounded-premium-full"
-            aria-label={t('home')} 
+            aria-label={`Cátedra Digital — ${t('home')}`} 
             onClick={(e) => {
               if (!isLegitimateClick(e)) return;
               navigate('/');
@@ -100,7 +100,7 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
                     fontVariantLigatures: 'common-ligatures',
                   }}
                 >
-                  Cathedra
+                  Cátedra
                 </span>
                 <span className="hidden md:block text-[7px] text-gold uppercase tracking-[0.32em] font-bold">
                   DIGITAL

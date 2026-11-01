@@ -62,7 +62,7 @@ const AdminSeoTab: React.FC = () => {
     const json = JSON.stringify({
       "@context": "https://schema.org",
       "@type": "LocalBusiness",
-      "name": formData.business_name || "Cathedra Digital",
+      "name": formData.business_name || "Cátedra Digital",
       "telephone": formData.business_whatsapp || formData.business_phone || "—",
       "address": {
         "@type": "PostalAddress",
@@ -160,7 +160,7 @@ const AdminSeoTab: React.FC = () => {
                   <Input 
                     value={formData.site_title || ''} 
                     onChange={e => setFormData({...formData, site_title: e.target.value})}
-                    placeholder="Ex: Cathedra Digital — Bíblia e Tradição"
+                    placeholder="Ex: Cátedra Digital — Bíblia e Tradição"
                   />
                   <p className="text-premium-xs text-muted-foreground italic">Recomendado: 50-60 caracteres.</p>
                 </div>
@@ -186,7 +186,7 @@ const AdminSeoTab: React.FC = () => {
                       <Input 
                         value={formData.business_name || ''} 
                         onChange={e => setFormData({...formData, business_name: e.target.value})}
-                        placeholder="Ex: Cathedra Digital HQ"
+                        placeholder="Ex: Cátedra Digital HQ"
                       />
                     </div>
                     <div className="space-y-spacing-xs">
@@ -284,7 +284,7 @@ const AdminSeoTab: React.FC = () => {
                   </div>
                 </div>
                 <h3 className="text-[20px] text-[#1a0dab] hover:underline cursor-pointer leading-tight">
-                  {formData.site_title || 'Cathedra Digital — Bíblia e Tradição'}
+                  {formData.site_title || 'Cátedra Digital — Bíblia e Tradição'}
                 </h3>
                 <p className="text-[14px] text-[#4d5156] leading-relaxed line-clamp-spacing-xs">
                   {formData.site_description || 'Aprofunde sua fé católica com Bíblia Sagrada, Catecismo da Igreja e IA teológica.'}
@@ -379,7 +379,7 @@ const AdminSeoTab: React.FC = () => {
 {JSON.stringify({
   "@context": "https://schema.org",
   "@type": "LocalBusiness",
-  "name": formData.business_name || "Cathedra Digital",
+  "name": formData.business_name || "Cátedra Digital",
   "telephone": formData.business_whatsapp || formData.business_phone || "—",
   "address": {
     "@type": "PostalAddress",

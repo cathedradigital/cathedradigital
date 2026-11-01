@@ -38,7 +38,7 @@ const ProShowcase: React.FC = () => {
         <div className="text-center space-y-spacing-xs">
           <div className="inline-flex items-center gap-spacing-xs px-spacing-sm py-spacing-2xs rounded-premium bg-secondary/20 border border-secondary/30">
             <Icons.Crown className="w-spacing-sm h-spacing-sm text-secondary" />
-            <span className="text-premium-xs font-black uppercase tracking-[0.3em] text-secondary">Cathedra PRO</span>
+            <span className="text-premium-xs font-black uppercase tracking-[0.3em] text-secondary">Cátedra PRO</span>
           </div>
           <h2 className="text-premium-xl md:text-premium-2xl font-black text-foreground leading-tight">
             Desbloqueie a experiência <br className="hidden md:block" />
