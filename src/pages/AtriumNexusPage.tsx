@@ -141,6 +141,13 @@ const AtriumNexusPage: React.FC = () => {
         }
         setRelations((relsResult.data ?? []) as NexusRelationRow[]);
         setContribs((contributionsResult.data ?? []) as NexusContributionRow[]);
+      } catch (error) {
+        if (!cancelled) {
+          console.error('Nexus data request failed', error);
+          setDataError(true);
+          setRelations([]);
+          setContribs([]);
+        }
       } finally {
         if (!cancelled) setLoading(false);
       }
@@ -165,10 +172,6 @@ const AtriumNexusPage: React.FC = () => {
       <MobileTopBar kicker="Cátedra Digital" title="Nexus" transparent />
     <div
       className="min-h-screen w-full min-w-0 overflow-x-hidden bg-stitch-background text-stitch-on-background"
-      style={{
-        backgroundImage:
-          'url("https://www.transparenttextures.com/patterns/p6.png")',
-      }}
      data-catedra-module-root data-catedra-module="nexus">
       <Helmet>
         <title>Cátedra Digital — Nexus Theologicus</title>
@@ -235,10 +238,11 @@ const AtriumNexusPage: React.FC = () => {
         <section className="mt-10 grid grid-cols-1 min-w-0 items-stretch gap-5 md:mt-12 md:gap-8 md:grid-cols-12">
           <article className="group relative flex h-80 flex-col justify-between overflow-hidden border border-[hsl(var(--stitch-secondary)/0.25)] bg-stitch-surface-container-lowest p-8 transition-all hover:bg-stitch-surface-container-low md:col-span-8">
             <div
-              className="pointer-events-none absolute inset-0 opacity-[0.03]"
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0 opacity-[0.12]"
               style={{
                 backgroundImage:
-                  'url("https://www.transparenttextures.com/patterns/parchment.png")',
+                  'radial-gradient(ellipse at 18% 22%, hsl(var(--stitch-secondary) / 0.35), transparent 68%)',
               }}
             />
             <div className="relative z-10 text-left">

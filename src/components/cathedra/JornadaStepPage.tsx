@@ -450,7 +450,6 @@ const JornadaStepPage: React.FC = () => {
         aria-live="polite"
         aria-label="Carregando etapa"
         className="fixed inset-0 z-[200] flex flex-col overflow-hidden bg-stitch-background text-stitch-on-background"
-        style={{ backgroundImage: 'url("https://www.transparenttextures.com/patterns/p6.png")' }}
       >
         {/* Header skeleton */}
         <div className="flex-shrink-0 border-b border-stitch-secondary/10 bg-stitch-background/95 px-5 pb-3 pt-[max(0.75rem,env(safe-area-inset-top))] backdrop-blur md:px-16">
@@ -496,7 +495,6 @@ const JornadaStepPage: React.FC = () => {
         role="alert"
         aria-live="assertive"
         className="fixed inset-0 z-[200] flex items-center justify-center overflow-hidden bg-stitch-background px-6 py-10 text-stitch-on-background"
-        style={{ backgroundImage: 'url("https://www.transparenttextures.com/patterns/p6.png")' }}
       >
         <div className="mx-auto flex w-full max-w-[520px] flex-col items-center gap-6 text-center">
           <div className="flex h-14 w-14 items-center justify-center rounded-full border border-stitch-secondary/30 bg-stitch-surface-container-lowest/60">
@@ -559,9 +557,6 @@ const JornadaStepPage: React.FC = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       className="fixed inset-0 z-[200] flex flex-col overflow-hidden bg-stitch-background text-stitch-on-background"
-      style={{
-        backgroundImage: 'url("https://www.transparenttextures.com/patterns/p6.png")',
-      }}
     >
       {/* ─── Header editorial ─────────────────────────── */}
       <header className="flex-shrink-0 border-b border-stitch-secondary/10 bg-stitch-background/95 px-5 pb-3 pt-[max(0.75rem,env(safe-area-inset-top))] backdrop-blur md:px-16">

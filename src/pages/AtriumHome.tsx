@@ -112,13 +112,7 @@ const AtriumHome: React.FC = () => {
 
   return (
     <SpaceLayout>
-      <div
-        className="catedra-atrium w-full bg-background text-foreground"
-        style={{
-          backgroundImage:
-            'url("https://www.transparenttextures.com/patterns/p6.png")',
-        }}
-      >
+      <div className="catedra-atrium w-full bg-background text-foreground">
       <Helmet>
         <title>CÁTEDRA DIGITAL — Átrio</title>
         <meta
@@ -137,7 +131,7 @@ const AtriumHome: React.FC = () => {
 
       <MobileTopBar kicker="CÁTEDRA DIGITAL" title="Átrio" transparent />
 
-      <section className="mx-auto w-full max-w-[1120px] px-5 pb-[calc(var(--bottom-nav-height)+var(--spacing-md)+2rem)] pt-6 md:px-16 md:pt-14 md:pb-16 animate-fade-in">
+      <section className="w-full animate-fade-in">
         {authenticated && <AtriumReception />}
         {/* ─── Hero editorial (visitantes) ─────────────────────────────── */}
         {!authenticated && (
@@ -200,10 +194,11 @@ const AtriumHome: React.FC = () => {
             {/* Nexus */}
             <article className="group relative flex h-96 flex-col justify-between overflow-hidden border border-gold-text/25 bg-accentest p-8 transition-all hover:bg-accent md:col-span-8">
               <div
+                aria-hidden="true"
                 className="pointer-events-none absolute inset-0 opacity-[0.03]"
                 style={{
                   backgroundImage:
-                    'url("https://www.transparenttextures.com/patterns/parchment.png")',
+                    'radial-gradient(ellipse at 20% 20%, hsl(var(--secondary) / 0.45), transparent 72%)',
                 }}
               />
               <div className="relative z-10 text-left">

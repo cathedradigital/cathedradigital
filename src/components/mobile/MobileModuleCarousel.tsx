@@ -56,6 +56,7 @@ export function MobileModuleCarousel() {
   const touchStartX = useRef<number | null>(null);
   const touchStartY = useRef<number | null>(null);
   const didSwipe = useRef(false);
+  const swipeResetTimer = useRef<number | null>(null);
 
   const destinations = useMemo<Destination[]>(() => [
     { key: 'atrium', label: 'Átrio', path: '/', icon: House, accent: '#c6a45c' },
@@ -76,6 +77,10 @@ export function MobileModuleCarousel() {
   useEffect(() => {
     activeRef.current?.scrollIntoView({ block: 'nearest', inline: 'center', behavior: 'smooth' });
   }, [activeIndex]);
+
+  useEffect(() => () => {
+    if (swipeResetTimer.current !== null) window.clearTimeout(swipeResetTimer.current);
+  }, []);
 
   const openIndex = useCallback((index: number) => {
     const destination = destinations[index];
@@ -98,6 +103,11 @@ export function MobileModuleCarousel() {
     const deltaY = end.clientY - startY;
     if (Math.abs(deltaX) < 48 || Math.abs(deltaX) < Math.abs(deltaY) * 1.2) return;
     didSwipe.current = true;
+    if (swipeResetTimer.current !== null) window.clearTimeout(swipeResetTimer.current);
+    swipeResetTimer.current = window.setTimeout(() => {
+      didSwipe.current = false;
+      swipeResetTimer.current = null;
+    }, 700);
     openIndex(Math.max(0, Math.min(destinations.length - 1, activeIndex + (deltaX < 0 ? 1 : -1))));
   };
 
@@ -115,6 +125,10 @@ export function MobileModuleCarousel() {
         event.preventDefault();
         event.stopPropagation();
         didSwipe.current = false;
+        if (swipeResetTimer.current !== null) {
+          window.clearTimeout(swipeResetTimer.current);
+          swipeResetTimer.current = null;
+        }
       }}
     >
       <div className="flex min-h-[64px] items-center justify-around gap-1 overflow-x-auto px-2 py-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">

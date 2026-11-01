@@ -77,7 +77,11 @@ export function MobileTopBar({
           <ArrowLeft className="h-5 w-5" />
         </button>
       )}
-      <Link to="/" className="shrink-0">
+      <Link
+        to="/"
+        aria-label={t('brand_alt')}
+        className="shrink-0 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stitch-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-stitch-surface"
+      >
         <img src={cathedraLogo} alt={t('brand_alt')} className="h-9 w-9 object-contain drop-shadow-[0_1px_2px_rgba(0,0,0,0.28)]" />
       </Link>
 
@@ -103,7 +107,7 @@ export function MobileTopBar({
         <Link
           to="/buscar"
           aria-label={t('search')}
-          className="inline-flex h-11 w-11 items-center justify-center rounded-full text-stitch-on-surface hover:bg-stitch-surface-container"
+          className="inline-flex h-11 w-11 items-center justify-center rounded-full text-stitch-on-surface hover:bg-stitch-surface-container focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stitch-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-stitch-surface"
         >
           <Search className="h-5 w-5" />
         </Link>

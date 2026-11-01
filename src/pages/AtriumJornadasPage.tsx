@@ -70,6 +70,7 @@ const AtriumJornadasPage: React.FC = () => {
   const [loadError, setLoadError] = useState<string | null>(null);
   const [progressError, setProgressError] = useState<string | null>(null);
   const [activeCategory, setActiveCategory] = useState<string>('all');
+  const [reloadKey, setReloadKey] = useState(0);
 
   useEffect(() => {
     let cancelled = false;
@@ -77,36 +78,43 @@ const AtriumJornadasPage: React.FC = () => {
       setLoading(true);
       setLoadError(null);
       setProgressError(null);
-      const { data, error } = await supabase
-        .from('view_journeys_with_stats')
-        .select('*')
-        .order('sort_order', { ascending: true });
-      if (error) {
-        console.error('AtriumJornadas load error:', error);
-        if (!cancelled) setLoadError('Não foi possível carregar as jornadas.');
-      }
-      if (!cancelled && data) setJourneys(data as JourneyRow[]);
+      setProgressMap({});
+      try {
+        const { data, error } = await supabase
+          .from('view_journeys_with_stats')
+          .select('*')
+          .order('sort_order', { ascending: true });
+        if (error) {
+          console.error('AtriumJornadas load error:', error);
+          if (!cancelled) setLoadError('Não foi possível carregar as jornadas.');
+        }
+        if (!cancelled && data) setJourneys(data as JourneyRow[]);
 
-      if (user) {
-        const progressRes = await JourneyService.listUserJourneyProgress(user.id);
-        if (progressRes.error) {
-          console.error('AtriumJornadas progress load error:', progressRes.error);
-          if (!cancelled) setProgressError('O progresso pessoal não pôde ser carregado.');
+        if (user) {
+          const progressRes = await JourneyService.listUserJourneyProgress(user.id);
+          if (progressRes.error) {
+            console.error('AtriumJornadas progress load error:', progressRes.error);
+            if (!cancelled) setProgressError('O progresso pessoal não pôde ser carregado.');
+          }
+          if (!cancelled && progressRes.data) {
+            const m: Record<string, number> = {};
+            progressRes.data.forEach((p) => {
+              m[p.journey_id] = (m[p.journey_id] || 0) + 1;
+            });
+            setProgressMap(m);
+          }
         }
-        if (!cancelled && progressRes.data) {
-          const m: Record<string, number> = {};
-          progressRes.data.forEach((p) => {
-            m[p.journey_id] = (m[p.journey_id] || 0) + 1;
-          });
-          setProgressMap(m);
-        }
+      } catch (error) {
+        console.error('AtriumJornadas unexpected load failure:', error);
+        if (!cancelled) setLoadError('Não foi possível carregar as jornadas. Tente novamente.');
+      } finally {
+        if (!cancelled) setLoading(false);
       }
-      if (!cancelled) setLoading(false);
     })();
     return () => {
       cancelled = true;
     };
-  }, [user]);
+  }, [user, reloadKey]);
 
   const categories = useMemo(() => {
     const set = new Set<string>();
@@ -127,10 +135,6 @@ const AtriumJornadasPage: React.FC = () => {
   return (
     <div
       className="min-h-screen w-full bg-background text-foreground"
-      style={{
-        backgroundImage:
-          'url("https://www.transparenttextures.com/patterns/p6.png")',
-      }}
     >
       <Helmet>
         <title>Cathedra — Formação</title>
@@ -219,7 +223,7 @@ const AtriumJornadasPage: React.FC = () => {
                 className="pointer-events-none absolute inset-0 opacity-[0.05]"
                 style={{
                   backgroundImage:
-                    'url("https://www.transparenttextures.com/patterns/parchment.png")',
+                    'radial-gradient(ellipse at 18% 22%, hsl(var(--stitch-secondary) / 0.35), transparent 68%)',
                 }}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-stitch-primary via-stitch-primary/50 to-transparent" />
@@ -292,7 +296,7 @@ const AtriumJornadasPage: React.FC = () => {
               <p className="font-stitch-body text-[14px] text-destructive">{loadError}</p>
               <button
                 type="button"
-                onClick={() => window.location.reload()}
+                onClick={() => setReloadKey((key) => key + 1)}
                 className="mt-4 border border-stitch-secondary/40 px-4 py-2 font-stitch-body text-[12px] font-bold uppercase tracking-[0.15em] text-stitch-secondary hover:bg-stitch-secondary/10"
               >
                 Tentar novamente

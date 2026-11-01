@@ -41,6 +41,7 @@ const AtriumMagisteriumViewer: React.FC = () => {
         title={title}
         subtitle={subtitle}
         backHref={AppRoute.MAGISTERIUM}
+        className="static md:sticky md:top-0"
       />
       <Suspense fallback={null}>
         <MagisteriumViewer />

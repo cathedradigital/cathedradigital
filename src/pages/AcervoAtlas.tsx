@@ -19,7 +19,7 @@ const AcervoAtlas: React.FC = () => {
 
       <main className="max-w-6xl mx-auto px-6 mt-12 space-y-12">
         <div className="aspect-video bg-card border border-primary/10 rounded-premium flex flex-col items-center justify-center space-y-4 shadow-premium-sm overflow-hidden relative">
-           <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/paper-fibers.png')]"></div>
+           <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-br from-secondary/10 via-transparent to-primary/5"></div>
            <Icons.Globe className="w-16 h-16 text-gold/40 animate-pulse" />
            <div className="text-center space-y-2 z-10">
              <h2 className="text-2xl font-serif font-bold italic">Cartografia da Tradição</h2>
