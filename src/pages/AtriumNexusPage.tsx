@@ -141,6 +141,13 @@ const AtriumNexusPage: React.FC = () => {
         }
         setRelations((relsResult.data ?? []) as NexusRelationRow[]);
         setContribs((contributionsResult.data ?? []) as NexusContributionRow[]);
+      } catch (error) {
+        if (!cancelled) {
+          console.error('Nexus data request failed', error);
+          setDataError(true);
+          setRelations([]);
+          setContribs([]);
+        }
       } finally {
         if (!cancelled) setLoading(false);
       }
