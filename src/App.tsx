@@ -917,6 +917,7 @@ const AppLayout: React.FC = () => {
                   <AdminGuard>
                     <Routes>
                       <Route path="/admin" element={<AdminDashboard />} />
+                      <Route path="/admin/users" element={<Navigate to="/admin?tab=users" replace />} />
                        <Route path="/admin/knowledge-audit" element={<GlobalKnowledgeAudit />} />
                        <Route path="/admin/acervo/audit" element={<AcervoAuditPage />} />
                       <Route path="/admin/production-ready" element={<ProductionReadyDashboard />} />
