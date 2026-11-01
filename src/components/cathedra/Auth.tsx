@@ -51,31 +51,30 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
     setError('');
     setSuccess('');
 
-    if (mode === 'forgot') {
-      const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/reset-password`,
-      });
-      if (resetError) {
-        setError(resetError.message);
-      } else {
-        setSuccess('Se este email estiver cadastrado, você receberá um link para redefinir sua senha.');
+    try {
+      if (mode === 'forgot') {
+        const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
+          redirectTo: `${window.location.origin}/reset-password`,
+        });
+        if (resetError) setError(resetError.message);
+        else setSuccess('Se este email estiver cadastrado, você receberá um link para redefinir sua senha.');
+        return;
       }
-      setLoading(false);
-      return;
-    }
 
-    if (mode === 'signup') {
-      const { error: signUpError } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          data: { name },
-          emailRedirectTo: `${window.location.origin}${nextPath ?? ''}`,
-        },
-      });
-      if (signUpError) {
-        setError(signUpError.message);
-      } else {
+      if (mode === 'signup') {
+        const { error: signUpError } = await supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            data: { name },
+            emailRedirectTo: `${window.location.origin}${nextPath ?? ''}`,
+          },
+        });
+        if (signUpError) {
+          setError(signUpError.message);
+          return;
+        }
+
         setSuccess('Conta criada! Fazendo login...');
         const { error: loginError } = await supabase.auth.signInWithPassword({ email, password });
         if (loginError) {
@@ -84,16 +83,21 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
         } else {
           handleSignupSuccess();
         }
+        return;
       }
-    } else {
+
       const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
       if (signInError) {
         setError(signInError.message === 'Invalid login credentials' ? 'Email ou senha incorretos.' : signInError.message);
       } else {
         handleSuccess();
       }
+    } catch (authError) {
+      console.error('[Auth] Falha inesperada durante a autenticação:', authError);
+      setError('Não foi possível concluir a autenticação. Verifique sua conexão e tente novamente.');
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   const switchMode = (newMode: 'login' | 'signup' | 'forgot') => {
@@ -326,20 +330,26 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
               onClick={async () => {
                 setLoading(true);
                 setError('');
-                const { error: oauthError } = await supabase.auth.signInWithOAuth({
-                  provider: 'google',
-                  options: {
-                    redirectTo: `${window.location.origin}${AppRoute.LOGIN}${nextQuery}`,
-                    queryParams: { prompt: 'select_account' },
-                  },
-                });
-                if (oauthError) {
+                try {
+                  const { error: oauthError } = await supabase.auth.signInWithOAuth({
+                    provider: 'google',
+                    options: {
+                      redirectTo: `${window.location.origin}${AppRoute.LOGIN}${nextQuery}`,
+                      queryParams: { prompt: 'select_account' },
+                    },
+                  });
+                  if (oauthError) {
+                    console.error('Google Auth Error:', oauthError);
+                    setError('Não foi possível conectar com o Google. Verifique sua conexão e tente novamente.');
+                  }
+                  // O Supabase conduz o redirecionamento OAuth; a navegação de retorno
+                  // usa o redirectTo com nextQuery após o provedor concluir.
+                } catch (oauthError) {
                   console.error('Google Auth Error:', oauthError);
                   setError('Não foi possível conectar com o Google. Verifique sua conexão e tente novamente.');
-                } else {
-                  handleSuccess();
+                } finally {
+                  setLoading(false);
                 }
-                setLoading(false);
               }}
               className="inline-flex min-h-11 items-center justify-center gap-3 border px-4 py-3 text-xs uppercase tracking-[0.28em] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary/50 focus-visible:ring-offset-2 disabled:opacity-40"
               style={{
@@ -369,19 +379,25 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
               onClick={async () => {
                 setLoading(true);
                 setError('');
-                const { error: oauthError } = await supabase.auth.signInWithOAuth({
-                  provider: 'apple',
-                  options: {
-                    redirectTo: `${window.location.origin}${AppRoute.LOGIN}${nextQuery}`,
-                  },
-                });
-                if (oauthError) {
+                try {
+                  const { error: oauthError } = await supabase.auth.signInWithOAuth({
+                    provider: 'apple',
+                    options: {
+                      redirectTo: `${window.location.origin}${AppRoute.LOGIN}${nextQuery}`,
+                    },
+                  });
+                  if (oauthError) {
+                    console.error('Apple Auth Error:', oauthError);
+                    setError('Não foi possível conectar com a Apple. Tente novamente em instantes.');
+                  }
+                  // O Supabase conduz o redirecionamento OAuth; a navegação de retorno
+                  // usa o redirectTo com nextQuery após o provedor concluir.
+                } catch (oauthError) {
                   console.error('Apple Auth Error:', oauthError);
                   setError('Não foi possível conectar com a Apple. Tente novamente em instantes.');
-                } else {
-                  handleSuccess();
+                } finally {
+                  setLoading(false);
                 }
-                setLoading(false);
               }}
               className="inline-flex min-h-11 items-center justify-center gap-3 border px-4 py-3 text-xs uppercase tracking-[0.28em] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary/50 focus-visible:ring-offset-2 disabled:opacity-40"
               style={{
