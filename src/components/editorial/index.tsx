@@ -45,7 +45,7 @@ export const EditorialShell = React.forwardRef<HTMLDivElement, EditorialShellPro
           className="pointer-events-none fixed inset-0 z-0 opacity-[0.05] mix-blend-multiply"
           style={{
             backgroundImage:
-              "url('https://www.transparenttextures.com/patterns/parchment.png')",
+              'radial-gradient(ellipse at 28% 35%, hsl(var(--stitch-secondary) / 0.18), transparent 72%)',
           }}
         />
       )}
@@ -203,7 +203,7 @@ export const EditorialHero: React.FC<EditorialHeroProps> = ({
           className="pointer-events-none absolute inset-0 opacity-[0.04] mix-blend-multiply"
           style={{
             backgroundImage:
-              "url('https://www.transparenttextures.com/patterns/parchment.png')",
+              'radial-gradient(ellipse at 30% 40%, hsl(var(--stitch-secondary) / 0.16), transparent 72%)',
             backgroundSize: '520px 520px',
             maskImage:
               'radial-gradient(ellipse at 30% 40%, black 0%, black 55%, transparent 90%)',
