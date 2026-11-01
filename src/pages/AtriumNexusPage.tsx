@@ -172,10 +172,6 @@ const AtriumNexusPage: React.FC = () => {
       <MobileTopBar kicker="Cátedra Digital" title="Nexus" transparent />
     <div
       className="min-h-screen w-full min-w-0 overflow-x-hidden bg-stitch-background text-stitch-on-background"
-      style={{
-        backgroundImage:
-          'url("https://www.transparenttextures.com/patterns/p6.png")',
-      }}
      data-catedra-module-root data-catedra-module="nexus">
       <Helmet>
         <title>Cátedra Digital — Nexus Theologicus</title>
