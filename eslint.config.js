@@ -18,7 +18,10 @@ export default tseslint.config(
       "react-refresh": reactRefresh,
     },
     rules: {
-      ...reactHooks.configs.recommended.rules,
+      "react-hooks/rules-of-hooks": "error",
+      "react-hooks/exhaustive-deps": "warn",
+      // Preserve the pre-ESLint-10 lint baseline; this rule was newly added to the v10 recommended set.
+      "no-useless-assignment": "off",
       "no-restricted-imports": [
         "error",
         {
