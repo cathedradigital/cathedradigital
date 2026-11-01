@@ -6,7 +6,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
 import SEOHead from '@/components/SEOHead';
 import { Icons } from '../../constants';
-import StaggeredList from './StaggeredList';
 import SacredImage from './SacredImage';
 import { SaintCardSkeleton, SaintGridSkeleton } from './SacredSkeleton';
 import { CATEGORY_LABELS } from './SaintDetail.categories';
@@ -660,15 +659,15 @@ const Saints = React.forwardRef<HTMLDivElement, { legacyReader?: boolean }>((pro
                 ) : modeSaints.length === 0 ? (
                   <p className="py-spacing-2xl text-center text-sm text-muted-foreground">Nenhum registro encontrado neste acervo.</p>
                 ) : (
-                  <StaggeredList className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-spacing-lg">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-spacing-lg">
                     {modeSaints.map(saint => (
-                      <SaintCard 
-                        key={saint.id} 
-                        saint={saint} 
+                      <SaintCard
+                        key={saint.id}
+                        saint={saint}
                         onClick={() => handleOpenSaint(saint, false)}
                       />
                     ))}
-                  </StaggeredList>
+                  </div>
                 )}
               </div>
             </motion.div>
@@ -704,24 +703,24 @@ const SaintCard: React.FC<{ saint: SaintWithScore; onClick: () => void }> = ({ s
   return (
     <Button
       onClick={onClick}
-      className="group bg-card border border-border rounded-[2rem] overflow-hidden hover:border-primary/50 hover:shadow-premium-hover hover:-translate-y-1 transition-all duration-500 text-left flex flex-col h-full focus-visible:ring-2 focus-visible:ring-primary outline-none"
+      className="group bg-card border border-border rounded-[2rem] overflow-hidden hover:border-primary/50 hover:shadow-premium-hover hover:translate-y-0 transition-colors duration-300 text-left flex flex-col h-full focus-visible:ring-2 focus-visible:ring-primary outline-none"
     >
-      <div className="relative h-spacing-4xl overflow-hidden">
+      <div className="pointer-events-none relative h-spacing-4xl overflow-hidden">
         <SacredImage 
           src={saint.image || ''} 
           category={saint.category}
           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
           alt={saint.name} 
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-        <div className="absolute bottom-spacing-md left-spacing-lg flex items-center gap-spacing-xs">
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+        <div className="pointer-events-none absolute bottom-spacing-md left-spacing-lg flex items-center gap-spacing-xs">
           <span className="text-premium-xs font-black uppercase tracking-widest text-white/90 bg-primary/80 px-spacing-xs py-spacing-3xs rounded-premium-full ">
             {CATEGORY_LABELS[saint.category] || saint.category}
           </span>
         </div>
         <RelevanceBadge
           score={saint.similarityScore}
-          className="absolute top-spacing-sm right-spacing-sm "
+          className="pointer-events-none absolute top-spacing-sm right-spacing-sm "
         />
       </div>
       
