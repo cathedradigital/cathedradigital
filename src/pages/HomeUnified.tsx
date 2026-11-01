@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Helmet } from '@/lib/helmet-compat';
 import { Link, useNavigate } from '@/lib/rr-compat';
 import {
@@ -50,21 +50,6 @@ const HomeUnified: React.FC = () => {
   const { lastRead, dailySteps } = useSpiritualJourney();
   const { profile, authenticated } = useAuth();
   const [query, setQuery] = useState('');
-  const [opening, setOpening] = useState(true);
-
-  useEffect(() => {
-    const key = 'catedra:atrium-opening-seen';
-    if (window.sessionStorage.getItem(key) === '1') {
-      setOpening(false);
-      return;
-    }
-    const timer = window.setTimeout(() => {
-      window.sessionStorage.setItem(key, '1');
-      setOpening(false);
-    }, 1800);
-    return () => window.clearTimeout(timer);
-  }, []);
-
   const featured = themes[0];
   const firstStep = dailySteps[0];
 
@@ -82,16 +67,6 @@ const HomeUnified: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      {opening && (
-        <div className="fixed inset-0 z-[100] flex min-h-screen items-center justify-center bg-background" role="status" aria-label="Abrindo a Cathedra Digital">
-          <div className="flex flex-col items-center px-6 text-center animate-[atrium-opening_1.8s_ease-out_forwards]">
-            <span className="relative flex h-28 w-28 items-center justify-center rounded-2xl border border-[#D4AF37]/35 bg-[#102A3A] p-3 shadow-[0_18px_50px_rgba(8,25,35,0.28)] md:h-36 md:w-36 md:p-4" aria-hidden="true"><span className="absolute inset-2 rounded-xl border border-[#D4AF37]/20" /><Icons.Logo className="relative h-24 w-24 md:h-32 md:w-32" /></span>
-            <span className="mt-5 font-display text-4xl tracking-tight md:text-6xl">Cathedra Digital</span>
-            
-            <span className="mt-8 text-[10px] font-semibold uppercase tracking-[0.32em] text-muted-foreground">Átrio · Estudar · Rezar · Formar-se</span>
-          </div>
-        </div>
-      )}
       <Helmet>
         <title>Cathedra Digital — sua jornada de estudo, oração e formação</title>
         <meta name="description" content="Estude, reze, forme-se e descubra a tradição cristã em uma única plataforma." />
@@ -106,7 +81,7 @@ const HomeUnified: React.FC = () => {
             <div className="grid items-end gap-10 lg:grid-cols-[1.15fr_.85fr]">
               <div>
                 <div className="mb-8 flex items-center gap-5 md:gap-6" aria-label="Cathedra Digital">
-                  <span className="flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl border border-[#D4AF37]/25 bg-[#102A3A] p-2 md:h-24 md:w-24 md:p-3"><Icons.Logo className="h-full w-full" /></span>
+                  <span className="relative flex h-[76px] w-[76px] shrink-0 items-center justify-center rounded-full border border-[#D4AF37]/55 bg-[#102A3A] p-2 shadow-[0_8px_28px_rgba(16,42,58,0.18)] md:h-[88px] md:w-[88px]" aria-hidden="true"><span className="absolute inset-[5px] rounded-full border border-[#D4AF37]/25" /><Icons.Logo className="relative h-full w-full p-2" /></span>
                   <div className="flex flex-col justify-center">
                     <span className="font-display text-3xl leading-none tracking-tight text-foreground md:text-5xl">Cathedra Digital</span>
                   </div>
