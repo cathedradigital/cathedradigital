@@ -109,7 +109,7 @@ const AdminCrmSegmentation: React.FC<Props> = ({ users, onSelectUser, totalUsers
     a.download = `segmentacao_${segment}_${new Date().toISOString().slice(0, 10)}.csv`;
     a.click();
     URL.revokeObjectURL(url);
-    toast.success(`${filtered.length} usuários exportados.`);
+    toast.success(`${filtered.length} usuários desta página exportados.`);
   }, [filtered, segment]);
 
   return (
@@ -131,6 +131,7 @@ const AdminCrmSegmentation: React.FC<Props> = ({ users, onSelectUser, totalUsers
               <span className="text-premium-xs font-black uppercase tracking-wider">{s.label}</span>
             </div>
             <p className="text-premium-xl font-bold mt-spacing-2xs">{segmentedUsers[s.key].length}</p>
+            <p className="text-[9px] uppercase tracking-wider text-muted-foreground">nesta página</p>
           </Button>
         ))}
       </div>
