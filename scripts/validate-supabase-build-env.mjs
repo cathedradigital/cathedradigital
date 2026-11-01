@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 
 function fail(message) {
-  console.error(\`[supabase-build] BLOCKED: \${message}\`);
+  console.error(`[supabase-build] BLOCKED: ${message}`);
   process.exit(1);
 }
 
@@ -20,7 +20,7 @@ try {
   fail('VITE_SUPABASE_URL is not a valid URL.');
 }
 
-if (parsedUrl.protocol !== 'https:' || parsedUrl.hostname !== \`\${projectId}.supabase.co\` || parsedUrl.pathname !== '/') {
+if (parsedUrl.protocol !== 'https:' || parsedUrl.hostname !== `${projectId}.supabase.co` || parsedUrl.pathname !== '/') {
   fail('VITE_SUPABASE_URL does not match VITE_SUPABASE_PROJECT_ID.');
 }
 
@@ -39,4 +39,4 @@ if (fallbackUrl !== url || fallbackKey !== publishableKey) {
   fail('Explicit build environment does not match the checked-in public fallback. Resolve the project/key discrepancy before building.');
 }
 
-console.log(\`[supabase-build] validated explicit Supabase target \${projectId}; publishable key present and not logged.\`);
+console.log(`[supabase-build] validated explicit Supabase target ${projectId}; publishable key present and not logged.`);
