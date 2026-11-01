@@ -411,7 +411,7 @@ const LazyParagraph: React.FC<{
   const { settings } = useReadingSettings();
 
   const ref = React.useRef<HTMLDivElement>(null);
-  const [isVisible, setIsVisible] = useState(false);
+  const [isVisible, setIsVisible] = useState(() => p === currentParagraph);
   const [isContextualOpen, setIsContextualOpen] = useState(false);
   const [contextText, setContextText] = useState('');
 
@@ -425,6 +425,14 @@ const LazyParagraph: React.FC<{
     observer.observe(el);
     return () => observer.disconnect();
   }, []);
+
+  // O parágrafo solicitado pela URL ou pela navegação explícita precisa ser
+  // carregado imediatamente, mesmo quando ainda não entrou no viewport.
+  // Os demais parágrafos continuam sob IntersectionObserver para preservar
+  // o carregamento progressivo do leitor.
+  useEffect(() => {
+    if (currentParagraph === p) setIsVisible(true);
+  }, [currentParagraph, p]);
 
   return (
     <article 
