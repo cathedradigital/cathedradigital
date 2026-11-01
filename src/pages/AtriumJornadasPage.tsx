@@ -127,10 +127,6 @@ const AtriumJornadasPage: React.FC = () => {
   return (
     <div
       className="min-h-screen w-full bg-background text-foreground"
-      style={{
-        backgroundImage:
-          'url("https://www.transparenttextures.com/patterns/p6.png")',
-      }}
     >
       <Helmet>
         <title>Cathedra — Formação</title>
@@ -219,7 +215,7 @@ const AtriumJornadasPage: React.FC = () => {
                 className="pointer-events-none absolute inset-0 opacity-[0.05]"
                 style={{
                   backgroundImage:
-                    'url("https://www.transparenttextures.com/patterns/parchment.png")',
+                    'radial-gradient(ellipse at 18% 22%, hsl(var(--stitch-secondary) / 0.35), transparent 68%)',
                 }}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-stitch-primary via-stitch-primary/50 to-transparent" />
