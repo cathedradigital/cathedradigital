@@ -7,6 +7,11 @@ import { useNavigate, useSearchParams } from '@/lib/rr-compat';
 import { AppRoute } from '@/types';
 import { ArrowLeft, Loader2 } from 'lucide-react';
 
+// Links enviados pelo Supabase devem sempre retornar ao domínio público oficial.
+// Não usar window.location.origin: em desenvolvimento/preview isso pode gerar
+// links de confirmação apontando para localhost ou para um host temporário.
+const AUTH_REDIRECT_ORIGIN = 'https://cathedradigital.com.br';
+
 // Preserva ?next= (rota interna) através de login, signup e OAuth.
 // Usado sobretudo pela rota /.lovable/oauth/consent para retornar à autorização MCP.
 function safeNextPath(raw: string | null): string | null {
@@ -66,7 +71,7 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
     try {
       if (mode === 'forgot') {
         const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
-          redirectTo: `${window.location.origin}/reset-password`,
+          redirectTo: `${AUTH_REDIRECT_ORIGIN}/reset-password`,
         });
         if (resetError) setError(resetError.message);
         else setSuccess('Se este email estiver cadastrado, você receberá um link para redefinir sua senha.');
@@ -74,12 +79,12 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
       }
 
       if (mode === 'signup') {
-        const { error: signUpError } = await supabase.auth.signUp({
+        const { data: signupData, error: signUpError } = await supabase.auth.signUp({
           email,
           password,
           options: {
             data: { name },
-            emailRedirectTo: `${window.location.origin}${nextPath ?? ''}`,
+            emailRedirectTo: `${AUTH_REDIRECT_ORIGIN}${nextPath ?? '/'}`,
           },
         });
         if (signUpError) {
@@ -87,14 +92,14 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
           return;
         }
 
-        setSuccess('Conta criada! Fazendo login...');
-        const { data: loginData, error: loginError } = await supabase.auth.signInWithPassword({ email, password });
-        if (loginError) {
-          setSuccess('Conta criada com sucesso! Você já pode fazer login.');
-          setMode('login');
-        } else {
-          handledSessionUserId.current = loginData.user?.id ?? null;
+        // Com confirmação de email habilitada, o Supabase não cria sessão
+        // imediatamente. Não tentar autenticar antes da confirmação.
+        if (signupData.session && signupData.user) {
+          handledSessionUserId.current = signupData.user.id;
           handleSignupSuccess();
+        } else {
+          setSuccess('Conta criada! Enviamos um link de confirmação para seu e-mail. Confirme o endereço para entrar na Cátedra.');
+          setMode('login');
         }
         return;
       }
@@ -348,7 +353,7 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
                   const { error: oauthError } = await supabase.auth.signInWithOAuth({
                     provider: 'google',
                     options: {
-                      redirectTo: `${window.location.origin}${AppRoute.LOGIN}${nextQuery}`,
+                      redirectTo: `${AUTH_REDIRECT_ORIGIN}${AppRoute.LOGIN}${nextQuery}`,
                       queryParams: { prompt: 'select_account' },
                     },
                   });
@@ -397,7 +402,7 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
                   const { error: oauthError } = await supabase.auth.signInWithOAuth({
                     provider: 'apple',
                     options: {
-                      redirectTo: `${window.location.origin}${AppRoute.LOGIN}${nextQuery}`,
+                      redirectTo: `${AUTH_REDIRECT_ORIGIN}${AppRoute.LOGIN}${nextQuery}`,
                     },
                   });
                   if (oauthError) {

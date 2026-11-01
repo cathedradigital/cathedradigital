@@ -49,93 +49,114 @@ export const useAdminDashboardData = (page = 0, pageSize = 20) => {
   return useQuery({
     queryKey: ['admin-dashboard-stats', page, pageSize],
     queryFn: async (): Promise<AdminStats> => {
-      const thirtyDaysAgoStart = new Date();
-      thirtyDaysAgoStart.setDate(new Date().getDate() - 30);
+      const now = new Date();
+      const thirtyDaysAgoStart = new Date(now);
+      thirtyDaysAgoStart.setDate(now.getDate() - 30);
       const iso30 = thirtyDaysAgoStart.toISOString();
+      const todayStart = new Date(now);
+      todayStart.setHours(0, 0, 0, 0);
+      // Inatividade e taxa de retorno usam a mesma janela de 30 dias.
 
       const from = page * pageSize;
       const to = from + pageSize - 1;
+      const months = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+      const currentMonth = now.getMonth();
 
-      // Executamos queries em paralelo, mas limitamos a listagem de usuários
-      const [statsRes, profilesRes, metricsRes, transactionsRes, journalRes, journeysStartedRes, crmRes] = await Promise.all([
-        supabase.from('profiles').select('*', { count: 'exact', head: true }),
+      // Indicadores globais usam COUNT exato no banco; não derivar totais
+      // da página de 20 usuários exibida na tabela administrativa.
+      const growthPromise = Promise.all(
+        months.slice(0, currentMonth + 1).map(async (month, index) => {
+          const monthEnd = new Date(now.getFullYear(), index + 1, 1);
+          const { count, error } = await supabase
+            .from('profiles')
+            .select('id', { count: 'exact', head: true })
+            .lt('created_at', monthEnd.toISOString());
+          if (error) throw error;
+          return { name: month, total: count || 0 };
+        })
+      );
+
+      const [
+        statsRes,
+        profilesRes,
+        premiumRes,
+        activeTodayRes,
+        activeLast30Res,
+        inactiveRes,
+        visitsRes,
+        downloadsRes,
+        installsRes,
+        opensRes,
+        transactionsRes,
+        journalRes,
+        journeysStartedRes,
+        crmRes,
+        userGrowth,
+      ] = await Promise.all([
+        supabase.from('profiles').select('id', { count: 'exact', head: true }),
         supabase.from('profiles').select('id, is_premium, created_at, last_visit, diocese, estado, movimento_pastoral, name, role, xp, level, streak').range(from, to),
-        supabase.from('app_metrics').select('metric_type, created_at').gte('created_at', iso30).limit(5000), // Cap para evitar estouro
+        supabase.from('profiles').select('id', { count: 'exact', head: true }).eq('is_premium', true),
+        supabase.from('profiles').select('id', { count: 'exact', head: true }).gte('last_visit', todayStart.toISOString()),
+        supabase.from('profiles').select('id', { count: 'exact', head: true }).gte('last_visit', iso30),
+        supabase.from('profiles').select('id', { count: 'exact', head: true }).or(`last_visit.is.null,last_visit.lt.${iso30}`),
+        supabase.from('app_metrics').select('metric_type', { count: 'exact', head: true }).eq('metric_type', 'visit').gte('created_at', iso30),
+        supabase.from('app_metrics').select('metric_type', { count: 'exact', head: true }).eq('metric_type', 'download').gte('created_at', iso30),
+        supabase.from('app_metrics').select('metric_type', { count: 'exact', head: true }).eq('metric_type', 'pwa_install').gte('created_at', iso30),
+        supabase.from('app_metrics').select('metric_type', { count: 'exact', head: true }).eq('metric_type', 'pwa_open').gte('created_at', iso30),
         supabase.from('transactions').select('amount, status, created_at, profiles(name)').order('created_at', { ascending: false }).limit(100),
         supabase.from('spiritual_journal').select('user_id', { count: 'exact', head: true }),
         JourneyService.getGlobalProgressCounts(),
         supabase.from('user_management_stats').select('id, email, classification, reflections_count, current_journey, last_activity').range(from, to),
+        growthPromise,
       ]);
 
+      if (statsRes.error) throw statsRes.error;
       if (profilesRes.error) throw profilesRes.error;
-      if (metricsRes.error) throw metricsRes.error;
+      if (premiumRes.error) throw premiumRes.error;
+      if (activeTodayRes.error) throw activeTodayRes.error;
+      if (activeLast30Res.error) throw activeLast30Res.error;
+      if (inactiveRes.error) throw inactiveRes.error;
+      if (visitsRes.error) throw visitsRes.error;
+      if (downloadsRes.error) throw downloadsRes.error;
+      if (installsRes.error) throw installsRes.error;
+      if (opensRes.error) throw opensRes.error;
       if (transactionsRes.error) throw transactionsRes.error;
+      if (journalRes.error) throw journalRes.error;
       if (journeysStartedRes.error) throw journeysStartedRes.error;
+      if (crmRes.error) throw crmRes.error;
 
       const profiles = profilesRes.data || [];
-      const metrics = metricsRes.data || [];
       const transactions = transactionsRes.data || [];
       const totalCount = statsRes.count || 0;
 
-      // Stats globais baseadas nos profiles (Idealmente isso viria de uma view ou RPC consolidado se o volume for MUITO alto)
-      // Por enquanto, as métricas de crescimento e geolocalização serão baseadas na amostragem ou queries específicas se necessário.
-      // Para manter a performance abaixo de 800ms, evitamos processar 100% dos dados no client.
-
-      const premiumCount = profiles.filter(p => p.is_premium).length; // Amostragem (ou query de count específica)
-      const visitsCount = metrics.filter(m => m.metric_type === 'visit').length;
-      const downloadsCount = metrics.filter(m => m.metric_type === 'download').length;
-      const pwaInstalls = metrics.filter(m => m.metric_type === 'pwa_install').length;
-      const pwaOpens = metrics.filter(m => m.metric_type === 'pwa_open').length;
+      // Receita e agregações geográficas ainda dependem de consolidação no banco;
+      // não são apresentadas como contagens globais derivadas desta página.
       const totalRevenue = transactions.filter(t => t.status === 'approved').reduce((acc, curr) => acc + Number(curr.amount), 0);
       const pendingRevenue = transactions.filter(t => t.status === 'pending').reduce((acc, curr) => acc + Number(curr.amount), 0);
 
-      const now = new Date();
-      const activeToday = profiles.filter(p => {
-        if (!p.last_visit) return false;
-        const visitDate = new Date(p.last_visit);
-        return visitDate.toDateString() === now.toDateString();
-      }).length;
-      
-      const thirtyDaysAgo = new Date();
-      thirtyDaysAgo.setDate(now.getDate() - 30);
-      const activeLast30Days = profiles.filter(p => {
-        if (!p.last_visit) return false;
-        const visitDate = new Date(p.last_visit);
-        return visitDate >= thirtyDaysAgo;
-      }).length;
+      const premiumCount = premiumRes.count || 0;
+      const visitsCount = visitsRes.count || 0;
+      const downloadsCount = downloadsRes.count || 0;
+      const pwaInstalls = installsRes.count || 0;
+      const pwaOpens = opensRes.count || 0;
+      const activeToday = activeTodayRes.count || 0;
+      const activeLast30Days = activeLast30Res.count || 0;
+      const inactiveUsers = inactiveRes.count || 0;
+      const returnRate = totalCount > 0 ? (activeLast30Days / totalCount) * 100 : 0;
 
-      const inactiveUsers = profiles.filter(p => {
-        if (!p.last_visit) return true;
-        const diff = (now.getTime() - new Date(p.last_visit).getTime()) / (1000 * 60 * 60);
-        return diff >= 48;
-      }).length;
-
-      const returnRate = totalCount > 0 ? ((totalCount - inactiveUsers) / totalCount) * 100 : 0;
-
-      const months = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
-      const currentYear = new Date().getFullYear();
-      
-      const userGrowth = months.map((month, index) => {
-        const count = profiles.filter(p => {
-          const date = new Date(p.created_at);
-          return date.getMonth() <= index && date.getFullYear() <= currentYear;
-        }).length;
-        return { name: month, total: count };
-      }).slice(0, new Date().getMonth() + 1);
-
+      // A série financeira permanece limitada às 100 transações mais recentes
+      // até existir uma agregação SQL/RPC confiável no banco.
       const revenueData = [3, 2, 1, 0].map(weeksAgo => {
         const start = new Date(now);
         start.setDate(now.getDate() - (weeksAgo + 1) * 7);
         const end = new Date(now);
         end.setDate(now.getDate() - weeksAgo * 7);
-        
         const amount = transactions
           .filter(t => {
             const date = new Date(t.created_at);
             return t.status === 'approved' && date >= start && date <= end;
           })
           .reduce((acc, curr) => acc + Number(curr.amount), 0);
-          
         return { name: `Sem ${4 - weeksAgo}`, amount };
       });
 

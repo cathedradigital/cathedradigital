@@ -15,7 +15,7 @@ const AdminChartsRecharts: React.FC<Props> = ({ userGrowth, revenueData }) => (
     <Card data-test="grafico-1" className="border-border/40 shadow-premium-none overflow-hidden bg-card ">
       <CardHeader className="pb-spacing-xs pt-spacing-md px-spacing-md">
         <CardTitle className="text-premium-sm font-black uppercase tracking-tight text-primary">Crescimento de Usuários</CardTitle>
-        <CardDescription className="text-premium-xs uppercase tracking-widest opacity-60">Novos registros por mês</CardDescription>
+        <CardDescription className="text-premium-xs uppercase tracking-widest opacity-60">Total acumulado até cada mês</CardDescription>
       </CardHeader>
       <CardContent className="h-[240px] w-full p-spacing-xs sm:p-spacing-md">
         <ResponsiveContainer width="100%" height="100%">
@@ -66,7 +66,7 @@ const AdminChartsRecharts: React.FC<Props> = ({ userGrowth, revenueData }) => (
     <Card data-test="grafico-2" className="border-border/40 shadow-premium-none overflow-hidden bg-card ">
       <CardHeader className="pb-spacing-xs pt-spacing-md px-spacing-md">
         <CardTitle className="text-premium-sm font-black uppercase tracking-tight text-primary">Fluxo Financeiro</CardTitle>
-        <CardDescription className="text-premium-xs uppercase tracking-widest opacity-60">Receita semanal acumulada</CardDescription>
+        <CardDescription className="text-premium-xs uppercase tracking-widest opacity-60">Receita semanal nas 100 transações mais recentes</CardDescription>
       </CardHeader>
       <CardContent className="h-[240px] w-full p-spacing-xs sm:p-spacing-md">
         <ResponsiveContainer width="100%" height="100%">

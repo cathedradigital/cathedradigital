@@ -29,6 +29,7 @@ interface UserProfile {
 interface Props {
   user: UserProfile;
   onBack: () => void;
+  onUserUpdated?: () => void;
 }
 
 const hoursSince = (date: string | null) => {
@@ -36,7 +37,7 @@ const hoursSince = (date: string | null) => {
   return Math.floor((Date.now() - new Date(date).getTime()) / (1000 * 60 * 60));
 };
 
-const AdminCrmUserProfile: React.FC<Props> = ({ user, onBack }) => {
+const AdminCrmUserProfile: React.FC<Props> = ({ user, onBack, onUserUpdated }) => {
   const [journeyProgress, setJourneyProgress] = useState<any[]>([]);
   const [journalEntries, setJournalEntries] = useState<any[]>([]);
   const [chaptersRead, setChaptersRead] = useState(0);
@@ -44,6 +45,7 @@ const AdminCrmUserProfile: React.FC<Props> = ({ user, onBack }) => {
   const [communityPosts, setCommunityPosts] = useState(0);
   const [diagnosis, setDiagnosis] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [isPremium, setIsPremium] = useState(user.is_premium);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -78,10 +80,15 @@ const AdminCrmUserProfile: React.FC<Props> = ({ user, onBack }) => {
   }, [user.id]);
 
   const handleTogglePremium = async () => {
-    const { error } = await supabase.from('profiles').update({ is_premium: !user.is_premium }).eq('id', user.id);
-    if (error) { toast.error('Erro ao atualizar'); return; }
-    toast.success(user.is_premium ? 'PRO removido' : 'PRO ativado');
-    // Parent needs to refresh
+    const nextPremium = !isPremium;
+    const { error } = await supabase.from('profiles').update({ is_premium: nextPremium }).eq('id', user.id);
+    if (error) {
+      toast.error('Erro ao atualizar acesso PRO: ' + error.message);
+      return;
+    }
+    setIsPremium(nextPremium);
+    onUserUpdated?.();
+    toast.success(nextPremium ? 'PRO ativado' : 'PRO removido');
   };
 
   const statusHours = hoursSince(user.last_visit);
@@ -111,7 +118,7 @@ const AdminCrmUserProfile: React.FC<Props> = ({ user, onBack }) => {
             <div className="flex-1 min-w-spacing-0 space-y-spacing-xs">
               <div className="flex items-center gap-spacing-xs flex-wrap">
                 <h2 className="text-premium-xl font-bold">{user.name || 'Sem nome'}</h2>
-                {user.is_premium && <Badge className="bg-primary/15 text-primary border-primary/30 gap-spacing-2xs"><Icons.Crown className="w-spacing-sm h-spacing-sm" /> PRO</Badge>}
+                {isPremium && <Badge className="bg-primary/15 text-primary border-primary/30 gap-spacing-2xs"><Icons.Crown className="w-spacing-sm h-spacing-sm" /> PRO</Badge>}
                 {user.role === 'admin' && <Badge className="bg-destructive/15 text-destructive border-destructive/30 gap-spacing-2xs"><Icons.Shield className="w-spacing-sm h-spacing-sm" /> Admin</Badge>}
                 <Badge variant="outline" className={`${statusColor} border-current/30 text-premium-xs`}>{statusLabel}</Badge>
               </div>
@@ -122,8 +129,8 @@ const AdminCrmUserProfile: React.FC<Props> = ({ user, onBack }) => {
               </div>
             </div>
             <div className="flex gap-spacing-xs">
-              <Button size="sm" variant={user.is_premium ? 'outline' : 'default'} onClick={handleTogglePremium} className="gap-spacing-2xs text-premium-xs">
-                <Icons.Crown className="w-spacing-sm h-spacing-sm" /> {user.is_premium ? 'Remover PRO' : 'Ativar PRO'}
+              <Button size="sm" variant={isPremium ? 'outline' : 'default'} onClick={handleTogglePremium} className="gap-spacing-2xs text-premium-xs">
+                <Icons.Crown className="w-spacing-sm h-spacing-sm" /> {isPremium ? 'Remover PRO' : 'Ativar PRO'}
               </Button>
             </div>
           </div>
