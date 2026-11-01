@@ -9,8 +9,7 @@ import { Label } from '@/components/ui/label';
 
 import { toast } from 'sonner';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
-import ExcelJS from 'exceljs';
-import Papa from 'papaparse';
+import * as XLSX from 'xlsx';
 
 interface Project {
   id: string;
@@ -118,89 +117,88 @@ const AdminConstructionTab: React.FC = () => {
     const file = e.target.files?.[0];
     if (!file || !selectedProjectId) return;
 
-    setUploading(true);
-    try {
-      const extension = file.name.toLowerCase().split('.').pop();
-      let jsonData: Array<Record<string, unknown>> = [];
+    if (file.size > 10 * 1024 * 1024) {
+      toast.error('O arquivo excede o limite seguro de 10 MB.');
+      e.target.value = '';
+      return;
+    }
 
-      if (extension === 'csv') {
-        const parsed = Papa.parse<Record<string, unknown>>(await file.text(), {
-          header: true,
-          skipEmptyLines: true,
-          dynamicTyping: true,
+    setUploading(true);
+    const reader = new FileReader();
+
+    reader.onload = async (event) => {
+      try {
+        const data = new Uint8Array(event.target?.result as ArrayBuffer);
+        const workbook = XLSX.read(data, {
+          type: 'array',
+          cellFormula: false,
+          cellHTML: false,
+          sheetRows: 10001,
         });
-        if (parsed.errors.length > 0) {
-          throw new Error('Não foi possível interpretar o CSV.');
-        }
-        jsonData = parsed.data;
-      } else if (extension === 'xlsx') {
-        const workbook = new ExcelJS.Workbook();
-        await workbook.xlsx.load(await file.arrayBuffer());
-        const worksheet = workbook.worksheets[0];
+        const firstSheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[firstSheetName];
         if (!worksheet) throw new Error('A planilha não contém abas.');
 
-        const headers: string[] = [];
-        worksheet.getRow(1).eachCell((cell, columnNumber) => {
-          headers[columnNumber - 1] = String(cell.text || cell.value || '').trim();
+        const fullRange = worksheet['!fullref'] || worksheet['!ref'];
+        if (fullRange && XLSX.utils.decode_range(fullRange).e.r > 10000) {
+          throw new Error('A planilha excede o limite de 10.000 linhas.');
+        }
+
+        const jsonData = XLSX.utils.sheet_to_json<Record<string, unknown>>(worksheet, {
+          defval: null,
+          raw: true,
         });
 
-        worksheet.eachRow((row, rowNumber) => {
-          if (rowNumber === 1) return;
-          const record: Record<string, unknown> = {};
-          headers.forEach((header, index) => {
-            if (header) record[header] = row.getCell(index + 1).value;
-          });
-          if (Object.values(record).some(value => value !== null && value !== undefined && value !== '')) {
-            jsonData.push(record);
+        if (jsonData.length === 0) {
+          toast.error('A planilha está vazia');
+          return;
+        }
+
+        const formattedData = jsonData.map(row => {
+          if (uploadType === 'budget') {
+            return {
+              project_id: selectedProjectId,
+              type: 'budget',
+              item_name: row['Item'] || row['Nome'] || row['Descrição'] || 'Sem nome',
+              planned_value: row['Previsto'] || row['Orçado'] || 0,
+              actual_value: row['Real'] || row['Gasto'] || 0,
+              category: row['Categoria'] || 'Geral',
+            };
           }
-        });
-      } else {
-        throw new Error('Formato não suportado. Envie um arquivo .xlsx ou .csv.');
-      }
-
-      if (jsonData.length === 0) {
-        toast.error('A planilha está vazia');
-        return;
-      }
-
-      const formattedData = jsonData.map(row => {
-        if (uploadType === 'budget') {
           return {
             project_id: selectedProjectId,
-            type: 'budget',
-            item_name: row['Item'] || row['Nome'] || row['Descrição'] || 'Sem nome',
-            planned_value: row['Previsto'] || row['Orçado'] || 0,
-            actual_value: row['Real'] || row['Gasto'] || 0,
-            category: row['Categoria'] || 'Geral',
+            type: 'schedule',
+            item_name: row['Tarefa'] || row['Atividade'] || 'Sem nome',
+            planned_start_date: row['Início Previsto'] || row['Start'] || null,
+            planned_end_date: row['Fim Previsto'] || row['End'] || null,
+            actual_start_date: row['Início Real'] || null,
+            actual_end_date: row['Fim Real'] || null,
+            progress: row['Progresso'] || row['%'] || 0,
+            category: row['Fase'] || 'Geral',
           };
-        }
-        return {
-          project_id: selectedProjectId,
-          type: 'schedule',
-          item_name: row['Tarefa'] || row['Atividade'] || 'Sem nome',
-          planned_start_date: row['Início Previsto'] || row['Start'] || null,
-          planned_end_date: row['Fim Previsto'] || row['End'] || null,
-          actual_start_date: row['Início Real'] || null,
-          actual_end_date: row['Fim Real'] || null,
-          progress: row['Progresso'] || row['%'] || 0,
-          category: row['Fase'] || 'Geral',
-        };
-      });
+        });
 
-      const { error } = await supabase
-        .from('construction_data')
-        .upsert(formattedData, { onConflict: 'project_id,type,item_name,category' });
+        const { error } = await supabase
+          .from('construction_data')
+          .upsert(formattedData, { onConflict: 'project_id,type,item_name,category' });
 
-      if (error) throw error;
-      toast.success(`Planilha de ${uploadType === 'budget' ? 'orçamento' : 'cronograma'} processada com sucesso!`);
-      setIsUploadDialogOpen(false);
-    } catch (error) {
-      console.error('Upload error:', error);
-      toast.error(error instanceof Error ? error.message : 'Erro ao processar planilha.');
-    } finally {
+        if (error) throw error;
+        toast.success(`Planilha de ${uploadType === 'budget' ? 'orçamento' : 'cronograma'} processada com sucesso!`);
+        setIsUploadDialogOpen(false);
+      } catch (error) {
+        console.error('Upload error:', error);
+        toast.error(error instanceof Error ? error.message : 'Erro ao processar planilha.');
+      } finally {
+        setUploading(false);
+        e.target.value = '';
+      }
+    };
+
+    reader.onerror = () => {
       setUploading(false);
-      e.target.value = '';
-    }
+      toast.error('Não foi possível ler o arquivo selecionado.');
+    };
+    reader.readAsArrayBuffer(file);
   };
 
   const filteredProjects = projects.filter(p => 
@@ -361,7 +359,7 @@ const AdminConstructionTab: React.FC = () => {
             </div>
             <div className="text-center px-spacing-md">
               <p className="text-premium-sm font-medium">Arraste sua planilha aqui ou clique no botão</p>
-              <p className="text-premium-xs text-muted-foreground mt-spacing-2xs">Formatos suportados: XLSX e CSV</p>
+              <p className="text-premium-xs text-muted-foreground mt-spacing-2xs">Formatos suportados: XLSX, XLS e CSV</p>
             </div>
             <div className="relative">
               <Button disabled={uploading} className="relative z-10">
@@ -371,7 +369,7 @@ const AdminConstructionTab: React.FC = () => {
               <input 
                 type="file" 
                 className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20" 
-                accept=".xlsx, .csv"
+                accept=".xlsx, .xls, .csv"
                 onChange={handleFileUpload}
                 disabled={uploading}
               />
