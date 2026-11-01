@@ -1,9 +1,10 @@
 name: Deploy Cloudflare
 
 on:
-  push:
+  workflow_run:
+    workflows: ["CI", "Estudar E2E", "Security Audit", "Estudar final audit"]
+    types: [completed]
     branches: ["main"]
-  workflow_dispatch:
 
 concurrency:
   group: cloudflare-production
@@ -14,11 +15,51 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 60
     permissions:
+      actions: read
       contents: read
 
     steps:
-      - name: Checkout
+      - name: Verify all release gates on the exact SHA
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const sha = context.payload.workflow_run.head_sha;
+            const branch = context.payload.workflow_run.head_branch;
+            if (branch !== "main") {
+              core.setFailed(`Refusing deployment from branch ${branch}`);
+              return;
+            }
+
+            const required = ["CI", "Estudar E2E", "Security Audit", "Estudar final audit"];
+            const { data } = await github.rest.actions.listWorkflowRunsForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              branch: "main",
+              head_sha: sha,
+              per_page: 100,
+            });
+
+            for (const name of required) {
+              const matching = data.workflow_runs
+                .filter(run => run.name === name && run.head_sha === sha && run.head_branch === "main")
+                .sort((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at));
+              const latest = matching[0];
+              if (!latest || latest.status !== "completed" || latest.conclusion !== "success") {
+                core.setFailed(`Release blocked: ${name} has not succeeded on ${sha}`);
+                return;
+              }
+              core.info(`PASS ${name}: ${latest.conclusion} (${latest.html_url})`);
+            }
+
+            await core.summary
+              .addHeading("Release gates")
+              .addRaw(`All required workflows passed on SHA ${sha}: CI, final audit, authenticated/public Playwright, and Security Audit.`)
+              .write();
+
+      - name: Checkout the exact validated SHA
         uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
 
       - name: Verify Cloudflare credentials
         env:
@@ -29,7 +70,7 @@ jobs:
           test -n "$CLOUDFLARE_ACCOUNT_ID" || { echo "::error::Missing GitHub secret CLOUDFLARE_ACCOUNT_ID"; exit 1; }
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: "22.x"
 
@@ -63,8 +104,14 @@ jobs:
       - name: Validate internal routes
         run: npm run validate:links
 
-      - name: Build
-        run: npm run build
+      - name: Validate explicit Supabase build target and build
+        run: |
+          set -euo pipefail
+          set -a
+          . ./.env.production
+          set +a
+          node scripts/validate-supabase-build-env.mjs
+          npm run build
 
       - name: Deploy Worker
         uses: cloudflare/wrangler-action@v4
@@ -110,8 +157,6 @@ jobs:
             return 0
           }
 
-          # Test the deployed Worker first; a custom-domain bot challenge must not
-          # prevent the direct production Worker and SEO checks from running.
           check_url "$worker" 100
 
           for domain in "${domains[@]}"; do
@@ -127,8 +172,6 @@ jobs:
             fi
           done
 
-          # Validate SEO files on the direct Worker endpoint. Check custom-domain
-          # copies independently, recording bot challenges as inconclusive.
           check_url "$worker/robots.txt" 1
           check_url "$worker/sitemap.xml" 100
           robots="$(curl --fail --silent --show-error --connect-timeout 10 --max-time 20 "$worker/robots.txt")"

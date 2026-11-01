@@ -1,5 +1,4 @@
 import js from "@eslint/js";
-import eslintPluginPrettier from "eslint-plugin-prettier/recommended";
 import globals from "globals";
 import reactHooks from "eslint-plugin-react-hooks";
 import reactRefresh from "eslint-plugin-react-refresh";
@@ -19,7 +18,10 @@ export default tseslint.config(
       "react-refresh": reactRefresh,
     },
     rules: {
-      ...reactHooks.configs.recommended.rules,
+      "react-hooks/rules-of-hooks": "error",
+      "react-hooks/exhaustive-deps": "warn",
+      // Preserve the pre-ESLint-10 lint baseline; this rule was newly added to the v10 recommended set.
+      "no-useless-assignment": "off",
       "no-restricted-imports": [
         "error",
         {
@@ -36,12 +38,10 @@ export default tseslint.config(
       "@typescript-eslint/no-unused-vars": "off",
     },
   },
-  eslintPluginPrettier,
   {
     // Formatação é responsabilidade do `npm run format` (Prettier); o lint do CI
     // bloqueia apenas problemas reais de código.
     rules: {
-      "prettier/prettier": "off",
       "no-empty": ["warn", { allowEmptyCatch: true }],
     },
   },

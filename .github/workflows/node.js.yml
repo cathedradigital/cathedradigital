@@ -33,4 +33,10 @@ jobs:
         run: npm run validate:links
 
       - name: Build (Cloudflare)
-        run: npm run build
+        run: |
+          set -euo pipefail
+          set -a
+          source .env.production
+          set +a
+          node scripts/validate-supabase-build-env.mjs
+          npm run build
