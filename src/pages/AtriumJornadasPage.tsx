@@ -70,6 +70,7 @@ const AtriumJornadasPage: React.FC = () => {
   const [loadError, setLoadError] = useState<string | null>(null);
   const [progressError, setProgressError] = useState<string | null>(null);
   const [activeCategory, setActiveCategory] = useState<string>('all');
+  const [reloadKey, setReloadKey] = useState(0);
 
   useEffect(() => {
     let cancelled = false;
@@ -106,7 +107,7 @@ const AtriumJornadasPage: React.FC = () => {
     return () => {
       cancelled = true;
     };
-  }, [user]);
+  }, [user, reloadKey]);
 
   const categories = useMemo(() => {
     const set = new Set<string>();
@@ -288,7 +289,7 @@ const AtriumJornadasPage: React.FC = () => {
               <p className="font-stitch-body text-[14px] text-destructive">{loadError}</p>
               <button
                 type="button"
-                onClick={() => window.location.reload()}
+                onClick={() => setReloadKey((key) => key + 1)}
                 className="mt-4 border border-stitch-secondary/40 px-4 py-2 font-stitch-body text-[12px] font-bold uppercase tracking-[0.15em] text-stitch-secondary hover:bg-stitch-secondary/10"
               >
                 Tentar novamente
