@@ -10,6 +10,7 @@ on:
       - "scripts/test-safe-playwright-evidence.mjs"
       - "scripts/validate-e2e-security.mjs"
       - "scripts/validate-security-boundaries.mjs"
+      - "scripts/validate-supabase-build-env.mjs"
       - "supabase/**"
       - "playwright.config.ts"
       - "package.json"
@@ -69,7 +70,13 @@ jobs:
         run: npx playwright install --with-deps chromium
 
       - name: Build tested source
-        run: npm run build
+        run: |
+          set -euo pipefail
+          set -a
+          . ./.env.production
+          set +a
+          node scripts/validate-supabase-build-env.mjs
+          npm run build
 
       - name: Verify safe evidence handling with synthetic values
         run: node scripts/test-safe-playwright-evidence.mjs
@@ -115,7 +122,13 @@ jobs:
         run: npx playwright install --with-deps chromium
 
       - name: Build trusted main
-        run: npm run build
+        run: |
+          set -euo pipefail
+          set -a
+          . ./.env.production
+          set +a
+          node scripts/validate-supabase-build-env.mjs
+          npm run build
 
       - name: Verify safe evidence handling with synthetic values
         run: node scripts/test-safe-playwright-evidence.mjs
