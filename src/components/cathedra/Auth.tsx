@@ -7,6 +7,11 @@ import { useNavigate, useSearchParams } from '@/lib/rr-compat';
 import { AppRoute } from '@/types';
 import { ArrowLeft, Loader2 } from 'lucide-react';
 
+// Links enviados pelo Supabase devem sempre retornar ao domínio público oficial.
+// Não usar window.location.origin: em desenvolvimento/preview isso pode gerar
+// links de confirmação apontando para localhost ou para um host temporário.
+const AUTH_REDIRECT_ORIGIN = 'https://cathedradigital.com.br';
+
 // Preserva ?next= (rota interna) através de login, signup e OAuth.
 // Usado sobretudo pela rota /.lovable/oauth/consent para retornar à autorização MCP.
 function safeNextPath(raw: string | null): string | null {
@@ -66,7 +71,7 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
     try {
       if (mode === 'forgot') {
         const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
-          redirectTo: `${window.location.origin}/reset-password`,
+          redirectTo: `${AUTH_REDIRECT_ORIGIN}/reset-password`,
         });
         if (resetError) setError(resetError.message);
         else setSuccess('Se este email estiver cadastrado, você receberá um link para redefinir sua senha.');
@@ -79,7 +84,7 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
           password,
           options: {
             data: { name },
-            emailRedirectTo: `${window.location.origin}${nextPath ?? ''}`,
+            emailRedirectTo: `${AUTH_REDIRECT_ORIGIN}${nextPath ?? '/'}`,
           },
         });
         if (signUpError) {
