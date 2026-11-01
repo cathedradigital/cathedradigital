@@ -137,7 +137,7 @@ const AtriumHome: React.FC = () => {
 
       <MobileTopBar kicker="CÁTEDRA DIGITAL" title="Átrio" transparent />
 
-      <section className="mx-auto w-full max-w-[1120px] px-5 pb-[calc(var(--bottom-nav-height)+var(--spacing-md)+2rem)] pt-6 md:px-16 md:pt-14 md:pb-16 animate-fade-in">
+      <section className="w-full animate-fade-in">
         {authenticated && <AtriumReception />}
         {/* ─── Hero editorial (visitantes) ─────────────────────────────── */}
         {!authenticated && (
