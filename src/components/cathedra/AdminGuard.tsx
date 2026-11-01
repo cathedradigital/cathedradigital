@@ -19,15 +19,49 @@ const AdminGuard: React.FC<AdminGuardProps> = ({ children }) => {
 
   useEffect(() => {
     let cancelled = false;
+
+    // Nunca reutiliza a autorização do usuário anterior durante uma troca de sessão.
+    setVerified(null);
+
     if (!user) {
-      setVerified(null);
-      return;
+      return () => {
+        cancelled = true;
+      };
     }
-    (async () => {
-      const { data, error } = await supabase.rpc('is_current_user_admin');
-      if (!cancelled) setVerified(!error && data === true);
-    })();
-    return () => { cancelled = true; };
+
+    const verifyAdminRole = async () => {
+      try {
+        // A tabela concede SELECT ao usuário autenticado e sua RLS limita
+        // a leitura à própria linha (user_roles_select_own). Não depende de
+        // RPCs administrativas cuja disponibilidade varia entre ambientes.
+        const { data, error } = await supabase
+          .from('user_roles')
+          .select('role')
+          .eq('user_id', user.id)
+          .eq('role', 'admin')
+          .maybeSingle();
+
+        if (cancelled) return;
+
+        if (error) {
+          console.error('[AdminGuard] Não foi possível verificar o papel administrativo:', error);
+          setVerified(false);
+          return;
+        }
+
+        setVerified(data?.role === 'admin');
+      } catch (error) {
+        if (cancelled) return;
+        console.error('[AdminGuard] Falha ao verificar o papel administrativo:', error);
+        setVerified(false);
+      }
+    };
+
+    void verifyAdminRole();
+
+    return () => {
+      cancelled = true;
+    };
   }, [user?.id]);
 
   if (loading) return <Spinner />;
