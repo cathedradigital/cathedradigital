@@ -230,7 +230,7 @@ const JornadaCompletePage: React.FC = () => {
       if (navigator.share && navigator.canShare?.({ files: [file] })) {
         await navigator.share({
           title: `Certificado: ${journey.title}`,
-          text: `Concluí a jornada "${journey.title}" no Cátedra.`,
+          text: `Concluí a jornada "${journey.title}" no Cathedra.`,
           files: [file],
         });
       } else {
@@ -276,7 +276,7 @@ const JornadaCompletePage: React.FC = () => {
       className="min-h-screen w-full bg-stitch-background text-stitch-on-background"
     >
       <Helmet>
-        <title>Jornada concluída — {journey.title} — Cátedra</title>
+        <title>Jornada concluída — {journey.title} — Cathedra</title>
       </Helmet>
 
       <section className="mx-auto w-full max-w-[900px] px-5 pb-24 pt-8 md:px-16 md:pt-12 animate-fade-in">
@@ -416,7 +416,7 @@ const JornadaCompletePage: React.FC = () => {
                   </p>
                 </div>
                 <p className="mt-6 font-stitch-body text-[10px] font-bold uppercase tracking-[0.4em] text-stitch-secondary">
-                  Cátedra · Digital
+                  Cathedra Digital
                 </p>
               </div>
             </div>

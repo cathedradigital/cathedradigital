@@ -20,7 +20,7 @@ const TermsPage: React.FC = () => {
           <p>
             Ao acessar e utilizar a plataforma Cathedra Digital, você concorda com estes Termos de Uso. 
             Se você não concordar com qualquer parte destes termos, não deverá utilizar nossos serviços.
-            A Cátedra é uma plataforma dedicada ao estudo, oração e vivência da fé católica.
+            A Cathedra é uma plataforma dedicada ao estudo, oração e vivência da fé católica.
           </p>
         </section>
 

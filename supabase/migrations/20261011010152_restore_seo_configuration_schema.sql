@@ -4,7 +4,7 @@
 
 create table if not exists public.seo_settings (
   id uuid primary key default gen_random_uuid(),
-  site_title text not null default 'Cátedra Digital',
+  site_title text not null default 'Cathedra Digital',
   site_description text not null default 'Aprofunde sua fé católica com a Bíblia, o Catecismo, o Magistério e a tradição da Igreja.',
   site_keywords text not null default '',
   ga4_measurement_id text,
@@ -104,7 +104,7 @@ create policy seo_audits_admin_all on public.seo_audits
 
 insert into public.seo_settings (site_title, site_description, site_keywords, og_image_url, twitter_handle)
 select
-  'Cátedra Digital',
+  'Cathedra Digital',
   'Aprofunde sua fé católica com a Bíblia, o Catecismo, o Magistério e a tradição da Igreja.',
   '',
   'https://isojguvcnfncokoxoauk.supabase.co/storage/v1/object/public/public-assets/og-home.png',
