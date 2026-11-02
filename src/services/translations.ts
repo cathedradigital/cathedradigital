@@ -253,3 +253,11 @@ Object.assign(UI_TRANSLATIONS.it, {"source_desc_bible":"La Parola che illumina i
 Object.assign(UI_TRANSLATIONS.la, {"source_desc_bible":"Verbum quod viam illuminat.","source_desc_catechism":"Fides intellecta et tradita.","source_desc_documents":"Vox Ecclesiae per tempora.","study_principle_title":"Legere initium tantum est","study_principle_body":"Studium sensum accipit cum intellegere, coniungere, meditari et prosequi potes. Connexiones ex contextu quem legis exhibentur."});
 Object.assign(UI_TRANSLATIONS.fr, {"source_desc_bible":"La Parole qui éclaire le chemin.","source_desc_catechism":"La foi comprise et transmise.","source_desc_documents":"La voix de l’Église à travers le temps.","study_principle_title":"Lire n’est que le début","study_principle_body":"L’étude prend son sens lorsque vous pouvez comprendre, relier, réfléchir et poursuivre. Les connexions sont présentées à partir du contexte que vous lisez."});
 Object.assign(UI_TRANSLATIONS.de, {"source_desc_bible":"Das Wort, das den Weg erhellt.","source_desc_catechism":"Der verstandene und überlieferte Glaube.","source_desc_documents":"Die Stimme der Kirche durch die Zeiten.","study_principle_title":"Lesen ist erst der Anfang","study_principle_body":"Studium gewinnt an Sinn, wenn Sie verstehen, verbinden, reflektieren und weitergehen können. Verbindungen werden aus dem Kontext Ihres Lesens dargestellt."});
+// Cabeçalho da sidebar global (marca "Cathedra Digital" não é traduzida).
+Object.assign(UI_TRANSLATIONS.pt, {"sidebar_tagline":"Mosteiro Digital","sidebar_home_label":"Cathedra Digital — Início"});
+Object.assign(UI_TRANSLATIONS.en, {"sidebar_tagline":"Digital Monastery","sidebar_home_label":"Cathedra Digital — Home"});
+Object.assign(UI_TRANSLATIONS.es, {"sidebar_tagline":"Monasterio Digital","sidebar_home_label":"Cathedra Digital — Inicio"});
+Object.assign(UI_TRANSLATIONS.it, {"sidebar_tagline":"Monastero Digitale","sidebar_home_label":"Cathedra Digital — Home"});
+Object.assign(UI_TRANSLATIONS.la, {"sidebar_tagline":"Monasterium Digitale","sidebar_home_label":"Cathedra Digital — Initium"});
+Object.assign(UI_TRANSLATIONS.fr, {"sidebar_tagline":"Monastère Numérique","sidebar_home_label":"Cathedra Digital — Accueil"});
+Object.assign(UI_TRANSLATIONS.de, {"sidebar_tagline":"Digitales Kloster","sidebar_home_label":"Cathedra Digital — Startseite"});

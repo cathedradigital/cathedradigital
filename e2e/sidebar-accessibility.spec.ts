@@ -33,3 +33,26 @@ test('Sidebar: contém foco, fecha com Escape e restaura foco e scroll', async (
   await expect(trigger).toBeFocused();
   await expect(page.locator('body')).toHaveCSS('overflow', 'clip');
 });
+
+test('Sidebar: ArrowDown/ArrowUp no seletor de idioma não tiram o foco dele', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: /Abrir menu lateral/i }).click();
+
+  const sidebar = page.locator('#cathedra-global-sidebar');
+  await expect(sidebar).toBeVisible();
+
+  const languageSelect = sidebar.locator('#cathedra-language');
+  await languageSelect.scrollIntoViewIfNeeded();
+  // No Chromium as setas mudam o valor do <select> fechado; isso trocaria o
+  // idioma e navegaria. Bloqueamos só o evento "change" para medir o foco.
+  await page.evaluate(() => {
+    document.addEventListener('change', (event) => event.stopPropagation(), true);
+  });
+  await languageSelect.focus();
+  await expect(languageSelect).toBeFocused();
+
+  await page.keyboard.press('ArrowDown');
+  await expect(languageSelect).toBeFocused();
+  await page.keyboard.press('ArrowUp');
+  await expect(languageSelect).toBeFocused();
+});

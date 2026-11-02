@@ -46,12 +46,26 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
   const sidebarRef = React.useRef<HTMLElement>(null);
   const closeButtonRef = React.useRef<HTMLButtonElement>(null);
 
+  // Keep the latest onClose without re-running the open/close effect when the
+  // parent passes a new function identity.
+  const onCloseRef = React.useRef(onClose);
   useEffect(() => {
-    getCacheStats().then(stats => setCacheCount(stats.total));
-    
-    const handleCacheUpdate = () => {
-      getCacheStats().then(stats => setCacheCount(stats.total));
+    onCloseRef.current = onClose;
+  }, [onClose]);
+
+  useEffect(() => {
+    let cancelled = false;
+    const refreshCacheCount = () => {
+      getCacheStats()
+        .then((stats) => {
+          if (!cancelled) setCacheCount(stats.total);
+        })
+        .catch(() => {
+          if (!cancelled) setCacheCount(null);
+        });
     };
+    refreshCacheCount();
+    const handleCacheUpdate = refreshCacheCount;
 
     const previousBodyOverflow = document.body.style.overflow;
     let focusTimer: number | undefined;
@@ -62,7 +76,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
 
       if (e.key === 'Escape') {
         e.preventDefault();
-        onClose();
+        onCloseRef.current();
         return;
       }
 
@@ -95,7 +109,12 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
       }
 
       // Arrow-key navigation remains available across the sidebar controls.
-      if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+      // Native form controls (e.g. the language select) keep their own arrow keys.
+      const isFormControl =
+        activeElement instanceof HTMLSelectElement ||
+        activeElement instanceof HTMLInputElement ||
+        activeElement instanceof HTMLTextAreaElement;
+      if ((e.key === 'ArrowDown' || e.key === 'ArrowUp') && !isFormControl) {
         e.preventDefault();
         let nextIndex = e.key === 'ArrowDown' ? currentIndex + 1 : currentIndex - 1;
 
@@ -121,6 +140,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
     }
 
     return () => {
+      cancelled = true;
       window.removeEventListener('cathedra_cache_updated', handleCacheUpdate);
       window.removeEventListener('keydown', handleKeyDown);
       if (focusTimer !== undefined) window.clearTimeout(focusTimer);
@@ -129,7 +149,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
         if (previouslyFocused?.isConnected) previouslyFocused.focus();
       }
     };
-  }, [isOpen, onClose]);
+  }, [isOpen]);
   
   const sections = useMemo(() => {
     const iconMap: Record<string, any> = {
@@ -274,24 +294,15 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
           >
             {/* Mobile Header — Noir & Gold wordmark */}
             <header className="flex items-center justify-between gap-3 mb-3 pb-3" style={{ borderBottom: '1px solid rgba(201,168,76,0.25)' }}>
-              <div
-                className="flex items-baseline gap-2 cursor-pointer group rounded-md outline-none focus-visible:ring-2 focus-visible:ring-[#c9a84c] focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+              <button
+                type="button"
+                className="flex items-baseline gap-2 cursor-pointer group rounded-md bg-transparent p-0 text-left outline-none focus-visible:ring-2 focus-visible:ring-[#c9a84c] focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                 onClick={(e) => handleNav('/', e)}
-                role="button"
-                tabIndex={0}
-                aria-label="Cathedra Digital — Início"
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    handleNav('/', e);
-                  }
-                }}
+                aria-label={t('sidebar_home_label')}
               >
                 <Icons.Logo className="w-12 h-12 text-primary" />
                 <div className="flex flex-col leading-none gap-1">
                   <span
-                    role="text"
-                    aria-label="Cathedra Digital — Mosteiro Digital"
                     style={{
                       fontFamily: "'Playfair Display', serif",
                       fontWeight: 600,
@@ -312,20 +323,17 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                       color: 'hsl(var(--muted-foreground))',
                     }}
                   >
-                    Mosteiro Digital
+                    {t('sidebar_tagline')}
                   </span>
                 </div>
-              </div>
+              </button>
 
               <Button
                 ref={closeButtonRef}
                 variant="ghost"
                 size="icon"
                 onClick={onClose}
-                className="rounded-none min-h-11 min-w-11 bg-transparent hover:bg-transparent transition-all focus-visible:ring-2 focus-visible:ring-[#c9a84c]/40"
-                style={{ border: '1px solid rgba(201,168,76,0.35)', color: 'var(--gold-text)' }}
-                onMouseEnter={(e) => { e.currentTarget.style.background = '#c9a84c'; e.currentTarget.style.color = '#0a0a0a'; }}
-                onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#c9a84c'; }}
+                className="rounded-none min-h-11 min-w-11 border border-[rgba(201,168,76,0.35)] bg-transparent text-[color:var(--gold-text)] transition-all [@media(hover:hover)]:hover:bg-[#c9a84c] [@media(hover:hover)]:hover:text-[#0a0a0a] focus-visible:bg-[#c9a84c] focus-visible:text-[#0a0a0a] focus-visible:ring-2 focus-visible:ring-[#c9a84c]/40"
                 aria-label={t('close_menu')}
               >
                 <Icons.X className="w-4 h-4" />
@@ -366,7 +374,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                 >
                   <CollapsibleTrigger asChild>
                     <button className="group/trigger flex min-h-11 w-full items-center justify-between rounded-md px-2.5 py-2 transition-colors hover:bg-[#c9a84c]/[0.055] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c9a84c]/45 focus-visible:ring-offset-2">
-                      <h3 style={{ color: 'var(--gold-text)', fontFamily: 'Inter, sans-serif', fontSize: '0.68rem', fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase' }}>— {section.label}</h3>
+                      <span style={{ color: 'var(--gold-text)', fontFamily: 'Inter, sans-serif', fontSize: '0.68rem', fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase' }}>— {section.label}</span>
                       <Icons.ChevronDown className="w-3 h-3 transition-all group-data-[state=open]:rotate-180" strokeWidth={1.5} style={{ color: 'var(--gold-text)' }} />
                     </button>
                   </CollapsibleTrigger>
@@ -417,7 +425,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
               })}
             </nav>
 
-            <div className="shrink-0 border-t border-primary/10 pt-3 mt-2 space-y-3">
+            <div className="shrink-0 max-h-[50dvh] overflow-y-auto overscroll-contain touch-pan-y border-t border-primary/10 pt-3 mt-2 space-y-3 no-scrollbar">
               <div className="flex flex-col gap-spacing-sm">
                 <div className="grid grid-cols-2 gap-2">
                   <Button 
@@ -525,7 +533,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                         onClick={() => handleNav(AppRoute.UPGRADE)}
                         className="flex-1 min-h-11 h-auto bg-primary/10 text-primary hover:bg-primary hover:text-primary-foreground rounded-premium-lg text-premium-xs font-bold uppercase tracking-widest transition-all"
                       >
-                        Upgrade
+                        {t('upgrade')}
                       </Button>
                     )}
                     <Button 
