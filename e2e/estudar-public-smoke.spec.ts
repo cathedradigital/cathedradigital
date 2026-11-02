@@ -516,3 +516,17 @@ test('SEO: robots e sitemap são servidos com URLs canônicas únicas', async ({
   expect(new Set(urls).size, 'sitemap não pode conter URLs duplicadas').toBe(urls.length);
   expect(urls.every((url) => url === 'https://www.cathedradigital.com.br' || url.startsWith('https://www.cathedradigital.com.br/'))).toBe(true);
 });
+
+
+test('Rezar: Breviário explica cadastro ausente sem permanecer em skeleton', async ({ page }) => {
+  for (const legacySlug of ['terca', 'oficio-leituras']) {
+    const response = await page.goto(`/breviary?h=${legacySlug}`);
+    expect(response?.ok(), `/breviary?h=${legacySlug}: HTTP ${response?.status()}`).toBeTruthy();
+    await expect(
+      page.getByRole('heading', { name: 'Liturgia das Horas ainda não cadastrada' }),
+    ).toBeVisible({ timeout: 15_000 });
+    await expect(page.getByRole('button', { name: 'Tentar novamente' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Voltar ao Livro de Orações' })).toBeVisible();
+    await expect(page.locator('[data-testid="skeleton"]')).toHaveCount(0);
+  }
+});
