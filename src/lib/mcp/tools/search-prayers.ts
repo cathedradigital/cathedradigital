@@ -19,7 +19,7 @@ export default defineTool({
     });
     let q = sb
       .from("prayers")
-      .select("slug,title,subtitle,kicker,category,duration_min,estimated_seconds,tags")
+      .select("slug,title,subtitle,kicker,category,estimated_seconds,tags")
       .eq("is_published", true)
       .or(`title.ilike.%${query}%,subtitle.ilike.%${query}%,kicker.ilike.%${query}%,category.ilike.%${query}%`)
       .limit(limit ?? 15);
