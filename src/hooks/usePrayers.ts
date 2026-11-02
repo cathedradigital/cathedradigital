@@ -29,17 +29,8 @@ export interface Prayer {
   related_catechism: number[];
   related_saints: string[];
   related_glossary: string[];
-  // Sub-sprint 1 SEG — campos editoriais expandidos
-  blocks?: unknown;
-  audio_url?: string | null;
-  duration_min?: number | null;
-  bible_refs?: unknown;
-  catechism_refs?: number[];
-  content_status?: 'stub' | 'partial' | 'complete';
-  /** Sprint 1.0 — v2 = hierarquia em prayer_sections/mysteries/blocks. */
-  engine_version?: number;
-  /** Sprint 3 — metadados extensíveis (hour_slug, window_start/end, etc.). */
-  meta?: Record<string, unknown>;
+  /** Versão do leitor hierárquico persistido em prayer_sections/mysteries/blocks. */
+  engine_version: number;
 }
 
 export const PRAYER_CATEGORY_LABEL: Record<PrayerCategory, string> = {
