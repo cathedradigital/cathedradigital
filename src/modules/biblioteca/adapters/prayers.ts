@@ -8,7 +8,7 @@ export const prayersAdapter: LibraryAdapter = {
   async list({ limit = 24, offset = 0 } = {}) {
     const { data, error } = await supabase
       .from('prayers')
-      .select('id, title, slug, subtitle, category, duration_min, updated_at, is_published')
+      .select('id, title, slug, subtitle, category, estimated_seconds, updated_at, is_published')
       .eq('is_published', true)
       .order('title', { ascending: true })
       .range(offset, offset + limit - 1);
@@ -21,7 +21,7 @@ export const prayersAdapter: LibraryAdapter = {
       slug: row.slug ?? String(row.id),
       summary: row.subtitle ?? undefined,
       category: row.category ?? undefined,
-      readingMinutes: row.duration_min ?? undefined,
+      readingMinutes: row.estimated_seconds > 0 ? Math.ceil(row.estimated_seconds / 60) : undefined,
       href: `/oracao/${row.slug ?? row.id}`,
       updatedAt: row.updated_at ?? undefined,
     }));
