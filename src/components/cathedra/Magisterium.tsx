@@ -502,7 +502,7 @@ const Magisterium: React.FC = () => {
           "description": "Coleção de encíclicas, constituições e documentos oficiais da Igreja.",
           "publisher": {
             "@type": "Organization",
-            "name": "Cátedra Digital"
+            "name": "Cathedra Digital"
           }
         })}
       </script>
