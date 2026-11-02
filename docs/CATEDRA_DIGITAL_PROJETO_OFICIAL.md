@@ -1,10 +1,10 @@
-# Cátedra Digital — Projeto Oficial de Produto, UI/UX e Implementação
+# Cathedra Digital — Projeto Oficial de Produto, UI/UX e Implementação
 
-> Documento-base oficial para orientar a evolução visual, estrutural e funcional do Cátedra Digital.
+> Documento-base oficial para orientar a evolução visual, estrutural e funcional do Cathedra Digital.
 >
 > **Versão:** 1.0  
 > **Status:** Base oficial de produto e implementação  
-> **Escopo:** experiência completa do Cátedra Digital — desktop, tablet e mobile  
+> **Escopo:** experiência completa do Cathedra Digital — desktop, tablet e mobile  
 > **Regra:** este documento orienta futuras implementações e deve ser atualizado quando uma decisão estrutural for substituída.
 
 ---
@@ -21,7 +21,7 @@ Este documento oficial continua sendo a base arquitetural. O documento mestre co
 
 ## 1. Visão
 
-O Cátedra Digital deve funcionar como uma **biblioteca viva e um átrio digital da Igreja**: acolhedor na entrada, profundo no conteúdo, preciso nas fontes e simples de navegar.
+O Cathedra Digital deve funcionar como uma **biblioteca viva e um átrio digital da Igreja**: acolhedor na entrada, profundo no conteúdo, preciso nas fontes e simples de navegar.
 
 A experiência deve unir:
 
@@ -44,7 +44,7 @@ O sistema deve partir de fontes reais e confiáveis. A inteligência contextual 
 
 # 2. Arquitetura principal
 
-O Cátedra será organizado em seis ambientes principais:
+O Cathedra será organizado em seis ambientes principais:
 
 1. **Átrio**
 2. **Estudar**
@@ -63,7 +63,7 @@ O Cátedra será organizado em seis ambientes principais:
 
 ## Objetivo
 
-Ser a entrada principal do Cátedra.
+Ser a entrada principal do Cathedra.
 
 O usuário deve entender em poucos segundos:
 
@@ -111,7 +111,7 @@ A busca deve parecer uma porta de entrada para o conhecimento, não necessariame
 
 ## Objetivo
 
-Ser o grande ambiente intelectual do Cátedra.
+Ser o grande ambiente intelectual do Cathedra.
 
 ## Entradas
 
@@ -141,7 +141,7 @@ Deve apresentar:
 
 ## Objetivo
 
-Oferecer o melhor leitor bíblico possível dentro do Cátedra.
+Oferecer o melhor leitor bíblico possível dentro do Cathedra.
 
 ## Tela de leitura
 
@@ -310,7 +310,7 @@ O progresso deve ficar separado do conteúdo público.
 
 ## Objetivo
 
-Criar uma pesquisa transversal do Cátedra.
+Criar uma pesquisa transversal do Cathedra.
 
 ## Fontes
 
@@ -396,7 +396,7 @@ Informar que a conexão ainda não está catalogada.
 
 ## Identidade
 
-Todos os módulos pertencem ao mesmo Cátedra.
+Todos os módulos pertencem ao mesmo Cathedra.
 
 Eles podem ter cores próprias, mas não podem parecer aplicativos diferentes.
 
@@ -463,7 +463,7 @@ Antes de adicionar um novo ícone:
 Todas as telas devem compartilhar:
 
 - cabeçalho;
-- logo Cátedra Digital;
+- logo Cathedra Digital;
 - navegação contextual;
 - pesquisa;
 - perfil/menu;
@@ -605,7 +605,7 @@ Controles interativos devem buscar área mínima de aproximadamente **44 × 44 p
 
 # 21. Conteúdo e fontes
 
-O Cátedra não deve apresentar:
+O Cathedra não deve apresentar:
 
 - mock como fonte;
 - seed como conteúdo oficial;
@@ -624,7 +624,7 @@ Separar claramente:
 
 # 22. Experiência de inteligência contextual
 
-A inteligência do Cátedra deve ser:
+A inteligência do Cathedra deve ser:
 
 - discreta;
 - orientada por fontes;
@@ -833,7 +833,7 @@ Uma mudança em um módulo não deve quebrar os demais.
 
 # 30. Resultado esperado
 
-O resultado final deve ser um único **Cátedra Digital**, e não um conjunto de módulos visualmente desconectados.
+O resultado final deve ser um único **Cathedra Digital**, e não um conjunto de módulos visualmente desconectados.
 
 O usuário deve sentir:
 

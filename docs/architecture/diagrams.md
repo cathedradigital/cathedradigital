@@ -1,4 +1,4 @@
-# Diagramas oficiais — Cátedra Digital
+# Diagramas oficiais — Cathedra Digital
 
 **Revisão:** 2026-10-29  
 **Base:** leitura do README, `src/App.tsx`, `src/config/moduleNavigation.ts`, `src/integrations/supabase/client.ts`, `src/server.ts`, `vite.config.ts`, `wrangler.jsonc`, `supabase/config.toml`, `package.json` e workflow Cloudflare em `main`.
@@ -36,7 +36,7 @@ flowchart TB
   WEB -->|"requisições específicas"| EF
   EF --> DB
 
-  subgraph PRODUCT["Experiência Cátedra"]
+  subgraph PRODUCT["Experiência Cathedra"]
     ATRIO["Átrio — entrada editorial"]
     STUDY["Estudar"]
     PRAY["Rezar"]

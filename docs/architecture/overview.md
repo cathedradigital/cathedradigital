@@ -1,4 +1,4 @@
-# Arquitetura técnica da Cátedra Digital
+# Arquitetura técnica da Cathedra Digital
 
 **Revisão:** 2026-10-29  
 **Escopo:** arquitetura lógica e infraestrutura observável no repositório.  

@@ -1,4 +1,4 @@
-# Documentação oficial — Cátedra Digital
+# Documentação oficial — Cathedra Digital
 
 **Revisão editorial:** 2026-10-29  
 **Regra:** documentação descreve requisitos e evidências; não transforma proposta em implementação nem execução em aprovação.

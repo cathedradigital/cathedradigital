@@ -1,4 +1,4 @@
-# Estratégia de qualidade e validação — Cátedra Digital
+# Estratégia de qualidade e validação — Cathedra Digital
 
 **Status:** contrato de qualidade; não é relatório de testes executados.
 

@@ -1,4 +1,4 @@
-# Cátedra Digital — publicação e operação
+# Cathedra Digital — publicação e operação
 
 **Alvo oficial:** Cloudflare Workers  
 **Worker:** `cathedradigital`  
@@ -44,7 +44,7 @@ O arquivo `.github/workflows/cloudflare-deploy.yml` em `main` declara:
 
 **Limite importante:** o workflow atualmente versionado não executa, por si só, auditoria completa de dependências nem Playwright autenticado desktop/mobile antes do deploy. A PR #213 propõe um fluxo manual com gates adicionais, mas uma proposta em PR não é comportamento ativo de `main`. Verificar o estado e os checks reais antes de qualquer liberação.
 
-Até a adoção e validação de um gate completo, não tratar o workflow atual como certificação integral de release. A política operacional da Cátedra exige CI, auditoria e Playwright aprovados no mesmo SHA, além da autorização de publicação.
+Até a adoção e validação de um gate completo, não tratar o workflow atual como certificação integral de release. A política operacional da Cathedra exige CI, auditoria e Playwright aprovados no mesmo SHA, além da autorização de publicação.
 
 ## 3. Comandos locais
 
