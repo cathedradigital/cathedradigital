@@ -221,13 +221,13 @@ Object.assign(UI_TRANSLATIONS.de, {"light":"Hell","dark":"Dunkel","accessibility
 
 
 // Textos fixos do Átrio e do shell global.
-Object.assign(UI_TRANSLATIONS.pt, {"today":"Hoje","atrium_search":"Buscar","resume":"Retomar","profile":"Perfil","reading_preferences":"Configurações de leitura","open_sidebar":"Abrir menu lateral","brand_alt":"Cátedra Digital"});
-Object.assign(UI_TRANSLATIONS.en, {"today":"Today","atrium_search":"Search","resume":"Resume","profile":"Profile","reading_preferences":"Reading settings","open_sidebar":"Open sidebar","brand_alt":"Cátedra Digital"});
-Object.assign(UI_TRANSLATIONS.es, {"today":"Hoy","atrium_search":"Buscar","resume":"Retomar","profile":"Perfil","reading_preferences":"Configuración de lectura","open_sidebar":"Abrir menú lateral","brand_alt":"Cátedra Digital"});
-Object.assign(UI_TRANSLATIONS.it, {"today":"Oggi","atrium_search":"Cerca","resume":"Riprendi","profile":"Profilo","reading_preferences":"Impostazioni di lettura","open_sidebar":"Apri menu laterale","brand_alt":"Cátedra Digital"});
-Object.assign(UI_TRANSLATIONS.la, {"today":"Hodie","atrium_search":"Quaerere","resume":"Resume","profile":"Profilum","reading_preferences":"Optiones lectionis","open_sidebar":"Aperi menu laterale","brand_alt":"Cátedra Digital"});
-Object.assign(UI_TRANSLATIONS.fr, {"today":"Aujourd’hui","atrium_search":"Rechercher","resume":"Reprendre","profile":"Profil","reading_preferences":"Paramètres de lecture","open_sidebar":"Ouvrir le menu latéral","brand_alt":"Cátedra Digital"});
-Object.assign(UI_TRANSLATIONS.de, {"today":"Heute","atrium_search":"Suchen","resume":"Fortsetzen","profile":"Profil","reading_preferences":"Leseeinstellungen","open_sidebar":"Seitenmenü öffnen","brand_alt":"Cátedra Digital"});
+Object.assign(UI_TRANSLATIONS.pt, {"today":"Hoje","atrium_search":"Buscar","resume":"Retomar","profile":"Perfil","reading_preferences":"Configurações de leitura","open_sidebar":"Abrir menu lateral","brand_alt":"Cathedra Digital"});
+Object.assign(UI_TRANSLATIONS.en, {"today":"Today","atrium_search":"Search","resume":"Resume","profile":"Profile","reading_preferences":"Reading settings","open_sidebar":"Open sidebar","brand_alt":"Cathedra Digital"});
+Object.assign(UI_TRANSLATIONS.es, {"today":"Hoy","atrium_search":"Buscar","resume":"Retomar","profile":"Perfil","reading_preferences":"Configuración de lectura","open_sidebar":"Abrir menú lateral","brand_alt":"Cathedra Digital"});
+Object.assign(UI_TRANSLATIONS.it, {"today":"Oggi","atrium_search":"Cerca","resume":"Riprendi","profile":"Profilo","reading_preferences":"Impostazioni di lettura","open_sidebar":"Apri menu laterale","brand_alt":"Cathedra Digital"});
+Object.assign(UI_TRANSLATIONS.la, {"today":"Hodie","atrium_search":"Quaerere","resume":"Resume","profile":"Profilum","reading_preferences":"Optiones lectionis","open_sidebar":"Aperi menu laterale","brand_alt":"Cathedra Digital"});
+Object.assign(UI_TRANSLATIONS.fr, {"today":"Aujourd’hui","atrium_search":"Rechercher","resume":"Reprendre","profile":"Profil","reading_preferences":"Paramètres de lecture","open_sidebar":"Ouvrir le menu latéral","brand_alt":"Cathedra Digital"});
+Object.assign(UI_TRANSLATIONS.de, {"today":"Heute","atrium_search":"Suchen","resume":"Fortsetzen","profile":"Profil","reading_preferences":"Leseeinstellungen","open_sidebar":"Seitenmenü öffnen","brand_alt":"Cathedra Digital"});
 
 
 // Textos auxiliares da navegação e acessibilidade da sidebar.
