@@ -1,5 +1,5 @@
 /**
- * Navegação modular canônica da Cátedra.
+ * Navegação modular canônica da Cathedra.
  *
  * Regra: os 5 ambientes são a arquitetura pública. Recursos específicos
  * ficam dentro de um ambiente; ferramentas transversais não viram novos

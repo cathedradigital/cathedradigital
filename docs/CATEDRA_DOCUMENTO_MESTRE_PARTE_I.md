@@ -1,4 +1,4 @@
-# CÁTEDRA DIGITAL
+# Cathedra Digital
 
 ## Documento Mestre Oficial do Produto
 
@@ -12,17 +12,17 @@
 
 ## 1. Natureza e identidade
 
-O Cátedra Digital é uma plataforma digital de estudo, oração, formação e aprofundamento da fé católica. Seu propósito é organizar fontes, conteúdos e experiências em um ambiente integrado, confiável, acessível e coerente com a identidade da Igreja Católica.
+O Cathedra Digital é uma plataforma digital de estudo, oração, formação e aprofundamento da fé católica. Seu propósito é organizar fontes, conteúdos e experiências em um ambiente integrado, confiável, acessível e coerente com a identidade da Igreja Católica.
 
 O produto deverá articular conhecimento, espiritualidade e formação sem reduzir a fé a uma coleção de textos, a uma ferramenta de pesquisa genérica ou a uma experiência conversacional sem fontes verificáveis.
 
-A identidade oficial deverá ser escrita como **Cátedra Digital** em português e **Cathedra Digital** quando adotada a forma internacional da marca, mantendo consistência visual e editorial.
+A identidade oficial deverá ser escrita como **Cathedra Digital** em português e **Cathedra Digital** quando adotada a forma internacional da marca, mantendo consistência visual e editorial.
 
-O Cátedra deverá preservar uma identidade própria em todas as suas interfaces, módulos, documentos, comunicações e experiências móveis ou desktop.
+O Cathedra deverá preservar uma identidade própria em todas as suas interfaces, módulos, documentos, comunicações e experiências móveis ou desktop.
 
 ## 2. Missão
 
-A missão do Cátedra Digital é facilitar o acesso, a compreensão, o estudo e a vivência da fé católica por meio da integração responsável entre fontes confiáveis, contexto histórico e doutrinal, referências cruzadas, formação e oração.
+A missão do Cathedra Digital é facilitar o acesso, a compreensão, o estudo e a vivência da fé católica por meio da integração responsável entre fontes confiáveis, contexto histórico e doutrinal, referências cruzadas, formação e oração.
 
 A plataforma deverá ajudar o usuário a:
 
@@ -38,7 +38,7 @@ A plataforma deverá servir à compreensão e à formação do usuário, não su
 
 ## 3. Finalidade e objetivos
 
-O Cátedra Digital deverá perseguir os seguintes objetivos:
+O Cathedra Digital deverá perseguir os seguintes objetivos:
 
 1. **Acesso:** tornar localizáveis os conteúdos disponíveis por meio de navegação e pesquisa claras.
 2. **Confiabilidade:** preservar a origem, a autoria, a identificação e o contexto das fontes.
@@ -53,7 +53,7 @@ O Cátedra Digital deverá perseguir os seguintes objetivos:
 
 ## 4. Princípio orientador do produto
 
-O percurso fundamental do Cátedra Digital é:
+O percurso fundamental do Cathedra Digital é:
 
 **Fonte → Contexto → Conexão → Compreensão → Ação**
 
@@ -67,7 +67,7 @@ Esse percurso orienta a arquitetura, a interface, a pesquisa, o Nexus e os recur
 
 ## 5. Unidade do produto
 
-O Cátedra Digital deverá funcionar como um produto integrado, e não como um conjunto de aplicações independentes que apenas compartilham uma marca.
+O Cathedra Digital deverá funcionar como um produto integrado, e não como um conjunto de aplicações independentes que apenas compartilham uma marca.
 
 A unidade deverá ser preservada por meio de:
 
@@ -85,7 +85,7 @@ A unidade não significa que todos os módulos devam utilizar a mesma interface 
 
 ## 6. Autoridade das fontes e integridade doutrinal
 
-O Cátedra Digital deverá identificar a natureza e a autoridade das fontes, sem apresentar todos os conteúdos como equivalentes.
+O Cathedra Digital deverá identificar a natureza e a autoridade das fontes, sem apresentar todos os conteúdos como equivalentes.
 
 A organização editorial deverá considerar, conforme o assunto e o contexto:
 
@@ -104,7 +104,7 @@ Quando houver divergência, incerteza ou ausência de fonte adequada, o sistema 
 
 ## 7. Limites da inteligência artificial
 
-A inteligência artificial do Cátedra, incluindo a assistente Yá, deverá atuar como instrumento de organização, pesquisa, comparação, contextualização e explicação.
+A inteligência artificial do Cathedra, incluindo a assistente Yá, deverá atuar como instrumento de organização, pesquisa, comparação, contextualização e explicação.
 
 Ela poderá, conforme os recursos implementados e as fontes disponíveis:
 
@@ -255,7 +255,7 @@ A aprovação de um documento não comprova a implementação do que ele determi
 
 ## 15. Critério de evolução do produto
 
-A evolução do Cátedra Digital deverá ser incremental, integrada e verificável.
+A evolução do Cathedra Digital deverá ser incremental, integrada e verificável.
 
 Novos recursos deverão respeitar os princípios fundamentais, os contratos existentes e os requisitos de segurança. Alterações que afetem múltiplos módulos deverão ser testadas nos fluxos de integração pertinentes.
 
@@ -263,7 +263,7 @@ Quando uma implementação existente divergir desta especificação, deverá ser
 
 ## 16. Estatuto deste documento
 
-Esta Parte I estabelece a base institucional, editorial e técnica do Cátedra Digital.
+Esta Parte I estabelece a base institucional, editorial e técnica do Cathedra Digital.
 
 Sua aprovação formal deverá ser registrada com versão e data. Até esse registro, o status permanece **proposta consolidada para aprovação formal**.
 

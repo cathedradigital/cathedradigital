@@ -130,11 +130,11 @@ const HojePage: React.FC = () => {
 
 
       <SEOHead 
-        title={`Sanctuarium - ${new Date().toLocaleDateString('pt-BR')} | Cátedra`} 
+        title={`Sanctuarium - ${new Date().toLocaleDateString('pt-BR')} | Cathedra`} 
         description="Refúgio digital contemplativo guiado pela Fé. Liturgia, Ritual e Sabedoria em silêncio visual." 
         path="/hoje" 
         image="https://isojguvcnfncokoxoauk.supabase.co/storage/v1/object/public/public-assets/og-hoje.png"
-        keywords="mosteiro digital, ritual diário, Cátedra Digital, silêncio espiritual, contemplação"
+        keywords="mosteiro digital, ritual diário, Cathedra Digital, silêncio espiritual, contemplação"
         breadcrumbs={[
           { name: "Sanctuarium", path: "/hoje" }
         ]}

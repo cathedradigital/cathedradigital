@@ -1,4 +1,4 @@
-# Cátedra Digital — Arquitetura de módulos e diagramação
+# Cathedra Digital — Arquitetura de módulos e diagramação
 
 ## Diagnóstico estrutural
 

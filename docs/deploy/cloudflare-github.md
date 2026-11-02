@@ -1,4 +1,4 @@
-# Publicação do Cátedra no Cloudflare Workers
+# Publicação do Cathedra no Cloudflare Workers
 
 ## Fonte única de verdade
 

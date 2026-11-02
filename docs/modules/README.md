@@ -1,4 +1,4 @@
-# Especificações funcionais dos módulos — Cátedra Digital
+# Especificações funcionais dos módulos — Cathedra Digital
 
 **Versão:** 1.0.0  
 **Estado:** especificação de trabalho para revisão; não significa implementação aprovada.  

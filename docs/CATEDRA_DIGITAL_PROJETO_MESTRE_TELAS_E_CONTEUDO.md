@@ -1,6 +1,6 @@
-# Cátedra Digital — Projeto Mestre de Produto, Telas, Conteúdo e Experiências
+# Cathedra Digital — Projeto Mestre de Produto, Telas, Conteúdo e Experiências
 
-> Documento mestre para transformar a visão do Cátedra Digital em um mapa executável de produto: página por página, recurso por recurso e conexão por conexão.
+> Documento mestre para transformar a visão do Cathedra Digital em um mapa executável de produto: página por página, recurso por recurso e conexão por conexão.
 >
 > Versão: 1.0  
 > Status: Especificação mestre de produto  
@@ -13,7 +13,7 @@
 
 Este documento responde à pergunta:
 
-> “Se fôssemos construir o Cátedra Digital hoje, o que cada página deveria fazer e o que ainda falta para que a plataforma seja realmente completa?”
+> “Se fôssemos construir o Cathedra Digital hoje, o que cada página deveria fazer e o que ainda falta para que a plataforma seja realmente completa?”
 
 A regra de construção é:
 
@@ -32,7 +32,7 @@ Cada nova funcionalidade deve, antes de ser criada, verificar:
 
 ## 2. Princípio de produto
 
-O Cátedra não deve parecer um conjunto de aplicativos independentes.
+O Cathedra não deve parecer um conjunto de aplicativos independentes.
 
 Ele deve funcionar como um único ambiente:
 
@@ -103,7 +103,7 @@ Essas camadas não devem necessariamente virar páginas independentes. Quando po
 Sem isso o módulo não deve ser considerado completo.
 
 ### P1 — diferencial
-Funcionalidades que tornam o Cátedra significativamente melhor.
+Funcionalidades que tornam o Cathedra significativamente melhor.
 
 ### P2 — evolução
 Funcionalidades avançadas que podem entrar depois sem alterar a arquitetura principal.
@@ -116,7 +116,7 @@ Funcionalidades avançadas que podem entrar depois sem alterar a arquitetura pri
 **P0**
 Objetivo: acolher e orientar.
 Conteúdo:
-- identidade Cátedra;
+- identidade Cathedra;
 - busca principal;
 - entradas para Estudar, Rezar, Formar-se e Pesquisar;
 - continuar de onde parou;
@@ -582,7 +582,7 @@ Somente após critérios reais de conclusão.
 
 ### P01 — Pesquisa global
 **P0**
-Pesquisa única do Cátedra.
+Pesquisa única do Cathedra.
 
 ### P02 — Resultados
 **P0**
@@ -734,7 +734,7 @@ Login, logout e segurança.
 
 ## 21. EXPERIÊNCIA DE INTELIGÊNCIA CONTEXTUAL
 
-A inteligência do Cátedra deve aparecer como **assistência contextual**, não como protagonista.
+A inteligência do Cathedra deve aparecer como **assistência contextual**, não como protagonista.
 
 ### I01 — Compreender
 Explicar uma passagem com fontes.
@@ -1010,7 +1010,7 @@ A partir deste documento, a execução deve seguir:
 
 ## 31. Regra final
 
-O Cátedra Digital deve crescer por **camadas**, não por remendos.
+O Cathedra Digital deve crescer por **camadas**, não por remendos.
 
 Cada nova ideia deve responder:
 

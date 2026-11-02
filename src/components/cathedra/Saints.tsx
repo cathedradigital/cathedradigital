@@ -277,7 +277,7 @@ const Saints = React.forwardRef<HTMLDivElement, { legacyReader?: boolean }>((pro
           "description": "Lista de santos e beatos da Igreja Católica organizados por data litúrgica.",
           "publisher": {
             "@type": "Organization",
-            "name": "Cátedra Digital"
+            "name": "Cathedra Digital"
           }
         })}
       </script>

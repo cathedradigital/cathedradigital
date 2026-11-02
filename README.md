@@ -1,8 +1,8 @@
-# Cátedra Digital — Formação católica para todos os dias.
+# Cathedra Digital — Formação católica para todos os dias.
 
 **Formação católica para todos os dias.**
 
-A Cátedra Digital integra estudo, oração, formação, pesquisa e continuidade pessoal em uma experiência católica unificada. A plataforma conecta fontes confiáveis, contexto, relações verificáveis e ação, sem substituir a autoridade eclesial nem a liberdade do usuário.
+A Cathedra Digital integra estudo, oração, formação, pesquisa e continuidade pessoal em uma experiência católica unificada. A plataforma conecta fontes confiáveis, contexto, relações verificáveis e ação, sem substituir a autoridade eclesial nem a liberdade do usuário.
 
 ## Princípio orientador
 

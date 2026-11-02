@@ -67,7 +67,7 @@ export function MaintenanceGate({ children }: { children: React.ReactNode }) {
         <div className="max-w-md text-center space-y-4">
           <p className="text-xs uppercase tracking-[0.3em] text-primary/60">Status 503</p>
           <h1 id="maintenance-title" className="text-2xl font-serif text-primary">
-            Cátedra em manutenção
+            Cathedra em manutenção
           </h1>
           <p className="text-sm text-muted-foreground">
             Estamos realizando uma manutenção breve. Em instantes, o silêncio dará lugar

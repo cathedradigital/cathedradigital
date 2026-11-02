@@ -237,7 +237,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
         section_type: type,
         timestamp: new Date().toISOString(),
         total_messages: history.length,
-        app: 'Cátedra Digital'
+        app: 'Cathedra Digital'
       },
       history: history.map((msg, index) => ({
         ...msg,

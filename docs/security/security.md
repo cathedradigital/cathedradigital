@@ -1,11 +1,11 @@
-# Segurança — Cátedra Digital
+# Segurança — Cathedra Digital
 
 **Escopo:** aplicação web, Cloudflare Workers, Supabase, Edge Functions, dados pessoais e cadeia de entrega.  
 **Status:** política e roteiro de auditoria; não é certificado de segurança.
 
 ## 1. Princípios
 
-- Um único projeto Supabase para a Cátedra Digital.
+- Um único projeto Supabase para a Cathedra Digital.
 - Menor privilégio em todos os ambientes e integrações.
 - Autenticação não substitui autorização.
 - Guards de frontend melhoram a experiência, mas não protegem dados por si sós.

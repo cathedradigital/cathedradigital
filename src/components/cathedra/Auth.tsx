@@ -98,7 +98,7 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
           handledSessionUserId.current = signupData.user.id;
           handleSignupSuccess();
         } else {
-          setSuccess('Conta criada! Enviamos um link de confirmação para seu e-mail. Confirme o endereço para entrar na Cátedra.');
+          setSuccess('Conta criada! Enviamos um link de confirmação para seu e-mail. Confirme o endereço para entrar na Cathedra.');
           setMode('login');
         }
         return;
@@ -130,7 +130,7 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
     mode === 'login'
       ? 'Retorne ao silêncio. Prossiga na caminhada.'
       : mode === 'signup'
-      ? 'Uma cátedra para a vida interior. Comece agora.'
+      ? 'Uma Cathedra para a vida interior. Comece agora.'
       : 'Informe seu email para receber o link de redefinição.';
 
   // ─── estilos base compartilhados ──────────────────────────────────────────

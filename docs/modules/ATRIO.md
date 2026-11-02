@@ -3,10 +3,10 @@
 **Versão:** 1.0.0 · **Prioridade:** P0 · **Estado:** especificado; aceite não verificado.
 
 ## Propósito
-Porta de entrada editorial da Cátedra Digital: orientar o usuário aos conteúdos e módulos, sem parecer painel administrativo.
+Porta de entrada editorial da Cathedra Digital: orientar o usuário aos conteúdos e módulos, sem parecer painel administrativo.
 
 ## Experiência principal
-- Identidade Cátedra Digital e caminhos claros para Estudar, Rezar, Formar-se, Pesquisar e Minha Jornada.
+- Identidade Cathedra Digital e caminhos claros para Estudar, Rezar, Formar-se, Pesquisar e Minha Jornada.
 - Notícias/atualizações em carrossel, priorizando fontes oficiais da Igreja (Vaticano, CNBB) e veículos católicos identificados.
 - Controles anterior/próximo acessíveis, seleção de notícia e link para fonte original.
 - Navegação por teclado e toque; não depender de hover.

@@ -117,7 +117,7 @@ const News: React.FC = () => {
 
       {announcements.length > 0 && (
         <div className="border-t border-border pt-3">
-          <h3 className="text-xs uppercase tracking-[0.18em] text-muted-foreground">Avisos do Cátedra</h3>
+          <h3 className="text-xs uppercase tracking-[0.18em] text-muted-foreground">Avisos do Cathedra</h3>
           <ul className="mt-2 flex flex-col gap-1.5">
             {announcements.map((announcement) => (
               <li key={announcement.id} className="text-sm text-muted-foreground">· {announcement.label}</li>

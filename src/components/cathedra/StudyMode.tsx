@@ -332,11 +332,11 @@ const StudyMode: React.FC = () => {
   return (
     <div className="flex flex-col items-center justify-center min-h-[60vh] text-center space-y-spacing-2xl max-w-spacing-2xl mx-auto py-spacing-2xl">
       <SEOHead 
-        title="Estudo | Cátedra" 
-        description="Aprofunde um tema no Cátedra, relacionando Escritura, Catecismo, Magistério e tradição." 
+        title="Estudo | Cathedra" 
+        description="Aprofunde um tema no Cathedra, relacionando Escritura, Catecismo, Magistério e tradição." 
         path="/estudo"
         image="https://isojguvcnfncokoxoauk.supabase.co/storage/v1/object/public/public-assets/og-logos.png"
-        keywords="estudo católico, Bíblia, Catecismo, Magistério, tradição, Cátedra"
+        keywords="estudo católico, Bíblia, Catecismo, Magistério, tradição, Cathedra"
         breadcrumbs={[
           { name: "Home", path: "/" },
           { name: "Estudar", path: "/estudo" }
@@ -349,7 +349,7 @@ const StudyMode: React.FC = () => {
       <div className="space-y-spacing-md">
         <h1 className="text-premium-3xl md:text-premium-5xl font-serif font-black text-primary">Aprofunde este tema</h1>
         <p className="text-premium-lg text-muted-foreground font-serif italic">
-          "O Cátedra conecta fontes e contextos para ajudar você a compreender a fé com mais profundidade."
+          "O Cathedra conecta fontes e contextos para ajudar você a compreender a fé com mais profundidade."
         </p>
       </div>
 

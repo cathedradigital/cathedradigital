@@ -1,4 +1,4 @@
-# Visão do produto — Cátedra Digital
+# Visão do produto — Cathedra Digital
 
 ## Missão
 
@@ -6,7 +6,7 @@ Ajudar o católico a acessar, compreender, estudar, rezar e viver a fé com cont
 
 ## Tese
 
-A Cátedra Digital organiza estudo, oração, formação, pesquisa e memória pessoal em um ambiente coerente. Não é apenas uma coleção de textos nem um chat genérico: conecta fontes, contexto, relações verificáveis, compreensão e ação.
+A Cathedra Digital organiza estudo, oração, formação, pesquisa e memória pessoal em um ambiente coerente. Não é apenas uma coleção de textos nem um chat genérico: conecta fontes, contexto, relações verificáveis, compreensão e ação.
 
 ## Princípio orientador
 
@@ -49,7 +49,7 @@ Yá auxilia a localizar, organizar, contextualizar e comparar fontes. Não cria 
 
 - Formação e integridade editorial antes de efeitos visuais.
 - A experiência deve parecer um mosteiro digital, não um painel administrativo.
-- Identidade Cátedra Digital consistente em desktop e mobile.
+- Identidade Cathedra Digital consistente em desktop e mobile.
 - Privacidade e autorização no backend.
 - Continuidade sem perda de contexto.
 - Nenhuma funcionalidade simulada deve ser apresentada como concluída.

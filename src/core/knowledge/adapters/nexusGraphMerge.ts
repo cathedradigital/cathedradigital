@@ -126,7 +126,7 @@ export function mergeCuratedEdges(
       ...resolved,
       nexusEvidence: 'editorial',
       nexusRelationKind: normalizeRelationKind(edge.relationType),
-      nexusExplanation: edge.note ?? 'Relação curada no grafo do Cátedra.',
+      nexusExplanation: edge.note ?? 'Relação curada no grafo do Cathedra.',
     };
 
     const arr = (byBucket[bucket] ??= []);

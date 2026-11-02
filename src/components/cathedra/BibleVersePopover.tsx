@@ -73,7 +73,7 @@ const EXTERNAL_BIBLE_EDITIONS = [
   {
     id: 'peregrino',
     name: 'Peregrino',
-    description: 'Abrir a referência na fonte externa do Peregrino. O Cátedra não copia, armazena ou extrai o conteúdo protegido.',
+    description: 'Abrir a referência na fonte externa do Peregrino. O Cathedra não copia, armazena ou extrai o conteúdo protegido.',
     buildUrl: (abbr: string, chapter: number, verse?: number) => {
       const reference = `${abbr} ${chapter}${verse ? `:${verse}` : ''}`;
       return `https://www.souperegrino.com/?s=${encodeURIComponent(reference)}`;
@@ -220,7 +220,7 @@ const BibleVersePopoverBody: React.FC<BodyProps> = ({ abbr, chapter, verse, onNa
             ) : <p className="mt-1.5 text-[10px] leading-relaxed text-muted-foreground">Ainda não há conexões editoriais cadastradas para este capítulo.</p>}
           </section>
           <section className="rounded-xl border border-border/70 p-3">
-            <h5 className="text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground">Como o Cátedra conecta</h5>
+            <h5 className="text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground">Como o Cathedra conecta</h5>
             <p className="mt-1.5 text-[10px] leading-relaxed text-muted-foreground">São exibidas somente relações já cadastradas no grafo de conhecimento. Quando uma relação não existe, ela não é inventada.</p>
           </section>
         </div>)}
@@ -243,7 +243,7 @@ const BibleVersePopoverBody: React.FC<BodyProps> = ({ abbr, chapter, verse, onNa
           ))}
         </div>
         <p className="mt-2 text-[10px] leading-relaxed text-muted-foreground">
-          A abertura leva à referência correspondente. Quando a fonte não oferece uma URL de capítulo/versículo estável, a busca externa preserva o livro, capítulo e versículo informados. O Cátedra não incorpora nem guarda o texto dessas edições sem licença de reprodução.
+          A abertura leva à referência correspondente. Quando a fonte não oferece uma URL de capítulo/versículo estável, a busca externa preserva o livro, capítulo e versículo informados. O Cathedra não incorpora nem guarda o texto dessas edições sem licença de reprodução.
         </p>
       </div>
 

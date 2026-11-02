@@ -1,5 +1,5 @@
 /**
- * Ponte de tipagem da clonagem do Catedra Digital.
+ * Ponte de tipagem da clonagem do Cathedra Digital.
  *
  * O schema original (159 tabelas) está sendo aplicado no Lovable Cloud em 20
  * lotes de migração. Enquanto ele não estiver completo, o `Database` gerado em

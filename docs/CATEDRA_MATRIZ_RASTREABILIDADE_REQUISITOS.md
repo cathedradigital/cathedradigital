@@ -1,4 +1,4 @@
-# Cátedra Digital — Matriz de rastreabilidade do Documento Mestre
+# Cathedra Digital — Matriz de rastreabilidade do Documento Mestre
 
 **Versão:** 0.1 — levantamento inicial  
 **Data:** 2026-10-18  

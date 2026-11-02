@@ -151,7 +151,7 @@ jobs:
             fs.writeFileSync('startup-evidence/report.json', JSON.stringify(report, null, 2));
 
             const lines = [
-              '## Monitoramento diário — abertura da Cátedra Digital',
+              '## Monitoramento diário — abertura da Cathedra Digital',
               '',
               `- SHA do workflow: ${report.commit}`,
               `- Medição: ${report.measuredAt}`,
