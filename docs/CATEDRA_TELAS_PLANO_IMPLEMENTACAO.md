@@ -1,4 +1,4 @@
-# Cátedra Digital — Plano de Implementação das Telas
+# Cathedra Digital — Plano de Implementação das Telas
 
 Este documento transforma o Projeto Oficial de Produto, UI/UX e Implementação em uma ordem prática de execução no repositório.
 
@@ -14,7 +14,7 @@ Antes de alterar uma tela:
 6. só então aplicar a mudança.
 
 ## Etapa 1 — Fundação visual
-Consolidar AppShell, cabeçalho global, identidade Cátedra Digital, tokens de espaçamento e superfície, áreas de toque confortáveis, foco de teclado, estados loading/empty/error, regras de leitura e cores contextuais por módulo.
+Consolidar AppShell, cabeçalho global, identidade Cathedra Digital, tokens de espaçamento e superfície, áreas de toque confortáveis, foco de teclado, estados loading/empty/error, regras de leitura e cores contextuais por módulo.
 
 Critério: nenhuma nova tela deve inventar seu próprio sistema de espaçamento, botão, card ou estado.
 

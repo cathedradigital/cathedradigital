@@ -1,4 +1,4 @@
-# Auditoria da Bíblia — Cátedra Digital
+# Auditoria da Bíblia — Cathedra Digital
 ## 2026-10-03
 
 Objetivo: transformar o módulo Bíblia em um leitor e ambiente de estudo profissional, tomando como referência padrões funcionais observados em aplicativos e plataformas de Bíblia, sem copiar identidade visual ou conteúdo proprietário.
@@ -69,7 +69,7 @@ Objetivo: transformar o módulo Bíblia em um leitor e ambiente de estudo profis
 - Recuperação: removido fallback parcial de Abdias que mostrava apenas três versículos e podia mascarar uma falha da fonte.
 - bible-text: mantém recuperação prioritária do banco local e fonte upstream, com ETag/cache e rastreabilidade da fonte.
 
-### Arquitetura alvo do Cátedra
+### Arquitetura alvo do Cathedra
 Fonte bíblica verificada → banco/indexação → bible-text → leitor → ações do versículo → Nexus/estudo → Diário/Minha Jornada
 
 A regra principal é: nenhuma camada de estudo pode esconder uma falha da camada bíblica.
