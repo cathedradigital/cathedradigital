@@ -527,6 +527,6 @@ test('Rezar: Breviário explica cadastro ausente sem permanecer em skeleton', as
     ).toBeVisible({ timeout: 15_000 });
     await expect(page.getByRole('button', { name: 'Tentar novamente' })).toBeVisible();
     await expect(page.getByRole('button', { name: 'Voltar ao Livro de Orações' })).toBeVisible();
-    await expect(page.locator('[data-testid="skeleton"]')).toHaveCount(0);
+    await expect(page.locator('body')).not.toContainText(/Preparando Liturgia/i);
   }
 });
