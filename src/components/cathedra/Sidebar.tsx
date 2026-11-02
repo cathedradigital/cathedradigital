@@ -258,7 +258,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                 onClick={(e) => handleNav('/', e)}
                 role="button"
                 tabIndex={0}
-                aria-label="Cátedra Digital — Início"
+                aria-label="Cathedra Digital — Início"
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' || e.key === ' ') {
                     e.preventDefault();
@@ -270,7 +270,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                 <div className="flex flex-col leading-none gap-1">
                   <span
                     role="text"
-                    aria-label="Cátedra Digital — Mosteiro Digital"
+                    aria-label="Cathedra Digital — Mosteiro Digital"
                     style={{
                       fontFamily: "'Playfair Display', serif",
                       fontWeight: 600,
@@ -279,7 +279,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                       color: 'hsl(var(--foreground))',
                     }}
                   >
-                    Cátedra Digital
+                    Cathedra Digital
                   </span>
                   <span
                     style={{
