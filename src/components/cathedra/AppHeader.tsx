@@ -175,7 +175,10 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
                   aria-expanded={isSidebarOpen}
                   aria-controls="cathedra-global-sidebar"
                 >
-                  <img src="/monograma-cathedra.svg" alt="" className="h-7 w-7 object-contain" />
+                  <span aria-hidden="true" className="flex h-5 w-5 flex-col items-start justify-center gap-[5px]">
+                    <span className="h-[2px] w-5 rounded-full bg-[var(--gold-text)] transition-all duration-200 group-hover:w-4" />
+                    <span className="h-[2px] w-3.5 rounded-full bg-[var(--gold-text)] transition-all duration-200 group-hover:w-5" />
+                  </span>
                 </Button>
 
                 <Button
