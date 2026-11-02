@@ -1,6 +1,7 @@
 import { defineTool } from "@lovable.dev/mcp-js";
 import { createClient } from "@supabase/supabase-js";
 import { z } from "zod";
+import { normalizeHourSlug } from "../../../core/liturgy/hour-slugs";
 
 const HOURS = [
   "oficio",
@@ -9,12 +10,10 @@ const HOURS = [
   "terca",
   "oficio-leituras",
   "hora-media",
-  "invitatorio",
   "sexta",
   "noa",
   "vesperas",
   "completas",
-  "oficio-leituras",
 ] as const;
 
 export default defineTool({
@@ -33,10 +32,10 @@ export default defineTool({
   annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
   handler: async ({ hour, date }) => {
     const iso = date ?? new Date().toISOString().slice(0, 10);
-    if (hour === "hora-media" || hour === "invitatorio") {
+    const canonicalHour = normalizeHourSlug(hour);
+    if (!canonicalHour) {
       return { content: [{ type: "text", text: "Identificador ambíguo ou não suportado pelo leitor. Escolha uma das sete Horas canônicas." }], isError: true };
     }
-    const canonicalHour = hour === "terca" ? "tercia" : hour === "oficio-leituras" ? "oficio" : hour;
     const sb = createClient((process.env.SUPABASE_URL || import.meta.env.VITE_SUPABASE_URL)!, (process.env.SUPABASE_PUBLISHABLE_KEY || import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY)!, {
       auth: { persistSession: false, autoRefreshToken: false },
     });
