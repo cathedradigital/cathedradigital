@@ -31,24 +31,50 @@ jobs:
             }
 
             const required = ["CI", "Estudar E2E", "Security Audit", "Estudar final audit"];
-            const { data } = await github.rest.actions.listWorkflowRunsForRepo({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              branch: "main",
-              head_sha: sha,
-              per_page: 100,
-            });
+            const deadline = Date.now() + 45 * 60 * 1000;
+            let passed = false;
 
-            for (const name of required) {
-              const matching = data.workflow_runs
-                .filter(run => run.name === name && run.head_sha === sha && run.head_branch === "main")
-                .sort((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at));
-              const latest = matching[0];
-              if (!latest || latest.status !== "completed" || latest.conclusion !== "success") {
-                core.setFailed(`Release blocked: ${name} has not succeeded on ${sha}`);
+            while (Date.now() < deadline) {
+              const { data } = await github.rest.actions.listWorkflowRunsForRepo({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                branch: "main",
+                head_sha: sha,
+                per_page: 100,
+              });
+
+              const states = required.map(name => {
+                const matching = data.workflow_runs
+                  .filter(run => run.name === name && run.head_sha === sha && run.head_branch === "main")
+                  .sort((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at));
+                return { name, run: matching[0] };
+              });
+
+              const failed = states.find(({ run }) => run && run.status === "completed" && run.conclusion !== "success");
+              if (failed) {
+                core.setFailed(`Release blocked: ${failed.name} concluded ${failed.run.conclusion} on ${sha}`);
                 return;
               }
-              core.info(`PASS ${name}: ${latest.conclusion} (${latest.html_url})`);
+
+              const missing = states.filter(({ run }) => !run);
+              const pending = states.filter(({ run }) => run && run.status !== "completed");
+              const unsuccessful = states.filter(({ run }) => run && run.status === "completed" && run.conclusion !== "success");
+
+              if (missing.length === 0 && pending.length === 0 && unsuccessful.length === 0) {
+                for (const { name, run } of states) {
+                  core.info(`PASS ${name}: ${run.conclusion} (${run.html_url})`);
+                }
+                passed = true;
+                break;
+              }
+
+              core.info(`Waiting for same-SHA release gates. Missing: ${missing.map(x => x.name).join(", ") || "none"}; pending: ${pending.map(x => x.name).join(", ") || "none"}.`);
+              await new Promise(resolve => setTimeout(resolve, 30000));
+            }
+
+            if (!passed) {
+              core.setFailed(`Release blocked: release gates did not all succeed on ${sha} within 45 minutes.`);
+              return;
             }
 
             await core.summary
