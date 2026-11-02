@@ -70,7 +70,9 @@ if (
 const authCheckout = (authenticatedJob.steps ?? []).find(
   (step) => step.name === "Checkout trusted main",
 );
-if (authCheckout?.with?.ref !== "main") fail("Authenticated job must checkout trusted main.");
+if (authCheckout?.with?.ref !== "${{ github.sha }}") {
+  fail("Authenticated job must checkout the exact trusted triggering SHA (github.sha).");
+}
 if (!(authenticatedJob.steps ?? []).some((step) => step.run === "npx playwright test")) {
   fail("Authenticated job must retain the complete Playwright suite.");
 }
@@ -97,5 +99,5 @@ if (secretReferences.some(({ stepName }) => !permittedCredentialSteps.has(stepNa
 }
 
 console.log(
-  "[e2e-security] Workflow isolation validated: PR has no E2E secrets; full suite is restricted to trusted main.",
+  "[e2e-security] Workflow isolation validated: PR has no E2E secrets; authenticated suite checks out the exact triggering SHA on trusted main.",
 );
