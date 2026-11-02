@@ -1,4 +1,4 @@
--- Cátedra Digital: RLS query-plan hardening and missing FK indexes.
+-- Cathedra Digital: RLS query-plan hardening and missing FK indexes.
 -- Authorization semantics are unchanged. The RLS predicates are wrapped in
 -- scalar SELECTs so auth.uid() is evaluated once per statement, not per row.
 -- Foreign-key indexes improve joins/deletes/updates on relationship columns.

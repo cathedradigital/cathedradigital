@@ -231,7 +231,7 @@ const EditorialShowcase: React.FC = () => {
       </Block>
 
       <EditorialFooter
-        kicker="Cátedra Digital"
+        kicker="Cathedra Digital"
         note="Design System · Sprint E1"
         action={<EditorialCTA>Documentação</EditorialCTA>}
       />
