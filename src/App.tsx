@@ -15,7 +15,6 @@ const ScrollToTop = lazy(() => import('./components/ScrollToTop'));
 const RouteSeo = lazy(() => import('./components/RouteSeo'));
 
 import { cn } from './lib/utils';
-import { Menu } from 'lucide-react';
 import { AppRoute, Language } from './types';
 import { AuthProvider, useAuth } from './hooks/useAuth';
 import { LangContext, LangProvider } from './contexts/LangContext';
@@ -581,10 +580,12 @@ const AppLayout: React.FC = () => {
             type="button"
             className="mobile-menu-fallback fixed left-3 z-[155] md:hidden inline-flex h-11 w-11 items-center justify-center rounded-full border border-primary/15 bg-background/90 text-foreground shadow-sm backdrop-blur-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             style={{ top: 'calc(var(--stitch-mobile-safe-top, 0px) + 0.5rem)' }}
-            aria-label="Abrir menu de navegação"
+            aria-label={t('open_sidebar')}
+            aria-expanded={isSidebarOpen}
+            aria-controls="cathedra-global-sidebar"
             onClick={handleOpenSidebar}
           >
-            <Menu className="h-5 w-5" strokeWidth={2} aria-hidden="true" />
+            <img src="/monograma-cathedra.svg" alt="" className="h-7 w-7 object-contain" />
           </button>
         )}
 
@@ -598,7 +599,7 @@ const AppLayout: React.FC = () => {
 
         <Suspense fallback={null}><ScrollToTop /></Suspense>
         <Suspense fallback={null}><AppErrorBoundary>
-          {(!settings.immersiveMode || !location.pathname.startsWith('/bible')) && !location.pathname.startsWith('/prototype-2.0') && location.pathname !== '/' && location.pathname !== '/auth' && location.pathname !== '/login' && location.pathname !== '/atlas' && !isAccountArea && (
+          {(!settings.immersiveMode || !location.pathname.startsWith('/bible')) && !location.pathname.startsWith('/prototype-2.0') && location.pathname !== '/auth' && location.pathname !== '/login' && location.pathname !== '/atlas' && !isAccountArea && (
             <Suspense fallback={null}>
               <AppHeader 
                 user={authUserAdapter} 
@@ -608,6 +609,7 @@ const AppLayout: React.FC = () => {
                 onChangeLang={setLang}
                 onSignOut={signOut}
                 onOpenSidebar={handleOpenSidebar}
+                isSidebarOpen={isSidebarOpen}
                 isLanding={location.pathname === '/'}
               />
             </Suspense>
