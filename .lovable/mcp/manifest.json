@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "sdk_version": "0.28.0",
+  "sdk_version": "3.4.0",
   "path": "/mcp",
   "auth": {
     "type": "oauth",
@@ -18,7 +18,7 @@
     "tools": [
       {
         "name": "semantic_search",
-        "title": "Busca Unificada Cathedra",
+        "title": "Busca Unificada Cathedra Digital",
         "description": "Busca simultânea em Glossário, Santos, Orações, Coleções e Jornadas por um termo. Retorna top N por categoria.",
         "annotations": {
           "readOnlyHint": true,
@@ -26,7 +26,7 @@
           "openWorldHint": false
         },
         "inputSchema": {
-          "$schema": "http://json-schema.org/draft-07/schema#",
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
           "type": "object",
           "properties": {
             "query": {
@@ -42,21 +42,22 @@
           },
           "required": [
             "query"
-          ]
+          ],
+          "additionalProperties": false
         },
         "outputSchema": null
       },
       {
         "name": "search_glossary",
         "title": "Buscar no Glossário",
-        "description": "Busca verbetes publicados do Glossário Teológico da Cathedra por termo. Retorna slug, título e definição curta. Público (dados publicados).",
+        "description": "Busca verbetes publicados do Glossário Teológico da Cathedra Digital por termo. Retorna slug, título e definição curta. Público (dados publicados).",
         "annotations": {
           "readOnlyHint": true,
           "idempotentHint": true,
           "openWorldHint": false
         },
         "inputSchema": {
-          "$schema": "http://json-schema.org/draft-07/schema#",
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
           "type": "object",
           "properties": {
             "query": {
@@ -74,7 +75,8 @@
           },
           "required": [
             "query"
-          ]
+          ],
+          "additionalProperties": false
         },
         "outputSchema": null
       },
@@ -88,7 +90,7 @@
           "openWorldHint": false
         },
         "inputSchema": {
-          "$schema": "http://json-schema.org/draft-07/schema#",
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
           "type": "object",
           "properties": {
             "slug": {
@@ -100,21 +102,22 @@
           },
           "required": [
             "slug"
-          ]
+          ],
+          "additionalProperties": false
         },
         "outputSchema": null
       },
       {
         "name": "search_saints",
         "title": "Buscar Santos",
-        "description": "Busca santos católicos por nome, título ou patronato no acervo público da Cathedra. Retorna id, nome, título, data festiva e categoria.",
+        "description": "Busca santos católicos por nome, título ou patronato no acervo público da Cathedra Digital. Retorna id, nome, título, data festiva e categoria.",
         "annotations": {
           "readOnlyHint": true,
           "idempotentHint": true,
           "openWorldHint": false
         },
         "inputSchema": {
-          "$schema": "http://json-schema.org/draft-07/schema#",
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
           "type": "object",
           "properties": {
             "query": {
@@ -132,21 +135,22 @@
           },
           "required": [
             "query"
-          ]
+          ],
+          "additionalProperties": false
         },
         "outputSchema": null
       },
       {
         "name": "get_saint",
         "title": "Obter Santo",
-        "description": "Retorna o registro completo de um santo pelo id (slug) — biografia, virtudes, oração, referências bíblicas, catecismo e citações. Dados públicos da Cathedra.",
+        "description": "Retorna o registro completo de um santo pelo id (slug) — biografia, virtudes, oração, referências bíblicas, catecismo e citações. Dados públicos da Cathedra Digital.",
         "annotations": {
           "readOnlyHint": true,
           "idempotentHint": true,
           "openWorldHint": false
         },
         "inputSchema": {
-          "$schema": "http://json-schema.org/draft-07/schema#",
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
           "type": "object",
           "properties": {
             "id": {
@@ -158,7 +162,8 @@
           },
           "required": [
             "id"
-          ]
+          ],
+          "additionalProperties": false
         },
         "outputSchema": null
       },
@@ -172,7 +177,7 @@
           "openWorldHint": false
         },
         "inputSchema": {
-          "$schema": "http://json-schema.org/draft-07/schema#",
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
           "type": "object",
           "properties": {
             "query": {
@@ -188,7 +193,8 @@
           },
           "required": [
             "query"
-          ]
+          ],
+          "additionalProperties": false
         },
         "outputSchema": null
       },
@@ -202,7 +208,7 @@
           "openWorldHint": false
         },
         "inputSchema": {
-          "$schema": "http://json-schema.org/draft-07/schema#",
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
           "type": "object",
           "properties": {
             "query": {
@@ -223,7 +229,8 @@
           },
           "required": [
             "query"
-          ]
+          ],
+          "additionalProperties": false
         },
         "outputSchema": null
       },
@@ -237,7 +244,7 @@
           "openWorldHint": false
         },
         "inputSchema": {
-          "$schema": "http://json-schema.org/draft-07/schema#",
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
           "type": "object",
           "properties": {
             "slug": {
@@ -249,7 +256,8 @@
           },
           "required": [
             "slug"
-          ]
+          ],
+          "additionalProperties": false
         },
         "outputSchema": null
       },
@@ -263,7 +271,7 @@
           "openWorldHint": false
         },
         "inputSchema": {
-          "$schema": "http://json-schema.org/draft-07/schema#",
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
           "type": "object",
           "properties": {
             "query": {
@@ -283,21 +291,22 @@
           },
           "required": [
             "query"
-          ]
+          ],
+          "additionalProperties": false
         },
         "outputSchema": null
       },
       {
         "name": "get_collection",
         "title": "Obter Coleção",
-        "description": "Retorna uma Coleção editorial publicada da Cathedra pelo slug, com seus itens ordenados (verbetes, santos, orações, jornadas). Dados públicos.",
+        "description": "Retorna uma Coleção editorial publicada da Cathedra Digital pelo slug, com seus itens ordenados (verbetes, santos, orações, jornadas). Dados públicos.",
         "annotations": {
           "readOnlyHint": true,
           "idempotentHint": true,
           "openWorldHint": false
         },
         "inputSchema": {
-          "$schema": "http://json-schema.org/draft-07/schema#",
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
           "type": "object",
           "properties": {
             "slug": {
@@ -309,21 +318,22 @@
           },
           "required": [
             "slug"
-          ]
+          ],
+          "additionalProperties": false
         },
         "outputSchema": null
       },
       {
         "name": "get_journey",
         "title": "Obter Jornada",
-        "description": "Retorna uma Jornada publicada da Cathedra pelo slug, incluindo hero editorial e etapas ordenadas (title, subtitle, step_type, conteúdo, reflection, exercise, closing).",
+        "description": "Retorna uma Jornada publicada da Cathedra Digital pelo slug, incluindo hero editorial e etapas ordenadas (title, subtitle, step_type, conteúdo, reflection, exercise, closing).",
         "annotations": {
           "readOnlyHint": true,
           "idempotentHint": true,
           "openWorldHint": false
         },
         "inputSchema": {
-          "$schema": "http://json-schema.org/draft-07/schema#",
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
           "type": "object",
           "properties": {
             "slug": {
@@ -335,7 +345,8 @@
           },
           "required": [
             "slug"
-          ]
+          ],
+          "additionalProperties": false
         },
         "outputSchema": null
       },
@@ -349,7 +360,7 @@
           "openWorldHint": false
         },
         "inputSchema": {
-          "$schema": "http://json-schema.org/draft-07/schema#",
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
           "type": "object",
           "properties": {
             "paragraph": {
@@ -367,7 +378,8 @@
           },
           "required": [
             "paragraph"
-          ]
+          ],
+          "additionalProperties": false
         },
         "outputSchema": null
       },
@@ -381,7 +393,7 @@
           "openWorldHint": false
         },
         "inputSchema": {
-          "$schema": "http://json-schema.org/draft-07/schema#",
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
           "type": "object",
           "properties": {
             "reference": {
@@ -411,7 +423,8 @@
               "minimum": 1,
               "maximum": 200
             }
-          }
+          },
+          "additionalProperties": false
         },
         "outputSchema": null
       },
@@ -425,7 +438,7 @@
           "openWorldHint": false
         },
         "inputSchema": {
-          "$schema": "http://json-schema.org/draft-07/schema#",
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
           "type": "object",
           "properties": {
             "query": {
@@ -441,7 +454,8 @@
           },
           "required": [
             "query"
-          ]
+          ],
+          "additionalProperties": false
         },
         "outputSchema": null
       },
@@ -455,7 +469,7 @@
           "openWorldHint": false
         },
         "inputSchema": {
-          "$schema": "http://json-schema.org/draft-07/schema#",
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
           "type": "object",
           "properties": {
             "date": {
@@ -463,7 +477,8 @@
               "type": "string",
               "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
             }
-          }
+          },
+          "additionalProperties": false
         },
         "outputSchema": null
       },
@@ -477,7 +492,7 @@
           "openWorldHint": false
         },
         "inputSchema": {
-          "$schema": "http://json-schema.org/draft-07/schema#",
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
           "type": "object",
           "properties": {
             "hour": {
@@ -503,7 +518,8 @@
           },
           "required": [
             "hour"
-          ]
+          ],
+          "additionalProperties": false
         },
         "outputSchema": null
       },
@@ -517,7 +533,7 @@
           "openWorldHint": false
         },
         "inputSchema": {
-          "$schema": "http://json-schema.org/draft-07/schema#",
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
           "type": "object",
           "properties": {
             "kind": {
@@ -548,7 +564,8 @@
           "required": [
             "kind",
             "ref"
-          ]
+          ],
+          "additionalProperties": false
         },
         "outputSchema": null
       },
@@ -562,7 +579,7 @@
           "openWorldHint": false
         },
         "inputSchema": {
-          "$schema": "http://json-schema.org/draft-07/schema#",
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
           "type": "object",
           "properties": {
             "kind": {
@@ -591,7 +608,8 @@
           "required": [
             "kind",
             "ref"
-          ]
+          ],
+          "additionalProperties": false
         },
         "outputSchema": null
       },
@@ -605,7 +623,7 @@
           "openWorldHint": false
         },
         "inputSchema": {
-          "$schema": "http://json-schema.org/draft-07/schema#",
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
           "type": "object",
           "properties": {
             "limit": {
@@ -614,7 +632,8 @@
               "minimum": 1,
               "maximum": 50
             }
-          }
+          },
+          "additionalProperties": false
         },
         "outputSchema": null
       },
@@ -628,7 +647,7 @@
           "openWorldHint": false
         },
         "inputSchema": {
-          "$schema": "http://json-schema.org/draft-07/schema#",
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
           "type": "object",
           "properties": {
             "content": {
@@ -650,7 +669,8 @@
           },
           "required": [
             "content"
-          ]
+          ],
+          "additionalProperties": false
         },
         "outputSchema": null
       }
