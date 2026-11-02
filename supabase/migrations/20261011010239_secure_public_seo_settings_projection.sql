@@ -19,7 +19,7 @@ $migration$;
 
 create table if not exists public.public_seo_settings (
   id uuid primary key,
-  site_title text not null default 'Cátedra Digital',
+  site_title text not null default 'Cathedra Digital',
   site_description text not null default 'Aprofunde sua fé católica com a Bíblia, o Catecismo, o Magistério e a tradição da Igreja.',
   site_keywords text not null default '',
   og_image_url text,

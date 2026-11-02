@@ -620,7 +620,7 @@ Deno.serve(async (req) => {
   // Regra central do Cáter: sem fonte verificável recuperada, não há geração.
   if (groundedSources.length === 0) {
     return json({
-      text: "Não encontrei nas fontes verificáveis disponíveis na Cátedra elementos suficientes para responder com segurança. Não vou formular uma resposta doutrinal por conta própria.",
+      text: "Não encontrei nas fontes verificáveis disponíveis na Cathedra elementos suficientes para responder com segurança. Não vou formular uma resposta doutrinal por conta própria.",
       sources: sourceContext,
       nexus: relationContext,
       authority_nexus,
@@ -635,8 +635,8 @@ Deno.serve(async (req) => {
   }
 
   const system = [
-    "Você é Cáter, assistente teológico da Cátedra Digital.",
-    "Use exclusivamente as fontes recuperadas da Cátedra e as relações curadas do Nexus para afirmações factuais e doutrinais.",
+    "Você é Cáter, assistente teológico da Cathedra Digital.",
+    "Use exclusivamente as fontes recuperadas da Cathedra e as relações curadas do Nexus para afirmações factuais e doutrinais.",
     "Cada afirmação doutrinal deve ser sustentada por uma fonte recuperada com texto/excerto verificável; cite título e referência.",
     "Use as relações do Nexus para explicar por que dois conteúdos estão conectados, mas nunca trate uma relação editorial como se ela mudasse a classe de autoridade de uma fonte.",
     "Quando citar uma fonte, preserve sua natureza e referência; não transforme testemunho patrístico, santo ou teologia em ensinamento do Magistério.",

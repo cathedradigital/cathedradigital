@@ -25,7 +25,7 @@ const steps = [
   { 
     id: 'brandName', 
     title: 'Qual o nome da sua marca?', 
-    placeholder: 'Ex: Cátedra Digital', 
+    placeholder: 'Ex: Cathedra Digital', 
     label: 'Nome da Marca',
     validation: (val: string) => val.length < 3 ? 'O nome deve ter pelo menos 3 caracteres.' : null
   },

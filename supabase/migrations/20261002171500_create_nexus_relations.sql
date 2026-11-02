@@ -1,4 +1,4 @@
--- Cátedra Digital · Nexus v1
+-- Cathedra Digital · Nexus v1
 -- Restores the canonical curated graph contract already consumed by the application.
 -- No relations are seeded here: an empty graph is preferable to fabricated links.
 

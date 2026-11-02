@@ -1,4 +1,4 @@
-# CÁTEDRA DIGITAL
+# Cathedra Digital
 
 ## Documento Mestre Oficial do Produto
 
