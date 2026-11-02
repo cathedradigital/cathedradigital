@@ -158,8 +158,7 @@ export default function PrayerAdmin() {
             Curadoria de Orações
           </h1>
           <p className="mt-2 max-w-[68ch] font-stitch-body text-sm text-stitch-on-surface-variant">
-            Painel editorial das orações. Status <em>complete</em> abre com o leitor contemplativo por blocos;
-            <em> stub</em> exibe o texto simples até a curadoria concluir.
+            Painel editorial das orações. A classificação é calculada a partir do texto, da explicação, da meditação e da fonte cadastrada.
           </p>
         </header>
 
@@ -215,7 +214,7 @@ export default function PrayerAdmin() {
                     <TableHead>Título</TableHead>
                     <TableHead>Categoria</TableHead>
                     <TableHead>Status</TableHead>
-                    <TableHead className="text-right">Blocos</TableHead>
+                    <TableHead className="text-right">Parágrafos</TableHead>
                     <TableHead className="text-right">Duração</TableHead>
                     <TableHead>Publicada</TableHead>
                     <TableHead className="text-right">Ações</TableHead>
