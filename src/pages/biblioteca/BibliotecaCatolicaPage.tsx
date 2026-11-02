@@ -63,7 +63,7 @@ const BibliotecaCatolicaPage: React.FC = () => {
   return (
     <section className="min-h-screen bg-background" data-space="biblioteca">
       <Helmet>
-        <title>Biblioteca Católica — Cátedra</title>
+        <title>Biblioteca Católica — Cathedra</title>
         <meta
           name="description"
           content="A tradição viva da Igreja em um só lugar: Escritos dos Santos, Padres, Doutores, Clássicos e Magistério com fichas editoriais, leitura contínua e Nexus Theologicus."
@@ -72,7 +72,7 @@ const BibliotecaCatolicaPage: React.FC = () => {
       </Helmet>
 
       <EditorialHero
-        kicker="Cátedra · Biblioteca"
+        kicker="Cathedra · Biblioteca"
         title="Biblioteca Católica"
         subtitle="A tradição viva da Igreja — Escritos, Padres, Doutores, Clássicos e Magistério em um só átrio."
         parchment

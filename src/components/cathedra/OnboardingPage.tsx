@@ -18,7 +18,7 @@ import onboardingCommunity from '@/assets/onboarding-community.webp';
 const SLIDES = [
   {
     icon: <Icons.Sparkles className="w-spacing-xl h-spacing-xl" />,
-    title: 'O Ecossistema Cátedra',
+    title: 'O Ecossistema Cathedra',
     subtitle: 'Sua vida espiritual integrada',
     description: 'Um ambiente digital sagrado que une oração, estudo, formação e comunidade em uma experiência única e personalizada.',
     image: onboardingBible,

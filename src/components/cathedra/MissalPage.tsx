@@ -278,7 +278,7 @@ const MissalPage: React.FC = () => {
         slug="missa-ordinario"
         title="Santa Missa"
         estimatedSeconds={45 * 60}
-        kicker="Cátedra · Ordo Missæ"
+        kicker="Cathedra · Ordo Missæ"
         backHref="/oracao"
         showRhythm={false}
         theme={missalTheme.theme}

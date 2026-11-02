@@ -3,7 +3,7 @@
  *
  * Página parametrizada por data (`/liturgia/dia/:d?`, default: hoje) que
  * agrega, em uma única peregrinação, todos os módulos litúrgicos do
- * Cátedra sem introduzir componentes paralelos:
+ * Cathedra sem introduzir componentes paralelos:
  *
  *   • Cabeçalho do dia    — LiturgyDayHeader (tempo, cor, celebração)
  *   • Santo do Dia        — useSaintOfDay + EditorialCard (balanced)
@@ -115,7 +115,7 @@ const DiaLiturgicoPage: React.FC = () => {
     <>
       <SEOHead
         title={`Dia Litúrgico · ${dateLabel}`}
-        description={`${celebration}. Missal, Liturgia das Horas, Santo do Dia e Escrituras — a peregrinação litúrgica completa do Cátedra.`}
+        description={`${celebration}. Missal, Liturgia das Horas, Santo do Dia e Escrituras — a peregrinação litúrgica completa do Cathedra.`}
         path={`/liturgia/dia${isToday ? '' : `/${isoDate}`}`}
       />
       <Helmet>
@@ -125,7 +125,7 @@ const DiaLiturgicoPage: React.FC = () => {
       <div className="w-full space-y-spacing-2xl pb-spacing-3xl">
         {/* ── Hero editorial ───────────────────────────────────────── */}
         <EditorialHero align="center">
-          <EditorialHero.Eyebrow>Cátedra · Dia Litúrgico</EditorialHero.Eyebrow>
+          <EditorialHero.Eyebrow>Cathedra · Dia Litúrgico</EditorialHero.Eyebrow>
           <EditorialHero.Title>{isToday ? 'Hoje na Igreja' : 'Dia Litúrgico'}</EditorialHero.Title>
           <EditorialHero.Subtitle>
             {celebration}

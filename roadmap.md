@@ -1,4 +1,4 @@
-# Migração Catedra Digital → Lovable (TanStack Start)
+# Migração Cathedra Digital → Lovable (TanStack Start)
 
 - [x] Clonar repo em /tmp/cathedradigital
 - [x] Copiar src/ + public/ (sem testes/entry)
