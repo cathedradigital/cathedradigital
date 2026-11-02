@@ -530,3 +530,67 @@ test('Rezar: Breviário explica cadastro ausente sem permanecer em skeleton', as
     await expect(page.locator('body')).not.toContainText(/Preparando Liturgia/i);
   }
 });
+
+
+test('Rezar: Rosário apresenta os quatro conjuntos e inicia uma sessão', async ({ page }) => {
+  const response = await page.goto('/oracao/rosario');
+  expect(response?.ok(), `/oracao/rosario: HTTP ${response?.status()}`).toBeTruthy();
+  await expect(page.getByRole('heading', { name: 'Santo Rosário' })).toBeVisible();
+
+  for (const setName of ['Mistérios Gozosos', 'Mistérios Luminosos', 'Mistérios Dolorosos', 'Mistérios Gloriosos']) {
+    await expect(page.getByRole('button', { name: new RegExp(setName) })).toBeVisible();
+  }
+
+  await page.getByRole('button', { name: /Mistérios Gozosos/ }).click();
+  await expect(page.getByRole('heading', { name: 'Mistérios Gozosos' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Escolha o modo' })).toBeVisible();
+  await page.getByRole('button', { name: 'Iniciar Oração' }).click();
+  await expect(page.getByRole('heading', { name: 'Sinal da Cruz' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Sair da oração e voltar' })).toBeVisible();
+});
+
+test('Rezar: Via-Sacra apresenta as 14 estações e abre a primeira estação', async ({ page }) => {
+  const response = await page.goto('/viacrucis');
+  expect(response?.ok(), `/viacrucis: HTTP ${response?.status()}`).toBeTruthy();
+  await expect(page.getByRole('heading', { name: 'Via Crucis' })).toBeVisible();
+  await expect(page.getByTestId('via-sacra-intro')).toBeVisible();
+  await expect(page.locator('[data-testid^="via-sacra-station-tile-"]')).toHaveCount(14);
+
+  await page.getByTestId('via-sacra-start').click();
+  await expect(page.getByRole('heading', { name: /Estação/ }).first()).toBeVisible();
+  await expect(page.getByText('Escritura', { exact: true })).toBeVisible();
+  await expect(page.getByText('Meditação', { exact: true })).toBeVisible();
+  await expect(page.getByText('Oração', { exact: true })).toBeVisible();
+});
+
+test('Rezar: Ladainhas abre o texto completo e permite localizar uma invocação', async ({ page }) => {
+  const response = await page.goto('/litanies');
+  expect(response?.ok(), `/litanies: HTTP ${response?.status()}`).toBeTruthy();
+  await expect(page.getByRole('heading', { name: 'Ladainhas' })).toBeVisible();
+
+  await page.getByLabel('Buscar ladainha').fill('Sagrado Coração');
+  const litanyCard = page.getByRole('button', { name: /Litania do Sagrado Coração de Jesus/ });
+  await expect(litanyCard).toBeVisible();
+  await litanyCard.click();
+
+  await expect(page.getByRole('heading', { name: 'Litania do Sagrado Coração de Jesus' })).toBeVisible();
+  await expect(page.getByText('Pai celeste, que sois Deus,')).toBeVisible();
+  await expect(page.getByText('Coração de Jesus, fonte de vida e de santidade,')).toBeVisible();
+  await expect(page.locator('#litany-closing')).toBeVisible();
+});
+
+test('Rezar: Novena permite navegar pelos dias e registrar conclusão', async ({ page }) => {
+  const response = await page.goto('/novenas/espirito-santo');
+  expect(response?.ok(), `/novenas/espirito-santo: HTTP ${response?.status()}`).toBeTruthy();
+  await expect(page.getByText('Dia 1 de 9')).toBeVisible();
+  await expect(page.getByText('Espírito de Sabedoria').first()).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Ir para o dia 2' })).toBeVisible();
+
+  await page.getByRole('button', { name: 'Ir para o dia 2' }).click();
+  await expect(page).toHaveURL(/dia=2/);
+  await expect(page.getByText('Dia 2 de 9')).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Espírito de Entendimento' })).toBeVisible();
+
+  await page.getByRole('button', { name: /Concluir dia 2/ }).click();
+  await expect(page.getByText('1/9 dias completos')).toBeVisible();
+});
