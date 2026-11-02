@@ -1,4 +1,5 @@
 import fs from 'node:fs';
+import { createClient } from '@supabase/supabase-js';
 
 function readProductionValue(name) {
   const source = fs.readFileSync('.env.production', 'utf8');
@@ -22,36 +23,28 @@ export default async function globalSetup() {
     throw new Error('E2E_AUTH_PREFLIGHT_MISSING_SUPABASE_CONFIG: the production URL and publishable key are required.');
   }
 
-  let response;
+  // Use the same Supabase SDK and signInWithPassword path as the real app.
+  // This avoids maintaining a second, hand-written Auth HTTP implementation.
+  const authClient = createClient(url, publishableKey, {
+    auth: {
+      persistSession: false,
+      autoRefreshToken: false,
+      detectSessionInUrl: false,
+    },
+  });
+
   try {
-    response = await fetch(`${url.replace(/\/$/, '')}/auth/v1/token?grant_type=password`, {
-      method: 'POST',
-      headers: {
-        apikey: publishableKey,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ email, password }),
-    });
-  } catch {
-    throw new Error('E2E_AUTH_PREFLIGHT_NETWORK_FAILURE: could not reach the configured Supabase Auth endpoint.');
-  }
+    const { error } = await authClient.auth.signInWithPassword({ email, password });
 
-  if (response.ok) {
-    await response.body?.cancel();
-    return;
-  }
+    if (!error) return;
 
-  let errorCode = '';
-  try {
-    const payload = await response.json();
-    errorCode = typeof payload?.error_code === 'string' ? payload.error_code : '';
-  } catch {
-    // Do not include raw response bodies in CI output.
-  }
+    if (error.code === 'invalid_credentials') {
+      throw new Error('E2E_AUTH_INVALID_CREDENTIALS: Supabase rejected the configured E2E account for this project. Secrets and response bodies were not logged.');
+    }
 
-  if (errorCode === 'invalid_credentials') {
-    throw new Error('E2E_AUTH_INVALID_CREDENTIALS: Supabase rejected the configured E2E account for this project. Secrets and response bodies were not logged.');
+    throw new Error(`E2E_AUTH_PREFLIGHT_FAILED: Supabase Auth returned HTTP ${error.status ?? 'unknown'}. Secrets and response bodies were not logged.`);
+  } catch (error) {
+    if (error instanceof Error && error.message.startsWith('E2E_AUTH_')) throw error;
+    throw new Error('E2E_AUTH_PREFLIGHT_NETWORK_FAILURE: could not complete authentication against the configured Supabase project.');
   }
-
-  throw new Error(`E2E_AUTH_PREFLIGHT_FAILED: Supabase Auth returned HTTP ${response.status}. Secrets and response bodies were not logged.`);
 }
