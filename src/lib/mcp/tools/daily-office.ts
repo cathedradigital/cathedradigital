@@ -10,6 +10,7 @@ const HOURS = [
   "terca",
   "oficio-leituras",
   "hora-media",
+  "invitatorio",
   "sexta",
   "noa",
   "vesperas",
@@ -34,7 +35,10 @@ export default defineTool({
     const iso = date ?? new Date().toISOString().slice(0, 10);
     const canonicalHour = normalizeHourSlug(hour);
     if (!canonicalHour) {
-      return { content: [{ type: "text", text: "Identificador ambíguo ou não suportado pelo leitor. Escolha uma das sete Horas canônicas." }], isError: true };
+      const reason = hour === "hora-media"
+        ? "“hora-media” é ambíguo; escolha “tercia”, “sexta” ou “noa”."
+        : "O Invitatorio integra a abertura do Ofício de Leituras e não é consultado como uma Hora independente.";
+      return { content: [{ type: "text", text: reason }], isError: true };
     }
     const sb = createClient((process.env.SUPABASE_URL || import.meta.env.VITE_SUPABASE_URL)!, (process.env.SUPABASE_PUBLISHABLE_KEY || import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY)!, {
       auth: { persistSession: false, autoRefreshToken: false },
