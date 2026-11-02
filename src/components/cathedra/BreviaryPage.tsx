@@ -25,6 +25,7 @@ import {
   type LiturgyHoursOfficeRow,
 } from '@/hooks/useLiturgyHoursOffice';
 import { toIsoDateKey } from '@/core/liturgy/LiturgyProvider';
+import { normalizeHourSlug } from '@/core/liturgy/hour-slugs';
 import { PrayerEngineReader } from './PrayerEngineReader';
 import { BreviaryContinuousReader, type BreviaryHourBundle } from './BreviaryContinuousReader';
 import { LiturgyHoursOfficeCards } from './primitives/liturgy/LiturgyHoursOfficeCards';
@@ -67,10 +68,6 @@ function suggestedHourFor(now: Date): HourSlug {
   if (h < 17) return 'noa';
   if (h < 20) return 'vesperas';
   return 'completas';
-}
-
-function isHour(s: string | null): s is HourSlug {
-  return !!s && (ALL_HOUR_SLUGS as string[]).includes(s);
 }
 
 function parseDateParam(raw: string | null): Date {
@@ -149,7 +146,7 @@ const BreviaryPage: React.FC = () => {
   const isToday = isoDate === todayIso;
 
   const hourParam = searchParams.get('h');
-  const selectedHour: HourSlug | null = isHour(hourParam) ? hourParam : null;
+  const selectedHour: HourSlug | null = hourParam ? normalizeHourSlug(hourParam) : null;
   const dayMode = searchParams.get('mode') === 'day';
 
   const suggested = useMemo(() => suggestedHourFor(new Date()), []);
