@@ -108,7 +108,7 @@ const NexusCorpusRelations: React.FC = () => {
                   <a
                     href={target.href}
                     className="hover:text-stitch-secondary"
-                    aria-label={`Abrir ${target.label}${target.external ? ' na fonte original' : ' na Cátedra'}`}
+                    aria-label={`Abrir ${target.label}${target.external ? ' na fonte original' : ' na Cathedra Digital'}`}
                     target={target.external ? '_blank' : undefined}
                     rel={target.external ? 'noreferrer' : undefined}
                   >

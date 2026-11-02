@@ -1,5 +1,5 @@
 /**
- * /admin/biblioteca-patristica — Cathedra Patristic Library Studio (E1.3).
+ * /admin/biblioteca-patristica — Cathedra Digital Patristic Library Studio (E1.3).
  *
  * Curadoria de obras dos santos: metadados, licença e workflow editorial
  * (draft → in_review → published → archived).
@@ -406,7 +406,7 @@ function EditWorkDialog({ work, onClose, onSave, saving }: EditWorkDialogProps) 
                 id="license"
                 value={form.license}
                 onChange={e => setForm(f => ({ ...f, license: e.target.value }))}
-                placeholder="Ex.: Domínio Público, CC BY-SA 4.0, Tradução Cathedra…"
+                placeholder="Ex.: Domínio Público, CC BY-SA 4.0, Tradução Cathedra Digital…"
               />
               <p className="text-xs text-muted-foreground mt-1">
                 Obrigatória para publicar. Se a tradução for licenciada separadamente, declare aqui.

@@ -1,6 +1,6 @@
 // Push notification service worker
 self.addEventListener("push", function (event) {
-  let data = { title: "Cathedra", body: "Nova mensagem", url: "/dashboard" };
+  let data = { title: "Cathedra Digital", body: "Nova mensagem", url: "/dashboard" };
   try {
     data = event.data.json();
   } catch (e) {
@@ -17,7 +17,7 @@ self.addEventListener("push", function (event) {
   };
 
   event.waitUntil(
-    self.registration.showNotification(data.title || "Cathedra", options)
+    self.registration.showNotification(data.title || "Cathedra Digital", options)
   );
 });
 

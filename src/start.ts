@@ -26,7 +26,7 @@ const csrfMiddleware = createCsrfMiddleware({
 });
 
 export const startInstance = createStart(() => ({
-  // Cathedra is a browser-first legacy SPA. Disable SSR by default so no
+  // Cathedra Digital is a browser-first legacy SPA. Disable SSR by default so no
   // route can accidentally execute browser-only code inside the Cloudflare Worker.
   defaultSsr: false,
   functionMiddleware: [attachSupabaseAuth],

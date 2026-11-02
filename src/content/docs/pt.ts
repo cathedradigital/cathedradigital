@@ -9,7 +9,7 @@ export const docsPt: DocsBundle = {
   },
   ui: {
     portalTitle: 'Documentação',
-    portalSubtitle: 'Guias breves para usar a Cathedra com proveito espiritual.',
+    portalSubtitle: 'Guias breves para usar a Cathedra Digital com proveito espiritual.',
     searchLabel: 'Buscar na documentação',
     searchPlaceholder: 'Buscar guia, tema ou palavra…',
     empty: 'Nenhum guia corresponde à busca.',
@@ -22,13 +22,13 @@ export const docsPt: DocsBundle = {
       slug: 'primeiros-passos',
       category: 'inicio',
       title: 'Primeiros passos',
-      summary: 'Como a Cathedra se organiza e por onde começar no primeiro dia.',
+      summary: 'Como a Cathedra Digital se organiza e por onde começar no primeiro dia.',
       keywords: ['início', 'conta', 'perfil', 'navegação', 'átrio'],
       sections: [
         {
-          heading: 'O que é a Cathedra',
+          heading: 'O que é a Cathedra Digital',
           body: [
-            'A Cathedra reúne Escritura, liturgia, oração e patrística em um só lugar, com referências cruzadas entre tudo o que você lê.',
+            'A Cathedra Digital reúne Escritura, liturgia, oração e patrística em um só lugar, com referências cruzadas entre tudo o que você lê.',
             'A proposta não é acumular informação, mas sustentar uma vida interior constante.',
           ],
         },

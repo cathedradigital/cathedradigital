@@ -92,7 +92,7 @@ const CollectionCertificatePage: React.FC = () => {
   return (
     <>
       <Helmet>
-        <title>Certificado · {collection.title} · Cathedra</title>
+        <title>Certificado · {collection.title} · Cathedra Digital</title>
         <meta name="robots" content="noindex,follow" />
       </Helmet>
 
@@ -101,7 +101,7 @@ const CollectionCertificatePage: React.FC = () => {
         ariaLabel={`Certificado — ${collection.title}`}
         hero={
           <EditorialHero
-            kicker="Cathedra · Certificação editorial"
+            kicker="Cathedra Digital · Certificação editorial"
             title={`Certificado — ${collection.title}`}
             subtitle="Confirmação da conclusão da trilha de formação"
           />

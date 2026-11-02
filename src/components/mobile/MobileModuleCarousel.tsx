@@ -60,7 +60,7 @@ export function MobileModuleCarousel() {
   const swipeResetTimer = useRef<number | null>(null);
 
   const destinations = useMemo<Destination[]>(() => [
-    { key: 'atrium', label: 'Átrio', path: '/', icon: House, accent: '#c6a45c' },
+    { key: 'atrium', label: t('nav.inicio'), path: '/', icon: House, accent: '#c6a45c' },
     ...MODULE_NAVIGATION.map((environment) => ({
       key: environment.key,
       label: t(environment.labelKey) || environment.label,
@@ -133,7 +133,7 @@ export function MobileModuleCarousel() {
 
   return (
     <nav
-      aria-label="Navegação entre módulos"
+      aria-label={t('navigation')}
       data-testid="mobile-module-carousel"
       className="fixed inset-x-0 bottom-0 z-[45] border-t border-primary/10 bg-background/95 pb-[var(--stitch-mobile-safe-bottom,env(safe-area-inset-bottom,0px))] shadow-[0_-8px_24px_rgba(0,0,0,0.06)] backdrop-blur-xl md:hidden"
       onTouchStart={handleTouchStart}
@@ -152,23 +152,20 @@ export function MobileModuleCarousel() {
       {expandedGroup && (
         <section
           id="mobile-module-submenu"
-          aria-label={'Opções de ' + expandedGroup.label}
+          aria-label={`${t('navigation')}: ${t(expandedGroup.labelKey)}`}
           className="mx-3 mb-2 overflow-hidden rounded-3xl border border-border/80 bg-card/98 p-4 shadow-[0_16px_48px_rgba(0,0,0,0.18)] backdrop-blur-2xl animate-in slide-in-from-bottom-2 fade-in duration-200"
           style={{ borderTopColor: expandedGroup.accent }}
         >
           <div className="mb-3 flex items-start justify-between gap-3">
             <div className="min-w-0">
-              <p className="text-[10px] font-bold uppercase tracking-[0.18em]" style={{ color: expandedGroup.accent }}>
-                Ambiente
-              </p>
-              <h2 className="mt-1 font-serif text-xl font-semibold text-foreground">{expandedGroup.label}</h2>
+              <h2 className="mt-1 font-serif text-xl font-semibold text-foreground">{t(expandedGroup.labelKey)}</h2>
               <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{expandedGroup.description}</p>
             </div>
             <button
               type="button"
-              aria-label="Fechar opções do módulo"
+              aria-label={t('close_menu')}
               onClick={() => setExpandedGroupKey(null)}
-              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-muted text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+              className="flex min-h-11 min-w-11 shrink-0 items-center justify-center rounded-full bg-muted text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             >
               <X className="h-4 w-4" aria-hidden="true" />
             </button>
@@ -191,7 +188,7 @@ export function MobileModuleCarousel() {
                   )}
                 >
                   <span className="min-w-0">
-                    <span className="block text-sm font-semibold leading-snug">{item.label}</span>
+                    <span className="block text-sm font-semibold leading-snug">{t(item.labelKey)}</span>
                     <span className="mt-1 block line-clamp-2 text-[10px] leading-snug text-muted-foreground">{item.description}</span>
                   </span>
                   <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground" aria-hidden="true" />
@@ -213,7 +210,7 @@ export function MobileModuleCarousel() {
               aria-current={active ? 'page' : undefined}
               aria-expanded={destination.key !== 'atrium' ? expandedGroupKey === destination.key : undefined}
               aria-controls={destination.key !== 'atrium' ? 'mobile-module-submenu' : undefined}
-              aria-label={'Abrir opções do módulo ' + destination.label}
+              aria-label={`${t('navigation')}: ${destination.label}`}
               onClick={() => openIndex(index)}
               className={cn(
                 'group relative inline-flex min-h-[48px] min-w-[54px] shrink-0 flex-col items-center justify-center gap-1 rounded-xl border px-2 py-1 transition-all duration-200',
@@ -239,7 +236,7 @@ export function MobileModuleCarousel() {
         })}
       </div>
       <span className="sr-only" aria-live="polite">
-        {activeIndex >= 0 ? `Módulo atual: ${destinations[activeIndex]?.label}` : ''}
+        {activeIndex >= 0 ? `${t('navigation')}: ${destinations[activeIndex]?.label}` : ''}
       </span>
     </nav>
   );

@@ -1,7 +1,7 @@
 /**
  * Reader Template Master — API canônica.
  *
- * Import único para toda leitura da Cathedra. Módulos NÃO devem
+ * Import único para toda leitura da Cathedra Digital. Módulos NÃO devem
  * importar Reader/Nexus/Popover fora deste barrel.
  *
  * Uso canônico:

@@ -1,5 +1,5 @@
 /**
- * SearchResult — hit universal de busca sobre conteúdo do Cathedra.
+ * SearchResult — hit universal de busca sobre conteúdo da Cathedra Digital.
  *
  * Todo adapter que expõe busca (Bíblia, CIC, Magistério, …) devolve a
  * mesma shape, permitindo que a `UniversalSearch` (Sprint 2.0.4B-3)

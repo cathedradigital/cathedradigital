@@ -137,12 +137,12 @@ const AtriumJornadasPage: React.FC = () => {
       className="min-h-screen w-full bg-background text-foreground"
     >
       <Helmet>
-        <title>Cathedra — Formação</title>
+        <title>Cathedra Digital — Formação</title>
         <meta
           name="description"
           content="Trilhas guiadas de formação católica: fundamentos, oração, vida mística e transformação. Um passo por vez, no ritmo do silêncio."
         />
-        <meta property="og:title" content="Cathedra — Formação" />
+        <meta property="og:title" content="Cathedra Digital — Formação" />
       </Helmet>
 
       <SpaceLayout>

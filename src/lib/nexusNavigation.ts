@@ -2,7 +2,7 @@
  * Handler central para navegação do Nexus Theologicus.
  *
  * REGRA INEGOCIÁVEL: toda referência (Catecismo, Bíblia, tag, santo) DEVE abrir
- * dentro do Cathedra por rota interna. Nenhum destino externo é permitido.
+ * dentro da Cathedra Digital por rota interna. Nenhum destino externo é permitido.
  * Qualquer novo tipo de referência precisa passar por aqui.
  */
 

@@ -340,7 +340,7 @@ export default function CollectionPage() {
   return (
     <>
       <Helmet>
-        <title>{collection.title} · Cathedra</title>
+        <title>{collection.title} · Cathedra Digital</title>
         <meta
           name="description"
           content={

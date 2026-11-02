@@ -899,7 +899,7 @@ const MagisteriumViewer: React.FC = () => {
                       Idioma original · {sourceLanguageName}
                     </p>
                     <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-                      {showingTranslation ? `Tradução de apoio para ${targetLanguageName}. A fonte oficial permanece vinculada ao Vaticano.` : `O texto carregado está em ${sourceLanguageName}. Você pode lê-lo em ${targetLanguageName} sem sair do Cátedra.`}
+                      {showingTranslation ? `Tradução de apoio para ${targetLanguageName}. A fonte oficial permanece vinculada ao Vaticano.` : `O texto carregado está em ${sourceLanguageName}. Você pode lê-lo em ${targetLanguageName} sem sair da Cathedra Digital.`}
                     </p>
                   </div>
                   <Button

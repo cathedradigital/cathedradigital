@@ -11,7 +11,7 @@ export interface HomeButtonProps extends ButtonProps {
 
 const HomeButton = React.forwardRef<HTMLButtonElement, HomeButtonProps>(
   ({ variant, size, children, className, ...props }, ref) => {
-    // Map existing Shadcn variants to Cathedra variants
+    // Map existing Shadcn variants to Cathedra Digital variants
     const vMap: Record<string, any> = {
       default: 'primary',
       secondary: 'secondary',

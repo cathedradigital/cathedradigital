@@ -20,7 +20,7 @@ const MobileShowcase = () => {
     <div className="min-h-screen bg-stitch-background pb-32">
       {/* 1. MobileTopBar padrão */}
       <MobileTopBar
-        kicker="Cathedra · Vitrine"
+        kicker="Cathedra Digital · Vitrine"
         title="Fundação Mobile"
         showBack
         actions={

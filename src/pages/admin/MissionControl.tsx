@@ -1,5 +1,5 @@
 /**
- * Cathedra Mission Control — sala de controle do ecossistema editorial.
+ * Cathedra Digital Mission Control — sala de controle do ecossistema editorial.
  *
  * Lê os manifestos registrados no Editorial Engine e mostra, por entidade,
  * ICE, Nexus, tier e status do gate. Entidades ainda não plugadas aparecem
@@ -147,7 +147,7 @@ function SystemPanel() {
       <CardHeader className="pb-2">
         <CardTitle className="text-base flex items-center gap-2">
           <ShieldCheck className="h-4 w-4 text-primary" />
-          Sistema · Cathedra
+          Sistema · Cathedra Digital
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -180,7 +180,7 @@ export default function MissionControl() {
   return (
     <div className="mx-auto max-w-6xl px-4 py-8">
       <Helmet>
-        <title>Cathedra Mission Control · Editorial Engine</title>
+        <title>Cathedra Digital Mission Control · Editorial Engine</title>
         <meta name="robots" content="noindex" />
       </Helmet>
 
@@ -189,7 +189,7 @@ export default function MissionControl() {
           <Target className="h-5 w-5 text-primary" />
         </div>
         <div>
-          <h1 className="font-serif text-2xl leading-none">Cathedra Mission Control</h1>
+          <h1 className="font-serif text-2xl leading-none">Cathedra Digital Mission Control</h1>
           <p className="text-xs text-muted-foreground mt-1">
             Sala de controle do ecossistema editorial · agregando todos os módulos plugados no Editorial Engine.
           </p>

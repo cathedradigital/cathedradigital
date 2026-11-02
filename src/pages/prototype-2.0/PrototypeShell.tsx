@@ -53,7 +53,7 @@ export const PrototypeShell: React.FC<Props> = ({
                 <ArrowLeft size={18} />
               </button>
             )}
-            <span className="font-serif text-base truncate">{title ?? 'Cathedra'}</span>
+            <span className="font-serif text-base truncate">{title ?? 'Cathedra Digital'}</span>
           </div>
           <div className="flex items-center gap-1">
             <Link to={`${BASE}/pesquisar`} state={{ from: location.pathname }} className="p-1.5 rounded hover:bg-muted" aria-label="Buscar">

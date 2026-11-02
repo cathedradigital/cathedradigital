@@ -51,7 +51,7 @@ const Index = () => {
         Se for apenas uma pergunta ou conversa, responda no chat em português, sem alterar nenhum arquivo.
         Nunca insira o texto enviado como conteúdo dentro do site ou da página.
 
-        TEXTO DO USUÁRIO: Cathedra MISSION CONTROL — ONDA 2.2
+        TEXTO DO USUÁRIO: Cathedra Digital MISSION CONTROL — ONDA 2.2
         VALIDAÇÃO DOS DADOS REAIS APÓS REATIVAÇÃO DA CLOUD
 
         A infraestrutura da Lovable Cloud foi reativada.
@@ -341,10 +341,10 @@ const Index = () => {
           { name: "Home", path: "/" }
         ]}
         faqs={[
-          { question: "O Cathedra é gratuito?", answer: "Sim! O acesso à Bíblia, Catecismo, Santos, Liturgia e Orações é totalmente gratuito. Recursos avançados como o Logos IA e análises aprofundadas estão disponíveis no plano Premium." },
+          { question: "A Cathedra Digital é gratuita?", answer: "Sim! O acesso à Bíblia, Catecismo, Santos, Liturgia e Orações é totalmente gratuito. Recursos avançados como o Logos IA e análises aprofundadas estão disponíveis no plano Premium." },
           { question: "Preciso ser católico para usar?", answer: "Não. Embora o conteúdo seja baseado na tradição católica, qualquer pessoa interessada em estudar a Bíblia, a história dos santos ou a teologia cristã é bem-vinda." },
-          { question: "Posso usar offline?", answer: "Sim! O Cathedra é um Progressive Web App (PWA). Após o primeiro acesso, grande parte do conteúdo fica disponível mesmo sem conexão à internet." },
-          { question: "Como funciona o Logos IA?", answer: "É um assistente de inteligência artificial para consulta teológica que recupera fontes da Cathedra e apresenta as referências usadas. Ele auxilia os estudos e não é uma autoridade eclesial." }
+          { question: "Posso usar offline?", answer: "Sim! A Cathedra Digital é um Progressive Web App (PWA). Após o primeiro acesso, grande parte do conteúdo fica disponível mesmo sem conexão à internet." },
+          { question: "Como funciona o Logos IA?", answer: "É um assistente de inteligência artificial para consulta teológica que recupera fontes da Cathedra Digital e apresenta as referências usadas. Ele auxilia os estudos e não é uma autoridade eclesial." }
         ]}
       />
 

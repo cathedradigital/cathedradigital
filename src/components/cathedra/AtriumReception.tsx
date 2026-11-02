@@ -177,7 +177,7 @@ const AtriumReception: React.FC = () => {
       {/* Saudação */}
       <div className="mb-spacing-lg">
         <h2 className="mb-spacing-2xs text-xs font-semibold uppercase tracking-widest text-secondary">
-          Sanctuarium Digital
+          Cathedra Digital
         </h2>
         <h1 className="font-serif text-3xl md:text-5xl leading-tight text-foreground">
           Paz e bem, {name}.

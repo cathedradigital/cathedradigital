@@ -89,7 +89,7 @@ export default function ProfileFavoritesPage() {
         </Button>
         <div>
           <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-primary">
-            Cathedra · Perfil
+            Cathedra Digital · Perfil
           </p>
           <h1 className="font-serif text-3xl font-bold">Meus Favoritos</h1>
         </div>

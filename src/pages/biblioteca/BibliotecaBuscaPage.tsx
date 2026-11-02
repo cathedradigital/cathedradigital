@@ -117,12 +117,12 @@ const BibliotecaBuscaPage: React.FC = () => {
   return (
     <section className="min-h-screen bg-background">
       <Helmet>
-        <title>{q ? `“${q}” — Busca · Biblioteca Patrística` : 'Buscar na Biblioteca Patrística · Cathedra'}</title>
+        <title>{q ? `“${q}” — Busca · Biblioteca Patrística` : 'Buscar na Biblioteca Patrística · Cathedra Digital'}</title>
         <meta name="robots" content="noindex,follow" />
       </Helmet>
 
       <EditorialHero
-        kicker="Cathedra · Biblioteca Viva"
+        kicker="Cathedra Digital · Biblioteca Viva"
         title="Buscar nos Escritos dos Santos"
         subtitle="Autor, obra ou palavras exatas dentro dos capítulos."
         parchment

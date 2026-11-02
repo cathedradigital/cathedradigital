@@ -6,7 +6,7 @@ export default defineTool({
   name: "get_collection",
   title: "Obter Coleção",
   description:
-    "Retorna uma Coleção editorial publicada da Cathedra pelo slug, com seus itens ordenados (verbetes, santos, orações, jornadas). Dados públicos.",
+    "Retorna uma Coleção editorial publicada da Cathedra Digital pelo slug, com seus itens ordenados (verbetes, santos, orações, jornadas). Dados públicos.",
   inputSchema: {
     slug: z.string().trim().min(1).max(120).describe("Slug da coleção (ex.: 'sete-sacramentos')."),
   },

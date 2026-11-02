@@ -130,7 +130,7 @@ const HojePage: React.FC = () => {
 
 
       <SEOHead 
-        title={`Sanctuarium - ${new Date().toLocaleDateString('pt-BR')} | Cathedra`} 
+        title={`Sanctuarium - ${new Date().toLocaleDateString('pt-BR')} | Cathedra Digital`}
         description="Refúgio digital contemplativo guiado pela Fé. Liturgia, Ritual e Sabedoria em silêncio visual." 
         path="/hoje" 
         image="https://isojguvcnfncokoxoauk.supabase.co/storage/v1/object/public/public-assets/og-hoje.png"

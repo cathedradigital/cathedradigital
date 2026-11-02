@@ -9,7 +9,7 @@ export const docsEn: DocsBundle = {
   },
   ui: {
     portalTitle: 'Documentation',
-    portalSubtitle: 'Short guides for using Cathedra with spiritual profit.',
+    portalSubtitle: 'Short guides for using Cathedra Digital with spiritual profit.',
     searchLabel: 'Search the documentation',
     searchPlaceholder: 'Search a guide, topic or word…',
     empty: 'No guide matches your search.',
@@ -22,13 +22,13 @@ export const docsEn: DocsBundle = {
       slug: 'primeiros-passos',
       category: 'inicio',
       title: 'Getting started',
-      summary: 'How Cathedra is organised and where to begin on day one.',
+      summary: 'How Cathedra Digital is organised and where to begin on day one.',
       keywords: ['start', 'account', 'profile', 'navigation', 'atrium'],
       sections: [
         {
-          heading: 'What Cathedra is',
+          heading: 'What Cathedra Digital is',
           body: [
-            'Cathedra gathers Scripture, liturgy, prayer and the Fathers in one place, cross-referenced throughout.',
+            'Cathedra Digital gathers Scripture, liturgy, prayer and the Fathers in one place, cross-referenced throughout.',
             'The aim is not to accumulate information, but to sustain a steady interior life.',
           ],
         },

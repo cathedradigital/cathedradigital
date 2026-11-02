@@ -6,7 +6,7 @@ export default defineTool({
   name: "get_journey",
   title: "Obter Jornada",
   description:
-    "Retorna uma Jornada publicada da Cathedra pelo slug, incluindo hero editorial e etapas ordenadas (title, subtitle, step_type, conteúdo, reflection, exercise, closing).",
+    "Retorna uma Jornada publicada da Cathedra Digital pelo slug, incluindo hero editorial e etapas ordenadas (title, subtitle, step_type, conteúdo, reflection, exercise, closing).",
   inputSchema: {
     slug: z.string().trim().min(1).max(120).describe("Slug da jornada."),
   },

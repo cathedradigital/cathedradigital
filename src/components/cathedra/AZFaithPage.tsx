@@ -124,7 +124,7 @@ const AZFaithPage: React.FC = () => {
       }
     >
       <SEOHead
-        title="A–Z da Fé | Cathedra"
+        title="A–Z da Fé | Cathedra Digital"
         description="Explore o índice alfabético de termos bíblicos e teológicos."
         path="/az-faith"
       />

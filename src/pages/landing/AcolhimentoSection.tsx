@@ -39,7 +39,7 @@ const AcolhimentoSection = () => {
             { 
               title: "Construído Juntos", 
               icon: <Icons.Users className="w-spacing-md h-spacing-md" />, 
-              desc: "O Cathedra cresce com o seu feedback. Cada sugestão sua ajuda a tornar este santuário digital mais completo para todos os católicos." 
+              desc: "A Cathedra Digital cresce com o seu feedback. Cada sugestão sua ajuda a tornar este santuário digital mais completo para todos os católicos."
             }
           ].map((item, i) => (
             <motion.div 

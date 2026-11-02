@@ -539,7 +539,7 @@
 }
 
 .catedra-atrium-doors::before {
-  content: "Cathedra · ÁTRIO";
+  content: "Cathedra Digital · ÁTRIO";
   display: block;
   margin-bottom: .75rem;
   color: color-mix(in srgb, var(--catedra-atrium-ink) 55%, transparent);
@@ -653,4 +653,3 @@
 [data-catedra-module="estudar"] [data-catedra-module-root] a:focus-visible {
   outline-color: var(--catedra-module-accent);
 }
-

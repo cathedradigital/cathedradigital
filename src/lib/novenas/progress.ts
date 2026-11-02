@@ -130,7 +130,7 @@ export function importProgressPayload(
   }
   const p = raw as Partial<NovenaExportPayload>;
   if (p.app !== 'cathedra' || p.kind !== 'novena-progress') {
-    result.errors.push('Este arquivo não é um progresso de novenas Cathedra.');
+    result.errors.push('Este arquivo não é um progresso de novenas Cathedra Digital.');
     return result;
   }
   if (!p.entries || typeof p.entries !== 'object') {

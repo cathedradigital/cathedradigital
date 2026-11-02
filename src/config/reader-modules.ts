@@ -1,5 +1,5 @@
 /**
- * Registro canônico de módulos de leitura da Cathedra.
+ * Registro canônico de módulos de leitura da Cathedra Digital.
  *
  * Fonte única de verdade para:
  *  - `scripts/reader-template-audit.ts` (score de aderência ao Reader Template Master)

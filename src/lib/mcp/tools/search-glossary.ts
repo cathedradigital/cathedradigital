@@ -6,7 +6,7 @@ export default defineTool({
   name: "search_glossary",
   title: "Buscar no Glossário",
   description:
-    "Busca verbetes publicados do Glossário Teológico da Cathedra por termo. Retorna slug, título e definição curta. Público (dados publicados).",
+    "Busca verbetes publicados do Glossário Teológico da Cathedra Digital por termo. Retorna slug, título e definição curta. Público (dados publicados).",
   inputSchema: {
     query: z.string().trim().min(1).max(120).describe("Termo ou fragmento a buscar."),
     limit: z.number().int().min(1).max(20).optional().describe("Máximo de resultados (default 10)."),

@@ -80,7 +80,7 @@ export const HighlightMenu: React.FC<HighlightMenuProps> = ({
                       Yá
                     </span>
                     <span className="text-[9px] font-black uppercase tracking-[0.25em] text-primary/45">
-                      Cathedra · {sourceLabel}
+                      Cathedra Digital · {sourceLabel}
                     </span>
                   </div>
                   {reference && (
@@ -162,7 +162,7 @@ export const HighlightMenu: React.FC<HighlightMenuProps> = ({
                   <PassageActions
                     text={verseText}
                     reference={reference}
-                    title={`Cathedra — ${reference}`}
+                    title={`Cathedra Digital — ${reference}`}
                     passage={passage}
                     size="sm"
                     className="justify-center"

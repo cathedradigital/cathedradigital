@@ -22,8 +22,8 @@ export type SaintWorkStatus = 'draft' | 'in_review' | 'published' | 'archived';
 
 /**
  * Modelo de acesso ao texto da obra.
- * - `internal`: leitor Cathedra (saint_work_chapters populados)
- * - `official_external`: fonte oficial fora do Cathedra (Vatican.va, ...)
+ * - `internal`: leitor Cathedra Digital (saint_work_chapters populados)
+ * - `official_external`: fonte oficial fora da Cathedra Digital (Vatican.va, ...)
  * - `public_domain`: fonte pública validada (CCEL, Documenta Catholica Omnia, ...)
  * - `licensed`: tradução licenciada (futuro)
  */
@@ -34,7 +34,7 @@ export type SaintWorkAccessType =
   | 'licensed';
 
 export const SAINT_WORK_ACCESS_LABELS: Record<SaintWorkAccessType, string> = {
-  internal: 'Leitor Cathedra',
+  internal: 'Leitor Cathedra Digital',
   official_external: 'Fonte oficial',
   public_domain: 'Domínio público',
   licensed: 'Tradução licenciada',

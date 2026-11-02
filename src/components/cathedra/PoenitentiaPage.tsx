@@ -99,7 +99,7 @@ const PoenitentiaPage: React.FC<Props> = ({ prayer, kicker }) => {
     <>
       {prayer && (
         <MobileTopBar
-          kicker={kicker ?? 'Cátedra · Sacramentum Poenitentiae'}
+          kicker={kicker ?? 'Cathedra Digital · Sacramentum Poenitentiae'}
           title={prayer.title}
           showBack
         />

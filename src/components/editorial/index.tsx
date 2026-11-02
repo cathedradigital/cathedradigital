@@ -1,5 +1,5 @@
 /**
- * Editorial primitives — Sprint R1 (reskin Stitch → Cathedra).
+ * Editorial primitives — Sprint R1 (reskin Stitch → Cathedra Digital).
  *
  * Wrappers puramente visuais. NENHUM destes componentes pode:
  *  - importar hooks de domínio (Bíblia, CIC, Nexus, Jornada, etc.)

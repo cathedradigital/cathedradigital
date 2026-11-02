@@ -63,7 +63,7 @@ const EditorialClosureValidator: React.FC = () => {
   return (
     <div className="container max-w-6xl py-8 space-y-6">
       <Helmet>
-        <title>Validador de Editorial Closure — Cathedra Admin</title>
+        <title>Validador de Editorial Closure — Cathedra Digital Admin</title>
         <meta name="robots" content="noindex,nofollow" />
       </Helmet>
 

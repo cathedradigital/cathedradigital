@@ -101,7 +101,7 @@ function ShellChrome({ kicker, title, children }: Props) {
   );
 }
 
-export function DevocionalMobileShell({ kicker = "Cathedra · Oração", title, children }: Props) {
+export function DevocionalMobileShell({ kicker = "Cathedra Digital · Oração", title, children }: Props) {
   return (
     <DevotionalReaderProvider>
       <ShellChrome kicker={kicker} title={title}>

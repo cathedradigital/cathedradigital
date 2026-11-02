@@ -1,5 +1,5 @@
 /**
- * NavigationTarget — endereço navegável dentro do Cathedra.
+ * NavigationTarget — endereço navegável dentro da Cathedra Digital.
  *
  * Representa "para onde ir a seguir" de forma independente de rota.
  * Consumidores obtêm a URL final via `KnowledgeGraph.resolve()` ou

@@ -32,7 +32,7 @@ export interface ReaderToolbarProps {
 }
 
 export const ReaderToolbar: React.FC<ReaderToolbarProps> = ({
-  kicker = 'Cathedra · Lectio',
+  kicker = 'Cathedra Digital · Lectio',
   title,
   subtitle,
   backHref,

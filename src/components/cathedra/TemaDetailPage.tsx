@@ -364,7 +364,7 @@ const TemaDetailPage = () => {
     <div className="space-y-spacing-2xl animate-in fade-in slide-in-from-bottom-spacing-md duration-700 max-w-5xl mx-auto pb-spacing-4xl px-spacing-md relative">
       <div className={`fixed inset-0 bg-gradient-to-b ${getCategoryColor(selectedTag?.category)} -z-10 pointer-events-none opacity-40`} />
       <SEOHead 
-        title={`${selectedTag?.label || 'Tema'} - Cathedra`}
+        title={`${selectedTag?.label || 'Tema'} - Cathedra Digital`}
         description={`Explore conteúdos sagrados sobre ${selectedTag?.label}.`}
         path={`/temas/${slug}`}
       />

@@ -1,7 +1,7 @@
 /**
  * Catálogo Oficial de Coleções — Onda 3 · Coleções Inteligentes.
  *
- * Fonte única de verdade editorial para as trilhas de formação do Cathedra.
+ * Fonte única de verdade editorial para as trilhas de formação da Cathedra Digital.
  * Organizadas em 4 tracks: Formação Fundamental, Santos e Espiritualidade,
  * Liturgia e Vida Cristã. Cada entrada abastece `public.collections` com
  * metadados editoriais (hero_quote, learning_objectives, difficulty_level,

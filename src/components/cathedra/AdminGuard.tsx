@@ -103,7 +103,7 @@ const AdminGuard: React.FC<AdminGuardProps> = ({ children }) => {
           Se você acredita que isso está incorreto, entre em contato com o responsável pelo sistema.
         </p>
         <a href="/" className="rounded-md border border-border px-5 py-3 font-semibold">
-          Voltar à Cathedra
+          Voltar à Cathedra Digital
         </a>
       </main>
     );

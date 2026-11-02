@@ -1,5 +1,5 @@
 /**
- * Sprint B.1 — Biblioteca Cathedra (barrel público).
+ * Sprint B.1 — Biblioteca Cathedra Digital (barrel público).
  */
 export * from './types';
 export { LibraryCard } from './components/LibraryCard';

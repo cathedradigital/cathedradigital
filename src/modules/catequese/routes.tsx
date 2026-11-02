@@ -1,5 +1,5 @@
 /**
- * Cathedra · Módulo Catequese — rotas lazy (Sprint CQ-1.2).
+ * Cathedra Digital · Módulo Catequese — rotas lazy (Sprint CQ-1.2).
  *
  * Consumido opcionalmente por `src/App.tsx` quando `VITE_MODULES_CATEQUESE=1`.
  * Enquanto a flag está em `0` (default até CQ-1.4), App.tsx continua usando os

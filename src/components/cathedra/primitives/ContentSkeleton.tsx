@@ -2,7 +2,7 @@ import * as React from 'react';
 import { cn } from '@/lib/utils';
 
 /**
- * ContentSkeleton — primitiva unificada de loading do Cathedra Design System.
+ * ContentSkeleton — primitiva unificada de loading da Cathedra Digital Design System.
  *
  * Consolidação (Sprint P2 Logos 2030):
  * - Substitui variantes ad-hoc de `animate-pulse` + `bg-muted/*` espalhadas.

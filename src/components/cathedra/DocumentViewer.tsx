@@ -8,7 +8,7 @@ import { motion, AnimatePresence } from 'framer-motion';
  *
  * C0.5.b (Parallel Readers Migration): NÃO é um Reader do Template Master.
  * Sua responsabilidade é apresentar conteúdo EXTERNO (PDF/HTML de terceiros)
- * dentro de um modal fullscreen — não conteúdo editorial próprio da Cathedra.
+ * dentro de um modal fullscreen — não conteúdo editorial próprio da Cathedra Digital.
  * Por isso está isento da Regra COS §10 (Reader Architecture Rule) e não
  * consome `ReaderShell`. Consumidores atuais: `SaintDetail` (fontes primárias).
  *

@@ -34,7 +34,7 @@ export interface PassageActionsProps {
   url?: string;
   /** Descritor da passagem — usado por `buildPassageUrl` quando `url` não é fornecido. */
   passage?: PassageDescriptor;
-  /** Título usado no share nativo (ex.: "Cathedra — Jo 6,53"). */
+  /** Título usado no share nativo (ex.: "Cathedra Digital — Jo 6,53"). */
   title?: string;
   /** Se fornecido, sobrescreve a navegação padrão do botão Destacar. */
   onHighlight?: () => void | Promise<void>;

@@ -1,5 +1,5 @@
 /**
- * /admin/collections — Cathedra Collections Studio (Onda B).
+ * /admin/collections — Cathedra Digital Collections Studio (Onda B).
  *
  * Lista e cria coleções editoriais. Toda coleção nasce em `draft`; publicação
  * é uma transição explícita feita no editor. RLS já restringe tudo a admin.
@@ -75,13 +75,13 @@ export default function CollectionsAdmin() {
   return (
     <div className="container mx-auto py-8 space-y-6">
       <Helmet>
-        <title>Cathedra Collections Studio — Admin</title>
+        <title>Cathedra Digital Collections Studio — Admin</title>
         <meta name="robots" content="noindex,nofollow" />
       </Helmet>
 
       <header className="flex items-start justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold">Cathedra Collections Studio</h1>
+          <h1 className="text-2xl font-semibold">Cathedra Digital Collections Studio</h1>
           <p className="text-sm text-muted-foreground max-w-2xl mt-1">
             Coleções editoriais navegáveis. Toda coleção nasce em rascunho; publicação é feita no
             editor, item a item, seguindo a mesma governança do Glossário.

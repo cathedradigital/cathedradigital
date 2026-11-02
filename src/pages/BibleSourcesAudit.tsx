@@ -17,7 +17,7 @@ import {
 import { RefreshCw, AlertTriangle, CheckCircle2, Database, Globe2, Repeat, FileText, Download, Wand2, Layers, Sliders, Filter, FlaskConical, TrendingUp, PauseCircle, PlayCircle, Search } from 'lucide-react';
 import { toast } from 'sonner';
 
-type SourceTag = 'Cathedra (Local)' | 'BollsLife (Fallback)' | 'BibliaCatolica (Ave-Maria)' | 'unavailable' | string | null;
+type SourceTag = 'Cathedra Digital (Local)' | 'BollsLife (Fallback)' | 'BibliaCatolica (Ave-Maria)' | 'unavailable' | string | null;
 
 interface SourceEntry {
   abbrev: string;
@@ -43,7 +43,7 @@ interface AlertRow {
 
 function sourceBadge(s: SourceTag) {
   if (!s) return <Badge variant="outline">—</Badge>;
-  if (s.startsWith('Cathedra')) return <Badge className="bg-emerald-100 text-emerald-800"><Database className="w-3 h-3 mr-1" />Banco (dump)</Badge>;
+  if (s.startsWith('Cathedra Digital')) return <Badge className="bg-emerald-100 text-emerald-800"><Database className="w-3 h-3 mr-1" />Banco (dump)</Badge>;
   if (s.startsWith('BollsLife')) return <Badge className="bg-blue-100 text-blue-800"><Globe2 className="w-3 h-3 mr-1" />bolls.life</Badge>;
   if (s.startsWith('BibliaCatolica')) return <Badge className="bg-amber-100 text-amber-800"><Globe2 className="w-3 h-3 mr-1" />BibliaCatolica</Badge>;
   if (s === 'unavailable') return <Badge variant="destructive">Indisponível</Badge>;
@@ -72,7 +72,7 @@ function deriveFallbackChain(e: SourceEntry): { bolls: 'ok' | 'fail' | 'skip'; b
     return { bolls: get('bolls') ?? get('bolls.life'), biblia: get('biblia') ?? get('bibliacatolica'), dump: get('dump') ?? get('cathedra') };
   }
   const src = (e.source ?? '') as string;
-  if (src.startsWith('Cathedra')) return { bolls: 'skip', biblia: 'skip', dump: 'ok' };
+  if (src.startsWith('Cathedra Digital')) return { bolls: 'skip', biblia: 'skip', dump: 'ok' };
   if (src.startsWith('BollsLife')) return { bolls: 'ok', biblia: 'skip', dump: 'skip' };
   if (src.startsWith('BibliaCatolica')) return { bolls: 'fail', biblia: 'ok', dump: 'skip' };
   return { bolls: 'fail', biblia: 'fail', dump: 'fail' };
@@ -362,7 +362,7 @@ export default function BibleSourcesAudit() {
     const s = (e.source ?? '') as string;
     if (filter === 'bolls') return s.startsWith('BollsLife');
     if (filter === 'biblia') return s.startsWith('BibliaCatolica');
-    if (filter === 'dump') return s.startsWith('Cathedra');
+    if (filter === 'dump') return s.startsWith('Cathedra Digital');
     if (filter === 'unavailable') return s === 'unavailable';
     return true;
   };
@@ -662,7 +662,7 @@ export default function BibleSourcesAudit() {
                 <SelectItem value="all">Todas</SelectItem>
                 <SelectItem value="bolls">bolls.life</SelectItem>
                 <SelectItem value="biblia">BibliaCatolica</SelectItem>
-                <SelectItem value="dump">dump (Cathedra)</SelectItem>
+                <SelectItem value="dump">dump (Cathedra Digital)</SelectItem>
                 <SelectItem value="unavailable">unavailable</SelectItem>
               </SelectContent>
             </Select>

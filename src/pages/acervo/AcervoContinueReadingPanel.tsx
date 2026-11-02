@@ -121,7 +121,7 @@ const AcervoContinueReadingPanel: React.FC = () => {
           </Link>
         ) : (
           <p className="text-muted-foreground italic font-serif text-premium-sm">
-            Abra qualquer obra do acervo e o Cathedra guarda seu ponto para retomar aqui.
+            Abra qualquer obra do acervo e a Cathedra Digital guarda seu ponto para retomar aqui.
           </p>
         )}
       </div>

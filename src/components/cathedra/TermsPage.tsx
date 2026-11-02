@@ -18,16 +18,16 @@ const TermsPage: React.FC = () => {
         <section>
           <h2 className="text-premium-lg font-bold text-foreground">1. Aceitação dos Termos</h2>
           <p>
-            Ao acessar e utilizar a plataforma Cathedra Digital, você concorda com estes Termos de Uso. 
+            Ao acessar e utilizar a plataforma Cathedra Digital, você concorda com estes Termos de Uso.
             Se você não concordar com qualquer parte destes termos, não deverá utilizar nossos serviços.
-            A Cathedra é uma plataforma dedicada ao estudo, oração e vivência da fé católica.
+            A Cathedra Digital é uma plataforma dedicada ao estudo, oração e vivência da fé católica.
           </p>
         </section>
 
         <section>
           <h2 className="text-premium-lg font-bold text-foreground">2. Descrição dos Serviços</h2>
           <p>
-            A Cathedra Digital oferece acesso a textos sagrados, documentos do Magistério, 
+            A Cathedra Digital oferece acesso a textos sagrados, documentos do Magistério,
             ferramentas de oração, estudos bíblicos e catequéticos, e uma comunidade de formação. 
             Os conteúdos disponibilizados provêm de fontes oficiais da Igreja Católica e 
             são apresentados com fins educativos e devocionais.
@@ -76,7 +76,7 @@ const TermsPage: React.FC = () => {
         <section>
           <h2 className="text-premium-lg font-bold text-foreground">7. Limitação de Responsabilidade</h2>
           <p>
-            A Cathedra Digital oferece seus serviços "como estão". Não garantimos a disponibilidade 
+            A Cathedra Digital oferece seus serviços "como estão". Não garantimos a disponibilidade
             ininterrupta do serviço nem a ausência total de erros. Os conteúdos não substituem 
             a orientação pastoral direta de um sacerdote ou diretor espiritual.
           </p>

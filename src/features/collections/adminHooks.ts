@@ -1,5 +1,5 @@
 /**
- * Hooks CRUD do Cathedra Collections Studio.
+ * Hooks CRUD da Cathedra Digital Collections Studio.
  *
  * Todas as mutações respeitam a RLS existente (`admins manage collections`).
  * Regra de governança: criação sempre em `draft`; publicação só via mutação

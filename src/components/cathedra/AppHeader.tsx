@@ -23,11 +23,12 @@ interface AppHeaderProps {
   onChangeLang: (lang: Language) => void;
   onSignOut: () => void;
   onOpenSidebar: () => void;
+  isSidebarOpen: boolean;
   isLanding?: boolean;
 }
 
 const AppHeader: React.FC<AppHeaderProps> = memo(({
-  user, isDark, onToggleDark, lang, onChangeLang, onSignOut, onOpenSidebar, isLanding = false
+  user, isDark, onToggleDark, lang, onChangeLang, onSignOut, onOpenSidebar, isSidebarOpen, isLanding = false
 }) => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
@@ -162,6 +163,19 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
                   aria-label={t('search') || 'Buscar'}
                 >
                   <Icons.Search className="opacity-60 group-hover:opacity-100 transition-opacity" />
+                </Button>
+
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  onClick={onOpenSidebar}
+                  className="hidden md:inline-flex h-[44px] w-[44px] rounded-full border border-primary/10 bg-background/35 transition-colors hover:bg-primary/[0.05] focus-visible:ring-2 focus-visible:ring-primary/30"
+                  aria-label={t('open_sidebar')}
+                  aria-expanded={isSidebarOpen}
+                  aria-controls="cathedra-global-sidebar"
+                >
+                  <img src="/monograma-cathedra.svg" alt="" className="h-7 w-7 object-contain" />
                 </Button>
 
                 <Button

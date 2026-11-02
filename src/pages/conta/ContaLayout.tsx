@@ -14,7 +14,7 @@ export default function ContaLayout() {
   return (
     <SidebarProvider>
       <Helmet>
-        <title>Minha Conta · Cathedra</title>
+        <title>Minha Conta · Cathedra Digital</title>
         <meta name="robots" content="noindex" />
       </Helmet>
       <div className="min-h-screen flex w-full bg-background" data-space="cloister">

@@ -22,13 +22,13 @@ export const docsLa: DocsBundle = {
       slug: 'primeiros-passos',
       category: 'inicio',
       title: 'Prima initia',
-      summary: 'Quomodo Cathedra disponatur et unde primo die incipiendum sit.',
+      summary: 'Quomodo Cathedra Digital disponatur et unde primo die incipiendum sit.',
       keywords: ['initium', 'ratio', 'atrium', 'navigatio'],
       sections: [
         {
-          heading: 'Quid sit Cathedra',
+          heading: 'Quid sit Cathedra Digital',
           body: [
-            'Cathedra Scripturam, liturgiam, orationem et Patres uno in loco colligit, omnibus inter se relatis.',
+            'Cathedra Digital Scripturam, liturgiam, orationem et Patres uno in loco colligit, omnibus inter se relatis.',
             'Non notitias congerere quaerimus, sed vitam interiorem constanter fovere.',
           ],
         },

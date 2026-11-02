@@ -70,7 +70,7 @@ export async function getWorkBySlug(
   saintSlug: string,
   workSlug: string
 ): Promise<SaintWork | null> {
-  // Na Cathedra atual `saints.id` é o próprio slug (TEXT). Não existe coluna `slug`.
+  // Na Cathedra Digital atual `saints.id` é o próprio slug (TEXT). Não existe coluna `slug`.
   // Usamos o parâmetro `saintSlug` diretamente como id.
   const saintId = saintSlug;
 

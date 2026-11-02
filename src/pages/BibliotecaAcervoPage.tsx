@@ -142,7 +142,7 @@ const BibliotecaAcervoPage: React.FC = () => {
       className="min-h-screen w-full bg-stitch-background text-stitch-on-background"
     >
       <Helmet>
-        <title>{`${acervo.title} — Biblioteca | Cathedra`}</title>
+        <title>{`${acervo.title} — Biblioteca | Cathedra Digital`}</title>
         <meta name="description" content={acervo.shortDescription} />
         <meta property="og:title" content={`${acervo.title} — Biblioteca`} />
         <link

@@ -1,5 +1,5 @@
 /**
- * /admin/editorial-integrity — Cathedra Index · Integridade Editorial.
+ * /admin/editorial-integrity — Cathedra Digital Index · Integridade Editorial.
  *
  * Cruza `glossary` e `nexus_relations` para expor inconsistências no padrão
  * Logos 2030 + Nexus Ouro. Permite regeração assistida por IA do
@@ -161,13 +161,13 @@ export default function EditorialIntegrityPage() {
   return (
     <div className="mx-auto max-w-6xl px-4 py-8">
       <Helmet>
-        <title>Integridade Editorial · Cathedra Admin</title>
+        <title>Integridade Editorial · Cathedra Digital Admin</title>
         <meta name="robots" content="noindex,nofollow" />
       </Helmet>
 
       <header className="mb-6">
         <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-          Cathedra Index
+          Cathedra Digital Index
         </p>
         <h1 className="text-3xl font-serif">Integridade Editorial</h1>
         <p className="mt-1 text-sm text-muted-foreground max-w-2xl">

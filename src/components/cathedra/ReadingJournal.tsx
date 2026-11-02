@@ -60,7 +60,7 @@ const ReadingJournal: React.FC = () => {
     let y = 20;
 
     doc.setFontSize(22);
-    doc.text("Meu Diário Espiritual - Cathedra", 20, y);
+    doc.text("Meu Diário Espiritual - Cathedra Digital", 20, y);
     y += 15;
 
     doc.setFontSize(12);
@@ -87,7 +87,7 @@ const ReadingJournal: React.FC = () => {
 
   return (
     <div className="max-w-spacing-4xl mx-auto py-spacing-2xl px-spacing-md space-y-spacing-xl min-h-screen pb-spacing-4xl">
-      <SEOHead title="Diário & Histórico | Cathedra" description="Gerencie suas marcas de leitura, histórico e anotações espirituais." path="/diario" />
+      <SEOHead title="Diário & Histórico | Cathedra Digital" description="Gerencie suas marcas de leitura, histórico e anotações espirituais." path="/diario" />
       
       <div className="text-center space-y-spacing-md">
         <div className="inline-flex items-center gap-spacing-xs px-spacing-sm py-spacing-2xs bg-primary/10 rounded-premium-full text-primary text-[10px] font-black uppercase tracking-widest">

@@ -113,7 +113,7 @@ const PartnersAdmin: React.FC = () => {
     return (
       <div className="max-w-xl mx-auto py-24 px-6 text-center space-y-3">
         <h2 className="text-2xl font-semibold">Sem permissão</h2>
-        <p className="text-muted-foreground">Este painel é restrito a administradores do Cathedra.</p>
+        <p className="text-muted-foreground">Este painel é restrito a administradores da Cathedra Digital.</p>
       </div>
     );
   }
@@ -171,7 +171,7 @@ const PartnersAdmin: React.FC = () => {
   return (
     <div className="container max-w-6xl mx-auto py-spacing-xl px-spacing-md space-y-spacing-xl">
       <header className="space-y-spacing-xs">
-        <p className="text-premium-xs uppercase tracking-widest text-secondary">Cathedra · Curadoria</p>
+        <p className="text-premium-xs uppercase tracking-widest text-secondary">Cathedra Digital · Curadoria</p>
         <h1 className="text-premium-3xl font-semibold">Parceiros & Patrocinadores</h1>
         <p className="text-muted-foreground">
           Revise e aprove candidaturas antes que apareçam publicamente em /partners.

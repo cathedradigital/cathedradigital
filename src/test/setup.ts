@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom';
 
 /**
- * Polyfills de ambiente jsdom usados amplamente pelos componentes do Cathedra
+ * Polyfills de ambiente jsdom usados amplamente pelos componentes da Cathedra Digital
  * (responsividade, animações, virtualização e scroll).
  */
 if (!window.matchMedia) {

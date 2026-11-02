@@ -338,12 +338,12 @@ test('Mobile: carrossel abre os submódulos e preserva a navegação canônica',
   await expect(carousel).toHaveCSS('position', 'fixed');
   await expect(carousel).toHaveCSS('bottom', '0px');
 
-  await carousel.getByRole('button', { name: 'Abrir opções do módulo Estudar' }).click();
+  await carousel.getByRole('button', { name: 'Menu de navegação: Estudar' }).click();
   await expect(carousel.getByRole('heading', { name: 'Estudar' })).toBeVisible();
   await carousel.getByRole('button', { name: /Bíblia/ }).click();
   await expect(page).toHaveURL(/\/bible$/);
 
-  await carousel.getByRole('button', { name: 'Abrir opções do módulo Rezar' }).click();
+  await carousel.getByRole('button', { name: 'Menu de navegação: Rezar' }).click();
   await expect(carousel.getByRole('heading', { name: 'Rezar' })).toBeVisible();
   await expect(carousel.getByRole('button', { name: /Orações/ })).toBeVisible();
   await expect(carousel.getByRole('button', { name: /Liturgia das Horas/ })).toBeVisible();
@@ -377,7 +377,7 @@ test('Home: identidade visual usa a marca Cathedra Digital', async ({ page }) =>
   const homeBrand = page.locator('main [aria-label="Cathedra Digital"]').first();
   await expect(homeBrand).toBeVisible();
   await expect(homeBrand.getByText('Cathedra Digital', { exact: true })).toBeVisible();
-  await expect(page.getByRole('contentinfo', { name: 'Rodapé' })).toContainText(/Cathedra[\\s\\S]*DIGITAL/i);
+  await expect(page.getByRole('contentinfo', { name: 'Rodapé' })).toContainText(/Cathedra Digital/i);
   await expect(page).toHaveTitle(/Cathedra Digital/i);
 });
 

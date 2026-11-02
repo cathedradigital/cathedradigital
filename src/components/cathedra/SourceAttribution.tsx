@@ -22,7 +22,7 @@ const SourceAttribution: React.FC<SourceAttributionProps> = ({
   lastScrapedAt,
   className = '',
 }) => {
-  const label = source && source !== 'Cathedra Database' ? source : null;
+  const label = source && source !== 'Cathedra Digital Database' ? source : null;
   const hasAny = Boolean(label || sourceUrl || bioSourceUrl || prayerSourceUrl);
   if (!hasAny) return null;
 

@@ -20,21 +20,21 @@ export interface RouteMeta {
 export const ROUTE_META: Record<string, RouteMeta> = {
   // ─── Documentação ─────────────────────────────────────────────
   '/docs': {
-    title: 'Documentação Cathedra — Guias de Uso',
+    title: 'Documentação Cathedra Digital — Guias de Uso',
     description:
-      'Guias práticos para usar a Cathedra: leitura bíblica, oração, liturgia e estudo. Disponíveis em português, inglês, espanhol, italiano, latim, francês e alemão.',
+      'Guias práticos para usar a Cathedra Digital: leitura bíblica, oração, liturgia e estudo. Disponíveis em português, inglês, espanhol, italiano, latim, francês e alemão.',
   },
   '/docs/:slug': {
-    title: 'Guia — Documentação Cathedra',
-    description: 'Guia da documentação Cathedra com passo a passo para aproveitar o acervo e as ferramentas de estudo.',
+    title: 'Guia — Documentação Cathedra Digital',
+    description: 'Guia da documentação Cathedra Digital com passo a passo para aproveitar o acervo e as ferramentas de estudo.',
   },
   '/audit-logs': {
-    title: 'Trilha de Auditoria — Cathedra',
+    title: 'Trilha de Auditoria — Cathedra Digital',
     description: 'Painel interno de auditoria.',
     noindex: true,
   },
   '/site-health': {
-    title: 'Saúde do Site — Cathedra',
+    title: 'Saúde do Site — Cathedra Digital',
     description: 'Painel interno de saúde da plataforma.',
     noindex: true,
   },
@@ -78,7 +78,7 @@ export const ROUTE_META: Record<string, RouteMeta> = {
       'Acervo do Magistério: encíclicas, exortações apostólicas e documentos conciliares com busca e leitura editorial.',
   },
   '/glossario': {
-    title: 'Léxico Teológico Católico — Glossário Cathedra',
+    title: 'Léxico Teológico Católico — Glossário Cathedra Digital',
     description:
       'Verbetes fundamentais da fé católica: definição, história, Escritura, Magistério e conexões teológicas cruzadas.',
   },
@@ -95,12 +95,12 @@ export const ROUTE_META: Record<string, RouteMeta> = {
   '/biblioteca': {
     title: 'Biblioteca Inteligente — O Google Católico',
     description:
-      'Busque por perguntas, assuntos, santos ou documentos. O cérebro teológico da Cathedra conectando toda a Tradição em um só lugar.',
+      'Busque por perguntas, assuntos, santos ou documentos. O cérebro teológico da Cathedra Digital conectando toda a Tradição em um só lugar.',
   },
   '/biblioteca/inteligente': {
     title: 'Biblioteca Inteligente — Pesquisa Teológica Avançada',
     description:
-      'Utilize o motor de busca avançado da Cathedra para encontrar conexões profundas entre a Bíblia, o Catecismo e a Patrística.',
+      'Utilize o motor de busca avançado da Cathedra Digital para encontrar conexões profundas entre a Bíblia, o Catecismo e a Patrística.',
   },
   '/dogmas': {
     title: 'Dogmas Católicos — Verdades Definidas da Fé',
@@ -111,16 +111,16 @@ export const ROUTE_META: Record<string, RouteMeta> = {
   '/atrium': {
     title: 'Átrio — Cathedra Digital',
     description:
-      'Portal interno da Cathedra: acesse Bíblia, Catecismo, Liturgia, Orações e Logos AI em um único ambiente contemplativo.',
+      'Portal interno da Cathedra Digital: acesse Bíblia, Catecismo, Liturgia, Orações e Logos AI em um único ambiente contemplativo.',
   },
   '/acervo': {
-    title: 'Acervo Cathedra — Mosteiro do Conhecimento',
+    title: 'Acervo Cathedra Digital — Mosteiro do Conhecimento',
     description: 'Biblioteca Católica unificada: Bíblia, Catecismo, Patrística, Magistério e Aparições Marianas em um hub inteligente.',
   },
 
   // ─── Vida de Oração (Igreja) ──────────────────────────────────
   '/oracao': {
-    title: 'Livro de Orações Católicas — Cathedra',
+    title: 'Livro de Orações Católicas — Cathedra Digital',
     description:
       'Orações tradicionais da Igreja: Pai Nosso, Ave Maria, Credo, Salve Rainha, Angelus, Te Deum e muito mais, comentadas.',
   },
@@ -175,7 +175,7 @@ export const ROUTE_META: Record<string, RouteMeta> = {
   },
   // Rotas dinâmicas de /liturgia/dia/:d são resolvidas via DYNAMIC_PATTERNS abaixo.
   '/calendar': {
-    title: 'Calendário Litúrgico Católico — Cathedra',
+    title: 'Calendário Litúrgico Católico — Cathedra Digital',
     description:
       'Calendário litúrgico anual com tempos, festas, memórias, cores e santos do dia segundo o rito romano.',
   },
@@ -190,7 +190,7 @@ export const ROUTE_META: Record<string, RouteMeta> = {
       'Reze o Ofício Divino: Laudes, Terça, Sexta, Nona, Vésperas e Completas com salmos, hinos e leituras próprias.',
   },
   '/hoje': {
-    title: 'Hoje na Cathedra — Sua Jornada Espiritual',
+    title: 'Hoje na Cathedra Digital — Sua Jornada Espiritual',
     description:
       'Painel diário com liturgia, oração, leitura, santo do dia e sua caminhada espiritual em um só lugar.',
   },
@@ -218,7 +218,7 @@ export const ROUTE_META: Record<string, RouteMeta> = {
 
   // ─── Comunidade & Jornadas ────────────────────────────────────
   '/buscar': {
-    title: 'Buscar na Cathedra — Bíblia, Catecismo, Santos',
+    title: 'Buscar na Cathedra Digital — Bíblia, Catecismo, Santos',
     description:
       'Busca unificada por versículos, parágrafos, verbetes, santos, orações e documentos do Magistério.',
   },
@@ -235,29 +235,29 @@ export const ROUTE_META: Record<string, RouteMeta> = {
 
   // ─── Institucional / Utilidade ────────────────────────────────
   '/guia-modulos': {
-    title: 'Guia dos Módulos — Como Usar a Cathedra',
+    title: 'Guia dos Módulos — Como Usar a Cathedra Digital',
     description:
-      'Conheça cada módulo da Cathedra: Bíblia, Catecismo, Liturgia, Oração, Comunidade e Formação.',
+      'Conheça cada módulo da Cathedra Digital: Bíblia, Catecismo, Liturgia, Oração, Comunidade e Formação.',
   },
 
   // ─── Comunidade ───────────────────────────────────────────────
   '/community': {
-    title: 'Comunidade Cathedra — Discussão Católica',
+    title: 'Comunidade Cathedra Digital — Discussão Católica',
     description:
       'Comunidade de fiéis para discussão de fé, doutrina, oração e caminhada espiritual à luz da Tradição católica.',
   },
   '/about': {
-    title: 'Sobre a Cathedra — Missão, Visão e Equipe',
+    title: 'Sobre a Cathedra Digital — Missão, Visão e Equipe',
     description:
       'Conheça a Cathedra Digital: missão de servir a fé católica com tradição e tecnologia, equipe e princípios que guiam a plataforma.',
   },
   '/partners': {
-    title: 'Parceiros Cathedra — Comunidades e Apostolados',
+    title: 'Parceiros Cathedra Digital — Comunidades e Apostolados',
     description:
-      'Parceiros institucionais da Cathedra: dioceses, paróquias, comunidades e apostolados que caminham conosco.',
+      'Parceiros institucionais da Cathedra Digital: dioceses, paróquias, comunidades e apostolados que caminham conosco.',
   },
   '/admin/seo': {
-    title: 'Admin · SEO — Cathedra',
+    title: 'Admin · SEO — Cathedra Digital',
     description: 'Painel administrativo de SEO e metadados. Acesso restrito.',
     noindex: true,
   },
@@ -266,7 +266,7 @@ export const ROUTE_META: Record<string, RouteMeta> = {
   '/transparencia': {
     title: 'Transparência — Cathedra Digital',
     description:
-      'Relatório de transparência da Cathedra: uso de recursos, apostolado apoiado e destinação dos aportes dos assinantes PRO.',
+      'Relatório de transparência da Cathedra Digital: uso de recursos, apostolado apoiado e destinação dos aportes dos assinantes PRO.',
   },
   '/terms': {
     title: 'Termos de Uso — Cathedra Digital',
@@ -276,35 +276,35 @@ export const ROUTE_META: Record<string, RouteMeta> = {
   '/privacy': {
     title: 'Política de Privacidade — Cathedra Digital',
     description:
-      'Política de privacidade da Cathedra: dados coletados, finalidade, base legal, cookies e direitos do titular (LGPD).',
+      'Política de privacidade da Cathedra Digital: dados coletados, finalidade, base legal, cookies e direitos do titular (LGPD).',
   },
   '/legal': {
     title: 'Centro Legal — Cathedra Digital',
     description:
-      'Documentos institucionais da Cathedra: privacidade, LGPD, termos de uso e transparência reunidos em um único lugar.',
+      'Documentos institucionais da Cathedra Digital: privacidade, LGPD, termos de uso e transparência reunidos em um único lugar.',
   },
   '/legal/privacy': {
     title: 'Política de Privacidade — Cathedra Digital',
     description:
-      'Política de privacidade da Cathedra: dados coletados, finalidade, base legal, cookies e direitos do titular (LGPD).',
+      'Política de privacidade da Cathedra Digital: dados coletados, finalidade, base legal, cookies e direitos do titular (LGPD).',
     canonicalPath: '/privacy',
     noindex: true, // alias — canonical aponta para /privacy
   },
 
   '/legal/lgpd': {
-    title: 'LGPD — Conformidade e Direitos do Titular · Cathedra',
+    title: 'LGPD — Conformidade e Direitos do Titular · Cathedra Digital',
     description:
       'Como a Cathedra Digital cumpre a Lei nº 13.709/2018: bases legais, direitos do titular, DPO, incidentes e transferência internacional.',
   },
   '/manifesto': {
-    title: 'Manifesto da Cathedra — Escritura, Tradição e Oração',
+    title: 'Manifesto da Cathedra Digital — Escritura, Tradição e Oração',
     description:
       'A convicção que sustenta a Cathedra Digital: unir Escritura, Tradição, Liturgia, Oração e IA em uma só experiência de fé.',
   },
   '/contato': {
     title: 'Contato — Cathedra Digital',
     description:
-      'Fale com a Cathedra: suporte, encarregado de dados (LGPD/DPO), parcerias institucionais e imprensa.',
+      'Fale com a Cathedra Digital: suporte, encarregado de dados (LGPD/DPO), parcerias institucionais e imprensa.',
   },
 
   // ─── Monetização / Planos ─────────────────────────────────────
@@ -322,44 +322,44 @@ export const ROUTE_META: Record<string, RouteMeta> = {
 
 
   // ─── Rotas privadas / não indexáveis ──────────────────────────
-  '/auth': { title: 'Entrar — Cathedra', description: 'Acesse sua conta na Cathedra Digital.', noindex: true },
-  '/reset-password': { title: 'Redefinir senha — Cathedra', description: 'Redefina sua senha.', noindex: true },
-  '/onboarding': { title: 'Boas-vindas — Cathedra', description: 'Configure seu perfil espiritual.', noindex: true },
-  '/profile': { title: 'Meu perfil — Cathedra', description: 'Sua caminhada e preferências.', noindex: true },
-  '/profile/favorites': { title: 'Favoritos — Cathedra', description: 'Seus conteúdos favoritos.', noindex: true },
-  '/spiritual-profile': { title: 'Perfil espiritual — Cathedra', description: 'Sua caminhada espiritual.', noindex: true },
-  '/diario': { title: 'Diário espiritual — Cathedra', description: 'Registre sua vida interior.', noindex: true },
-  '/favorites': { title: 'Favoritos — Cathedra', description: 'Seus conteúdos favoritos.', noindex: true },
-  '/achievements': { title: 'Conquistas — Cathedra', description: 'Suas conquistas na caminhada.', noindex: true },
-  '/checkout': { title: 'Checkout — Cathedra', description: 'Finalize sua assinatura.', noindex: true },
+  '/auth': { title: 'Entrar — Cathedra Digital', description: 'Acesse sua conta na Cathedra Digital.', noindex: true },
+  '/reset-password': { title: 'Redefinir senha — Cathedra Digital', description: 'Redefina sua senha.', noindex: true },
+  '/onboarding': { title: 'Boas-vindas — Cathedra Digital', description: 'Configure seu perfil espiritual.', noindex: true },
+  '/profile': { title: 'Meu perfil — Cathedra Digital', description: 'Sua caminhada e preferências.', noindex: true },
+  '/profile/favorites': { title: 'Favoritos — Cathedra Digital', description: 'Seus conteúdos favoritos.', noindex: true },
+  '/spiritual-profile': { title: 'Perfil espiritual — Cathedra Digital', description: 'Sua caminhada espiritual.', noindex: true },
+  '/diario': { title: 'Diário espiritual — Cathedra Digital', description: 'Registre sua vida interior.', noindex: true },
+  '/favorites': { title: 'Favoritos — Cathedra Digital', description: 'Seus conteúdos favoritos.', noindex: true },
+  '/achievements': { title: 'Conquistas — Cathedra Digital', description: 'Suas conquistas na caminhada.', noindex: true },
+  '/checkout': { title: 'Checkout — Cathedra Digital', description: 'Finalize sua assinatura.', noindex: true },
   '/checkout/result': { title: 'Checkout — Resultado', description: 'Resultado do pagamento.', noindex: true },
-  '/transactions': { title: 'Minhas transações — Cathedra', description: 'Histórico de pagamentos.', noindex: true },
+  '/transactions': { title: 'Minhas transações — Cathedra Digital', description: 'Histórico de pagamentos.', noindex: true },
 
   // ─── Aliases (Navigate replace) — noindex + canonical ao destino
   '/home': { title: 'Cathedra Digital', description: 'Alias para a página inicial.', noindex: true, canonicalPath: '/' },
-  '/sobre': { title: 'Sobre — Cathedra', description: 'Alias para /about.', noindex: true, canonicalPath: '/about' },
+  '/sobre': { title: 'Sobre — Cathedra Digital', description: 'Alias para /about.', noindex: true, canonicalPath: '/about' },
   '/biblia': { title: 'Ler — Sagrada Escritura', description: 'Alias para /bible.', noindex: true, canonicalPath: '/bible' },
-  '/catecismo': { title: 'Catecismo — Cathedra', description: 'Alias para /catechism.', noindex: true, canonicalPath: '/catechism' },
-  '/magisterio': { title: 'Magistério — Cathedra', description: 'Alias para /magisterium.', noindex: true, canonicalPath: '/magisterium' },
-  '/search': { title: 'Buscar — Cathedra', description: 'Alias para /buscar.', noindex: true, canonicalPath: '/buscar' },
-  '/planos': { title: 'Planos — Cathedra', description: 'Alias para /pricing.', noindex: true, canonicalPath: '/pricing' },
-  '/chat': { title: 'Logos — Cathedra', description: 'Alias para /logos.', noindex: true, canonicalPath: '/logos' },
-  '/login': { title: 'Entrar — Cathedra', description: 'Alias para /auth.', noindex: true, canonicalPath: '/auth' },
-  '/dashboard': { title: 'Hoje — Cathedra', description: 'Alias para /hoje.', noindex: true, canonicalPath: '/hoje' },
-  '/glossary': { title: 'Glossário — Cathedra', description: 'Alias para /glossario.', noindex: true, canonicalPath: '/glossario' },
-  '/az-faith': { title: 'Glossário — Cathedra', description: 'Alias para /glossario.', noindex: true, canonicalPath: '/glossario' },
-  '/encyclopedia': { title: 'Glossário — Cathedra', description: 'Alias para /glossario.', noindex: true, canonicalPath: '/glossario' },
-  '/rosary': { title: 'Rosário — Cathedra', description: 'Alias para /oracao/rosario.', noindex: true, canonicalPath: '/oracao/rosario' },
-  '/prayers': { title: 'Orações — Cathedra', description: 'Alias para /oracao.', noindex: true, canonicalPath: '/oracao' },
-  '/rosario': { title: 'Rosário — Cathedra', description: 'Alias para /oracao/rosario.', noindex: true, canonicalPath: '/oracao/rosario' },
-  '/ladainhas': { title: 'Ladainhas — Cathedra', description: 'Alias para /litanies.', noindex: true, canonicalPath: '/litanies' },
-  '/contemplacao': { title: 'Contemplação — Cathedra', description: 'Alias para /contemplatio.', noindex: true, canonicalPath: '/contemplatio' },
-  '/confession': { title: 'Exame de consciência — Cathedra', description: 'Alias para /oracao/exame-de-consciencia.', noindex: true, canonicalPath: '/oracao/exame-de-consciencia' },
-  '/confissao': { title: 'Exame de consciência — Cathedra', description: 'Alias para /oracao/exame-de-consciencia.', noindex: true, canonicalPath: '/oracao/exame-de-consciencia' },
+  '/catecismo': { title: 'Catecismo — Cathedra Digital', description: 'Alias para /catechism.', noindex: true, canonicalPath: '/catechism' },
+  '/magisterio': { title: 'Magistério — Cathedra Digital', description: 'Alias para /magisterium.', noindex: true, canonicalPath: '/magisterium' },
+  '/search': { title: 'Buscar — Cathedra Digital', description: 'Alias para /buscar.', noindex: true, canonicalPath: '/buscar' },
+  '/planos': { title: 'Planos — Cathedra Digital', description: 'Alias para /pricing.', noindex: true, canonicalPath: '/pricing' },
+  '/chat': { title: 'Logos — Cathedra Digital', description: 'Alias para /logos.', noindex: true, canonicalPath: '/logos' },
+  '/login': { title: 'Entrar — Cathedra Digital', description: 'Alias para /auth.', noindex: true, canonicalPath: '/auth' },
+  '/dashboard': { title: 'Hoje — Cathedra Digital', description: 'Alias para /hoje.', noindex: true, canonicalPath: '/hoje' },
+  '/glossary': { title: 'Glossário — Cathedra Digital', description: 'Alias para /glossario.', noindex: true, canonicalPath: '/glossario' },
+  '/az-faith': { title: 'Glossário — Cathedra Digital', description: 'Alias para /glossario.', noindex: true, canonicalPath: '/glossario' },
+  '/encyclopedia': { title: 'Glossário — Cathedra Digital', description: 'Alias para /glossario.', noindex: true, canonicalPath: '/glossario' },
+  '/rosary': { title: 'Rosário — Cathedra Digital', description: 'Alias para /oracao/rosario.', noindex: true, canonicalPath: '/oracao/rosario' },
+  '/prayers': { title: 'Orações — Cathedra Digital', description: 'Alias para /oracao.', noindex: true, canonicalPath: '/oracao' },
+  '/rosario': { title: 'Rosário — Cathedra Digital', description: 'Alias para /oracao/rosario.', noindex: true, canonicalPath: '/oracao/rosario' },
+  '/ladainhas': { title: 'Ladainhas — Cathedra Digital', description: 'Alias para /litanies.', noindex: true, canonicalPath: '/litanies' },
+  '/contemplacao': { title: 'Contemplação — Cathedra Digital', description: 'Alias para /contemplatio.', noindex: true, canonicalPath: '/contemplatio' },
+  '/confession': { title: 'Exame de consciência — Cathedra Digital', description: 'Alias para /oracao/exame-de-consciencia.', noindex: true, canonicalPath: '/oracao/exame-de-consciencia' },
+  '/confissao': { title: 'Exame de consciência — Cathedra Digital', description: 'Alias para /oracao/exame-de-consciencia.', noindex: true, canonicalPath: '/oracao/exame-de-consciencia' },
 
   // Legacy / dev — noindex
-  '/legacy-home': { title: 'Cathedra', description: 'Cathedra Digital.', noindex: true, canonicalPath: '/' },
-  '/home-v3': { title: 'Cathedra', description: 'Cathedra Digital.', noindex: true, canonicalPath: '/' },
+  '/legacy-home': { title: 'Cathedra Digital', description: 'Cathedra Digital.', noindex: true, canonicalPath: '/' },
+  '/home-v3': { title: 'Cathedra Digital', description: 'Cathedra Digital.', noindex: true, canonicalPath: '/' },
   '/bible-legacy': { title: 'Bíblia (legado)', description: 'Versão anterior do leitor bíblico.', noindex: true, canonicalPath: '/bible' },
   '/catechism-legacy': { title: 'Catecismo (legado)', description: 'Versão anterior.', noindex: true, canonicalPath: '/catechism' },
   '/buscar-legacy': { title: 'Buscar (legado)', description: 'Versão anterior.', noindex: true, canonicalPath: '/buscar' },
@@ -398,14 +398,14 @@ const DYNAMIC_PATTERNS: Array<{ test: RegExp; meta: RouteMeta }> = [
   {
     test: /^\/glossario\/[^/]+$/,
     meta: {
-      title: 'Verbete Teológico — Léxico Cathedra',
+      title: 'Verbete Teológico — Léxico Cathedra Digital',
       description: 'Definição, história, Escritura, Magistério e conexões cruzadas do verbete teológico.',
     },
   },
   {
     test: /^\/oracao\/[^/]+$/,
     meta: {
-      title: 'Oração Católica — Cathedra',
+      title: 'Oração Católica — Cathedra Digital',
       description: 'Reze com a Igreja: texto integral, comentário editorial e modo contemplativo.',
     },
   },
@@ -419,14 +419,14 @@ const DYNAMIC_PATTERNS: Array<{ test: RegExp; meta: RouteMeta }> = [
   {
     test: /^\/santos\/[^/]+$/,
     meta: {
-      title: 'Vida de Santo Católico — Cathedra',
+      title: 'Vida de Santo Católico — Cathedra Digital',
       description: 'Biografia, virtudes, escritos e devoção do santo católico.',
     },
   },
   {
     test: /^\/magisterium\/[^/]+$/,
     meta: {
-      title: 'Documento do Magistério — Cathedra',
+      title: 'Documento do Magistério — Cathedra Digital',
       description: 'Texto integral do documento magisterial com navegação e busca.',
     },
   },
@@ -440,22 +440,22 @@ const DYNAMIC_PATTERNS: Array<{ test: RegExp; meta: RouteMeta }> = [
   {
     test: /^\/colecoes\/[^/]+$/,
     meta: {
-      title: 'Coleção Editorial — Cathedra',
-      description: 'Coleção editorial da Cathedra: percurso curado por sacramentos, santos e temas da fé católica.',
+      title: 'Coleção Editorial — Cathedra Digital',
+      description: 'Coleção editorial da Cathedra Digital: percurso curado por sacramentos, santos e temas da fé católica.',
     },
   },
   {
     test: /^\/acervo\/colecoes\/[^/]+$/,
     meta: {
-      title: 'Coleção do Acervo — Cathedra',
-      description: 'Trilha de formação do Acervo Cathedra: leituras, orações e reflexões conectadas em uma coleção editorial.',
+      title: 'Coleção do Acervo — Cathedra Digital',
+      description: 'Trilha de formação do Acervo Cathedra Digital: leituras, orações e reflexões conectadas em uma coleção editorial.',
     },
   },
   {
     test: /^\/colecoes\/[^/]+\/certificado$/,
     meta: {
-      title: 'Certificado da Coleção — Cathedra',
-      description: 'Status de conclusão e critérios da coleção editorial no Cathedra.',
+      title: 'Certificado da Coleção — Cathedra Digital',
+      description: 'Status de conclusão e critérios da coleção editorial na Cathedra Digital.',
       noindex: true,
     },
   },
@@ -463,21 +463,21 @@ const DYNAMIC_PATTERNS: Array<{ test: RegExp; meta: RouteMeta }> = [
   {
     test: /^\/temas\/[^/]+$/,
     meta: {
-      title: 'Tema da Fé Católica — Cathedra',
+      title: 'Tema da Fé Católica — Cathedra Digital',
       description: 'Percurso temático conectando Escritura, Catecismo e Magistério.',
     },
   },
   {
     test: /^\/jornadas$/,
     meta: {
-      title: 'Jornadas Espirituais — Cathedra',
+      title: 'Jornadas Espirituais — Cathedra Digital',
       description: 'Jornadas guiadas de 7 a 14 dias com leitura, oração e contemplação para aprofundar a fé passo a passo.',
     },
   },
   {
     test: /^\/jornadas\/[^/]+$/,
     meta: {
-      title: 'Jornada Espiritual — Cathedra',
+      title: 'Jornada Espiritual — Cathedra Digital',
       description: 'Jornada guiada com leitura, oração e contemplação para aprofundar a fé passo a passo.',
     },
   },
@@ -492,22 +492,22 @@ const DYNAMIC_PATTERNS: Array<{ test: RegExp; meta: RouteMeta }> = [
   {
     test: /^\/community\/post\/[^/]+$/,
     meta: {
-      title: 'Publicação — Comunidade Cathedra',
-      description: 'Publicação da comunidade Cathedra com discussão sobre fé, doutrina e vida espiritual.',
+      title: 'Publicação — Comunidade Cathedra Digital',
+      description: 'Publicação da comunidade Cathedra Digital com discussão sobre fé, doutrina e vida espiritual.',
     },
   },
   {
     test: /^\/community\/user\/[^/]+$/,
     meta: {
-      title: 'Perfil de membro — Comunidade Cathedra',
-      description: 'Perfil público de membro da comunidade Cathedra.',
+      title: 'Perfil de membro — Comunidade Cathedra Digital',
+      description: 'Perfil público de membro da comunidade Cathedra Digital.',
       noindex: true,
     },
   },
   {
     test: /^\/glossary\/[^/]+$/,
     meta: {
-      title: 'Verbete — Glossário Cathedra',
+      title: 'Verbete — Glossário Cathedra Digital',
       description: 'Alias em inglês para verbete do glossário teológico católico.',
       noindex: true,
       canonicalPath: '/glossario',
@@ -516,22 +516,22 @@ const DYNAMIC_PATTERNS: Array<{ test: RegExp; meta: RouteMeta }> = [
   {
     test: /^\/biblioteca\/padres\/[^/]+$/,
     meta: {
-      title: 'Padre da Igreja — Biblioteca Cathedra',
-      description: 'Redirecionamento para o verbete/biografia do Padre da Igreja na Biblioteca Cathedra.',
+      title: 'Padre da Igreja — Biblioteca Cathedra Digital',
+      description: 'Redirecionamento para o verbete/biografia do Padre da Igreja na Biblioteca Cathedra Digital.',
       noindex: true,
     },
   },
   {
     test: /^\/biblioteca\/acervo\/[^/]+$/,
     meta: {
-      title: 'Acervo — Biblioteca Cathedra',
-      description: 'Coleção editorial da Biblioteca Cathedra com temas, filtros e itens paginados por nível de formação.',
+      title: 'Acervo — Biblioteca Cathedra Digital',
+      description: 'Coleção editorial da Biblioteca Cathedra Digital com temas, filtros e itens paginados por nível de formação.',
     },
   },
   {
     test: /^\/biblioteca\/catolica$/,
     meta: {
-      title: 'Biblioteca Católica — Cathedra',
+      title: 'Biblioteca Católica — Cathedra Digital',
       description: 'Escritos dos Santos, Padres, Doutores, Clássicos e Magistério da Igreja em um só átrio, com ficha editorial e Nexus Theologicus.',
       canonicalPath: '/acervo',
     },
@@ -539,7 +539,7 @@ const DYNAMIC_PATTERNS: Array<{ test: RegExp; meta: RouteMeta }> = [
   {
     test: /^\/biblioteca\/catolica\/acervo$/,
     meta: {
-      title: 'Acervo — Biblioteca Católica · Cathedra',
+      title: 'Acervo — Biblioteca Católica · Cathedra Digital',
       description: 'Explore o acervo unificado: busque por título, autor ou tema em toda a Tradição — Escritos, Padres, Doutores, Clássicos e Magistério.',
       canonicalPath: '/acervo/lista',
     },
@@ -547,7 +547,7 @@ const DYNAMIC_PATTERNS: Array<{ test: RegExp; meta: RouteMeta }> = [
   {
     test: /^\/acervo$/,
     meta: {
-      title: 'Acervo Cathedra — Biblioteca Católica',
+      title: 'Acervo Cathedra Digital — Biblioteca Católica',
       description: 'O centro do conhecimento católico: Escritos dos Santos, Padres, Doutores, Magistério, Patrística, Liturgia e Clássicos em um só átrio.',
       canonicalPath: '/acervo',
     },
@@ -555,15 +555,15 @@ const DYNAMIC_PATTERNS: Array<{ test: RegExp; meta: RouteMeta }> = [
   {
     test: /^\/acervo\/lista$/,
     meta: {
-      title: 'Acervo — Explorar todas as obras · Cathedra',
-      description: 'Busque no acervo unificado do Cathedra por título, autor ou tema — Escritos, Padres, Doutores, Clássicos e Magistério.',
+      title: 'Acervo — Explorar todas as obras · Cathedra Digital',
+      description: 'Busque no acervo unificado da Cathedra Digital por título, autor ou tema — Escritos, Padres, Doutores, Clássicos e Magistério.',
       canonicalPath: '/acervo/lista',
     },
   },
   {
     test: /^\/biblioteca\/escritos$/,
     meta: {
-      title: 'Biblioteca Patrística — Escritos dos Santos | Cathedra',
+      title: 'Biblioteca Patrística — Escritos dos Santos | Cathedra Digital',
       description: 'Obras dos Padres, Doutores e místicos da Igreja: Confissões, Suma Teológica, Imitação de Cristo e mais — leitor premium com anotações.',
       canonicalPath: '/biblioteca/escritos',
     },
@@ -571,7 +571,7 @@ const DYNAMIC_PATTERNS: Array<{ test: RegExp; meta: RouteMeta }> = [
   {
     test: /^\/biblioteca\/escritos\/busca$/,
     meta: {
-      title: 'Buscar — Biblioteca Patrística Cathedra',
+      title: 'Buscar — Biblioteca Patrística Cathedra Digital',
       description: 'Busca full-text nos escritos dos Padres, Doutores e místicos: pesquise por autor, obra ou palavras exatas dentro dos capítulos.',
       noindex: true,
     },
@@ -579,22 +579,22 @@ const DYNAMIC_PATTERNS: Array<{ test: RegExp; meta: RouteMeta }> = [
   {
     test: /^\/biblioteca\/escritos\/[^/]+\/[^/]+$/,
     meta: {
-      title: 'Obra Patrística — Biblioteca Cathedra',
+      title: 'Obra Patrística — Biblioteca Cathedra Digital',
       description: 'Sumário da obra patrística com abstract, licença editorial, capítulos e leitor contínuo integrado ao Nexus Theologicus.',
     },
   },
   {
     test: /^\/biblioteca\/escritos\/[^/]+\/[^/]+\/capitulo\/[^/]+$/,
     meta: {
-      title: 'Capítulo — Biblioteca Patrística Cathedra',
+      title: 'Capítulo — Biblioteca Patrística Cathedra Digital',
       description: 'Leitor premium de capítulo patrístico com notas editoriais, referências bíblicas e conexões teológicas.',
     },
   },
   {
     test: /^\/magisterio\/[^/]+$/,
     meta: {
-      title: 'Magistério — Cathedra',
-      description: 'Redirecionamento para o documento do Magistério no acervo Cathedra.',
+      title: 'Magistério — Cathedra Digital',
+      description: 'Redirecionamento para o documento do Magistério no acervo Cathedra Digital.',
       noindex: true,
     },
   },
@@ -605,7 +605,7 @@ const DYNAMIC_PATTERNS: Array<{ test: RegExp; meta: RouteMeta }> = [
   {
     test: /^\/(admin|dev)(\/|$)/,
     meta: {
-      title: 'Admin — Cathedra',
+      title: 'Admin — Cathedra Digital',
       description: 'Painel administrativo.',
       noindex: true,
     },

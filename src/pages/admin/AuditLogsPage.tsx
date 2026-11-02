@@ -506,7 +506,7 @@ export default function AuditLogsPage() {
   return (
     <>
       <Helmet>
-        <title>Trilha de Auditoria · Admin · Cathedra</title>
+        <title>Trilha de Auditoria · Admin · Cathedra Digital</title>
         <meta name="robots" content="noindex, nofollow" />
       </Helmet>
 

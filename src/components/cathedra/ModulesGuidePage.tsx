@@ -16,7 +16,7 @@ const ModulesGuidePage: React.FC = () => {
   return (
     <div className="mx-auto w-full max-w-[1120px] space-y-10 px-5 pb-24 pt-8 md:px-10 md:pt-14">
       <Helmet>
-        <title>Mapa da Plataforma — Cathedra</title>
+        <title>Mapa da Plataforma — Cathedra Digital</title>
         <meta
           name="description"
           content="Mapa dos cinco ambientes e módulos da plataforma Cathedra Digital."
@@ -31,7 +31,7 @@ const ModulesGuidePage: React.FC = () => {
           Um caminho claro para cada necessidade.
         </h1>
         <p className="mt-5 text-base leading-7 text-muted-foreground md:text-lg">
-          A Cathedra foi organizada em cinco ambientes. Os módulos vivem dentro
+          A Cathedra Digital foi organizada em cinco ambientes. Os módulos vivem dentro
           deles, mantendo a navegação principal simples e contextual.
         </p>
       </header>

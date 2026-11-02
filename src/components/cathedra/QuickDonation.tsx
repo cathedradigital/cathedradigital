@@ -32,7 +32,7 @@ const QuickDonation: React.FC = () => {
         body: { 
           planId: 'donation', 
           price: amount, 
-          title: 'Doação voluntária – Cathedra Digital', 
+          title: 'Doação voluntária – Cathedra Digital',
           origin: window.location.origin,
           isDonation: true
         },
@@ -60,7 +60,7 @@ const QuickDonation: React.FC = () => {
             <Icons.Heart className="w-spacing-md h-spacing-md fill-current" />
           </div>
           <div>
-            <CardTitle className="text-premium-sm font-bold">Apoie o Cathedra</CardTitle>
+            <CardTitle className="text-premium-sm font-bold">Apoie a Cathedra Digital</CardTitle>
             <CardDescription className="text-premium-xs">Ajude a manter nossa missão</CardDescription>
           </div>
         </div>

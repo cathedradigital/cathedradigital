@@ -10,7 +10,7 @@
  *  - Contexto histórico (acordeão)
  *  - Por que esta obra importa (destaque)
  *  - Público recomendado
- *  - CTA duplo: "Ler no Cathedra" (interno) OU "Ler na fonte oficial" (externo)
+ *  - CTA duplo: "Ler na Cathedra Digital" (interno) OU "Ler na fonte oficial" (externo)
  *
  * Zero domínio: recebe o row `SaintWork` e o `authorRef` já resolvido.
  * Compatível com obras legadas (campos opcionais renderizam vazio).
@@ -181,7 +181,7 @@ const SaintWorkCard: React.FC<Props> = ({ work, authorRef }) => {
           {isInternal ? (
             <>
               <Icons.BookOpen className="w-3 h-3 text-primary" aria-hidden />
-              Hospedado no Cathedra
+              Hospedado na Cathedra Digital
             </>
           ) : (
             <>
@@ -228,10 +228,10 @@ const SaintWorkCard: React.FC<Props> = ({ work, authorRef }) => {
         <Link
           to={internalHref}
           className="inline-flex items-center gap-1 text-premium-sm font-semibold text-primary hover:underline"
-          aria-label={`Abrir ficha editorial de ${work.title} no Cathedra`}
+          aria-label={`Abrir ficha editorial de ${work.title} na Cathedra Digital`}
         >
           <Icons.BookOpen className="w-4 h-4" aria-hidden />
-          {isInternal ? 'Ler no Cathedra' : 'Ficha editorial'}
+          {isInternal ? 'Ler na Cathedra Digital' : 'Ficha editorial'}
         </Link>
         {!isInternal && work.external_url && (
           <a

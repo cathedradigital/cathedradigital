@@ -45,7 +45,7 @@ export default function CollectionsMetricsPage() {
   return (
     <>
       <Helmet>
-        <title>Métricas de Coleções · Cathedra</title>
+        <title>Métricas de Coleções · Cathedra Digital</title>
         <meta name="robots" content="noindex" />
       </Helmet>
       <ReaderShell

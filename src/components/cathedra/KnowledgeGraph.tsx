@@ -58,7 +58,7 @@ export const KnowledgeGraph: React.FC<KnowledgeGraphProps> = ({ onClose, initial
         </button>
         <div className="text-center">
           <h1 className="text-[10px] font-black uppercase tracking-[0.4em] text-secondary/60">Knowledge Graph</h1>
-          <span className="text-premium-xs font-medium uppercase text-stone-600">Cathedra Phase 3</span>
+          <span className="text-premium-xs font-medium uppercase text-stone-600">Cathedra Digital Phase 3</span>
         </div>
         <div className="w-10" />
       </header>

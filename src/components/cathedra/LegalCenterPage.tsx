@@ -19,7 +19,7 @@ const DOCS: LegalDoc[] = [
   {
     path: '/legal/lgpd',
     label: 'LGPD — Lei Geral de Proteção de Dados',
-    desc: 'Como a Cathedra cumpre a Lei nº 13.709/2018: bases legais, DPO, incidentes e canal do titular.',
+    desc: 'Como a Cathedra Digital cumpre a Lei nº 13.709/2018: bases legais, DPO, incidentes e canal do titular.',
     icon: <Icons.Shield className="w-spacing-lg h-spacing-lg" />,
   },
   {

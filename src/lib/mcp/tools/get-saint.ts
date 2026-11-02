@@ -6,7 +6,7 @@ export default defineTool({
   name: "get_saint",
   title: "Obter Santo",
   description:
-    "Retorna o registro completo de um santo pelo id (slug) — biografia, virtudes, oração, referências bíblicas, catecismo e citações. Dados públicos da Cathedra.",
+    "Retorna o registro completo de um santo pelo id (slug) — biografia, virtudes, oração, referências bíblicas, catecismo e citações. Dados públicos da Cathedra Digital.",
   inputSchema: {
     id: z.string().trim().min(1).max(120).describe("Identificador do santo (ex.: 'agostinho-de-hipona')."),
   },

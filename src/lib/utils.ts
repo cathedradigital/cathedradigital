@@ -2,7 +2,7 @@ import { clsx, type ClassValue } from "clsx";
 import { extendTailwindMerge } from "tailwind-merge";
 
 /**
- * Escalas tipográficas customizadas do Cathedra (tailwind.config.ts → fontSize).
+ * Escalas tipográficas customizadas da Cathedra Digital (tailwind.config.ts → fontSize).
  * Sem registrá-las, o tailwind-merge interpreta `text-premium-sm` como uma cor
  * e descarta silenciosamente o `text-*-foreground` da variante do componente —
  * causa raiz de texto escuro sobre fundo escuro em botões.

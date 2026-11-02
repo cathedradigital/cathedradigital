@@ -349,7 +349,7 @@ export default function NexusAdmin() {
   return (
     <div className="container mx-auto px-4 py-8 max-w-7xl">
       <Helmet>
-        <title>Admin · Nexus Theologicus | Cathedra</title>
+        <title>Admin · Nexus Theologicus | Cathedra Digital</title>
         <meta name="robots" content="noindex, nofollow" />
       </Helmet>
 

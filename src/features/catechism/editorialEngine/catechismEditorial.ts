@@ -1,7 +1,7 @@
 /**
  * catechismEditorial — camada editorial do Catecismo (Sprint 3).
  *
- * Constituição Editorial 1.0.0, Cap. IX: nenhuma leitura da Cathedra termina
+ * Constituição Editorial 1.0.0, Cap. IX: nenhuma leitura da Cathedra Digital termina
  * em texto cru. Cada capítulo do CIC recebe:
  *
  *   Introdução → Contexto histórico → Contexto doutrinário →

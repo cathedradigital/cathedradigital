@@ -1,5 +1,5 @@
 /**
- * ReaderContent — contrato universal de conteúdo lido pelo Cathedra.
+ * ReaderContent — contrato universal de conteúdo lido pela Cathedra Digital.
  *
  * Bíblia, Catecismo, Magistério, Padres, Santos, Concílios e Cânones
  * expõem tudo através desta shape. O `UniversalReader` (Sprint 2.0.4B-3)

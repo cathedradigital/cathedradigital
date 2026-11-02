@@ -65,7 +65,7 @@ const LandingHeader = () => {
         <Link 
           to={AppRoute.HOME}
           className="flex items-center gap-spacing-md cursor-pointer group focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-premium-full p-spacing-2xs transition-shadow"
-          aria-label="Cathedra - Página Inicial"
+          aria-label="Cathedra Digital - Página Inicial"
         >
           <Icons.Logo className="w-spacing-2xl h-spacing-2xl transition-all duration-1000 group-hover:scale-105" variant="gold" />
           <div className="hidden sm:flex flex-col">

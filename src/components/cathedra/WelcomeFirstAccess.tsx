@@ -1,5 +1,5 @@
 /**
- * Tela "Bem-vindo à Cathedra" — exibida apenas no primeiro acesso do usuário.
+ * Tela "Bem-vindo à Cathedra Digital" — exibida apenas no primeiro acesso do usuário.
  *
  * Overlay não bloqueante que apresenta os 5 caminhos canônicos: Formação,
  * Oração, Bíblia, Liturgia e Catequese. Marca a exibição por usuário para
@@ -71,13 +71,13 @@ const WelcomeFirstAccess: React.FC = () => {
         </button>
 
         <h2 className="text-xs uppercase tracking-widest text-secondary mb-spacing-2xs">
-          Sanctuarium Digital
+          Cathedra Digital
         </h2>
         <h1
           id="welcome-first-access-title"
           className="font-serif text-3xl md:text-4xl text-foreground mb-spacing-xs"
         >
-          Bem-vindo à Cathedra
+          Bem-vindo à Cathedra Digital
         </h1>
         <p className="text-muted-foreground mb-spacing-lg">
           Escolha por onde deseja começar. Você poderá navegar livremente entre todos os caminhos depois.
