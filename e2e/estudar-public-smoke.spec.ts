@@ -479,15 +479,17 @@ test('Sanctorum: catálogo público carrega santos com fonte e status editorial'
 });
 
 
-test('Rezar ativo oferece entrada para liturgia, devoções e oração pessoal', async ({ page }) => {
+test('Rezar ativo apresenta os três caminhos centrais e abre o Rosário', async ({ page }) => {
   const response = await page.goto('/rezar');
   expect(response?.ok(), `/rezar: HTTP ${response?.status()}`).toBeTruthy();
   await expect(page.getByRole('heading', { name: 'Rezar' })).toBeVisible();
-  await expect(page.getByRole('heading', { name: 'Liturgia da Igreja' })).toBeVisible();
-  await expect(page.getByRole('heading', { name: 'Devoções' })).toBeVisible();
-  await expect(page.getByRole('heading', { name: 'Oração e meditação' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Uma vida de oração, três caminhos' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Liturgia das Horas' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Lectio Divina' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Rosário' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Outras formas de oração' })).toBeVisible();
 
-  await page.getByRole('link', { name: /Rosário/ }).click();
+  await page.getByRole('link', { name: /Rezar o Rosário/ }).click();
   await expect(page).toHaveURL(/\/oracao\/rosario$/);
 });
 
