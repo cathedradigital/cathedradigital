@@ -110,7 +110,7 @@ jobs:
       - name: Checkout trusted main
         uses: actions/checkout@v6
         with:
-          ref: main
+          ref: ${{ github.sha }}
 
       - name: Setup Node 22
         uses: actions/setup-node@v6
