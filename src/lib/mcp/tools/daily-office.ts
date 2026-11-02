@@ -3,10 +3,13 @@ import { createClient } from "@supabase/supabase-js";
 import { z } from "zod";
 
 const HOURS = [
-  "invitatorio",
+  "oficio",
   "laudes",
-  "hora-media",
+  "tercia",
   "terca",
+  "oficio-leituras",
+  "hora-media",
+  "invitatorio",
   "sexta",
   "noa",
   "vesperas",
@@ -30,6 +33,10 @@ export default defineTool({
   annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
   handler: async ({ hour, date }) => {
     const iso = date ?? new Date().toISOString().slice(0, 10);
+    if (hour === "hora-media" || hour === "invitatorio") {
+      return { content: [{ type: "text", text: "Identificador ambíguo ou não suportado pelo leitor. Escolha uma das sete Horas canônicas." }], isError: true };
+    }
+    const canonicalHour = hour === "terca" ? "tercia" : hour === "oficio-leituras" ? "oficio" : hour;
     const sb = createClient((process.env.SUPABASE_URL || import.meta.env.VITE_SUPABASE_URL)!, (process.env.SUPABASE_PUBLISHABLE_KEY || import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY)!, {
       auth: { persistSession: false, autoRefreshToken: false },
     });
@@ -39,12 +46,12 @@ export default defineTool({
         "iso_date,hour_slug,antiphon_opening,psalmody,brief_reading_ref,brief_reading_text,responsory,gospel_canticle,intercessions,concluding_prayer,season_note",
       )
       .eq("iso_date", iso)
-      .eq("hour_slug", hour)
+      .eq("hour_slug", canonicalHour)
       .maybeSingle();
     if (error) return { content: [{ type: "text", text: error.message }], isError: true };
     if (!data)
       return {
-        content: [{ type: "text", text: `Ofício '${hour}' não disponível para ${iso}. Gere em /liturgia/horas.` }],
+        content: [{ type: "text", text: `Ofício '${canonicalHour}' não disponível para ${iso}. Gere em /liturgia/horas.` }],
         isError: true,
       };
     return {
