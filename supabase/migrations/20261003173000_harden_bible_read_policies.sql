@@ -1,4 +1,4 @@
--- Cathedra Digital · Bíblia
+-- Cátedra Digital · Bíblia
 -- Evita policies PERMISSIVE sobrepostas no SELECT público das tabelas bíblicas.
 -- Conteúdo bíblico continua público; somente operações de escrita ficam
 -- reservadas ao papel admin autenticado.

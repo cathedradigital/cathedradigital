@@ -1,4 +1,4 @@
--- Cathedra Digital · Nexus policy hardening
+-- Cátedra Digital · Nexus policy hardening
 -- Keep public SELECT separate from privileged writes to avoid duplicate SELECT policies.
 drop policy if exists "nexus_relations_admin_all" on public.nexus_relations;
 create policy "nexus_relations_admin_write"
