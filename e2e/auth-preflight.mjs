@@ -7,6 +7,30 @@ function readProductionValue(name) {
   return match?.[1]?.trim().replace(/^["']|["']$/g, '') || '';
 }
 
+function createSupabaseFetch(publishableKey) {
+  return (input, init) => {
+    const headers = new Headers(
+      typeof Request !== 'undefined' && input instanceof Request ? input.headers : undefined,
+    );
+
+    if (init?.headers) {
+      new Headers(init.headers).forEach((value, key) => headers.set(key, value));
+    }
+
+    // Match the production client: opaque publishable keys belong in apikey,
+    // not in Authorization as if they were JWT bearer tokens.
+    if (
+      publishableKey.startsWith('sb_publishable_') &&
+      headers.get('Authorization') === `Bearer ${publishableKey}`
+    ) {
+      headers.delete('Authorization');
+    }
+
+    headers.set('apikey', publishableKey);
+    return fetch(input, { ...init, headers });
+  };
+}
+
 export default async function globalSetup() {
   const email = process.env.E2E_TEST_EMAIL;
   const password = process.env.E2E_TEST_PASSWORD;
@@ -26,6 +50,7 @@ export default async function globalSetup() {
   // Use the same Supabase SDK and signInWithPassword path as the real app.
   // This avoids maintaining a second, hand-written Auth HTTP implementation.
   const authClient = createClient(url, publishableKey, {
+    global: { fetch: createSupabaseFetch(publishableKey) },
     auth: {
       persistSession: false,
       autoRefreshToken: false,
