@@ -241,6 +241,19 @@ const BreviaryPage: React.FC = () => {
     && (!prayer || !hierarchy || !hierarchyHasSections);
   const prayerLoadFailed = !!prayersError || !!hierarchyError;
 
+  // ── Dia inteiro contínuo (7 horas em fluxo único) ──
+  // Coleta as 7 horas via useQueries (reativo, offline-first via IDB).
+  const allHourQueries = useQueries({
+    queries: (dayMode && hierarchy && prayer)
+      ? ALL_HOUR_SLUGS.map((h) => ({
+          queryKey: ['liturgy-hours-office', isoDate, h] as const,
+          queryFn: async () => null, // resolvido pelo prefetch/useLiturgyHoursOffice
+          enabled: false, // apenas lê o cache do QueryClient (populado pelo prefetch)
+          staleTime: Infinity,
+        }))
+      : [],
+  });
+
   if (!loading && !prayersLoading && (prayerLoadFailed || prayerConfigurationMissing)) {
     const title = prayerLoadFailed
       ? 'Não foi possível carregar a Liturgia das Horas'
@@ -277,19 +290,6 @@ const BreviaryPage: React.FC = () => {
       </>
     );
   }
-
-  // ── Dia inteiro contínuo (7 horas em fluxo único) ──
-  // Coleta as 7 horas via useQueries (reativo, offline-first via IDB).
-  const allHourQueries = useQueries({
-    queries: (dayMode && hierarchy && prayer)
-      ? ALL_HOUR_SLUGS.map((h) => ({
-          queryKey: ['liturgy-hours-office', isoDate, h] as const,
-          queryFn: async () => null, // resolvido pelo prefetch/useLiturgyHoursOffice
-          enabled: false, // apenas lê o cache do QueryClient (populado pelo prefetch)
-          staleTime: Infinity,
-        }))
-      : [],
-  });
 
   if (dayMode && prayer && hierarchy) {
     const orderedSections = ALL_HOUR_SLUGS
