@@ -18,7 +18,7 @@ export default defineTool({
     const { data, error } = await sb
       .from("prayers")
       .select(
-        "slug,title,subtitle,kicker,category,content,content_latin,explanation,meditation,estimated_seconds,duration_min,tags,source_ref,related_bible,related_catechism,related_saints,related_glossary,bible_refs,catechism_refs,blocks,engine_version",
+        "slug,title,subtitle,kicker,category,content,content_latin,explanation,meditation,estimated_seconds,tags,source_ref,related_bible,related_catechism,related_saints,related_glossary,engine_version",
       )
       .eq("slug", slug)
       .eq("is_published", true)
