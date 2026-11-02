@@ -1106,7 +1106,7 @@ const AppProviders: React.FC<{ children: React.ReactNode }> = ({ children }) => 
 };
 
 const App: React.FC = () => {
-  // A abertura da Cátedra acontece a cada carregamento completo da aplicação.
+  // A abertura da Cathedra acontece a cada carregamento completo da aplicação.
   // Navegação interna continua instantânea; somente um novo carregamento mostra a identidade de abertura.
   const [showSplash, setShowSplash] = useState(() => {
     if (typeof window === 'undefined') return true;
