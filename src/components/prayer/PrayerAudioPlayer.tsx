@@ -4,8 +4,8 @@
  * Comportamento definido pelo produto:
  *   • Quando `audioUrl` existe, renderiza o player nativo controlado.
  *   • Quando não existe, mostra apenas um botão desabilitado indicando
- *     que o áudio está "preparado para futura integração" (a coluna
- *     `audio_url` já existe no schema `prayers`).
+ *     que o áudio está preparado para futura integração. O schema canônico
+ *     atual de `prayers` não possui coluna de URL de áudio.
  *
  * Reutilizável entre todos os leitores do módulo Orações Premium.
  *
