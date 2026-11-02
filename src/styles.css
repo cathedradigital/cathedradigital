@@ -653,3 +653,25 @@
 [data-catedra-module="estudar"] [data-catedra-module-root] a:focus-visible {
   outline-color: var(--catedra-module-accent);
 }
+
+
+/* ÁTRIO — contenção responsiva de textos e itens flexíveis. */
+.catedra-atrium {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.catedra-atrium :where(section, article, div, form, header, footer, nav) {
+  min-width: 0;
+}
+
+.catedra-atrium :where(h1, h2, h3, h4, p, a, button, span, time, li) {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+
+.catedra-atrium img,
+.catedra-atrium svg {
+  max-width: 100%;
+}
