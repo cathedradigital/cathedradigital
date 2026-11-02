@@ -53,48 +53,56 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
       getCacheStats().then(stats => setCacheCount(stats.total));
     };
 
+    const previousBodyOverflow = document.body.style.overflow;
+    let focusTimer: number | undefined;
+    let previouslyFocused: HTMLElement | null = null;
+
     const handleKeyDown = (e: KeyboardEvent) => {
       if (!isOpen) return;
 
       if (e.key === 'Escape') {
+        e.preventDefault();
         onClose();
         return;
       }
 
-      const focusableElements = sidebarRef.current?.querySelectorAll(
-        'button:not([disabled]), [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      const focusableElements = Array.from(
+        sidebarRef.current?.querySelectorAll<HTMLElement>(
+          'button:not([disabled]), a[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+        ) ?? []
+      ).filter((element) =>
+        element.getAttribute('aria-hidden') !== 'true' &&
+        element.getClientRects().length > 0
       );
-      
-      if (!focusableElements || focusableElements.length === 0) return;
 
-      const firstElement = focusableElements[0] as HTMLElement;
-      const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement;
-      const currentIndex = Array.from(focusableElements).indexOf(document.activeElement as HTMLElement);
+      if (focusableElements.length === 0) return;
 
-      // Focus Trap
+      const firstElement = focusableElements[0];
+      const lastElement = focusableElements[focusableElements.length - 1];
+      const activeElement = document.activeElement;
+      const currentIndex = focusableElements.indexOf(activeElement as HTMLElement);
+      const focusIsInside = sidebarRef.current?.contains(activeElement) ?? false;
+
+      // Keep keyboard focus inside the modal, including when focus starts outside it.
       if (e.key === 'Tab') {
-        if (e.shiftKey) {
-          if (document.activeElement === firstElement) {
-            lastElement.focus();
-            e.preventDefault();
-          }
-        } else {
-          if (document.activeElement === lastElement) {
-            firstElement.focus();
-            e.preventDefault();
-          }
+        if (e.shiftKey && (activeElement === firstElement || !focusIsInside)) {
+          e.preventDefault();
+          lastElement.focus();
+        } else if (!e.shiftKey && (activeElement === lastElement || !focusIsInside)) {
+          e.preventDefault();
+          firstElement.focus();
         }
       }
 
-      // Arrow Key Navigation
+      // Arrow-key navigation remains available across the sidebar controls.
       if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
         e.preventDefault();
         let nextIndex = e.key === 'ArrowDown' ? currentIndex + 1 : currentIndex - 1;
-        
+
         if (nextIndex >= focusableElements.length) nextIndex = 0;
         if (nextIndex < 0) nextIndex = focusableElements.length - 1;
-        
-        (focusableElements[nextIndex] as HTMLElement).focus();
+
+        focusableElements[nextIndex].focus();
       }
     };
 
@@ -102,19 +110,24 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
     window.addEventListener('keydown', handleKeyDown);
 
     if (isOpen) {
+      previouslyFocused = document.activeElement instanceof HTMLElement
+        ? document.activeElement
+        : null;
       document.body.style.overflow = 'hidden';
-      // Focus close button on open for immediate exit capability
-      setTimeout(() => {
+      // Focus the close control as soon as the dialog is mounted.
+      focusTimer = window.setTimeout(() => {
         closeButtonRef.current?.focus();
-      }, 100);
-    } else {
-      document.body.style.overflow = '';
+      }, 0);
     }
 
     return () => {
       window.removeEventListener('cathedra_cache_updated', handleCacheUpdate);
       window.removeEventListener('keydown', handleKeyDown);
-      document.body.style.overflow = '';
+      if (focusTimer !== undefined) window.clearTimeout(focusTimer);
+      if (isOpen) {
+        document.body.style.overflow = previousBodyOverflow;
+        if (previouslyFocused?.isConnected) previouslyFocused.focus();
+      }
     };
   }, [isOpen, onClose]);
   
