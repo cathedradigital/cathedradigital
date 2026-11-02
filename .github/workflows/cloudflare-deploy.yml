@@ -165,7 +165,7 @@ jobs:
 
             if grep -Eiq '^cf-mitigated:[[:space:]]*challenge' "$headers_file"; then
               echo "Response headers (safe subset):"
-              awk 'BEGIN { IGNORECASE=1 } /^HTTP\\// || /^(server|cf-ray|cf-mitigated|cf-cache-status|content-type|location|cf-access-denied|www-authenticate):/ { print }' "$headers_file"
+              awk 'BEGIN { IGNORECASE=1 } /^HTTP\// || /^(server|cf-ray|cf-mitigated|cf-cache-status|content-type|location|cf-access-denied|www-authenticate):/ { print }' "$headers_file"
               rm -f "$body_file" "$headers_file"
               echo "::error::Cloudflare challenge intercepted $url. Production accessibility is unverified; release validation must fail."
               return 1
