@@ -56,7 +56,7 @@ export const ROUTE_META: Record<string, RouteMeta> = {
 
   // ─── Home / Átrio ─────────────────────────────────────────────
   '/': {
-    title: 'Cátedra Digital — Mosteiro Digital',
+    title: 'Cathedra Digital — Mosteiro Digital',
     description:
       'Bem-vindo ao Mosteiro Digital. Bíblia Sagrada, Catecismo, liturgia diária, santos, orações e IA teológica em uma experiência contemplativa.',
   },
@@ -109,7 +109,7 @@ export const ROUTE_META: Record<string, RouteMeta> = {
   },
 
   '/atrium': {
-    title: 'Átrio — Cátedra Digital',
+    title: 'Átrio — Cathedra Digital',
     description:
       'Portal interno da Cátedra: acesse Bíblia, Catecismo, Liturgia, Orações e Logos AI em um único ambiente contemplativo.',
   },
@@ -202,7 +202,7 @@ export const ROUTE_META: Record<string, RouteMeta> = {
       'Vidas dos santos com biografia, virtudes, escritos, milagres e devoções para inspirar sua caminhada rumo à santidade.',
   },
   '/santos/:id': {
-    title: 'Vida de Santo — Cátedra Digital',
+    title: 'Vida de Santo — Cathedra Digital',
     description: 'Conheça a história, milagres e o legado espiritual deste santo da Igreja Católica.',
   },
   '/papas': {
@@ -249,7 +249,7 @@ export const ROUTE_META: Record<string, RouteMeta> = {
   '/about': {
     title: 'Sobre a Cátedra — Missão, Visão e Equipe',
     description:
-      'Conheça a Cátedra Digital: missão de servir a fé católica com tradição e tecnologia, equipe e princípios que guiam a plataforma.',
+      'Conheça a Cathedra Digital: missão de servir a fé católica com tradição e tecnologia, equipe e princípios que guiam a plataforma.',
   },
   '/partners': {
     title: 'Parceiros Cátedra — Comunidades e Apostolados',
@@ -264,27 +264,27 @@ export const ROUTE_META: Record<string, RouteMeta> = {
 
   // ─── Institucional / Legal ────────────────────────────────────
   '/transparencia': {
-    title: 'Transparência — Cátedra Digital',
+    title: 'Transparência — Cathedra Digital',
     description:
       'Relatório de transparência da Cátedra: uso de recursos, apostolado apoiado e destinação dos aportes dos assinantes PRO.',
   },
   '/terms': {
-    title: 'Termos de Uso — Cátedra Digital',
+    title: 'Termos de Uso — Cathedra Digital',
     description:
-      'Termos de uso da Cátedra Digital: direitos, deveres, propriedade intelectual e regras de utilização da plataforma.',
+      'Termos de uso da Cathedra Digital: direitos, deveres, propriedade intelectual e regras de utilização da plataforma.',
   },
   '/privacy': {
-    title: 'Política de Privacidade — Cátedra Digital',
+    title: 'Política de Privacidade — Cathedra Digital',
     description:
       'Política de privacidade da Cátedra: dados coletados, finalidade, base legal, cookies e direitos do titular (LGPD).',
   },
   '/legal': {
-    title: 'Centro Legal — Cátedra Digital',
+    title: 'Centro Legal — Cathedra Digital',
     description:
       'Documentos institucionais da Cátedra: privacidade, LGPD, termos de uso e transparência reunidos em um único lugar.',
   },
   '/legal/privacy': {
-    title: 'Política de Privacidade — Cátedra Digital',
+    title: 'Política de Privacidade — Cathedra Digital',
     description:
       'Política de privacidade da Cátedra: dados coletados, finalidade, base legal, cookies e direitos do titular (LGPD).',
     canonicalPath: '/privacy',
@@ -294,15 +294,15 @@ export const ROUTE_META: Record<string, RouteMeta> = {
   '/legal/lgpd': {
     title: 'LGPD — Conformidade e Direitos do Titular · Cátedra',
     description:
-      'Como a Cátedra Digital cumpre a Lei nº 13.709/2018: bases legais, direitos do titular, DPO, incidentes e transferência internacional.',
+      'Como a Cathedra Digital cumpre a Lei nº 13.709/2018: bases legais, direitos do titular, DPO, incidentes e transferência internacional.',
   },
   '/manifesto': {
     title: 'Manifesto da Cátedra — Escritura, Tradição e Oração',
     description:
-      'A convicção que sustenta a Cátedra Digital: unir Escritura, Tradição, Liturgia, Oração e IA em uma só experiência de fé.',
+      'A convicção que sustenta a Cathedra Digital: unir Escritura, Tradição, Liturgia, Oração e IA em uma só experiência de fé.',
   },
   '/contato': {
-    title: 'Contato — Cátedra Digital',
+    title: 'Contato — Cathedra Digital',
     description:
       'Fale com a Cátedra: suporte, encarregado de dados (LGPD/DPO), parcerias institucionais e imprensa.',
   },
@@ -322,7 +322,7 @@ export const ROUTE_META: Record<string, RouteMeta> = {
 
 
   // ─── Rotas privadas / não indexáveis ──────────────────────────
-  '/auth': { title: 'Entrar — Cátedra', description: 'Acesse sua conta na Cátedra Digital.', noindex: true },
+  '/auth': { title: 'Entrar — Cátedra', description: 'Acesse sua conta na Cathedra Digital.', noindex: true },
   '/reset-password': { title: 'Redefinir senha — Cátedra', description: 'Redefina sua senha.', noindex: true },
   '/onboarding': { title: 'Boas-vindas — Cátedra', description: 'Configure seu perfil espiritual.', noindex: true },
   '/profile': { title: 'Meu perfil — Cátedra', description: 'Sua caminhada e preferências.', noindex: true },
@@ -336,7 +336,7 @@ export const ROUTE_META: Record<string, RouteMeta> = {
   '/transactions': { title: 'Minhas transações — Cátedra', description: 'Histórico de pagamentos.', noindex: true },
 
   // ─── Aliases (Navigate replace) — noindex + canonical ao destino
-  '/home': { title: 'Cátedra Digital', description: 'Alias para a página inicial.', noindex: true, canonicalPath: '/' },
+  '/home': { title: 'Cathedra Digital', description: 'Alias para a página inicial.', noindex: true, canonicalPath: '/' },
   '/sobre': { title: 'Sobre — Cátedra', description: 'Alias para /about.', noindex: true, canonicalPath: '/about' },
   '/biblia': { title: 'Ler — Sagrada Escritura', description: 'Alias para /bible.', noindex: true, canonicalPath: '/bible' },
   '/catecismo': { title: 'Catecismo — Cátedra', description: 'Alias para /catechism.', noindex: true, canonicalPath: '/catechism' },
@@ -358,8 +358,8 @@ export const ROUTE_META: Record<string, RouteMeta> = {
   '/confissao': { title: 'Exame de consciência — Cátedra', description: 'Alias para /oracao/exame-de-consciencia.', noindex: true, canonicalPath: '/oracao/exame-de-consciencia' },
 
   // Legacy / dev — noindex
-  '/legacy-home': { title: 'Cátedra', description: 'Cátedra Digital.', noindex: true, canonicalPath: '/' },
-  '/home-v3': { title: 'Cátedra', description: 'Cátedra Digital.', noindex: true, canonicalPath: '/' },
+  '/legacy-home': { title: 'Cátedra', description: 'Cathedra Digital.', noindex: true, canonicalPath: '/' },
+  '/home-v3': { title: 'Cátedra', description: 'Cathedra Digital.', noindex: true, canonicalPath: '/' },
   '/bible-legacy': { title: 'Bíblia (legado)', description: 'Versão anterior do leitor bíblico.', noindex: true, canonicalPath: '/bible' },
   '/catechism-legacy': { title: 'Catecismo (legado)', description: 'Versão anterior.', noindex: true, canonicalPath: '/catechism' },
   '/buscar-legacy': { title: 'Buscar (legado)', description: 'Versão anterior.', noindex: true, canonicalPath: '/buscar' },
