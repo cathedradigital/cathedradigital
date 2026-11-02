@@ -493,11 +493,9 @@ const AppLayout: React.FC = () => {
     return () => window.removeEventListener('open-sidebar', handleOpenSidebar);
   }, [handleOpenSidebar]);
   const handleCloseSidebar = useCallback(() => {
+    // Sidebar owns focus restoration and returns focus to the original trigger.
+    // Moving focus to main content here would override that restoration.
     setIsSidebarOpen(false);
-    // Focus content for accessibility after closing
-    setTimeout(() => {
-      mainContentRef.current?.focus();
-    }, 100);
   }, []);
   const handleOpenA11y = useCallback(() => setShowA11ySettings(true), []);
   const handleCloseA11y = useCallback(() => setShowA11ySettings(false), []);
