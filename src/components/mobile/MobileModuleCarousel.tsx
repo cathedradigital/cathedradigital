@@ -1,6 +1,6 @@
-import React, { useCallback, useEffect, useMemo, useRef } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useLocation, useNavigate } from '@/lib/rr-compat';
-import { BookOpen, Footprints, GraduationCap, HandHeart, House, Search } from 'lucide-react';
+import { BookOpen, ChevronRight, Footprints, GraduationCap, HandHeart, House, Search, X } from 'lucide-react';
 import { MODULE_NAVIGATION, type ModuleEnvironment } from '@/config/moduleNavigation';
 import { useLang } from '@/hooks/useLang';
 import { cn } from '@/lib/utils';
@@ -52,6 +52,7 @@ export function MobileModuleCarousel() {
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const { t } = useLang();
+  const [expandedGroupKey, setExpandedGroupKey] = useState<ModuleEnvironment | null>(null);
   const activeRef = useRef<HTMLButtonElement | null>(null);
   const touchStartX = useRef<number | null>(null);
   const touchStartY = useRef<number | null>(null);
@@ -84,8 +85,24 @@ export function MobileModuleCarousel() {
 
   const openIndex = useCallback((index: number) => {
     const destination = destinations[index];
-    if (destination && index !== activeIndex) navigate(destination.path);
-  }, [activeIndex, destinations, navigate]);
+    if (!destination) return;
+    if (destination.key === 'atrium') {
+      setExpandedGroupKey(null);
+      if (pathname !== '/') navigate('/');
+      return;
+    }
+    const groupKey = destination.key as ModuleEnvironment;
+    setExpandedGroupKey((current) => current === groupKey ? null : groupKey);
+  }, [destinations, navigate, pathname]);
+
+  const navigateToItem = useCallback((path: string) => {
+    setExpandedGroupKey(null);
+    navigate(path);
+  }, [navigate]);
+
+  const expandedGroup = expandedGroupKey
+    ? MODULE_NAVIGATION.find((group) => group.key === expandedGroupKey)
+    : undefined;
 
   const handleTouchStart = (event: React.TouchEvent<HTMLElement>) => {
     touchStartX.current = event.touches[0]?.clientX ?? null;
@@ -108,7 +125,8 @@ export function MobileModuleCarousel() {
       didSwipe.current = false;
       swipeResetTimer.current = null;
     }, 700);
-    openIndex(Math.max(0, Math.min(destinations.length - 1, activeIndex + (deltaX < 0 ? 1 : -1))));
+    const next = destinations[Math.max(0, Math.min(destinations.length - 1, activeIndex + (deltaX < 0 ? 1 : -1)))];
+    if (next) navigate(next.path);
   };
 
   if (isExcludedRoute || activeIndex < 0) return null;
@@ -131,6 +149,58 @@ export function MobileModuleCarousel() {
         }
       }}
     >
+      {expandedGroup && (
+        <section
+          id="mobile-module-submenu"
+          aria-label={'Opções de ' + expandedGroup.label}
+          className="mx-3 mb-2 overflow-hidden rounded-3xl border border-border/80 bg-card/98 p-4 shadow-[0_16px_48px_rgba(0,0,0,0.18)] backdrop-blur-2xl animate-in slide-in-from-bottom-2 fade-in duration-200"
+          style={{ borderTopColor: expandedGroup.accent }}
+        >
+          <div className="mb-3 flex items-start justify-between gap-3">
+            <div className="min-w-0">
+              <p className="text-[10px] font-bold uppercase tracking-[0.18em]" style={{ color: expandedGroup.accent }}>
+                Ambiente
+              </p>
+              <h2 className="mt-1 font-serif text-xl font-semibold text-foreground">{expandedGroup.label}</h2>
+              <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{expandedGroup.description}</p>
+            </div>
+            <button
+              type="button"
+              aria-label="Fechar opções do módulo"
+              onClick={() => setExpandedGroupKey(null)}
+              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-muted text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            >
+              <X className="h-4 w-4" aria-hidden="true" />
+            </button>
+          </div>
+          <div className="grid max-h-[min(46vh,360px)] grid-cols-2 gap-2 overflow-y-auto overscroll-contain">
+            {expandedGroup.items.map((item) => {
+              const selected = pathname === item.path || pathname.startsWith(item.path + '/');
+              return (
+                <button
+                  key={item.id}
+                  type="button"
+                  aria-current={selected ? 'page' : undefined}
+                  onClick={() => navigateToItem(item.path)}
+                  className={cn(
+                    'flex min-h-[58px] items-center justify-between gap-2 rounded-2xl border px-3 py-3 text-left transition-all',
+                    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary',
+                    selected
+                      ? 'border-primary/35 bg-primary/[0.08] text-foreground'
+                      : 'border-border/70 bg-background/75 text-foreground hover:border-primary/25 hover:bg-primary/[0.04]',
+                  )}
+                >
+                  <span className="min-w-0">
+                    <span className="block text-sm font-semibold leading-snug">{item.label}</span>
+                    <span className="mt-1 block line-clamp-2 text-[10px] leading-snug text-muted-foreground">{item.description}</span>
+                  </span>
+                  <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground" aria-hidden="true" />
+                </button>
+              );
+            })}
+          </div>
+        </section>
+      )}
       <div className="flex min-h-[64px] items-center justify-around gap-1 overflow-x-auto px-2 py-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {destinations.map((destination, index) => {
           const Icon = destination.icon;
@@ -141,7 +211,9 @@ export function MobileModuleCarousel() {
               ref={active ? activeRef : undefined}
               type="button"
               aria-current={active ? 'page' : undefined}
-              aria-label={`Abrir módulo ${destination.label}`}
+              aria-expanded={destination.key !== 'atrium' ? expandedGroupKey === destination.key : undefined}
+              aria-controls={destination.key !== 'atrium' ? 'mobile-module-submenu' : undefined}
+              aria-label={'Abrir opções do módulo ' + destination.label}
               onClick={() => openIndex(index)}
               className={cn(
                 'group relative inline-flex min-h-[48px] min-w-[54px] shrink-0 flex-col items-center justify-center gap-1 rounded-xl border px-2 py-1 transition-all duration-200',

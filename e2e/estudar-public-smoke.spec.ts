@@ -329,7 +329,7 @@ test('Catecismo: deep-link §2262 carrega o texto oficial sem depender do scroll
 });
 
 
-test('Mobile: carrossel inferior alterna entre os ambientes canônicos', async ({ page }) => {
+test('Mobile: carrossel abre os submódulos e preserva a navegação canônica', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/');
 
@@ -337,11 +337,18 @@ test('Mobile: carrossel inferior alterna entre os ambientes canônicos', async (
   await expect(carousel).toBeVisible();
   await expect(carousel).toHaveCSS('position', 'fixed');
   await expect(carousel).toHaveCSS('bottom', '0px');
-  await expect(carousel.getByRole('button', { name: 'Abrir módulo Estudar' })).toBeVisible();
 
-  await carousel.getByRole('button', { name: 'Abrir módulo Estudar' }).click();
-  await expect(page).toHaveURL(/\/estudar$/);
-  await expect(carousel.getByRole('button', { name: 'Abrir módulo Estudar' })).toHaveAttribute('aria-current', 'page');
+  await carousel.getByRole('button', { name: 'Abrir opções do módulo Estudar' }).click();
+  await expect(carousel.getByRole('heading', { name: 'Estudar' })).toBeVisible();
+  await carousel.getByRole('button', { name: /Bíblia/ }).click();
+  await expect(page).toHaveURL(/\/bible$/);
+
+  await carousel.getByRole('button', { name: 'Abrir opções do módulo Rezar' }).click();
+  await expect(carousel.getByRole('heading', { name: 'Rezar' })).toBeVisible();
+  await expect(carousel.getByRole('button', { name: /Orações/ })).toBeVisible();
+  await expect(carousel.getByRole('button', { name: /Liturgia das Horas/ })).toBeVisible();
+  await carousel.getByRole('button', { name: /Liturgia das Horas/ }).click();
+  await expect(page).toHaveURL(/\/breviary$/);
 });
 
 test('Desktop: carrossel inferior permanece oculto', async ({ page }) => {
