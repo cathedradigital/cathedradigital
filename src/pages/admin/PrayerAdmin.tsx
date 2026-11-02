@@ -55,8 +55,7 @@ export default function PrayerAdmin() {
       setLoading(true);
       const { data, error } = await supabase
         .from('prayers')
-        .select('id, slug, title, subtitle, category, content_status, duration_min, is_published, blocks, updated_at')
-        .order('content_status', { ascending: false })
+        .select('id, slug, title, subtitle, category, content, explanation, meditation, source_ref, estimated_seconds, is_published, updated_at')
         .order('category')
         .order('slug');
       if (cancelled) return;
@@ -66,10 +65,24 @@ export default function PrayerAdmin() {
         return;
       }
       setRows(
-        (data ?? []).map((r) => ({
-          ...r,
-          blocks_count: Array.isArray(r.blocks) ? (r.blocks as unknown[]).length : 0,
-        })) as PrayerRow[],
+        (data ?? []).map((r) => {
+          const content = typeof r.content === 'string' ? r.content.trim() : '';
+          const hasEditorialContext = Boolean(
+            r.explanation?.trim() && r.meditation?.trim() && r.source_ref?.trim(),
+          );
+          return {
+            id: r.id,
+            slug: r.slug,
+            title: r.title,
+            subtitle: r.subtitle,
+            category: r.category,
+            content_status: !content ? 'stub' : hasEditorialContext ? 'complete' : 'partial',
+            duration_min: r.estimated_seconds > 0 ? Math.ceil(r.estimated_seconds / 60) : null,
+            is_published: r.is_published,
+            blocks_count: content ? content.split(/\n\s*\n/).filter(Boolean).length : 0,
+            updated_at: r.updated_at,
+          };
+        }) as PrayerRow[],
       );
       setLoading(false);
     })();
@@ -145,8 +158,7 @@ export default function PrayerAdmin() {
             Curadoria de Orações
           </h1>
           <p className="mt-2 max-w-[68ch] font-stitch-body text-sm text-stitch-on-surface-variant">
-            Painel editorial das orações. Status <em>complete</em> abre com o leitor contemplativo por blocos;
-            <em> stub</em> exibe o texto simples até a curadoria concluir.
+            Painel editorial das orações. A classificação é calculada a partir do texto, da explicação, da meditação e da fonte cadastrada.
           </p>
         </header>
 
@@ -202,7 +214,7 @@ export default function PrayerAdmin() {
                     <TableHead>Título</TableHead>
                     <TableHead>Categoria</TableHead>
                     <TableHead>Status</TableHead>
-                    <TableHead className="text-right">Blocos</TableHead>
+                    <TableHead className="text-right">Parágrafos</TableHead>
                     <TableHead className="text-right">Duração</TableHead>
                     <TableHead>Publicada</TableHead>
                     <TableHead className="text-right">Ações</TableHead>

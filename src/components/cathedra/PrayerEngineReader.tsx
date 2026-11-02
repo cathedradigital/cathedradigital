@@ -773,7 +773,7 @@ export const PrayerEngineReader: React.FC<Props> = ({
               autoIntervalMs={autoIntervalMs}
               onIntervalChange={setAutoIntervalMs}
             />
-            <PrayerAudioPlayer audioUrl={prayer.audio_url} label={`Áudio: ${prayer.title}`} />
+            <PrayerAudioPlayer label={`Áudio: ${prayer.title}`} />
 
           </div>
         )}
