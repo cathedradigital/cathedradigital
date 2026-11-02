@@ -80,7 +80,7 @@ export const HighlightMenu: React.FC<HighlightMenuProps> = ({
                       Yá
                     </span>
                     <span className="text-[9px] font-black uppercase tracking-[0.25em] text-primary/45">
-                      Cátedra · {sourceLabel}
+                      Cathedra · {sourceLabel}
                     </span>
                   </div>
                   {reference && (
