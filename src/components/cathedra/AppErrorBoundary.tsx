@@ -111,11 +111,10 @@ class AppErrorBoundary extends Component<Props, State> {
 
           <div className="space-y-spacing-md max-w-spacing-md mx-auto">
             <h1 className="text-premium-2xl md:text-premium-3xl font-display text-primary tracking-tight">
-              Santuário em <span className="italic font-serif text-secondary/60">Manutenção</span>
+              Não foi possível carregar esta área
             </h1>
             <p className="text-premium-xs font-serif italic text-muted-foreground leading-relaxed">
-              Pedimos desculpas, peregrino. Algo interrompeu esta seção da sua jornada espiritual.
-              Nossos guardiões técnicos já foram alertados.
+              Ocorreu um erro inesperado ao carregar esta área. O problema foi registrado para investigação. Tente novamente em instantes ou copie os detalhes técnicos para nos ajudar a identificar a causa.
             </p>
 
             {this.state.errorMessage && (
