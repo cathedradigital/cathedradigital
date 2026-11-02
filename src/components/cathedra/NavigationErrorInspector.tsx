@@ -266,7 +266,7 @@ const NavigationErrorInspector: React.FC = () => {
     if (formatExt === 'pdf') {
       const doc = new jsPDF();
       doc.setFontSize(18);
-      doc.text(`Cathedra - Relatório de Auditoria (${type})`, 14, 22);
+      doc.text(`Cathedra Digital - Relatório de Auditoria (${type})`, 14, 22);
       doc.setFontSize(10);
       doc.text(`Exportado em: ${format(new Date(), 'dd/MM/yyyy HH:mm:ss')}`, 14, 30);
       doc.text(`Filtro de Data: ${dateRange.from || 'Sempre'} até ${dateRange.to || 'Hoje'}`, 14, 35);

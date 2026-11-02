@@ -46,7 +46,7 @@ const AboutCreatorSection = () => {
             
             <div className="space-y-spacing-md text-muted-foreground text-premium-lg leading-relaxed">
               <p>
-                Idealizador do Cathedra, buscador da Verdade e entusiasta da tecnologia. Minha missão é construir pontes entre o sagrado e o digital, permitindo que a profundidade da tradição católica floresça no mundo contemporâneo.
+                Idealizador da Cathedra Digital, buscador da Verdade e entusiasta da tecnologia. Minha missão é construir pontes entre o sagrado e o digital, permitindo que a profundidade da tradição católica floresça no mundo contemporâneo.
               </p>
               <p className="font-serif text-foreground/80">
                 Acreditamos que a tecnologia, quando a serviço da fé, pode ser um instrumento poderoso de santificação e estudo.
@@ -57,7 +57,7 @@ const AboutCreatorSection = () => {
               <Button 
                 onClick={() => navigate(AppRoute.ABOUT)}
                 className="w-full sm:w-auto px-spacing-xl py-spacing-sm bg-primary text-primary-foreground rounded-premium-full text-premium-xs font-bold uppercase tracking-[0.2em] shadow-premium-none hover:bg-primary/90 transition-all flex items-center justify-center gap-spacing-xs focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
-                aria-label="Ler o manifesto do Cathedra"
+                aria-label="Ler o manifesto da Cathedra Digital"
               >
                 Manifesto
                 <Icons.ArrowRight className="w-spacing-md h-spacing-md" aria-hidden="true" />

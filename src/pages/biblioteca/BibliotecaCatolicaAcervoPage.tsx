@@ -129,7 +129,7 @@ const BibliotecaCatolicaAcervoPage: React.FC = () => {
   return (
     <section className="min-h-screen bg-background" data-space="biblioteca">
       <Helmet>
-        <title>Acervo — Biblioteca Católica · Cathedra</title>
+        <title>Acervo — Biblioteca Católica · Cathedra Digital</title>
         <meta
           name="description"
           content="Explore o acervo unificado da Biblioteca Católica: Escritos dos Santos, Padres, Doutores, Clássicos e Magistério. Busca por título, autor ou tema."

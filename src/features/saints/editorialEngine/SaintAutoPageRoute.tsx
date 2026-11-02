@@ -8,7 +8,7 @@
  *   4. Renderiza `SaintAutoPage` (ReaderShell + EditorialHero + blocos).
  *
  * Sem modais. Sem renderer legado. A leitura de escritos internos
- * roteia dentro do próprio Cathedra pelo `SaintWritingsBlock`.
+ * roteia dentro do próprio Cathedra Digital pelo `SaintWritingsBlock`.
  */
 import React, { useEffect } from 'react';
 import { useParams, useNavigate, Navigate } from '@/lib/rr-compat';
@@ -63,7 +63,7 @@ const SaintAutoPageRoute: React.FC = () => {
       <>
         <SEOHead
           title="Santo não encontrado"
-          description="Este verbete do Sanctorum não foi encontrado no Cathedra."
+          description="Este verbete do Sanctorum não foi encontrado na Cathedra Digital."
           path={`/santos/${id}`}
         />
         <ReaderShell
@@ -92,7 +92,7 @@ const SaintAutoPageRoute: React.FC = () => {
     <>
       <SEOHead
         title={`${saint.name} — Sanctorum`}
-        description={saint.bio?.slice(0, 155) || `${saint.name}: vida, virtudes e escritos no Sanctorum do Cathedra.`}
+        description={saint.bio?.slice(0, 155) || `${saint.name}: vida, virtudes e escritos no Sanctorum da Cathedra Digital.`}
         path={`/santos/${saint.id}`}
         image={saint.image}
         breadcrumbs={[

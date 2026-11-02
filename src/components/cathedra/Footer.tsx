@@ -278,22 +278,9 @@ const Footer: React.FC = React.memo(() => {
                     lineHeight: 1,
                   }}
                 >
-                  Cathedra
+                  Cathedra Digital
                 </span>
               </div>
-              <span
-                className="pl-4"
-                style={{
-                  color: GOLD_TEXT,
-                  fontFamily: FONT_BODY,
-                  fontSize: 10,
-                  fontWeight: 500,
-                  letterSpacing: '0.4em',
-                  textTransform: 'uppercase',
-                }}
-              >
-                DIGITAL
-              </span>
             </div>
 
             <p
@@ -336,7 +323,7 @@ const Footer: React.FC = React.memo(() => {
 
           {/* Coluna 2 — Navegação principal */}
           <FooterSection
-            title={lang === 'pt' ? 'Cathedra' : 'Cathedra'}
+            title={lang === 'pt' ? 'Cathedra Digital' : 'Cathedra Digital'}
             id="navigation"
             isMobile={isMobile}
             openId={openId}

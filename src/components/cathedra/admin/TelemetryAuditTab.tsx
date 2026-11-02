@@ -296,7 +296,7 @@ const AdminAuditPage: React.FC = () => {
 
       <div className="flex justify-center pt-spacing-xl">
         <p className="text-[9px] font-black uppercase tracking-widest opacity-20 italic">
-          Audit Protocol — Cathedra Governance System
+          Audit Protocol — Cathedra Digital Governance System
         </p>
       </div>
     </div>

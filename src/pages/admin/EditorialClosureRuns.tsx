@@ -467,7 +467,7 @@ const EditorialClosureRuns: React.FC = () => {
   return (
     <div className="container mx-auto py-8 space-y-6">
       <Helmet>
-        <title>Runs de Migração Editorial · Cathedra Admin</title>
+        <title>Runs de Migração Editorial · Cathedra Digital Admin</title>
       </Helmet>
 
       <header className="flex items-start justify-between gap-4">

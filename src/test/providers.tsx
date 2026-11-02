@@ -1,5 +1,5 @@
 /**
- * Wrapper padrão de testes do Cathedra.
+ * Wrapper padrão de testes da Cathedra Digital.
  *
  * Todo teste que renderiza componentes da aplicação deve usar
  * `renderWithProviders` (ou `TestProviders`) — ele garante a presença de

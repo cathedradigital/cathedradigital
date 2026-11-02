@@ -98,7 +98,7 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
           handledSessionUserId.current = signupData.user.id;
           handleSignupSuccess();
         } else {
-          setSuccess('Conta criada! Enviamos um link de confirmação para seu e-mail. Confirme o endereço para entrar na Cathedra.');
+          setSuccess('Conta criada! Enviamos um link de confirmação para seu e-mail. Confirme o endereço para entrar na Cathedra Digital.');
           setMode('login');
         }
         return;
@@ -130,7 +130,7 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
     mode === 'login'
       ? 'Retorne ao silêncio. Prossiga na caminhada.'
       : mode === 'signup'
-      ? 'Uma Cathedra para a vida interior. Comece agora.'
+      ? 'Uma Cathedra Digital para a vida interior. Comece agora.'
       : 'Informe seu email para receber o link de redefinição.';
 
   // ─── estilos base compartilhados ──────────────────────────────────────────
@@ -144,8 +144,8 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
   return (
     <div className="cathedra-noir relative flex min-h-screen w-full items-center justify-center px-6 py-16 md:px-12">
       <Helmet>
-        <title>{title} · Cathedra</title>
-        <meta name="description" content="Acesse a Cathedra para retomar sua caminhada de estudo, oração e formação." />
+        <title>{title} · Cathedra Digital</title>
+        <meta name="description" content="Acesse a Cathedra Digital para retomar sua caminhada de estudo, oração e formação." />
       </Helmet>
 
       {/* Halo dourado sutil, igual ao da Home */}

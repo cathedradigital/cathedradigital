@@ -3,7 +3,7 @@
  *
  * REGRA INEGOCIÁVEL: toda referência do Nexus (Bíblia, CIC, santos, orações,
  * jornadas, glossário, liturgia, magistério, patrística) DEVE abrir dentro
- * do Cathedra por rota interna. Este módulo é a fonte única de verdade para
+ * da Cathedra Digital por rota interna. Este módulo é a fonte única de verdade para
  * converter `(NexusKind, ref)` em URL interna.
  *
  * Consumidores devem SEMPRE usar `resolveNexusHref` — nunca duplicar

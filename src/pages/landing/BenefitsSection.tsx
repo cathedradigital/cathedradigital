@@ -53,7 +53,7 @@ const BenefitsSection = ({ onLogin }: BenefitsSectionProps) => {
         <div className="space-y-spacing-xl">
           <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} className="space-y-spacing-lg">
             <h2 className="text-premium-4xl md:text-premium-5xl font-display font-bold leading-tight">
-              Sua morada espiritual no <span className="text-primary italic font-serif">Cathedra</span>
+              Sua morada espiritual no <span className="text-primary italic font-serif">Cathedra Digital</span>
             </h2>
             <p className="text-premium-lg opacity-70 leading-relaxed max-w-spacing-xl">
               Criar sua conta permite uma experiência única de crescimento, guardando sua história viva com a Palavra de Deus e o Magistério.

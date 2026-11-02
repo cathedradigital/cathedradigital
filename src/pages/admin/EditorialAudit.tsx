@@ -745,7 +745,7 @@ export default function EditorialAuditPage() {
   return (
     <div className="mx-auto max-w-7xl px-4 py-8">
       <Helmet>
-        <title>Editorial Audit · Glossário · Cathedra Admin</title>
+        <title>Editorial Audit · Glossário · Cathedra Digital Admin</title>
         <meta name="robots" content="noindex,nofollow" />
       </Helmet>
 
@@ -774,10 +774,10 @@ export default function EditorialAuditPage() {
               <div className="flex flex-wrap items-baseline justify-between gap-3">
                 <div>
                   <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                    Cathedra Editorial · Operação Ouro
+                    Cathedra Digital Editorial · Operação Ouro
                   </p>
                   <h2 className="font-serif text-2xl leading-tight">
-                    {v1Certified ? "Glossário Cathedra v1.0 — Certificado" : "Linha de produção editorial"}
+                    {v1Certified ? "Glossário Cathedra Digital v1.0 — Certificado" : "Linha de produção editorial"}
                   </h2>
                 </div>
                 {v1Certified && (
@@ -832,7 +832,7 @@ export default function EditorialAuditPage() {
                     <ShieldCheck className="h-10 w-10" />
                     <div>
                       <p className="text-[10px] font-bold uppercase tracking-widest opacity-80">
-                        Cathedra Editorial · Certificação
+                        Cathedra Digital Editorial · Certificação
                       </p>
                       <p className="text-2xl font-serif leading-tight">Nível {tier.label}</p>
                     </div>
@@ -933,7 +933,7 @@ export default function EditorialAuditPage() {
                     <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full border-4 border-amber-500 bg-gradient-to-br from-amber-400 to-yellow-600 shadow-lg">
                       <Trophy className="h-10 w-10 text-white" />
                     </div>
-                    <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-amber-800">Cathedra Editorial</p>
+                    <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-amber-800">Cathedra Digital Editorial</p>
                     <h2 className="mt-1 font-serif text-3xl text-amber-950">Glossário Teológico</h2>
                     <p className="mt-1 text-xs uppercase tracking-widest text-amber-700">Versão 1.0 · Certificada</p>
 
@@ -1444,7 +1444,7 @@ export default function EditorialAuditPage() {
           {/* Dashboard de Produção cross-módulo */}
           <Card className="mb-6">
             <CardHeader className="pb-3">
-              <CardTitle className="text-base">Dashboard de Produção Cathedra</CardTitle>
+              <CardTitle className="text-base">Dashboard de Produção Cathedra Digital</CardTitle>
             </CardHeader>
             <CardContent className="space-y-2">
               {modules.map(m => {

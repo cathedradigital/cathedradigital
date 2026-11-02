@@ -27,8 +27,8 @@ const AtriumMagisteriumViewer: React.FC = () => {
   }, [id]);
 
   const kicker = meta
-    ? `Cathedra · Magistério${meta.type ? ` · ${meta.type}` : ''}`
-    : 'Cathedra · Magistério';
+    ? `Cathedra Digital · Magistério${meta.type ? ` · ${meta.type}` : ''}`
+    : 'Cathedra Digital · Magistério';
   const title = meta?.title ?? 'Documento do Magistério';
   const subtitleParts = [meta?.author, meta?.year ? String(meta.year) : null].filter(Boolean);
   const subtitle = subtitleParts.length > 0 ? subtitleParts.join(' · ') : undefined;

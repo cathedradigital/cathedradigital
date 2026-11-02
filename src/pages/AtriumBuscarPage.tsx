@@ -127,15 +127,15 @@ const AtriumBuscarPage: React.FC = () => {
       className="min-h-screen w-full bg-stitch-background text-stitch-on-background"
     >
       <Helmet>
-        <title>Cathedra — Pesquisa</title>
+        <title>Cathedra Digital — Pesquisa</title>
         <meta
           name="description"
           content="Pesquise a sabedoria da Igreja: Escritura, Catecismo, Magistério, Santos, temas e discussões — tudo interconectado pelo Nexus."
         />
-        <meta property="og:title" content="Cathedra — Pesquisa" />
+        <meta property="og:title" content="Cathedra Digital — Pesquisa" />
       </Helmet>
 
-      <MobileTopBar kicker="Cathedra" title="Pesquisa" transparent />
+      <MobileTopBar kicker="Cathedra Digital" title="Pesquisa" transparent />
 
       <section className="mx-auto w-full max-w-[1120px] px-5 pb-[calc(var(--stitch-mobile-bottomnav-h)+var(--stitch-mobile-safe-bottom)+2rem)] pt-6 md:px-16 md:pt-14 md:pb-16 animate-fade-in">
         {/* ─── Hero editorial ─────────────────────────────────────────── */}

@@ -1,5 +1,5 @@
 /**
- * Cathedra · Módulo Catequese — barrel público (Sprint CQ-1.2).
+ * Cathedra Digital · Módulo Catequese — barrel público (Sprint CQ-1.2).
  *
  * Superfície única de import para o módulo Catequese. Consumidores externos
  * (App.tsx, prefetch, adapters, testes E2E) devem importar sempre a partir de

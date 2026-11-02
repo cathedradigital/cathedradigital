@@ -71,7 +71,7 @@ export const ThemeControlPanel: React.FC = () => {
           >
             <div className="space-y-spacing-xs">
               <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/40">Sistemática de Temas</h3>
-              <p className="text-premium-xs text-muted-foreground leading-relaxed">Alterne entre estados visuais do Cathedra.</p>
+              <p className="text-premium-xs text-muted-foreground leading-relaxed">Alterne entre estados visuais da Cathedra Digital.</p>
             </div>
 
             <div className="grid grid-cols-1 gap-spacing-xs">

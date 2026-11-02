@@ -22,7 +22,7 @@ export interface GlobalSearchHit {
 
 /**
  * Biblioteca Inteligente (Global Search V2)
- * Busca unificada em todos os módulos do Cathedra.
+ * Busca unificada em todos os módulos da Cathedra Digital.
  */
 export async function globalSearchV2(query: string, limit: number = 20): Promise<GlobalSearchHit[]> {
   const { data, error } = await supabase.rpc('global_search_v2', {

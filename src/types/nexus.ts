@@ -1,5 +1,5 @@
 /**
- * Cathedra · Nexus Knowledge Graph — tipos compartilhados
+ * Cathedra Digital · Nexus Knowledge Graph — tipos compartilhados
  * Sprint 4 (Nexus v1). Reflete o schema real de `public.nexus_relations`
  * e `public.nexus_relation_types`.
  */

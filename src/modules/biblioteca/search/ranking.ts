@@ -8,7 +8,7 @@
  *   + 20% doctrinalWeight
  *   + 15% (Nexus + ICE)
  *
- * A Cathedra não é Google: um conteúdo doutrinariamente mais denso deve
+ * A Cathedra Digital não é Google: um conteúdo doutrinariamente mais denso deve
  * aparecer mesmo com relevância textual moderada. O semantic adapter (MCP)
  * enriquece, nunca controla.
  */

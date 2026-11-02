@@ -2,13 +2,13 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { CathedraCard } from "@/components/cathedra/CathedraCard";
 
 const faqs = [
-  { q: "O Cathedra é gratuito?", a: "Sim! O acesso à Bíblia, Catecismo, Santos, Liturgia e Orações é totalmente gratuito. Recursos avançados como o Logos IA e análises aprofundadas estão disponíveis no plano Premium." },
+  { q: "A Cathedra Digital é gratuita?", a: "Sim! O acesso à Bíblia, Catecismo, Santos, Liturgia e Orações é totalmente gratuito. Recursos avançados como o Logos IA e análises aprofundadas estão disponíveis no plano Premium." },
   { q: "Preciso ser católico para usar?", a: "Não. Embora o conteúdo seja baseado na tradição católica, qualquer pessoa interessada em estudar a Bíblia, a história dos santos ou a teologia cristã é bem-vinda." },
-  { q: "Posso usar offline?", a: "Sim! O Cathedra é um Progressive Web App (PWA). Após o primeiro acesso, grande parte do conteúdo fica disponível mesmo sem conexão à internet." },
-  { q: "Como funciona o Logos IA?", a: "É um assistente de inteligência artificial para consulta teológica que recupera fontes da Cathedra e apresenta as referências usadas. Ele auxilia os estudos e não é uma autoridade eclesial." },
+  { q: "Posso usar offline?", a: "Sim! A Cathedra Digital é um Progressive Web App (PWA). Após o primeiro acesso, grande parte do conteúdo fica disponível mesmo sem conexão à internet." },
+  { q: "Como funciona o Logos IA?", a: "É um assistente de inteligência artificial para consulta teológica que recupera fontes da Cathedra Digital e apresenta as referências usadas. Ele auxilia os estudos e não é uma autoridade eclesial." },
   { q: "Meus dados estão seguros?", a: "Absolutamente. Utilizamos criptografia de ponta e seguimos as melhores práticas de segurança. Seus dados de oração e estudo são privados e nunca compartilhados." },
-  { q: "Posso instalar no celular?", a: "Sim! O Cathedra pode ser instalado como um app no seu dispositivo Android ou iOS diretamente pelo navegador, sem precisar de loja de aplicativos." },
-  { q: "Como dou feedback ou peço ajuda?", a: "Você pode usar o botão de feedback no canto inferior da tela a qualquer momento! Adoramos ouvir nossos usuários para tornar o Cathedra cada vez melhor." },
+  { q: "Posso instalar no celular?", a: "Sim! A Cathedra Digital pode ser instalado como um app no seu dispositivo Android ou iOS diretamente pelo navegador, sem precisar de loja de aplicativos." },
+  { q: "Como dou feedback ou peço ajuda?", a: "Você pode usar o botão de feedback no canto inferior da tela a qualquer momento! Adoramos ouvir nossos usuários para tornar a Cathedra Digital cada vez melhor." },
 ];
 
 const FaqSection = () => (

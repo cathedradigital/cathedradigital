@@ -64,6 +64,7 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart }: HeroContent
       >
         <h2 className="text-[3.5rem] sm:text-[5rem] md:text-[10rem] lg:text-[14rem] xl:text-[18rem] font-display font-light text-primary leading-none tracking-tight uppercase select-none filter blur-[0.2px] hover:blur-none transition-all duration-2000 group">
           Cathedra
+          <span className="block mt-2 text-[0.28em] font-medium tracking-[0.38em] leading-none">Digital</span>
           <span className="block h-[1px] w-spacing-0 group-hover:w-full bg-primary/10 transition-all duration-3000 mx-auto mt-spacing-md" />
         </h2>
       </motion.div>

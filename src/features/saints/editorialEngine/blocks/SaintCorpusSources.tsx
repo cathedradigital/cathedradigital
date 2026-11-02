@@ -39,7 +39,7 @@ export const SaintCorpusSources: React.FC<Props> = ({ slug, name }) => {
         <h2 id="saint-corpus-sources" className="text-premium-lg font-semibold">Obras e fontes verificadas</h2>
       </div>
       <p className="text-sm text-muted-foreground">
-        Referências do acervo documental da Cathedra, separadas da biografia editorial. O Cáter pode usar estas fontes quando houver trecho verificável.
+        Referências do acervo documental da Cathedra Digital, separadas da biografia editorial. O Cáter pode usar estas fontes quando houver trecho verificável.
       </p>
       <div className="grid gap-3 sm:grid-cols-2">
         {documents.map((document) => (

@@ -108,7 +108,7 @@ const FIXED_CELEBRATIONS: Record<string, { name: string; color: 'verde' | 'roxo'
   '01-25': { name: 'Conversão de São Paulo', color: 'branco', rank: 'festa' },
   '02-02': { name: 'Apresentação do Senhor', color: 'branco', rank: 'festa' },
   '02-11': { name: 'N. Sra. de Lourdes', color: 'branco', rank: 'memória' },
-  '02-22': { name: 'Cátedra de São Pedro', color: 'branco', rank: 'festa' },
+  '02-22': { name: 'Cathedra Digital de São Pedro', color: 'branco', rank: 'festa' },
   '03-19': { name: 'São José', color: 'branco', rank: 'solenidade' },
   '03-25': { name: 'Anunciação do Senhor', color: 'branco', rank: 'solenidade' },
   '04-11': { name: 'Santo Estanislau', color: 'vermelho', rank: 'memória' },

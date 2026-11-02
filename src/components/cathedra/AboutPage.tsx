@@ -69,7 +69,7 @@ const AboutPage: React.FC = () => (
           <h2 className="text-premium-3xl font-serif font-bold text-foreground">Nossa História</h2>
         </div>
         <div className="space-y-spacing-md text-muted-foreground leading-relaxed text-premium-lg">
-          <p>O projeto Cathedra começou como uma busca pessoal por consolidar os tesouros da Igreja em uma interface digna da beleza de seu conteúdo. O que era um repositório de estudos transformou-se em um ecossistema digital completo.</p>
+          <p>O projeto Cathedra Digital começou como uma busca pessoal por consolidar os tesouros da Igreja em uma interface digna da beleza de seu conteúdo. O que era um repositório de estudos transformou-se em um ecossistema digital completo.</p>
           <p>Desde a primeira linha de código, o foco foi a fidelidade ao Magistério. Passamos de uma simples ferramenta de busca para uma inteligência a serviço da Tradição, ajudando milhares de pessoas a redescobrirem a profundidade de sua fé no cotidiano digital.</p>
         </div>
       </div>
@@ -114,7 +114,7 @@ const AboutPage: React.FC = () => (
     {/* Pillars / Features */}
     <div className="space-y-spacing-2xl">
       <div className="text-center space-y-spacing-xs">
-        <h2 className="text-premium-3xl font-serif font-bold text-foreground">Os Pilares da Cathedra</h2>
+        <h2 className="text-premium-3xl font-serif font-bold text-foreground">Os Pilares da Cathedra Digital</h2>
         <p className="text-muted-foreground">O que nos diferencia em cada detalhe.</p>
       </div>
 
@@ -146,7 +146,7 @@ const AboutPage: React.FC = () => (
           <h3 className="text-premium-xl font-serif font-bold text-foreground">Por que existe</h3>
         </div>
         <p className="text-premium-sm text-muted-foreground leading-relaxed">
-          A fé merece uma casa digital à altura da sua profundidade. A Cathedra existe para que
+          A fé merece uma casa digital à altura da sua profundidade. A Cathedra Digital existe para que
           Escritura, Tradição, Liturgia e Oração sejam encontradas em um só lugar — sem diluição,
           sem ruído, sem dependência de plataformas que não compartilham a mesma missão.
         </p>

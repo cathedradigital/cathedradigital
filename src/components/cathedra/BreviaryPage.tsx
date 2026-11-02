@@ -430,7 +430,7 @@ const BreviaryPage: React.FC = () => {
         slug="liturgia-das-horas"
         title="Liturgia das Horas"
         estimatedSeconds={20 * 60}
-        kicker="Cathedra · Officium Divinum"
+        kicker="Cathedra Digital · Officium Divinum"
         backHref="/oracao"
         showRhythm={false}
         theme={hourTheme.theme}

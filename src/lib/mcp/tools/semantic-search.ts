@@ -4,7 +4,7 @@ import { z } from "zod";
 
 export default defineTool({
   name: "semantic_search",
-  title: "Busca Unificada Cathedra",
+  title: "Busca Unificada Cathedra Digital",
   description:
     "Busca simultânea em Glossário, Santos, Orações, Coleções e Jornadas por um termo. Retorna top N por categoria.",
   inputSchema: {

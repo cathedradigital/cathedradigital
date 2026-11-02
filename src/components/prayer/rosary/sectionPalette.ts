@@ -1,6 +1,6 @@
 /**
  * Paletas litúrgicas por seção do Rosário — Onda B.
- * A identidade visual (navy/gold do Cathedra) é mantida; muda apenas o
+ * A identidade visual (navy/gold da Cathedra Digital) é mantida; muda apenas o
  * acento contemplativo aplicado ao overlay/hero/dots do mistério ativo.
  */
 export type MysterySectionKey = 'gozosos' | 'luminosos' | 'dolorosos' | 'gloriosos';

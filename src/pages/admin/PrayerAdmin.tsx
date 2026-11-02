@@ -137,7 +137,7 @@ export default function PrayerAdmin() {
   return (
     <>
       <Helmet>
-        <title>Curadoria de Orações · Cathedra Admin</title>
+        <title>Curadoria de Orações · Cathedra Digital Admin</title>
         <meta name="robots" content="noindex,nofollow" />
       </Helmet>
 
@@ -152,7 +152,7 @@ export default function PrayerAdmin() {
 
         <header className="mb-8">
           <p className="font-stitch-body text-[11px] font-bold uppercase tracking-[0.28em] text-stitch-secondary">
-            Cathedra · Admin
+            Cathedra Digital · Admin
           </p>
           <h1 className="mt-2 font-stitch-display text-3xl md:text-4xl leading-tight">
             Curadoria de Orações

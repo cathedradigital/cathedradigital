@@ -159,7 +159,7 @@ const ContemplatioPage: React.FC = () => {
   return (
     <>
       <SEOHead
-        title="Modo Contemplação — Cathedra"
+        title="Modo Contemplação — Cathedra Digital"
         description="Um roteiro guiado de oração contemplativa em cinco etapas: silêncio, invocação, palavra, presença e gratidão."
         path="/contemplatio"
       />

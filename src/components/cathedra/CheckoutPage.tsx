@@ -318,7 +318,7 @@ const CheckoutPage: React.FC = () => {
             </div>
             <CardTitle className="text-premium-xl font-serif font-bold">Doação Voluntária</CardTitle>
             <CardDescription className="text-premium-sm w-full mx-auto">
-              Não quer assinar o PRO? Apoie o Cathedra com uma contribuição livre.
+              Não quer assinar o PRO? Apoie a Cathedra Digital com uma contribuição livre.
               Cada doação ajuda a manter o app gratuito para todos.
             </CardDescription>
           </CardHeader>

@@ -1,4 +1,4 @@
-# Glossário Cathedra - Auditoria e Termos Bíblicos
+# Glossário Cathedra Digital - Auditoria e Termos Bíblicos
 
 ## Termos Bíblicos (Consistência Institucional)
 - **Books**: Livros

@@ -146,7 +146,7 @@ const RitualDoDia: React.FC = () => {
     // Title
     doc.setFont("times", "bold");
     doc.setFontSize(24);
-    doc.text("Ritual do Dia - Cathedra", margin, y);
+    doc.text("Ritual do Dia - Cathedra Digital", margin, y);
     y += 15;
 
     doc.setFontSize(12);

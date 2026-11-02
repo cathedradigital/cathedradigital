@@ -1,5 +1,5 @@
 /**
- * Mobile primitives — Etapa M1 (Fundação mobile Cathedra 3.0).
+ * Mobile primitives — Etapa M1 (Fundação mobile Cathedra Digital 3.0).
  *
  * Regras:
  * - Só aparecem em viewports `< md`.

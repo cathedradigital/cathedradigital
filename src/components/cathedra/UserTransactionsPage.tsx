@@ -210,7 +210,7 @@ const UserTransactionsPage: React.FC = () => {
 
     const doc = new jsPDF();
     doc.setFontSize(20);
-    doc.text('Relatório de Doações - Cathedra', 14, 22);
+    doc.text('Relatório de Doações - Cathedra Digital', 14, 22);
     doc.setFontSize(10);
     doc.text(`Gerado em: ${format(new Date(), "dd/MM/yyyy HH:mm")}`, 14, 30);
     doc.text(`Usuário: ${user?.email}`, 14, 35);

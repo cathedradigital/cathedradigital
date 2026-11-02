@@ -111,7 +111,7 @@ export default function NexusCorpusVoices() {
             <Crown className="h-5 w-5 text-stitch-secondary" aria-hidden="true" />
             <h3 className="font-stitch-display text-[22px] text-stitch-primary">Cronologia pontifícia</h3>
           </div>
-          <p className="mt-2 text-sm leading-6 text-stitch-on-surface-variant">A lista oficial completa dos pontífices é mantida pela Santa Sé; o Cátedra exibe aqui apenas registros já verificados no corpus.</p>
+          <p className="mt-2 text-sm leading-6 text-stitch-on-surface-variant">A lista oficial completa dos pontífices é mantida pela Santa Sé; a Cathedra Digital exibe aqui apenas registros já verificados no corpus.</p>
           <div className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
             {popes.map((pope) => (
               <a key={pope.id} href={pope.canonical_url ?? '/nexus'} target={pope.canonical_url ? '_blank' : undefined} rel={pope.canonical_url ? 'noreferrer' : undefined} className="flex items-center gap-2 border border-stitch-secondary/10 px-3 py-2 text-sm hover:bg-stitch-surface-container-low">

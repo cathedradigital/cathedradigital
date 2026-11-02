@@ -207,7 +207,7 @@ const SaintWorkReaderPage: React.FC = () => {
   return (
     <section className="min-h-screen bg-background">
       <Helmet>
-        <title>{`${chapter.title} — ${work.title} · Cathedra`}</title>
+        <title>{`${chapter.title} — ${work.title} · Cathedra Digital`}</title>
         <meta
           name="description"
           content={

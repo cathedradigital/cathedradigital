@@ -38,7 +38,7 @@ export async function exportProfilePdf({ userName, userEmail, donations, audit }
   // Cabeçalho
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(18);
-  doc.text('Cathedra — Relatório Pessoal', 40, 50);
+  doc.text('Cathedra Digital — Relatório Pessoal', 40, 50);
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(10);
   doc.text(`Usuário: ${userName || '—'}  ·  ${userEmail}`, 40, 68);

@@ -341,7 +341,7 @@ const CacheManager: React.FC = () => {
           <h2 className="text-premium-lg font-serif font-bold">Nota sobre Soberania de Dados</h2>
         </div>
         <p className="text-premium-sm text-muted-foreground leading-relaxed">
-          O Cathedra utiliza o armazenamento local do seu navegador (IndexedDB) para garantir que você possa acessar os textos sagrados mesmo sem conexão. 
+          A Cathedra Digital utiliza o armazenamento local do seu navegador (IndexedDB) para garantir que você possa acessar os textos sagrados mesmo sem conexão.
           Estes arquivos nunca saem do seu dispositivo e podem ser exportados para portabilidade completa. 
           Limpar o cache aqui liberará espaço, mas exigirá uma nova conexão para baixar os conteúdos.
         </p>

@@ -39,7 +39,7 @@ interface MobileBottomNavProps {
 }
 
 /**
- * MobileBottomNav — navegação inferior fixa com 5 áreas do Cathedra.
+ * MobileBottomNav — navegação inferior fixa com 5 áreas da Cathedra Digital.
  * Aparece apenas em viewports `< md` e respeita safe-area do iOS.
  */
 export function MobileBottomNav({

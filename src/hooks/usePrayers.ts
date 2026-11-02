@@ -1,5 +1,5 @@
 /**
- * usePrayers — leitura da tabela `prayers` (Livro de Orações Cathedra).
+ * usePrayers — leitura da tabela `prayers` (Livro de Orações Cathedra Digital).
  *
  * Sprint CAT-12 item 2 — refatoração de Orações.
  * Não invente dados. Todo conteúdo vive na tabela `prayers`.

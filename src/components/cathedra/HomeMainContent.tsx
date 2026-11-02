@@ -60,7 +60,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
         )}
       </header>
 
-      {/* 2. BUSCA INTELIGENTE (Cérebro do Cathedra) */}
+      {/* 2. BUSCA INTELIGENTE (Cérebro da Cathedra Digital) */}
       <section className="w-full max-w-2xl">
         <CathedraCard
           ref={logosCardRef}

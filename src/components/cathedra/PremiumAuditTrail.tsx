@@ -90,7 +90,7 @@ const PremiumAuditTrail: React.FC = () => {
     doc.setTextColor(255, 255, 255);
     doc.setFontSize(22);
     doc.setFont("helvetica", "bold");
-    doc.text("Cathedra Premium", 14, 25);
+    doc.text("Cathedra Digital Premium", 14, 25);
     doc.setFontSize(12);
     doc.setFont("helvetica", "normal");
     doc.text("Relatório de Auditoria e Transações", 14, 32);
@@ -137,7 +137,7 @@ const PremiumAuditTrail: React.FC = () => {
       doc.setPage(i);
       doc.setFontSize(8);
       doc.setTextColor(150, 150, 150);
-      doc.text(`Página ${i} de ${pageCount} · Documento gerado automaticamente pelo Sistema Cathedra`, 105, 290, { align: 'center' });
+      doc.text(`Página ${i} de ${pageCount} · Documento gerado automaticamente pelo Sistema Cathedra Digital`, 105, 290, { align: 'center' });
     }
 
     doc.save(`auditoria_premium_${user?.id}_${format(new Date(), 'yyyyMMdd')}.pdf`);

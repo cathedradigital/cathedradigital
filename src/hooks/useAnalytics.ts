@@ -24,7 +24,7 @@ export const useAnalytics = (userId: string | undefined) => {
         'jornada': 'Jornada Espiritual',
         'santos': 'Vida dos Santos',
         'oracao': 'Momento de Oração',
-        'comunidade': 'Comunidade Cathedra'
+        'comunidade': 'Comunidade Cathedra Digital'
       };
 
       for (const [key, title] of Object.entries(titleMap)) {

@@ -478,7 +478,7 @@ export const PrayerEngineReader: React.FC<Props> = ({
     toast.success('Rosário reiniciado');
   };
 
-  const chromeKicker = kicker ?? `Cathedra · ${prayer.title}`;
+  const chromeKicker = kicker ?? `Cathedra Digital · ${prayer.title}`;
 
   // ============ RESUME CARD ============
   const showResumeCard =

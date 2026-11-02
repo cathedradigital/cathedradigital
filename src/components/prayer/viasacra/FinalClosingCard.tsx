@@ -76,7 +76,7 @@ const FinalClosingCard: React.FC<Props> = ({ onRestart, onExit }) => {
         </Button>
         <ShareButton
           title="Via Sacra"
-          text="Percorri hoje a Via Sacra no Cathedra. Um caminho de silêncio e conversão."
+          text="Percorri hoje a Via Sacra na Cathedra Digital. Um caminho de silêncio e conversão."
           variant="ghost"
           size="lg"
         />

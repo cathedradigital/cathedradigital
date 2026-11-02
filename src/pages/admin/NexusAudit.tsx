@@ -1,5 +1,5 @@
 /**
- * /admin/nexus-audit — Onda A do Cathedra Index.
+ * /admin/nexus-audit — Onda A da Cathedra Digital Index.
  *
  * Auditoria em tempo real do grafo sacramental: cada verbete-chave é medido
  * contra o padrão Nexus Ouro (≈20 arestas distribuídas entre 10 dimensões).
@@ -144,7 +144,7 @@ export default function NexusAuditPage() {
   return (
     <div className="mx-auto max-w-6xl px-4 py-8" data-space="claustro">
       <header className="mb-8">
-        <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Cathedra Index · Onda A</p>
+        <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Cathedra Digital Index · Onda A</p>
         <h1 className="mt-2 text-3xl font-serif">Auditoria do Grafo Sacramental</h1>
         <p className="mt-2 text-sm text-muted-foreground">
           Verifica em tempo real se cada verbete-chave atinge o padrão Nexus Ouro:
@@ -154,7 +154,7 @@ export default function NexusAuditPage() {
 
       <div className="mb-6 rounded-lg border border-border bg-muted/30 p-4 flex items-center justify-between gap-4">
         <div>
-          <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Cathedra Index · Integridade Editorial</p>
+          <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Cathedra Digital Index · Integridade Editorial</p>
           <p className="mt-1 text-sm">Verbetes marcados como <code>complete</code> mas com campos vitais vazios (interpretação profunda, bibliografia, FAQ) ou densidade Nexus abaixo do Ouro.</p>
         </div>
         <a href="/admin/editorial-integrity" className="shrink-0 text-sm font-medium underline underline-offset-4">

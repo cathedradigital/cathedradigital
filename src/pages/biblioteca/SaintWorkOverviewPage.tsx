@@ -109,12 +109,12 @@ const SaintWorkOverviewPage: React.FC = () => {
   const themes = (work.main_themes ?? []).filter((t) => t && t.trim().length > 0);
   const closureProps = resolveEditorialClosure({ editorial_closure: work.editorial_closure });
   const metaDescription = (work.synopsis ?? work.abstract ?? '').slice(0, 155) ||
-    `Leia ${work.title} — obra da tradição ${SAINT_WORK_CATEGORY_LABELS[work.category]} na Biblioteca Patrística Cathedra.`;
+    `Leia ${work.title} — obra da tradição ${SAINT_WORK_CATEGORY_LABELS[work.category]} na Biblioteca Patrística Cathedra Digital.`;
 
   return (
     <section className="min-h-screen bg-background" data-space="biblioteca">
       <Helmet>
-        <title>{`${work.title} — Biblioteca Patrística · Cathedra`}</title>
+        <title>{`${work.title} — Biblioteca Patrística · Cathedra Digital`}</title>
         <meta name="description" content={metaDescription} />
         <link rel="canonical" href={canonicalUrl} />
       </Helmet>

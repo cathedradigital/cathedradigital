@@ -304,7 +304,7 @@ const InstitutionalVideoSection = () => {
                     Assistir Apresentação
                   </h3>
                   <p className="text-white/60 text-premium-small font-medium tracking-wide uppercase">
-                    Mergulhe na Proposta da Cathedra
+                    Mergulhe na Proposta da Cathedra Digital
                   </p>
                 </div>
               </div>

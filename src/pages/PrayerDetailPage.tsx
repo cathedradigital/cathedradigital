@@ -128,7 +128,7 @@ const PrayerDetailPageInner: React.FC = () => {
     );
   }
 
-  const kicker = prayer.kicker ?? `Cathedra · ${PRAYER_CATEGORY_LABEL[prayer.category]}`;
+  const kicker = prayer.kicker ?? `Cathedra Digital · ${PRAYER_CATEGORY_LABEL[prayer.category]}`;
 
   // Sprint 1.0 — Prayer Engine v2: conteúdo servido 100% pelo banco hierárquico.
   const engineV2 = (prayer as { engine_version?: number }).engine_version === 2;
@@ -151,7 +151,7 @@ const PrayerDetailPageInner: React.FC = () => {
     }
     if (hierarchy.blocks.length > 0 && hierarchy.hierarchy) {
       const engineKicker = hierarchy.activeSection
-        ? `Cathedra · ${prayer.title} · ${hierarchy.activeSection.title}`
+        ? `Cathedra Digital · ${prayer.title} · ${hierarchy.activeSection.title}`
         : kicker;
 
       // B.2.5.d — Portal de Oração universal. Todas orações v2 passam pelo

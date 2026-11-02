@@ -266,7 +266,7 @@ const ViaCrucis: React.FC = () => {
           slug="viacrucis"
           title="Via Sacra"
           estimatedSeconds={25 * 60}
-          kicker="Cathedra · Via Dolorosa"
+          kicker="Cathedra Digital · Via Dolorosa"
           backHref="/oracao"
           theme="passion"
           accentIcon={Cross}

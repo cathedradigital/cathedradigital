@@ -4,7 +4,7 @@ import { Helmet } from '@/lib/helmet-compat';
 import { supabase } from '@/lib/db';
 
 // Rota /.lovable/oauth/consent — tela de consentimento OAuth 2.1 para clientes MCP
-// externos (ChatGPT, Claude, Cursor, etc.) autorizarem acesso à conta Cathedra.
+// externos (ChatGPT, Claude, Cursor, etc.) autorizarem acesso à conta Cathedra Digital.
 type OAuthApi = {
   getAuthorizationDetails: (id: string) => Promise<{ data: any; error: any }>;
   approveAuthorization: (id: string) => Promise<{ data: any; error: any }>;
@@ -88,7 +88,7 @@ export default function OAuthConsent() {
   return (
     <section className="cathedra-noir min-h-screen w-full flex items-center justify-center px-6 py-16">
       <Helmet>
-        <title>Autorizar acesso · Cathedra</title>
+        <title>Autorizar acesso · Cathedra Digital</title>
         <meta name="robots" content="noindex,nofollow" />
       </Helmet>
       <div className="w-full max-w-md rounded-2xl border border-[var(--noir-line)] bg-black/30 backdrop-blur p-8">
@@ -96,7 +96,7 @@ export default function OAuthConsent() {
           Conectar {clientName} à sua conta
         </h1>
         <p className="text-sm text-[var(--noir-text-muted)] mb-6">
-          Este cliente poderá usar as ferramentas da Cathedra como você enquanto estiver conectado.
+          Este cliente poderá usar as ferramentas da Cathedra Digital como você enquanto estiver conectado.
           As permissões e políticas do backend continuam válidas.
         </p>
 

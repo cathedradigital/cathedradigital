@@ -86,7 +86,7 @@ function deriveUsageScope(w: SaintWritingRef): UsageScope[] {
     ];
   }
   return [
-    { label: 'Leitura pessoal no Cathedra', allowed: 'yes' },
+    { label: 'Leitura pessoal na Cathedra Digital', allowed: 'yes' },
     {
       label: 'Redistribuição / uso comercial',
       allowed: 'conditional',
@@ -138,7 +138,7 @@ export const SaintWritingProvenanceModal: React.FC<Props> = ({
           </DialogTitle>
           <DialogDescription>
             {isInternal
-              ? 'Hospedado no Cathedra — texto editado e revisado internamente.'
+              ? 'Hospedado na Cathedra Digital — texto editado e revisado internamente.'
               : `Conteúdo linkado${writing.externalSourceLabel ? ` · ${writing.externalSourceLabel}` : ''}.`}
           </DialogDescription>
         </DialogHeader>

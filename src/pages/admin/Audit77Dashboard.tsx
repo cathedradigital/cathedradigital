@@ -212,7 +212,7 @@ export default function Audit77Dashboard() {
   return (
     <div className="mx-auto max-w-4xl px-4 py-8">
       <Helmet>
-        <title>Cathedra · AUDIT 7.7 Dashboard</title>
+        <title>Cathedra Digital · AUDIT 7.7 Dashboard</title>
       </Helmet>
 
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">

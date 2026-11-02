@@ -64,7 +64,7 @@ const FeedbackWidget = () => {
                 </div>
                 <h3 className="text-premium-xl font-serif font-bold">Obrigado!</h3>
                 <p className="text-premium-sm text-muted-foreground font-serif italic">
-                  Seu feedback é precioso para construirmos o Cathedra juntos.
+                  Seu feedback é precioso para construirmos a Cathedra Digital juntos.
                 </p>
               </div>
             ) : (
@@ -77,7 +77,7 @@ const FeedbackWidget = () => {
                 </div>
                 
                 <p className="text-premium-xs text-muted-foreground font-serif italic mb-spacing-md">
-                  Como podemos tornar o Cathedra mais acolhedor para você?
+                  Como podemos tornar a Cathedra Digital mais acolhedor para você?
                 </p>
 
                 <div className="flex gap-spacing-xs justify-center py-spacing-xs">

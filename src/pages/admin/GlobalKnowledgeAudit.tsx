@@ -44,7 +44,7 @@ export default function GlobalKnowledgeAudit() {
 
   return (
     <div className="container mx-auto py-8 max-w-6xl space-y-8 animate-in fade-in duration-700">
-      <Helmet><title>Auditoria Global de Conhecimento — Cathedra 3.0</title></Helmet>
+      <Helmet><title>Auditoria Global de Conhecimento — Cathedra Digital 3.0</title></Helmet>
 
       <header className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div className="space-y-1">

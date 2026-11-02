@@ -1,5 +1,5 @@
 /**
- * EditorialClosure — encerramento canônico de toda leitura Cathedra.
+ * EditorialClosure — encerramento canônico de toda leitura Cathedra Digital.
  *
  * Sequência obrigatória (Constituição Editorial 1.0.0, Cap. IX):
  *

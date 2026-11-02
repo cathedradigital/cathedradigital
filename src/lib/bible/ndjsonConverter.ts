@@ -1,5 +1,5 @@
 /**
- * Conversor + validador de dumps bíblicos para NDJSON canônico Cathedra.
+ * Conversor + validador de dumps bíblicos para NDJSON canônico Cathedra Digital.
  *
  * Saída canônica: { "abbr": "Gn", "chapter": 1, "verse": 1, "text": "..." }
  *

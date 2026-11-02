@@ -38,7 +38,7 @@ const AtriumCatechismReader: React.FC = () => {
     return (
       <Suspense fallback={<CatechismSkeleton />}>
         <MobileTopBar
-          kicker="Cathedra · Depositum Fidei"
+          kicker="Cathedra Digital · Depositum Fidei"
           title={`§${pParam}`}
           showBack
         />
@@ -56,17 +56,17 @@ const CatechismLanding: React.FC = () => {
       className="min-h-screen w-full bg-stitch-background text-stitch-on-background"
      data-catedra-module-root data-catedra-module="catechism">
       <Helmet>
-        <title>Cathedra — Catecismo da Igreja Católica</title>
+        <title>Cathedra Digital — Catecismo da Igreja Católica</title>
         <meta
           name="description"
           content="Os 2865 parágrafos do CIC organizados em Credo, Liturgia, Moral e Oração — com Nexus contextual e leitura contemplativa."
         />
-        <meta property="og:title" content="Cathedra — Catecismo da Igreja Católica" />
+        <meta property="og:title" content="Cathedra Digital — Catecismo da Igreja Católica" />
       </Helmet>
 
       <MobileTopBar
         transparent
-        kicker="Cathedra"
+        kicker="Cathedra Digital"
         title="Catecismo"
       />
 

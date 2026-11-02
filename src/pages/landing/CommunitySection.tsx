@@ -44,7 +44,7 @@ const CommunitySection = () => {
             viewport={{ once: true }}
             className="inline-flex items-center gap-spacing-xs px-spacing-md py-spacing-xs bg-secondary/10 border border-secondary/20 rounded-premium-full text-secondary text-[10px] font-semibold uppercase tracking-premium-wide"
           >
-            <span>Irmandade Cathedra</span>
+            <span>Irmandade Cathedra Digital</span>
           </motion.div>
           
           <motion.h2

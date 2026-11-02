@@ -30,7 +30,7 @@ const sizeMap: Record<NonNullable<MobileSheetProps["size"]>, string> = {
 };
 
 /**
- * MobileSheet — bottom-sheet padrão do Cathedra 3.0 mobile.
+ * MobileSheet — bottom-sheet padrão da Cathedra Digital 3.0 mobile.
  * Envolve o Sheet do shadcn para garantir handle, safe-area, e footer sticky.
  */
 export function MobileSheet({

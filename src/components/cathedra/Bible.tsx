@@ -620,7 +620,7 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
       highlight: reference,
     });
 
-    share({ title: 'Cathedra Bible', text, url }).catch(() => {
+    share({ title: 'Cathedra Digital Bible', text, url }).catch(() => {
       /* useShare já faz fallback para clipboard + toast */
     });
   }, [activeVerse, selectedBook, selectedChapter, share]);

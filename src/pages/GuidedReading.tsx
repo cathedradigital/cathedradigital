@@ -11,7 +11,7 @@ const GuidedReadingPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-background text-foreground transition-colors duration-1000">
       <MobileTopBar
-        kicker="Cathedra"
+        kicker="Cathedra Digital"
         title="Jornada de Leitura"
         showBack
         onBack={() => navigate(-1)}

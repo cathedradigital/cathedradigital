@@ -755,31 +755,31 @@ const AppLayout: React.FC = () => {
 
               {/* Liturgia & Oração — rotas canônicas validadas e publicáveis */}
               <Route path="/liturgia" element={<Suspense fallback={<LoadingFallback />}><DevocionalMobileShell title="Liturgia"><LiturgiaPage /></DevocionalMobileShell></Suspense>} />
-              <Route path="/liturgia/dia" element={<Suspense fallback={<LoadingFallback />}><DevocionalMobileShell title="Dia Litúrgico" kicker="Cathedra · Liturgia"><DiaLiturgicoPage /></DevocionalMobileShell></Suspense>} />
-              <Route path="/liturgia/dia/:d" element={<Suspense fallback={<LoadingFallback />}><DevocionalMobileShell title="Dia Litúrgico" kicker="Cathedra · Liturgia"><DiaLiturgicoPage /></DevocionalMobileShell></Suspense>} />
+              <Route path="/liturgia/dia" element={<Suspense fallback={<LoadingFallback />}><DevocionalMobileShell title="Dia Litúrgico" kicker="Cathedra Digital · Liturgia"><DiaLiturgicoPage /></DevocionalMobileShell></Suspense>} />
+              <Route path="/liturgia/dia/:d" element={<Suspense fallback={<LoadingFallback />}><DevocionalMobileShell title="Dia Litúrgico" kicker="Cathedra Digital · Liturgia"><DiaLiturgicoPage /></DevocionalMobileShell></Suspense>} />
               <Route path="/calendar" element={<Suspense fallback={<LoadingFallback />}><LiturgicalCalendarPage /></Suspense>} />
-              <Route path="/missal" element={<Suspense fallback={<LoadingFallback />}><DevocionalMobileShell title="Missal" kicker="Cathedra · Missal"><MissalPage /></DevocionalMobileShell></Suspense>} />
-              <Route path="/breviary" element={<Suspense fallback={<LoadingFallback />}><DevocionalMobileShell title="Breviário" kicker="Cathedra · Liturgia das Horas"><BreviaryPage /></DevocionalMobileShell></Suspense>} />
-              {/* Sprint 1.0 — Rosário unificado no PrayerReader (via /oracao/rosario). */}              <Route path="/oracao/rosario" element={<Suspense fallback={<LoadingFallback />}><DevocionalMobileShell title="Rosário" kicker="Cathedra · Rosário"><Rosary /></DevocionalMobileShell></Suspense>} />
+              <Route path="/missal" element={<Suspense fallback={<LoadingFallback />}><DevocionalMobileShell title="Missal" kicker="Cathedra Digital · Missal"><MissalPage /></DevocionalMobileShell></Suspense>} />
+              <Route path="/breviary" element={<Suspense fallback={<LoadingFallback />}><DevocionalMobileShell title="Breviário" kicker="Cathedra Digital · Liturgia das Horas"><BreviaryPage /></DevocionalMobileShell></Suspense>} />
+              {/* Sprint 1.0 — Rosário unificado no PrayerReader (via /oracao/rosario). */}              <Route path="/oracao/rosario" element={<Suspense fallback={<LoadingFallback />}><DevocionalMobileShell title="Rosário" kicker="Cathedra Digital · Rosário"><Rosary /></DevocionalMobileShell></Suspense>} />
 
               <Route path="/rosary" element={<Navigate to="/oracao/rosario" replace />} />
-              <Route path="/rosary-legacy" element={<Suspense fallback={<LoadingFallback />}><DevocionalMobileShell title="Rosário" kicker="Cathedra · Rosário"><Rosary /></DevocionalMobileShell></Suspense>} />
-              <Route path="/viacrucis" element={<Suspense fallback={<LoadingFallback />}><DevocionalMobileShell title="Via Crucis" kicker="Cathedra · Via Crucis"><ViaCrucis /></DevocionalMobileShell></Suspense>} />
-              <Route path="/litanies" element={<Suspense fallback={<LoadingFallback />}><DevocionalMobileShell title="Ladainhas" kicker="Cathedra · Ladainhas"><LitaniesPage /></DevocionalMobileShell></Suspense>} />
+              <Route path="/rosary-legacy" element={<Suspense fallback={<LoadingFallback />}><DevocionalMobileShell title="Rosário" kicker="Cathedra Digital · Rosário"><Rosary /></DevocionalMobileShell></Suspense>} />
+              <Route path="/viacrucis" element={<Suspense fallback={<LoadingFallback />}><DevocionalMobileShell title="Via Crucis" kicker="Cathedra Digital · Via Crucis"><ViaCrucis /></DevocionalMobileShell></Suspense>} />
+              <Route path="/litanies" element={<Suspense fallback={<LoadingFallback />}><DevocionalMobileShell title="Ladainhas" kicker="Cathedra Digital · Ladainhas"><LitaniesPage /></DevocionalMobileShell></Suspense>} />
               <Route path="/ladainhas" element={<Navigate to="/litanies" replace />} />
 
-              <Route path="/novenas" element={<Suspense fallback={<LoadingFallback />}><DevocionalMobileShell title="Novenas" kicker="Cathedra · Novenas"><NovenasPage /></DevocionalMobileShell></Suspense>} />
-              <Route path="/novenas/:slug" element={<Suspense fallback={<LoadingFallback />}><DevocionalMobileShell title="Novena" kicker="Cathedra · Novena"><NovenaDetailPage /></DevocionalMobileShell></Suspense>} />
+              <Route path="/novenas" element={<Suspense fallback={<LoadingFallback />}><DevocionalMobileShell title="Novenas" kicker="Cathedra Digital · Novenas"><NovenasPage /></DevocionalMobileShell></Suspense>} />
+              <Route path="/novenas/:slug" element={<Suspense fallback={<LoadingFallback />}><DevocionalMobileShell title="Novena" kicker="Cathedra Digital · Novena"><NovenaDetailPage /></DevocionalMobileShell></Suspense>} />
 
 
-              <Route path="/oracao" element={<Suspense fallback={<LoadingFallback />}><DevocionalMobileShell title="Livro de Orações" kicker="Cathedra · Orações"><PrayerLibraryPage /></DevocionalMobileShell></Suspense>} />
-              <Route path="/oracao/:slug" element={<Suspense fallback={<LoadingFallback />}><DevocionalMobileShell title="Oração" kicker="Cathedra · Orações"><PrayerDetailPage /></DevocionalMobileShell></Suspense>} />
-              <Route path="/oracao-legacy" element={<Suspense fallback={<LoadingFallback />}><DevocionalMobileShell title="Oração" kicker="Cathedra · Orações (legado)"><PrayerPage /></DevocionalMobileShell></Suspense>} />
+              <Route path="/oracao" element={<Suspense fallback={<LoadingFallback />}><DevocionalMobileShell title="Livro de Orações" kicker="Cathedra Digital · Orações"><PrayerLibraryPage /></DevocionalMobileShell></Suspense>} />
+              <Route path="/oracao/:slug" element={<Suspense fallback={<LoadingFallback />}><DevocionalMobileShell title="Oração" kicker="Cathedra Digital · Orações"><PrayerDetailPage /></DevocionalMobileShell></Suspense>} />
+              <Route path="/oracao-legacy" element={<Suspense fallback={<LoadingFallback />}><DevocionalMobileShell title="Oração" kicker="Cathedra Digital · Orações (legado)"><PrayerPage /></DevocionalMobileShell></Suspense>} />
               <Route path="/prayers" element={<Navigate to="/oracao" replace />} />
-              <Route path="/rezar" element={<Suspense fallback={<LoadingFallback />}><DevocionalMobileShell title="Rezar" kicker="Cathedra · Oração"><RezarHomePage /></DevocionalMobileShell></Suspense>} />
+              <Route path="/rezar" element={<Suspense fallback={<LoadingFallback />}><DevocionalMobileShell title="Rezar" kicker="Cathedra Digital · Oração"><RezarHomePage /></DevocionalMobileShell></Suspense>} />
               <Route path="/lectio" element={<Suspense fallback={<LoadingFallback />}><LectioDivina /></Suspense>} />
               <Route path="/contemplatio" element={<Suspense fallback={<LoadingFallback />}><ContemplatioPage /></Suspense>} />
-              <Route path="/contemplacao" element={<Navigate to="/contemplatio" replace />} />              <Route path="/oracao/exame-de-consciencia" element={<Suspense fallback={<LoadingFallback />}><DevocionalMobileShell title="Exame de consciência" kicker="Cathedra · Preparação para a Confissão"><PoenitentiaPage /></DevocionalMobileShell></Suspense>} />
+              <Route path="/contemplacao" element={<Navigate to="/contemplatio" replace />} />              <Route path="/oracao/exame-de-consciencia" element={<Suspense fallback={<LoadingFallback />}><DevocionalMobileShell title="Exame de consciência" kicker="Cathedra Digital · Preparação para a Confissão"><PoenitentiaPage /></DevocionalMobileShell></Suspense>} />
 
               <Route path="/confession" element={<Navigate to="/oracao/exame-de-consciencia" replace />} />
               <Route path="/confissao" element={<Navigate to="/oracao/exame-de-consciencia" replace />} />
@@ -803,7 +803,7 @@ const AppLayout: React.FC = () => {
               <Route path="/biblioteca/catolica" element={<Navigate to="/acervo" replace />} />
               <Route path="/biblioteca/catolica/acervo" element={<Navigate to="/acervo/lista" replace />} />
 
-              {/* Acervo Cathedra — hub unificado do conhecimento católico */}
+              {/* Acervo Cathedra Digital — hub unificado do conhecimento católico */}
               <Route path="/acervo" element={<Suspense fallback={<LoadingFallback />}><AcervoHomePage /></Suspense>} />
               <Route path="/acervo/lista" element={<Suspense fallback={<LoadingFallback />}><BibliotecaCatolicaAcervoPage /></Suspense>} />
 
@@ -1108,7 +1108,7 @@ const AppProviders: React.FC<{ children: React.ReactNode }> = ({ children }) => 
 };
 
 const App: React.FC = () => {
-  // A abertura da Cathedra acontece a cada carregamento completo da aplicação.
+  // A abertura da Cathedra Digital acontece a cada carregamento completo da aplicação.
   // Navegação interna continua instantânea; somente um novo carregamento mostra a identidade de abertura.
   const [showSplash, setShowSplash] = useState(() => {
     if (typeof window === 'undefined') return true;

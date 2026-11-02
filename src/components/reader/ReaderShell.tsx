@@ -1,5 +1,5 @@
 /**
- * ReaderShell — Template Mestre oficial de leitura da Cathedra.
+ * ReaderShell — Template Mestre oficial de leitura da Cathedra Digital.
  *
  * Arquitetura única (Reader Template Master):
  *

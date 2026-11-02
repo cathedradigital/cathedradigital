@@ -113,10 +113,10 @@ const AtriumCommunityProfilePage: React.FC = () => {
   return (
     <>
       <Helmet>
-        <title>{profile.name || 'Perfil'} — Comunidade Cathedra</title>
+        <title>{profile.name || 'Perfil'} — Comunidade Cathedra Digital</title>
         <meta
           name="description"
-          content={`Publicações de ${profile.name} na comunidade Cathedra.`}
+          content={`Publicações de ${profile.name} na comunidade Cathedra Digital.`}
         />
       </Helmet>
 

@@ -3,7 +3,7 @@
  * na auditoria de linguagem portuguesa.
  */
 export const LANGUAGE_ALLOWLIST = [
-  'Cathedra',
+  'Cathedra Digital',
   'Logos',
   'Oasis',
   'Nexus',

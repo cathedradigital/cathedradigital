@@ -20,7 +20,7 @@ export const LANDING_FAQS: Array<{ question: string; answer: string }> = [
   {
     question: "O que é a Cathedra Digital?",
     answer:
-      "Um Sanctuarium Digital: biblioteca viva da Tradição católica reunindo Escritura, Catecismo, Magistério, Liturgia, Orações e Santos, todos interligados por uma rede semântica editorial (Nexus). Não é rede social nem app devocional genérico — é um espaço de estudo e oração contemplativa.",
+      "A Cathedra Digital é uma biblioteca viva da Tradição católica que reúne Escritura, Catecismo, Magistério, Liturgia, Orações e Santos, interligados por uma rede semântica editorial (Nexus). Não é uma rede social nem um app devocional genérico: é um espaço de estudo e oração contemplativa.",
   },
   {
     question: "O conteúdo é gratuito?",
@@ -35,7 +35,7 @@ export const LANDING_FAQS: Array<{ question: string; answer: string }> = [
   {
     question: "Como funciona o Logos AI?",
     answer:
-      "É um assistente de estudo teológico ancorado nas fontes da Cathedra. Não inventa doutrina: cada resposta cita Escritura, Catecismo e Magistério, e você pode abrir os trechos originais dentro do próprio app. Peregrinos têm 5 mensagens por dia; assinantes PRO, uso ilimitado.",
+      "É um assistente de estudo teológico ancorado nas fontes da Cathedra Digital. Não inventa doutrina: cada resposta cita Escritura, Catecismo e Magistério, e você pode abrir os trechos originais dentro do próprio app. Peregrinos têm 5 mensagens por dia; assinantes PRO, uso ilimitado.",
   },
   {
     question: "Para onde vai o dinheiro dos assinantes PRO?",

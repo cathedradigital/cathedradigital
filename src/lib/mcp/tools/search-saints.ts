@@ -6,7 +6,7 @@ export default defineTool({
   name: "search_saints",
   title: "Buscar Santos",
   description:
-    "Busca santos católicos por nome, título ou patronato no acervo público da Cathedra. Retorna id, nome, título, data festiva e categoria.",
+    "Busca santos católicos por nome, título ou patronato no acervo público da Cathedra Digital. Retorna id, nome, título, data festiva e categoria.",
   inputSchema: {
     query: z.string().trim().min(1).max(120).describe("Nome, título ou fragmento (ex.: 'Agostinho', 'padroeiro dos advogados')."),
     limit: z.number().int().min(1).max(30).optional().describe("Máximo de resultados (default 10)."),

@@ -6,7 +6,7 @@ const BASE = '/prototype-2.0';
 
 const Atrio: React.FC = () => {
   return (
-    <PrototypeShell title="Cathedra">
+    <PrototypeShell title="Cathedra Digital">
       <p className="font-serif text-3xl leading-tight">Pax et bonum, João</p>
       <p className="text-xs text-muted-foreground mt-1 uppercase tracking-wider">
         Tempo Comum · sexta-feira

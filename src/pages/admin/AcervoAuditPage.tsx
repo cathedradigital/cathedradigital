@@ -23,7 +23,7 @@ const AcervoAuditPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-background pb-20">
       <Helmet>
-        <title>Auditoria do Acervo Cathedra — Ecossistema Vivo</title>
+        <title>Auditoria do Acervo Cathedra Digital — Ecossistema Vivo</title>
       </Helmet>
 
       <EditorialHero align="center" density="minimal" className="bg-primary/5">
@@ -146,7 +146,7 @@ const AcervoAuditPage: React.FC = () => {
            <Icons.Shield className="w-8 h-8 mx-auto text-primary/40" />
            <h3 className="text-xl font-serif font-bold italic">Fase 10.1: Constituição do Patrimônio</h3>
            <p className="text-muted-foreground text-sm max-w-2xl mx-auto leading-relaxed italic">
-             A infraestrutura chegou à maturidade. Agora, o Cathedra opera sob uma Constituição Editorial rigorosa: 
+             A infraestrutura chegou à maturidade. Agora, a Cathedra Digital opera sob uma Constituição Editorial rigorosa:
              nenhum conteúdo entra sem 100% de conformidade com o Reader V2, Nexus, Logos e fidelidade documental.
            </p>
         </div>

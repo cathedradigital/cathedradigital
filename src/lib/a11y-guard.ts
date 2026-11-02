@@ -21,13 +21,13 @@ export const useA11yGuard = (enabled = true) => {
         
         if (ratio < 4.5) {
           console.warn(
-            `%c[Cathedra A11y Guard] Low contrast detected: ${ratio}:1 (${level}). %cLegibility might be compromised in this theme state.`,
+            `%c[Cathedra Digital A11y Guard] Low contrast detected: ${ratio}:1 (${level}). %cLegibility might be compromised in this theme state.`,
             'color: #ff9800; font-weight: bold;',
             'color: inherit;'
           );
         } else {
           console.log(
-            `%c[Cathedra A11y Guard] Premium contrast verified: ${ratio}:1 (${level}).`,
+            `%c[Cathedra Digital A11y Guard] Premium contrast verified: ${ratio}:1 (${level}).`,
             'color: #4caf50; font-weight: bold;'
           );
         }

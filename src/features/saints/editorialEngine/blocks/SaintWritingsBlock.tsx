@@ -46,7 +46,7 @@ export const SaintWritingsBlock: React.FC<Props> = ({ writings }) => {
 
   const filterOptions: { id: OriginFilter; label: string; count: number }[] = [
     { id: 'all', label: 'Todos', count: counts.all },
-    { id: 'hosted', label: 'Hospedado no Cathedra', count: counts.hosted },
+    { id: 'hosted', label: 'Hospedado na Cathedra Digital', count: counts.hosted },
     { id: 'linked', label: 'Conteúdo linkado', count: counts.linked },
   ];
 

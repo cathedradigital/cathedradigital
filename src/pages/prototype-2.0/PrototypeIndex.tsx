@@ -79,7 +79,7 @@ const PrototypeIndex: React.FC = () => {
       </section>
 
       <footer className="pt-6 border-t border-border text-xs text-muted-foreground">
-        <Link to="/" className="underline">← Voltar ao Cathedra atual (1.0)</Link>
+        <Link to="/" className="underline">← Voltar à Cathedra Digital atual (1.0)</Link>
       </footer>
     </div>
   );

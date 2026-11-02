@@ -1,6 +1,6 @@
 /**
  * buildPassageUrl — helper único para gerar URLs compartilháveis
- * dos Readers do Cathedra. Sempre acrescenta `?highlight=…` para
+ * dos Readers da Cathedra Digital. Sempre acrescenta `?highlight=…` para
  * que o Reader destino possa rolar e destacar o trecho.
  *
  * Superfícies suportadas:

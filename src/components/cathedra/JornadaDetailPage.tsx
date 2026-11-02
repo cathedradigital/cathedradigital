@@ -192,10 +192,10 @@ const JornadaDetailPage: React.FC = () => {
       className="min-h-screen w-full bg-stitch-background text-stitch-on-background"
     >
       <Helmet>
-        <title>{journey.title} — Cathedra</title>
+        <title>{journey.title} — Cathedra Digital</title>
         {journey.description && <meta name="description" content={journey.description} />}
         <link rel="canonical" href={canonical} />
-        <meta property="og:title" content={`${journey.title} — Cathedra`} />
+        <meta property="og:title" content={`${journey.title} — Cathedra Digital`} />
         {journey.description && <meta property="og:description" content={journey.description} />}
         <meta property="og:type" content="article" />
         <meta property="og:url" content={canonical} />
