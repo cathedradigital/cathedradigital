@@ -114,13 +114,13 @@ const AtriumHome: React.FC = () => {
     <SpaceLayout>
       <div className="catedra-atrium w-full bg-background text-foreground">
       <Helmet>
-        <title>CÁTEDRA DIGITAL — Átrio</title>
+        <title>CATHEDRA DIGITAL — Átrio</title>
         <meta
           name="description"
           content="Entrai no silêncio. A biblioteca viva da Tradição: leitura, oração, formação e pesquisa em um só lugar."
         />
         <link rel="canonical" href="https://www.cathedradigital.com.br/" />
-        <meta property="og:title" content="CÁTEDRA DIGITAL — Átrio" />
+        <meta property="og:title" content="CATHEDRA DIGITAL — Átrio" />
         <meta property="og:url" content="https://www.cathedradigital.com.br/" />
         <meta property="og:type" content="website" />
         <meta
@@ -129,7 +129,7 @@ const AtriumHome: React.FC = () => {
         />
       </Helmet>
 
-      <MobileTopBar kicker="CÁTEDRA DIGITAL" title="Átrio" transparent />
+      <MobileTopBar kicker="CATHEDRA DIGITAL" title="Átrio" transparent />
 
       <section className="w-full animate-fade-in">
         {authenticated && <AtriumReception />}

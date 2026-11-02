@@ -53,7 +53,7 @@ export function MobileReaderChrome({
         style={{ height: "var(--stitch-mobile-topbar-h)" }}
       >
         <div className="flex shrink-0 items-center gap-1">
-          <img src={CATHEDRA_BRAND.logoUrl} alt="Cátedra Digital" className="h-7 w-7" />
+          <img src={CATHEDRA_BRAND.logoUrl} alt="Cathedra Digital" className="h-7 w-7" />
           {title && (
             <p
               className={cn(

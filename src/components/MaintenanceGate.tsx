@@ -49,13 +49,13 @@ export function MaintenanceGate({ children }: { children: React.ReactNode }) {
   return (
     <HelmetProvider>
       <Helmet>
-        <title>Em manutenção — Cátedra Digital</title>
+        <title>Em manutenção — Cathedra Digital</title>
         <meta name="robots" content="noindex, nofollow" />
         <meta name="googlebot" content="noindex, nofollow" />
         <meta httpEquiv="Retry-After" content={String(RETRY_AFTER_SECONDS)} />
         <meta
           name="description"
-          content="A Cátedra Digital está em manutenção programada. Volte em instantes."
+          content="A Cathedra Digital está em manutenção programada. Volte em instantes."
         />
         <link rel="canonical" href="https://www.cathedradigital.com.br/" />
       </Helmet>

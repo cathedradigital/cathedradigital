@@ -221,9 +221,9 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.8, ease: [0.19, 1, 0.22, 1] }}
+            transition={{ duration: settings.reduceAnimations ? 0.12 : 0.24, ease: [0.22, 1, 0.36, 1] }}
             onClick={onClose}
-            className="fixed inset-0 bg-background/20 backdrop-blur-md z-[165] will-change-opacity"
+            className="fixed inset-0 bg-slate-950/45 backdrop-blur-[3px] z-[165] will-change-opacity"
             aria-hidden="true"
           />
 
@@ -242,10 +242,10 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
             animate={{ x: 0, opacity: 1 }}
             exit={{ x: '-100%', opacity: 0 }}
             transition={{ 
-              duration: settings.reduceAnimations ? 0.3 : 0.6, 
+              duration: settings.reduceAnimations ? 0.16 : 0.28, 
               ease: [0.16, 1, 0.3, 1] 
             }}
-            className="fixed top-0 left-0 bottom-0 w-[min(304px,88vw)] bg-background/98 backdrop-blur-2xl border-r border-primary/10 flex flex-col px-3 sm:px-4 z-[170] shadow-xl overflow-hidden admin-hide touch-none pt-[calc(0.75rem+env(safe-area-inset-top,0px))] pb-[calc(0.75rem+env(safe-area-inset-bottom,0px))] will-change-transform"
+            className="fixed inset-y-0 left-0 z-[170] flex w-[min(328px,88vw)] flex-col overflow-hidden border-r border-[#c9a84c]/15 bg-[hsl(var(--background))] px-4 shadow-[18px_0_48px_rgba(0,0,0,0.22)] backdrop-blur-xl admin-hide touch-none pt-[calc(1rem+env(safe-area-inset-top,0px))] pb-[calc(1rem+env(safe-area-inset-bottom,0px))] will-change-transform sm:px-5"
             role="dialog"
             aria-modal="true"
             aria-label={t('navigation')}
@@ -258,7 +258,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                 onClick={(e) => handleNav('/', e)}
                 role="button"
                 tabIndex={0}
-                aria-label="Cátedra Digital — Início"
+                aria-label="Cathedra Digital — Início"
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' || e.key === ' ') {
                     e.preventDefault();
@@ -270,7 +270,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                 <div className="flex flex-col leading-none gap-1">
                   <span
                     role="text"
-                    aria-label="Cátedra Digital — Mosteiro Digital"
+                    aria-label="Cathedra Digital — Mosteiro Digital"
                     style={{
                       fontFamily: "'Playfair Display', serif",
                       fontWeight: 600,
@@ -279,7 +279,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                       color: 'hsl(var(--foreground))',
                     }}
                   >
-                    Cátedra Digital
+                    Cathedra Digital
                   </span>
                   <span
                     style={{
@@ -311,7 +311,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
               </Button>
             </header>
 
-            <nav className="flex-1 min-h-0 space-y-1 overflow-y-auto pb-3 no-scrollbar pr-1" role="navigation">
+            <nav className="min-h-0 flex-1 space-y-2 overflow-y-auto overscroll-contain pb-4 pr-1 no-scrollbar" role="navigation">
               {sections.map((section, sectionIdx) => (section.items.length > 0 && (
                 <Collapsible
                   key={section.label}
@@ -321,8 +321,8 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                   }
                 >
                   <CollapsibleTrigger asChild>
-                    <button className="w-full min-h-10 flex items-center justify-between py-1.5 px-2.5 group/trigger hover:bg-[#c9a84c]/[0.05] rounded-lg transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c9a84c]/40 focus-visible:ring-offset-2">
-                      <h3 style={{ color: 'var(--gold-text)', fontFamily: 'Inter, sans-serif', fontSize: '0.74rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase' }}>— {section.label}</h3>
+                    <button className="group/trigger flex min-h-11 w-full items-center justify-between rounded-md px-2.5 py-2 transition-colors hover:bg-[#c9a84c]/[0.055] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c9a84c]/45 focus-visible:ring-offset-2">
+                      <h3 style={{ color: 'var(--gold-text)', fontFamily: 'Inter, sans-serif', fontSize: '0.68rem', fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase' }}>— {section.label}</h3>
                       <Icons.ChevronDown className="w-3 h-3 transition-all group-data-[state=open]:rotate-180" strokeWidth={1.5} style={{ color: 'var(--gold-text)' }} />
                     </button>
                   </CollapsibleTrigger>
@@ -333,9 +333,9 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                       exit={{ opacity: 0, height: 0 }}
                       className="overflow-hidden px-0.5"
                     >
-                      <ul className="space-y-0.5 mt-0.5">
+                      <ul className="mt-1 space-y-1 border-l border-[#c9a84c]/15 pl-2">
                         {section.items.map((item, idx) => {
-                          const isActive = currentPath === item.path || (item.path !== '/' && currentPath.startsWith(item.path));
+                          const isActive = currentPath === item.path || (item.path !== '/' && currentPath.startsWith(`${item.path}/`));
                           return (
                             <li key={idx}>
                               <Button
@@ -345,15 +345,15 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                                 onTouchStart={() => prefetchRoute(item.path)}
                                  aria-current={isActive ? 'page' : undefined}
                                  aria-label={isActive ? `${item.label}, ${t('current_page')}` : item.label}
-                                className={`w-full flex items-center justify-start gap-3 px-3 py-2 rounded-lg text-xs font-semibold transition-all duration-200 outline-none h-auto min-h-11 border
+                                className={`group w-full flex items-center justify-start gap-3 rounded-md border border-transparent px-3 py-2.5 text-xs font-medium outline-none transition-colors duration-200 h-auto min-h-11
                                   ${isActive
-                                    ? 'bg-[#c9a84c]/[0.08] text-[color:var(--gold-text)] border-[#c9a84c]/40'
-                                    : 'text-foreground/80 hover:bg-[#c9a84c]/[0.04] hover:text-[color:var(--gold-text)] border-transparent hover:border-[#c9a84c]/20'}`}
+                                    ? 'bg-[#c9a84c]/[0.10] text-[color:var(--gold-text)] border-l-2 border-l-[#c9a84c] shadow-[inset_0_0_0_1px_rgba(201,168,76,0.08)]'
+                                    : 'text-foreground/75 hover:bg-[#c9a84c]/[0.055] hover:text-[color:var(--gold-text)] hover:border-[#c9a84c]/10'}`}
                               >
                                   <span className={`transition-all duration-300 transform ${isActive ? 'opacity-100 scale-105' : 'opacity-80'}`}>
                                     {item.icon}
                                   </span>
-                                <span className="tracking-[0.04em] truncate text-[0.84rem]">{item.label}</span>
+                                <span className="min-w-0 flex-1 truncate text-left text-[0.875rem] leading-5 tracking-[0.01em]">{item.label}</span>
                                 {item.path === AppRoute.CACHE_MANAGER && cacheCount !== null && cacheCount > 0 && (
                                   <span className="ml-auto text-premium-xs font-bold px-2 py-0.5 rounded-none flex-shrink-0" style={{ background: '#c9a84c', color: '#0a0a0a' }}>
                                     {cacheCount}

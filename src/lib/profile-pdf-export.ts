@@ -98,7 +98,7 @@ export async function exportProfilePdf({ userName, userEmail, donations, audit }
     doc.setFontSize(8);
     doc.setTextColor(120);
     doc.text(
-      `Cátedra Digital · pág. ${i}/${pageCount} · Documento gerado localmente`,
+      `Cathedra Digital · pág. ${i}/${pageCount} · Documento gerado localmente`,
       40,
       doc.internal.pageSize.getHeight() - 24,
     );

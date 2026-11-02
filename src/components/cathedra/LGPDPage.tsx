@@ -20,7 +20,7 @@ const LGPDPage: React.FC = () => (
         Conformidade com a LGPD
       </h1>
       <p className="text-muted-foreground text-premium-lg">
-        A Cátedra Digital trata dados pessoais em conformidade com a Lei Geral de Proteção de Dados
+        A Cathedra Digital trata dados pessoais em conformidade com a Lei Geral de Proteção de Dados
         brasileira. Esta página resume nossas práticas; para o detalhamento completo consulte a{' '}
         <Link to="/legal/privacy" className="text-primary hover:underline">
           Política de Privacidade
@@ -31,7 +31,7 @@ const LGPDPage: React.FC = () => (
 
     <Section title="1. Papéis e responsabilidades">
       <p>
-        A Cátedra Digital atua como <strong>controladora</strong> dos dados que coleta diretamente dos
+        A Cathedra Digital atua como <strong>controladora</strong> dos dados que coleta diretamente dos
         usuários. Provedores de infraestrutura (autenticação, banco de dados, e-mail, pagamentos) atuam
         como <strong>operadores</strong> sob contrato.
       </p>
