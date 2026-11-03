@@ -116,7 +116,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       { rel: "icon", href: cathedraLogo, type: "image/webp" },
       { rel: "apple-touch-icon", href: cathedraLogo },
-      { rel: "canonical", href: "https://www.cathedradigital.com.br/" },
     ],
   }),
   shellComponent: RootShell,
