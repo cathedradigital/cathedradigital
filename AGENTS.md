@@ -40,6 +40,9 @@ Cathedra / Digital Cathedral é um produto digital de formação católica. O ob
 
 ## Engenharia
 
+- Client-side compatibility retries must match a specific schema projection error and keep RLS and unrelated failures intact; this preserves security while supporting the legacy schema.
+- Fuzzy-search callers may supply already authorized rows for a local fallback; this keeps filtering usable without creating database functions or broadening access.
+
 - Prefira mudanças pequenas, reversíveis e testáveis.
 - Não faça refatorações amplas junto com mudança funcional sem necessidade.
 - Preserve compatibilidade com o Lovable.

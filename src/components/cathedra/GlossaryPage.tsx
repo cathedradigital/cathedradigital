@@ -35,6 +35,7 @@ import {
   type RosaryReturnContext,
 } from '@/lib/rosaryReturnContext';
 import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
 
 export function slugifyTerm(term: string): string {
   return term
@@ -77,6 +78,8 @@ const GlossaryPage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [terms, setTerms] = useState<GlossaryTerm[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
+  const [reloadKey, setReloadKey] = useState(0);
   const [category, setCategory] = useState(() => searchParams.get('category') || 'Todos');
   const [searchQuery, setSearchQuery] = useState(() => searchParams.get('q') || '');
   const [rosaryReturn, setRosaryReturn] = useState<RosaryReturnContext | null>(null);
@@ -103,25 +106,37 @@ const GlossaryPage: React.FC = () => {
     primaryField: 'term',
     secondaryField: 'definition',
     secondaryWeight: 0.5,
+    fallbackRows: terms,
   });
 
   useEffect(() => {
     let cancelled = false;
     (async () => {
       setLoading(true);
-      const { data, error } = await (supabase as any)
+      setLoadError(false);
+      let { data, error } = await (supabase as any)
         .from('glossary')
         .select('id, slug, term, short_definition, definition, category, status, editorial_completeness')
         .order('term', { ascending: true });
+      // The legacy public schema has no editorial status column. Only retry
+      // this specific projection mismatch; RLS and all other errors remain intact.
+      if (error?.code === '42703' && /glossary\.status/.test(error.message ?? '')) {
+        const response = await supabase.from('glossary')
+          .select('id, slug, term, short_definition, definition, category, editorial_completeness')
+          .order('term', { ascending: true });
+        data = response.data?.map((row) => ({ ...row, status: null })) ?? null;
+        error = response.error;
+      }
       if (cancelled) return;
       if (error) console.error('Erro ao carregar glossário:', error);
+      setLoadError(Boolean(error));
       setTerms((data as GlossaryTerm[]) || []);
       setLoading(false);
     })();
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [reloadKey]);
 
   const categories = useMemo(() => {
     const cats = new Set(terms.map((t) => t.category).filter(Boolean) as string[]);
@@ -323,7 +338,7 @@ const GlossaryPage: React.FC = () => {
               <div>
                 <dt className="text-foreground/85">Publicados</dt>
                 <dd className="mt-1 font-stitch-display text-stitch-display-sm text-stitch-on-background">
-                  {terms.filter((t) => t.status === 'published').length}
+                  {terms.some((t) => t.status != null) ? terms.filter((t) => t.status === 'published').length : '—'}
                 </dd>
               </div>
             </dl>
@@ -335,6 +350,11 @@ const GlossaryPage: React.FC = () => {
           {loading ? (
             <div className="flex justify-center py-24">
               <div className="h-10 w-10 border-2 border-stitch-secondary border-t-transparent rounded-full animate-spin" />
+            </div>
+          ) : loadError ? (
+            <div role="alert" className="py-12 text-center">
+              <p className="mb-4 text-muted-foreground">Não foi possível carregar o glossário.</p>
+              <Button variant="outline" onClick={() => setReloadKey((value) => value + 1)}>Tentar novamente</Button>
             </div>
           ) : filtered.length === 0 ? (
             <EditorialEmptyState

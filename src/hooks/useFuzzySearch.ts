@@ -48,6 +48,8 @@ export interface UseFuzzySearchOptions<TRow> {
   debounceMs?: number;
   /** Hard cap on returned rows. Defaults to 50. */
   resultLimit?: number;
+  /** Already authorized rows for a local search if the RPC is unavailable. */
+  fallbackRows?: TRow[];
 }
 
 export interface FuzzyRow {
@@ -79,6 +81,7 @@ export function useFuzzySearch<TRow>(
     minLength = 2,
     debounceMs = 300,
     resultLimit = 50,
+    fallbackRows,
   } = options;
 
   const debouncedQuery = useDebounce(query, debounceMs);
@@ -116,7 +119,12 @@ export function useFuzzySearch<TRow>(
       if (rpcError) {
         console.error(`[useFuzzySearch] ${rpc} failed:`, rpcError);
         setError(rpcError);
-        setResults(null);
+        const normalize = (value: unknown) => String(value ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+        const needle = normalize(trimmed);
+        setResults(fallbackRows ? fallbackRows.filter((row) =>
+          normalize(row[primaryField]).includes(needle) ||
+          (secondaryField ? normalize(row[secondaryField]).includes(needle) : false)
+        ).slice(0, resultLimit) : null);
       } else {
         const rows = (data ?? []).map(row => {
           const r = row as Record<string, unknown>;
@@ -139,7 +147,7 @@ export function useFuzzySearch<TRow>(
       cancelled = true;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [rpc, trimmed, primaryField, secondaryField, secondaryWeight, minLength, resultLimit, retryTick]);
+  }, [rpc, trimmed, primaryField, secondaryField, secondaryWeight, minLength, resultLimit, retryTick, fallbackRows]);
 
   return { results, isSearching, isPending, error, refetch: () => setRetryTick(t => t + 1) };
 }

@@ -58,9 +58,9 @@ const WelcomeFirstAccess: React.FC = () => {
       role="dialog"
       aria-modal="true"
       aria-labelledby="welcome-first-access-title"
-      className="fixed inset-0 z-[80] flex items-center justify-center bg-background/90 backdrop-blur-sm p-spacing-md"
+      className="fixed inset-0 z-[80] flex items-center justify-center overflow-y-auto bg-background/90 backdrop-blur-sm p-spacing-md"
     >
-      <div className="relative w-full max-w-2xl rounded-premium border border-border bg-card p-spacing-xl shadow-2xl">
+      <div className="relative max-h-[calc(100dvh-2rem)] w-full max-w-2xl overflow-y-auto rounded-premium border border-border bg-card p-spacing-xl shadow-2xl">
         <button
           type="button"
           aria-label="Fechar boas-vindas"

@@ -29,3 +29,9 @@
 - [ ] Realocar controles secundários de Bíblia, Catecismo e Estudar sem remover funções
 - [ ] Validar teclado, foco, touch, overflow e leitura em desktop/mobile
 - [ ] Rodar testes aplicáveis e revisar o preview sem publicar
+
+## Varredura controlada dos módulos — novembro de 2026
+- [x] Diagnosticar imports, lint, validadores e rotas no desktop/mobile
+- [ ] Corrigir falhas concretas de interface sem alterar conteúdo, banco ou autenticação
+- [ ] Executar regressões e segunda revisão no preview
+- [ ] Documentar dependências ausentes e verificações não disponíveis
