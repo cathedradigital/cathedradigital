@@ -139,7 +139,7 @@ const AtriumJornadasPage: React.FC = () => {
   );
 
   const visible = useMemo(() => {
-    const normalize = (value: string) => value.toLocaleLowerCase('pt-BR').normalize('NFD').replace(/[\\u0300-\\u036f]/g, '');
+    const normalize = (value: string) => value.toLocaleLowerCase('pt-BR').normalize('NFD').replace(/[\u0300-\u036f]/g, '');
     const normalizedQuery = normalize(searchQuery.trim());
     return journeys.filter((j) => {
       const matchesCategory = activeCategory === 'all' || j.category === activeCategory;
