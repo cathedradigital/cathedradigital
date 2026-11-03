@@ -103,5 +103,19 @@ export default class SafePlaywrightReporter {
     process.stdout.write(
       `[e2e-safe] run=${report.runStatus}; total=${counts.total}; passed=${counts.passed}; failed=${counts.failed}; skipped=${counts.skipped}\n`,
     );
+
+    // Emit only redacted, deduplicated failure signatures so CI logs explain
+    // systemic failures without uploading raw browser artifacts or secrets.
+    const signatures = new Map();
+    for (const failed of this.tests.filter((test) =>
+      ["failed", "timedOut", "interrupted"].includes(test.status),
+    )) {
+      const detail = failed.error?.detail || failed.error?.name || "Unknown failure";
+      const key = `${failed.project}: ${detail.slice(0, 1200)}`;
+      signatures.set(key, (signatures.get(key) ?? 0) + 1);
+    }
+    for (const [signature, occurrences] of [...signatures.entries()].slice(0, 20)) {
+      process.stdout.write(`[e2e-safe] failure-signature (x${occurrences}): ${signature}\n`);
+    }
   }
 }
