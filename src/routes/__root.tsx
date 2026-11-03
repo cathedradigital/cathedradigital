@@ -84,14 +84,31 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Cathedra Digital" },
-      { name: "description", content: "Cathedra Digital — oração, estudo, formação e comunidade." },
+      { title: "Cathedra Digital | Oração, estudo e formação católica" },
+      {
+        name: "description",
+        content:
+          "Uma plataforma católica para rezar, estudar a Bíblia, o Catecismo e o Magistério, acompanhar a liturgia e aprofundar a formação espiritual.",
+      },
       { name: "author", content: "Cathedra Digital" },
-      { property: "og:title", content: "Cathedra Digital" },
-      { property: "og:description", content: "Cathedra Digital — oração, estudo, formação e comunidade." },
+      { name: "robots", content: "index, follow, max-image-preview:large" },
+      {
+        property: "og:title",
+        content: "Cathedra Digital | Oração, estudo e formação católica",
+      },
+      {
+        property: "og:description",
+        content:
+          "Bíblia, Catecismo, Magistério, liturgia, oração e formação espiritual em uma plataforma católica integrada.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-          ],
+      {
+        name: "twitter:description",
+        content:
+          "Bíblia, Catecismo, Magistério, liturgia, oração e formação espiritual em uma plataforma católica integrada.",
+      },
+    ],
     links: [
       {
         rel: "stylesheet",
@@ -99,6 +116,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       { rel: "icon", href: cathedraLogo, type: "image/webp" },
       { rel: "apple-touch-icon", href: cathedraLogo },
+      { rel: "canonical", href: "https://www.cathedradigital.com.br/" },
     ],
   }),
   shellComponent: RootShell,
@@ -115,6 +133,38 @@ function RootShell({ children }: { children: ReactNode }) {
       </head>
       <body>
         {children}
+        <noscript>
+          <main lang="pt-BR" aria-labelledby="cathedra-public-title">
+            <header>
+              <p>Cathedra Digital</p>
+              <h1 id="cathedra-public-title">
+                Oração, estudo e formação católica em um só lugar
+              </h1>
+              <p>
+                A Cathedra Digital é uma plataforma católica que reúne recursos
+                para a vida espiritual, o estudo da fé e a formação cristã.
+                Consulte a Sagrada Escritura, o Catecismo da Igreja Católica,
+                documentos do Magistério, liturgia, orações e vidas de santos,
+                com conteúdos organizados para favorecer o aprofundamento e a
+                continuidade da jornada espiritual.
+              </p>
+            </header>
+            <nav aria-label="Principais áreas da Cathedra Digital">
+              <ul>
+                <li><a href="/bible">Bíblia Sagrada — leitura e estudo</a></li>
+                <li><a href="/catechism">Catecismo da Igreja Católica</a></li>
+                <li><a href="/magisterium">Documentos do Magistério da Igreja</a></li>
+                <li><a href="/liturgia">Liturgia e calendário litúrgico</a></li>
+                <li><a href="/oracao">Orações e devoções</a></li>
+                <li><a href="/santos">Santos e testemunhos de vida cristã</a></li>
+                <li><a href="/jornadas">Jornadas e itinerários de formação</a></li>
+                <li><a href="/guia-modulos">Guia para conhecer os módulos</a></li>
+                <li><a href="/about">Sobre a Cathedra Digital</a></li>
+                <li><a href="/contato">Contato</a></li>
+              </ul>
+            </nav>
+          </main>
+        </noscript>
         <Scripts />
       </body>
     </html>
