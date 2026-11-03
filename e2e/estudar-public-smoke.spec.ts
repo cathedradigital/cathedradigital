@@ -522,5 +522,6 @@ test('Formar-se: rota protegida preserva destino ao exigir autenticação', asyn
   const response = await page.goto('/jornadas');
   expect(response?.ok(), '/jornadas: HTTP ' + response?.status()).toBeTruthy();
   await expect(page).toHaveURL(/\/auth\?next=/);
-  expect(new URL(page.url()).searchParams.get('next')).toContain('/jornadas');
+  const next = new URL(page.url()).searchParams.get('next') ?? '';
+  expect(decodeURIComponent(next)).toContain('/jornadas');
 });
