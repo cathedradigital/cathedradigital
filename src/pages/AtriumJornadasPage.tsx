@@ -184,7 +184,14 @@ const AtriumJornadasPage: React.FC = () => {
                       Etapa {done} de {j.steps_count}
                     </p>
                     <div className="mt-4 flex items-center gap-3">
-                      <div className="h-1 flex-1 overflow-hidden rounded-full bg-stitch-surface-container-highest">
+                      <div
+                        className="h-1 flex-1 overflow-hidden rounded-full bg-stitch-surface-container-highest"
+                        role="progressbar"
+                        aria-label={`Progresso de ${j.title}`}
+                        aria-valuemin={0}
+                        aria-valuemax={100}
+                        aria-valuenow={pct}
+                      >
                         <div
                           className="h-full bg-stitch-secondary transition-all"
                           style={{ width: `${pct}%` }}
@@ -337,12 +344,19 @@ const AtriumJornadasPage: React.FC = () => {
                       <ArrowRight className="h-4 w-4 text-stitch-secondary transition-transform group-hover:translate-x-1" />
                     </div>
                     {done > 0 && (
-                      <div className="mt-4 h-1 overflow-hidden rounded-full bg-stitch-surface-container-highest">
-                        <div
-                          className="h-full bg-stitch-secondary"
-                          style={{ width: `${Math.round((done / Math.max(j.steps_count, 1)) * 100)}%` }}
-                        />
-                      </div>
+                      <div
+                      className="mt-4 h-1 overflow-hidden rounded-full bg-stitch-surface-container-highest"
+                      role="progressbar"
+                      aria-label={`Progresso de ${j.title}`}
+                      aria-valuemin={0}
+                      aria-valuemax={100}
+                      aria-valuenow={Math.min(100, Math.round((done / Math.max(j.steps_count, 1)) * 100))}
+                    >
+                      <div
+                        className="h-full bg-stitch-secondary"
+                        style={{ width: `${Math.round((done / Math.max(j.steps_count, 1)) * 100)}%` }}
+                      />
+                    </div>
                     )}
                   </Link>
                 );
