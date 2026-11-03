@@ -22,6 +22,7 @@ import {
   Stethoscope,
   Zap,
   Flame,
+  Search,
 } from 'lucide-react';
 import { EditorialHero } from '@/components/editorial/harmony';
 import { supabase } from '@/lib/db';
@@ -70,6 +71,8 @@ const AtriumJornadasPage: React.FC = () => {
   const [loadError, setLoadError] = useState<string | null>(null);
   const [progressError, setProgressError] = useState<string | null>(null);
   const [activeCategory, setActiveCategory] = useState<string>('all');
+  const [activeDifficulty, setActiveDifficulty] = useState<string>('all');
+  const [searchQuery, setSearchQuery] = useState('');
   const [reloadKey, setReloadKey] = useState(0);
 
   useEffect(() => {
@@ -97,9 +100,17 @@ const AtriumJornadasPage: React.FC = () => {
             if (!cancelled) setProgressError('O progresso pessoal não pôde ser carregado.');
           }
           if (!cancelled && progressRes.data) {
-            const m: Record<string, number> = {};
+            // Conta etapas distintas: registros repetidos não podem inflar o progresso.
+            const completedByJourney = new Map<string, Set<string>>();
             progressRes.data.forEach((p) => {
-              m[p.journey_id] = (m[p.journey_id] || 0) + 1;
+              if (!p.step_id) return;
+              const completed = completedByJourney.get(p.journey_id) ?? new Set<string>();
+              completed.add(p.step_id);
+              completedByJourney.set(p.journey_id, completed);
+            });
+            const m: Record<string, number> = {};
+            completedByJourney.forEach((completed, journeyId) => {
+              m[journeyId] = completed.size;
             });
             setProgressMap(m);
           }
@@ -122,10 +133,21 @@ const AtriumJornadasPage: React.FC = () => {
     return ['all', ...Array.from(set)];
   }, [journeys]);
 
+  const difficultyOptions = useMemo(
+    () => Array.from(new Set(journeys.map((j) => j.difficulty).filter(Boolean))).sort(),
+    [journeys],
+  );
+
   const visible = useMemo(() => {
-    if (activeCategory === 'all') return journeys;
-    return journeys.filter((j) => j.category === activeCategory);
-  }, [journeys, activeCategory]);
+    const normalize = (value: string) => value.toLocaleLowerCase('pt-BR').normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    const normalizedQuery = normalize(searchQuery.trim());
+    return journeys.filter((j) => {
+      const matchesCategory = activeCategory === 'all' || j.category === activeCategory;
+      const matchesDifficulty = activeDifficulty === 'all' || j.difficulty === activeDifficulty;
+      const searchable = normalize(`${j.title} ${j.subtitle ?? ''} ${j.description ?? ''} ${j.category}`);
+      return matchesCategory && matchesDifficulty && (!normalizedQuery || searchable.includes(normalizedQuery));
+    });
+  }, [journeys, activeCategory, activeDifficulty, searchQuery]);
 
   const featured = journeys[0];
   const inProgress = journeys.filter(
@@ -252,10 +274,39 @@ const AtriumJornadasPage: React.FC = () => {
 
         {/* ─── Trilhas ──────────────────────────────────────────────── */}
         <section className="pt-10 md:pt-16">
-          <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-            <h2 className="font-stitch-display text-[24px] font-semibold leading-[32px] text-stitch-primary">
-              Explore os percursos
-            </h2>
+          <div className="mb-8 space-y-4">
+            <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+              <h2 className="font-stitch-display text-[24px] font-semibold leading-[32px] text-stitch-primary">
+                Explore os percursos
+              </h2>
+              <div className="flex w-full flex-col gap-3 sm:flex-row md:max-w-[560px]">
+                <label className="relative block min-w-0 flex-1">
+                  <Search aria-hidden="true" className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-stitch-on-surface-variant" />
+                  <input
+                    type="search"
+                    value={searchQuery}
+                    onChange={(event) => setSearchQuery(event.target.value)}
+                    placeholder="Buscar por tema ou percurso"
+                    aria-label="Buscar percursos formativos"
+                    className="min-h-11 w-full rounded border border-stitch-outline-variant/40 bg-stitch-surface-container-lowest py-2 pl-10 pr-3 font-stitch-body text-[14px] text-stitch-on-surface placeholder:text-stitch-on-surface-variant/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stitch-secondary"
+                  />
+                </label>
+                <label className="block sm:w-[180px]">
+                  <span className="sr-only">Filtrar por nível</span>
+                  <select
+                    value={activeDifficulty}
+                    onChange={(event) => setActiveDifficulty(event.target.value)}
+                    aria-label="Filtrar por nível"
+                    className="min-h-11 w-full rounded border border-stitch-outline-variant/40 bg-stitch-surface-container-lowest px-3 font-stitch-body text-[13px] text-stitch-on-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stitch-secondary"
+                  >
+                    <option value="all">Todos os níveis</option>
+                    {difficultyOptions.map((difficulty) => (
+                      <option key={difficulty} value={difficulty}>{DIFFICULTY_LABELS[difficulty] ?? difficulty}</option>
+                    ))}
+                  </select>
+                </label>
+              </div>
+            </div>
             <div
               className="-mx-4 flex snap-x snap-mandatory gap-2 overflow-x-auto px-4 pb-2 md:mx-0 md:flex-wrap md:overflow-visible md:px-0"
               role="group"
@@ -305,9 +356,20 @@ const AtriumJornadasPage: React.FC = () => {
               </button>
             </div>
           ) : visible.length === 0 ? (
-            <p className="border-t border-stitch-secondary/10 pt-8 text-center font-stitch-body text-[14px] italic text-stitch-on-surface-variant">
-              Nenhuma jornada nesta trilha ainda.
-            </p>
+            <div className="border-t border-stitch-secondary/10 pt-8 text-center">
+              <p className="font-stitch-body text-[14px] italic text-stitch-on-surface-variant">
+                {searchQuery || activeDifficulty !== 'all' || activeCategory !== 'all'
+                  ? 'Nenhum percurso corresponde aos filtros selecionados.'
+                  : 'Nenhuma jornada disponível nesta trilha ainda.'}
+              </p>
+              {(searchQuery || activeDifficulty !== 'all' || activeCategory !== 'all') && (
+                <button
+                  type="button"
+                  onClick={() => { setSearchQuery(''); setActiveDifficulty('all'); setActiveCategory('all'); }}
+                  className="mt-3 inline-flex min-h-11 items-center px-3 font-stitch-body text-[12px] font-bold uppercase tracking-[0.12em] text-stitch-secondary underline underline-offset-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stitch-secondary"
+                >Limpar filtros</button>
+              )}
+            </div>
           ) : (
             <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
               {visible.map((j, i) => {
