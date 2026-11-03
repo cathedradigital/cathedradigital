@@ -135,6 +135,37 @@ function RootShell({ children }: { children: ReactNode }) {
     <html lang="pt-BR">
       <head>
         <HeadContent />
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify({
+                "@context": "https://schema.org",
+                "@graph": [
+                  {
+                    "@type": "Organization",
+                    "@id": `${SEO_CONFIG.BASE_URL}/#organization`,
+                    name: "Cathedra Digital",
+                    url: SEO_CONFIG.BASE_URL,
+                    logo: SEO_CONFIG.ORGANIZATION.logo,
+                    sameAs: [SEO_CONFIG.ORGANIZATION.instagram, SEO_CONFIG.ORGANIZATION.twitter],
+                  },
+                  {
+                    "@type": "WebSite",
+                    "@id": `${SEO_CONFIG.BASE_URL}/#website`,
+                    name: "Cathedra Digital",
+                    url: SEO_CONFIG.BASE_URL,
+                    inLanguage: "pt-BR",
+                    publisher: { "@id": `${SEO_CONFIG.BASE_URL}/#organization` },
+                    potentialAction: {
+                      "@type": "SearchAction",
+                      target: `${SEO_CONFIG.BASE_URL}/buscar?q={search_term_string}`,
+                      "query-input": "required name=search_term_string",
+                    },
+                  },
+                ],
+              }),
+            }}
+          />
       </head>
       <body>
         {children}
