@@ -166,12 +166,12 @@ const AtriumJornadasPage: React.FC = () => {
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
               {inProgress.slice(0, 2).map((j) => {
                 const done = progressMap[j.id] ?? 0;
-                const pct = Math.round((done / Math.max(j.steps_count, 1)) * 100);
+                const pct = Math.min(100, Math.round((done / Math.max(j.steps_count, 1)) * 100));
                 return (
                   <Link
                     key={j.id}
                     to={`/jornadas/${j.id}`}
-                    className="group relative flex flex-col overflow-hidden rounded border border-stitch-outline-variant/30 bg-stitch-surface-container-lowest p-6 shadow-sm transition-shadow hover:shadow-md"
+                    className="group relative flex flex-col overflow-hidden rounded border border-stitch-outline-variant/30 bg-stitch-surface-container-lowest p-6 shadow-sm transition-shadow hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stitch-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-stitch-background"
                   >
                     <div className="absolute left-0 top-0 h-full w-1 origin-top scale-y-0 bg-stitch-secondary transition-transform group-hover:scale-y-100" />
                     <span className="font-stitch-body text-[12px] font-bold uppercase tracking-[0.15em] text-stitch-secondary">
@@ -214,7 +214,7 @@ const AtriumJornadasPage: React.FC = () => {
           <section className="pt-10 md:pt-16">
             <Link
               to={`/jornadas/${featured.id}`}
-              className="group relative flex min-h-[360px] flex-col justify-end overflow-hidden bg-stitch-primary p-8 md:p-12"
+              className="group relative flex min-h-[360px] flex-col justify-end overflow-hidden bg-stitch-primary p-8 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stitch-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-stitch-background md:p-12"
             >
               <div
                 className="pointer-events-none absolute inset-0 opacity-[0.05]"
@@ -299,7 +299,7 @@ const AtriumJornadasPage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setReloadKey((key) => key + 1)}
-                className="mt-4 border border-stitch-secondary/40 px-4 py-2 font-stitch-body text-[12px] font-bold uppercase tracking-[0.15em] text-stitch-secondary hover:bg-stitch-secondary/10"
+                className="mt-4 inline-flex min-h-11 items-center border border-stitch-secondary/40 px-4 py-2 font-stitch-body text-[12px] font-bold uppercase tracking-[0.15em] text-stitch-secondary hover:bg-stitch-secondary/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stitch-secondary focus-visible:ring-offset-2"
               >
                 Tentar novamente
               </button>
