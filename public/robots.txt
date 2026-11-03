@@ -26,6 +26,8 @@ Disallow: /dashboard
 Disallow: /dev/editorial
 Disallow: /dev/mobile
 Disallow: /diagnostics
+Disallow: /diario
+Disallow: /encyclopedia
 Disallow: /favorites
 Disallow: /glossary
 Disallow: /home
@@ -49,19 +51,6 @@ Disallow: /sobre
 Disallow: /transactions
 Disallow: /upgrade
 Disallow: /vendedor
-
-# Search crawlers: allow discovery of public Cathedra Digital content.
-User-agent: OAI-SearchBot
-Allow: /
-
-User-agent: ChatGPT-User
-Allow: /
-
-User-agent: PerplexityBot
-Allow: /
-
-User-agent: Claude-SearchBot
-Allow: /
 
 # Training and dataset crawlers remain disallowed by policy.
 User-agent: GPTBot
