@@ -71,7 +71,7 @@ const AboutPage: React.FC = () => (
         </div>
         <div className="space-y-spacing-md text-muted-foreground leading-relaxed text-premium-lg">
           <p>O projeto Cathedra Digital começou como uma busca pessoal por consolidar os tesouros da Igreja em uma interface digna da beleza de seu conteúdo. O que era um repositório de estudos transformou-se em um ecossistema digital completo.</p>
-          <p>Desde a primeira linha de código, o foco foi a fidelidade ao Magistério. Passamos de uma simples ferramenta de busca para uma inteligência a serviço da Tradição, ajudando milhares de pessoas a redescobrirem a profundidade de sua fé no cotidiano digital.</p>
+          <p>Desde a primeira linha de código, o foco foi a fidelidade ao Magistério. Passamos de uma simples ferramenta de busca para um ecossistema digital a serviço da Tradição, ampliando o acesso à profundidade da fé no cotidiano digital.</p>
         </div>
       </div>
     </div>
