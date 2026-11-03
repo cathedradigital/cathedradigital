@@ -42,31 +42,5 @@ export const TESTIMONIALS: Testimonial[] = [
     quote:
       "Tarde vos amei, ó Beleza tão antiga e tão nova, tarde vos amei! Estáveis dentro de mim e eu, fora. E era fora que vos procurava.",
   },
-  {
-    id: "reader-mariana-sp",
-    kind: "reader",
-    author: "Mariana R.",
-    source: "São Paulo, SP",
-    period: "Peregrina desde 2026",
-    quote:
-      "Voltei a ler o Catecismo depois de anos. Ver cada parágrafo conectado à Escritura e aos Padres mudou minha oração. O Nexus é o que faltava.",
-  },
-  {
-    id: "reader-pe-tiago",
-    kind: "reader",
-    author: "Pe. Tiago M.",
-    source: "Diocese de Petrópolis, RJ",
-    period: "Assinante PRO",
-    quote:
-      "Uso o Missal e a Liturgia das Horas todos os dias. As meditações são sóbrias, sem apelo emocional barato — é raro encontrar isso.",
-  },
-  {
-    id: "reader-caio-bh",
-    kind: "reader",
-    author: "Caio F.",
-    source: "Belo Horizonte, MG",
-    period: "Assinante PRO",
-    quote:
-      "O Logos AI não inventa. Cada resposta cita a fonte e me leva direto ao Catecismo. É a única IA católica em que confio para estudar.",
-  },
+
 ];
