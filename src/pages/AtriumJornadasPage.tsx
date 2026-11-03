@@ -345,18 +345,18 @@ const AtriumJornadasPage: React.FC = () => {
                     </div>
                     {done > 0 && (
                       <div
-                      className="mt-4 h-1 overflow-hidden rounded-full bg-stitch-surface-container-highest"
-                      role="progressbar"
-                      aria-label={`Progresso de ${j.title}`}
-                      aria-valuemin={0}
-                      aria-valuemax={100}
-                      aria-valuenow={Math.min(100, Math.round((done / Math.max(j.steps_count, 1)) * 100))}
-                    >
-                      <div
-                        className="h-full bg-stitch-secondary"
-                        style={{ width: `${Math.round((done / Math.max(j.steps_count, 1)) * 100)}%` }}
-                      />
-                    </div>
+                        className="mt-4 h-1 overflow-hidden rounded-full bg-stitch-surface-container-highest"
+                        role="progressbar"
+                        aria-label={`Progresso de ${j.title}`}
+                        aria-valuemin={0}
+                        aria-valuemax={100}
+                        aria-valuenow={Math.min(100, Math.round((done / Math.max(j.steps_count, 1)) * 100))}
+                      >
+                        <div
+                          className="h-full bg-stitch-secondary"
+                          style={{ width: `${Math.round((done / Math.max(j.steps_count, 1)) * 100)}%` }}
+                        />
+                      </div>
                     )}
                   </Link>
                 );
