@@ -731,4 +731,9 @@
     <xhtml:link rel="alternate" hreflang="la" href="https://www.cathedradigital.com.br/la/docs/glossario-e-nexus" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://www.cathedradigital.com.br/docs/glossario-e-nexus" />
   </url>
+  <url>
+    <loc>https://www.cathedradigital.com.br/oracao/exame-de-consciencia</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
 </urlset>
