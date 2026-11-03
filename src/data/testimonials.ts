@@ -1,12 +1,9 @@
 /**
- * Testimonials — Modelo de dados dos depoimentos exibidos na landing e /sobre.
+ * Citações editoriais exibidas na landing e em /about.
  *
- * Estrutura híbrida (aprovada em SPRINT-2):
- *   - `patristic`: citação âncora de santo/Padre da Igreja (peso editorial).
- *   - `reader`:    testemunho de leitor/assinante (voz da comunidade).
- *
- * Substituir mocks por conteúdo real: basta editar `TESTIMONIALS` abaixo.
- * O layout aceita 1..N itens; carrossel/paginação se ajustam automaticamente.
+ * Somente citações com fonte identificável são publicadas aqui.
+ * Depoimentos de leitores exigem relato real, autorização e procedência verificável;
+ * não usar nomes, localidades ou assinaturas fictícias como prova social.
  */
 
 export type TestimonialKind = "patristic" | "reader";
