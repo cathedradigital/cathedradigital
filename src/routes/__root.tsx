@@ -12,6 +12,7 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import cathedraLogo from "../assets/cathedra-logo.webp";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { SEO_CONFIG } from "../config/seo";
 
 function NotFoundComponent() {
   return (
@@ -91,6 +92,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "Uma plataforma católica para rezar, estudar a Bíblia, o Catecismo e o Magistério, acompanhar a liturgia e aprofundar a formação espiritual.",
       },
       { name: "author", content: "Cathedra Digital" },
+      { property: "og:site_name", content: "Cathedra Digital" },
+      { property: "og:image", content: SEO_CONFIG.DEFAULT_OG_IMAGE },
+      { property: "og:image:alt", content: "Cathedra Digital — plataforma católica de oração, estudo e formação" },
       { name: "robots", content: "index, follow, max-image-preview:large" },
       {
         property: "og:title",
@@ -103,6 +107,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "Cathedra Digital | Oração, estudo e formação católica" },
+      { name: "twitter:image", content: SEO_CONFIG.DEFAULT_OG_IMAGE },
       {
         name: "twitter:description",
         content:
