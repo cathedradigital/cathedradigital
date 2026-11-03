@@ -2,7 +2,7 @@
 
 > Plataforma católica de vida interior: Bíblia, Catecismo, Magistério, Liturgia, oração e formação espiritual em português.
 
-A Cathedra Digital reúne em um só lugar a Sagrada Escritura, o Catecismo da Igreja Católica, documentos do Magistério, a liturgia diária, vidas de santos, devoções tradicionais e ferramentas de estudo teológico. Tudo interligado por referências cruzadas (Nexus Theologicus) para aprofundar a vida espiritual sem perder o contexto.
+A Cathedra Digital reúne a Sagrada Escritura, o Catecismo da Igreja Católica, documentos do Magistério, liturgia, vidas de santos, orações, devoções e percursos de formação. As referências cruzadas (Nexus Theologicus) ajudam a compreender as relações entre as fontes e seus contextos. A plataforma é organizada em torno de oração, estudo, formação e comunidade.
 
 ## Pages
 
@@ -19,25 +19,31 @@ A Cathedra Digital reúne em um só lugar a Sagrada Escritura, o Catecismo da Ig
 - [Aparições](/aparicoes): Aparições marianas reconhecidas.
 - [Dogmas](/dogmas): Dogmas da fé católica.
 - [Orações](/oracao): Orações tradicionais.
-- [Rosário](/rosary): Mistérios e oração do Santo Rosário.
+- [Rosário](/oracao/rosario): Mistérios e oração do Santo Rosário.
 - [Via-Sacra](/viacrucis): Estações da Via-Sacra.
 - [Ladainhas](/litanies): Ladainhas tradicionais.
 - [Lectio Divina](/lectio): Método de leitura orante da Escritura.
-- [Confissão](/confession): Guia para o Sacramento da Reconciliação.
+- [Exame de Consciência](/oracao/exame-de-consciencia): preparação para o Sacramento da Reconciliação.
 - [Jornadas](/jornadas): Itinerários espirituais guiados.
 - [Itinerários](/itineraria): Caminhos formativos estruturados.
 - [Temas](/temas): Mapas temáticos da fé católica.
-- [Enciclopédia](/encyclopedia): Verbetes de A a Z sobre a fé.
-- [Glossário](/glossary): Termos teológicos explicados.
+- [Glossário e Enciclopédia](/glossario): verbetes e conceitos da fé católica organizados para consulta.
 - [Aquinas Opera](/aquinas): Obras de Santo Tomás de Aquino.
 - [Guia dos Módulos](/guia-modulos): Como usar cada módulo da plataforma.
 - [Logos AI](/logos): Assistente teológico católico.
 - [Busca](/buscar): Busca global em todo o acervo.
+- [Comunidade](/community): espaço de encontro e participação.
 - [Hoje](/hoje): Painel espiritual diário.
 - [Sobre](/about): Sobre a Cathedra Digital.
 - [Planos](/pricing): Planos e assinaturas.
 - [Transparência](/transparencia): Modelo de doação e transparência financeira.
 - [Parceiros](/partners): Instituições parceiras.
+
+## Princípios editoriais
+
+- As fontes de referência prioritárias são a Sagrada Escritura, o Catecismo da Igreja Católica e os documentos oficiais do Magistério.
+- Ferramentas de inteligência artificial auxiliam na organização, comparação e explicação; não substituem as fontes nem devem inventar referências doutrinais.
+- As conexões entre conteúdos devem preservar a fonte, o contexto e a referência original.
 
 ## Optional
 
