@@ -57,6 +57,7 @@ const AboutPage: React.FC = () => (
         <div className="space-y-spacing-md text-muted-foreground leading-relaxed text-premium-lg">
           <p>A Cathedra Digital nasceu de uma convicção profunda: a riqueza incomensurável da tradição católica — sua teologia, liturgia, moral e espiritualidade — deve ser acessível a todo fiel, sem diluição e sem complicação.</p>
           <p>Nosso objetivo primordial é fornecer uma plataforma de formação contínua, onde cada recurso é meticulosamente desenhado para conduzir o usuário da simples leitura à profunda compreensão, e da compreensão à vivência cristã autêntica.</p>
+          <p>A organização editorial prioriza as fontes de referência da fé católica: a Sagrada Escritura, o Catecismo da Igreja Católica e os documentos oficiais do Magistério. As ferramentas de inteligência artificial apoiam a organização e a explicação dos conteúdos, sem substituir as fontes nem a autoridade da Igreja.</p>
         </div>
       </div>
 
