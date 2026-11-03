@@ -518,46 +518,9 @@ test('SEO: robots e sitemap são servidos com URLs canônicas únicas', async ({
 });
 
 
-test('Formar-se: entrada editorial, filtros acessíveis e cartões navegáveis', async ({ page }) => {
-  const errors: string[] = [];
-  const failedResponses: string[] = [];
-  page.on('console', message => {
-    if (message.type() === 'error') errors.push(message.text());
-  });
-  page.on('response', response => {
-    if (response.status() >= 400) failedResponses.push(`${response.status()}: ${new URL(response.url()).pathname}`);
-  });
-
+test('Formar-se: rota protegida preserva destino ao exigir autenticação', async ({ page }) => {
   const response = await page.goto('/jornadas');
-  expect(response?.ok(), `/jornadas: HTTP ${response?.status()}`).toBeTruthy();
-  await expect(page.getByRole('heading', { name: 'Formar-se', exact: true })).toBeVisible();
-  await expect(page.getByText(/Percursos para aprofundar a fé/i)).toBeVisible();
-
-  const filters = page.getByRole('group', { name: 'Filtrar percursos por categoria' });
-  await expect(filters).toBeVisible();
-  const all = filters.getByRole('button', { name: 'Todas', exact: true });
-  await expect(all).toHaveAttribute('aria-pressed', 'true');
-
-  const filterButtons = filters.getByRole('button');
-  if (await filterButtons.count() > 1) {
-    const secondFilter = filterButtons.nth(1);
-    await secondFilter.click();
-    await expect(secondFilter).toHaveAttribute('aria-pressed', 'true');
-    await all.click();
-    await expect(all).toHaveAttribute('aria-pressed', 'true');
-  }
-
-  const journeyLinks = page.locator('a[href^="/jornadas/"]');
-  if (await journeyLinks.count() > 0) {
-    await expect(journeyLinks.first()).toBeVisible();
-    await journeyLinks.first().focus();
-    await expect(journeyLinks.first()).toBeFocused();
-  }
-
-  const hasHorizontalOverflow = await page.evaluate(() =>
-    document.documentElement.scrollWidth > document.documentElement.clientWidth,
-  );
-  expect(hasHorizontalOverflow, 'Formar-se não deve criar overflow horizontal na página').toBe(false);
-  expect(errors, 'Formar-se: erros de console').toEqual([]);
-  expect(failedResponses, 'Formar-se: respostas HTTP com erro').toEqual([]);
+  expect(response?.ok(), '/jornadas: HTTP ' + response?.status()).toBeTruthy();
+  await expect(page).toHaveURL(/\/auth\?next=/);
+  expect(new URL(page.url()).searchParams.get('next')).toContain('/jornadas');
 });
