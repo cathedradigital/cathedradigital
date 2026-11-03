@@ -516,3 +516,12 @@ test('SEO: robots e sitemap são servidos com URLs canônicas únicas', async ({
   expect(new Set(urls).size, 'sitemap não pode conter URLs duplicadas').toBe(urls.length);
   expect(urls.every((url) => url === 'https://www.cathedradigital.com.br' || url.startsWith('https://www.cathedradigital.com.br/'))).toBe(true);
 });
+
+
+test('Formar-se: rota protegida preserva destino ao exigir autenticação', async ({ page }) => {
+  const response = await page.goto('/jornadas');
+  expect(response?.ok(), '/jornadas: HTTP ' + response?.status()).toBeTruthy();
+  await expect(page).toHaveURL(/\/auth\?next=/);
+  const next = new URL(page.url()).searchParams.get('next') ?? '';
+  expect(decodeURIComponent(next)).toContain('/jornadas');
+});

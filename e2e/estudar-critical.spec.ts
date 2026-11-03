@@ -247,3 +247,41 @@ test.describe('responsive critical flow', () => {
     expect(overflow).toBe(false);
   });
 });
+
+
+test('Formar-se: entrada editorial, filtros acessíveis e cartões navegáveis', async ({ page }) => {
+  const bad = watchBrowserHealth(page);
+  await login(page, '/jornadas');
+
+  await expect(page.getByRole('heading', { name: 'Formar-se', exact: true })).toBeVisible();
+  await expect(page.getByText(/Percursos para aprofundar a fé/i)).toBeVisible();
+
+  const filters = page.getByRole('group', { name: 'Filtrar percursos por categoria' });
+  await expect(filters).toBeVisible();
+  const all = filters.getByRole('button', { name: 'Todas', exact: true });
+  await expect(all).toHaveAttribute('aria-pressed', 'true');
+
+  const filterButtons = filters.getByRole('button');
+  if (await filterButtons.count() > 1) {
+    const secondFilter = filterButtons.nth(1);
+    await secondFilter.click();
+    await expect(secondFilter).toHaveAttribute('aria-pressed', 'true');
+    await all.click();
+    await expect(all).toHaveAttribute('aria-pressed', 'true');
+  }
+
+  const journeyLinks = page.locator('a[href^="/jornadas/"]');
+  if (await journeyLinks.count() > 0) {
+    await expect(journeyLinks.first()).toBeVisible();
+    await journeyLinks.first().focus();
+    await expect(journeyLinks.first()).toBeFocused();
+  } else {
+    await expect(page.getByText('Nenhuma jornada nesta trilha ainda.')).toBeVisible();
+  }
+
+  const hasHorizontalOverflow = await page.evaluate(() =>
+    document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
+  );
+  expect(hasHorizontalOverflow, 'Formar-se não deve criar overflow horizontal na página').toBe(false);
+  expect(bad, 'Formar-se: erros de console ou HTTP').toEqual([]);
+});
