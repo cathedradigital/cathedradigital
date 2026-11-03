@@ -78,7 +78,7 @@ const TestimonialsSection = ({
           title={<span id="testimonials-heading">Vozes que caminham conosco</span>}
         />
         <p className="max-w-2xl text-base text-muted-foreground">
-          Padres da Igreja e leitores contemporâneos — a mesma Tradição, através dos séculos.
+          Citações de autores da tradição patrística, sempre acompanhadas da indicação da obra de origem.
         </p>
       </div>
 
