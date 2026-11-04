@@ -4,7 +4,6 @@ const baseURL = process.env.PLAYWRIGHT_TEST_BASE_URL ?? "http://127.0.0.1:4173";
 
 export default defineConfig({
   testDir: "./e2e",
-  globalSetup: "./e2e/auth-preflight.mjs",
   timeout: 90_000,
   expect: { timeout: 15_000 },
   fullyParallel: false,
@@ -12,8 +11,8 @@ export default defineConfig({
   retries: process.env.CI ? 1 : 0,
   reporter: [["./e2e/safe-reporter.mjs"]],
   // Authentication is exercised through the real application UI in the specs.
-  // The global preflight independently verifies the same account against the
-  // configured Supabase project before browser tests begin.
+  // Do not gate the browser suite with a second out-of-browser password grant:
+  // it can reject before the actual login flow is exercised.
   // Authenticated form values can appear in snapshots, screenshots and traces.
   // Keep assertions unchanged while disabling raw browser-state artifacts.
   use: { baseURL, trace: "off", screenshot: "off", video: "off" },
