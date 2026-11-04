@@ -1,4 +1,9 @@
 import { test, expect } from '@playwright/test';
+import { readFileSync } from 'node:fs';
+import { createRequire } from 'node:module';
+
+const require = createRequire(import.meta.url);
+const DOMPURIFY_BROWSER_BUNDLE = require.resolve('dompurify/dist/purify.js');
 
 test('public browser smoke: landing and login render', async ({ page }) => {
   const bad: string[] = [];
@@ -608,4 +613,53 @@ test('Rezar: Novena permite navegar pelos dias e registrar conclusão', async ({
 
   await page.getByRole('button', { name: /Concluir dia 2/ }).click();
   await expect(page.getByText('1/9 dias completos')).toBeVisible();
+});
+
+
+
+test('Segurança editorial: DOMPurify preserva estrutura e remove conteúdo ativo', async ({ page }) => {
+  await page.goto('/');
+  await page.addScriptTag({ path: DOMPURIFY_BROWSER_BUNDLE });
+
+  const result = await page.evaluate(() => {
+    const purifier = (window as Window & { DOMPurify?: { sanitize: (html: string) => string } }).DOMPurify;
+    if (!purifier) throw new Error('DOMPurify browser bundle was not initialized.');
+
+    const dirty = `
+      <h2>Vida e missão</h2>
+      <p>Texto editorial <strong>essencial</strong> e <em>contextual</em>.</p>
+      <ul><li>Primeiro ponto preservado</li></ul>
+      <a href="https://www.vatican.va/content/vatican/pt.html">Fonte oficial</a>
+      <a href="javascript:window.__editorialXss=1">link inválido</a>
+      <img src="x" onerror="window.__editorialXss=2">
+      <script>window.__editorialXss=3</script>
+    `;
+    const clean = purifier.sanitize(dirty);
+    const article = document.createElement('article');
+    article.innerHTML = clean;
+    return {
+      heading: article.querySelector('h2')?.textContent,
+      strong: article.querySelector('strong')?.textContent,
+      emphasis: article.querySelector('em')?.textContent,
+      listItem: article.querySelector('li')?.textContent,
+      officialHref: article.querySelector('a[href^="https://"]')?.getAttribute('href'),
+      scriptCount: article.querySelectorAll('script').length,
+      eventHandlerCount: article.querySelectorAll('[onerror], [onclick]').length,
+      unsafeHrefCount: article.querySelectorAll('a[href^="javascript:"]').length,
+    };
+  });
+
+  expect(result.heading).toBe('Vida e missão');
+  expect(result.strong).toBe('essencial');
+  expect(result.emphasis).toBe('contextual');
+  expect(result.listItem).toBe('Primeiro ponto preservado');
+  expect(result.officialHref).toContain('vatican.va');
+  expect(result.scriptCount).toBe(0);
+  expect(result.eventHandlerCount).toBe(0);
+  expect(result.unsafeHrefCount).toBe(0);
+
+  const bioSource = readFileSync(new URL('../src/features/saints/editorialEngine/blocks/SaintBioBlock.tsx', import.meta.url), 'utf8');
+  const workSource = readFileSync(new URL('../src/pages/biblioteca/SaintWorkReaderPage.tsx', import.meta.url), 'utf8');
+  expect(bioSource).toContain('DOMPurify.sanitize(html)');
+  expect(workSource).toContain("DOMPurify.sanitize(chapter.body_html ?? '')");
 });
