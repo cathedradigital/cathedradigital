@@ -152,7 +152,6 @@ jobs:
           set -euo pipefail
           worker="https://cathedradigital.cathedradigital.workers.dev"
           domains=("https://cathedradigital.com.br" "https://www.cathedradigital.com.br")
-          challenge_count=0
 
           check_url() {
             local url="$1"
@@ -165,9 +164,11 @@ jobs:
             echo "=== $url -> HTTP $status ($size bytes) ==="
 
             if grep -Eiq '^cf-mitigated:[[:space:]]*challenge' "$headers_file"; then
-              echo "::warning::Cloudflare bot challenge intercepted CI request for $url; visitor accessibility remains unverified."
+              echo "Response headers (safe subset):"
+              awk 'BEGIN { IGNORECASE=1 } /^HTTP\// || /^(server|cf-ray|cf-mitigated|cf-cache-status|content-type|location|cf-access-denied|www-authenticate):/ { print }' "$headers_file"
               rm -f "$body_file" "$headers_file"
-              return 2
+              echo "::error::Cloudflare challenge intercepted $url. Production accessibility is unverified; release validation must fail."
+              return 1
             fi
 
             if [ "$status" != "200" ] || [ "$size" -lt "$expected" ]; then
@@ -186,16 +187,7 @@ jobs:
           check_url "$worker" 100
 
           for domain in "${domains[@]}"; do
-            if check_url "$domain" 100; then
-              :
-            else
-              result=$?
-              if [ "$result" -eq 2 ]; then
-                challenge_count=$((challenge_count + 1))
-              else
-                exit "$result"
-              fi
-            fi
+            check_url "$domain" 100
           done
 
           check_url "$worker/robots.txt" 1
@@ -208,26 +200,10 @@ jobs:
 
           for domain in "${domains[@]}"; do
             for resource in robots.txt sitemap.xml; do
-              if check_url "$domain/$resource" "$([ "$resource" = "robots.txt" ] && echo 1 || echo 100)"; then
-                :
-              else
-                result=$?
-                if [ "$result" -eq 2 ]; then
-                  challenge_count=$((challenge_count + 1))
-                else
-                  exit "$result"
-                fi
-              fi
+              expected=100
+              if [ "$resource" = "robots.txt" ]; then expected=1; fi
+              check_url "$domain/$resource" "$expected"
             done
           done
 
-          if [ "$challenge_count" -gt 0 ]; then
-            echo "::warning::$challenge_count custom-domain request(s) were intercepted by Cloudflare challenge. Direct Worker and SEO checks passed; custom-domain visitor access is inconclusive, not marked as verified."
-            {
-              echo "### Production validation"
-              echo "- Direct Worker and its robots.txt/sitemap.xml: passed."
-              echo "- Custom domains: one or more CI requests received Cloudflare bot challenges; visitor accessibility remains unverified."
-            } >> "$GITHUB_STEP_SUMMARY"
-          else
-            echo "All production endpoints and SEO resources returned HTTP 200."
-          fi
+          echo "All production endpoints and SEO resources returned HTTP 200 without Cloudflare challenges."
