@@ -33,7 +33,7 @@ function normalizeSupabaseProjectUrl(rawUrl: string): string {
   if (url.search || url.hash) {
     throw new Error('Supabase project URL must not contain a query string or fragment.');
   }
-  const path = url.pathname.replace(/\\/+$/, '');
+  const path = url.pathname.replace(/\/+$/, '');
   if (path === '/rest/v1') {
     // Supabase JS expects the project root and appends /auth/v1 and /rest/v1.
     url.pathname = '';
@@ -43,7 +43,7 @@ function normalizeSupabaseProjectUrl(rawUrl: string): string {
   if (url.protocol !== 'https:' && url.hostname !== 'localhost' && url.hostname !== '127.0.0.1') {
     throw new Error('Supabase project URL must use HTTPS.');
   }
-  return url.toString().replace(/\\/+$/, '');
+  return url.toString().replace(/\/+$/, '');
 }
 
 function createSupabaseClient() {
