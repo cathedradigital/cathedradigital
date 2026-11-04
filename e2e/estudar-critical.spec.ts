@@ -13,6 +13,14 @@ async function login(page: Page, destination: string) {
   await page.getByLabel('Senha').fill(password!);
   await page.getByRole('button', { name: 'Entrar', exact: true }).click();
   const destinationPath = destination.split('?')[0];
+  const alert = page.getByRole('alert');
+  const outcome = await Promise.race([
+    page.waitForURL(url => url.pathname === destinationPath, { timeout: 20_000 }).then(() => 'authenticated' as const),
+    alert.waitFor({ state: 'visible', timeout: 20_000 }).then(() => 'rejected' as const),
+  ]);
+  if (outcome === 'rejected') {
+    throw new Error('Application rejected the configured E2E login: ' + (await alert.innerText()));
+  }
   await expect(page).toHaveURL(url => url.pathname === destinationPath);
 }
 
