@@ -39,5 +39,6 @@
 ## Correções restritas — design system Estudar e Rezar
 - [x] Confirmar regex, escapes CSS, falha do Nexus e promessas de Rezar
 - [x] Corrigir apenas divergências confirmadas sem alterar navegação ou conteúdo
-- [ ] Executar lint, validadores, testes públicos e revisão desktop/390×844
-- [ ] Relatar verificações indisponíveis sem publicar
+- [x] Executar lint, validadores e revisão desktop/390×844; build automático OK
+- [ ] Suítes Playwright JS: bloqueadas pela ausência do Chromium 1248 exigido pelo pacote; crítico também sem E2E_TEST_EMAIL/E2E_TEST_PASSWORD
+- [x] Relatar verificações indisponíveis sem publicar
