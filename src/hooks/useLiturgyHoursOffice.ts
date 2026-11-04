@@ -15,12 +15,8 @@ import { supabase } from '@/lib/db';
 import type { DailyLiturgy } from '@/core/liturgy/LiturgyProvider';
 import { getCachedHoursOffice, cacheHoursOffice } from '@/lib/offlineCache';
 
-export type HourSlug =
-  | 'oficio' | 'laudes' | 'tercia' | 'sexta' | 'noa' | 'vesperas' | 'completas';
-
-export const ALL_HOUR_SLUGS: HourSlug[] = [
-  'oficio', 'laudes', 'tercia', 'sexta', 'noa', 'vesperas', 'completas',
-];
+export { ALL_HOUR_SLUGS };
+export type { HourSlug };
 
 export interface OfficePsalmody {
   antiphon: string;
