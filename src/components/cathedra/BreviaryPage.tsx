@@ -25,6 +25,7 @@ import {
   type LiturgyHoursOfficeRow,
 } from '@/hooks/useLiturgyHoursOffice';
 import { toIsoDateKey } from '@/core/liturgy/LiturgyProvider';
+import { normalizeHourSlug } from '@/core/liturgy/hour-slugs';
 import { PrayerEngineReader } from './PrayerEngineReader';
 import { BreviaryContinuousReader, type BreviaryHourBundle } from './BreviaryContinuousReader';
 import { LiturgyHoursOfficeCards } from './primitives/liturgy/LiturgyHoursOfficeCards';
@@ -67,10 +68,6 @@ function suggestedHourFor(now: Date): HourSlug {
   if (h < 17) return 'noa';
   if (h < 20) return 'vesperas';
   return 'completas';
-}
-
-function isHour(s: string | null): s is HourSlug {
-  return !!s && (ALL_HOUR_SLUGS as string[]).includes(s);
 }
 
 function parseDateParam(raw: string | null): Date {
@@ -149,7 +146,7 @@ const BreviaryPage: React.FC = () => {
   const isToday = isoDate === todayIso;
 
   const hourParam = searchParams.get('h');
-  const selectedHour: HourSlug | null = isHour(hourParam) ? hourParam : null;
+  const selectedHour: HourSlug | null = hourParam ? normalizeHourSlug(hourParam) : null;
   const dayMode = searchParams.get('mode') === 'day';
 
   const suggested = useMemo(() => suggestedHourFor(new Date()), []);
@@ -190,11 +187,11 @@ const BreviaryPage: React.FC = () => {
     [searchParams, setSearchParams, todayIso],
   );
 
-  const { hierarchy, activeSection, loading } = usePrayerHierarchy(
+  const { hierarchy, activeSection, loading, error: hierarchyError, reload: reloadHierarchy } = usePrayerHierarchy(
     'liturgia-das-horas',
     selectedHour ?? undefined,
   );
-  const { prayers } = usePrayers();
+  const { prayers, loading: prayersLoading, error: prayersError, reload: reloadPrayers } = usePrayers();
   const prayer = useMemo(
     () => prayers.find((p) => p.slug === 'liturgia-das-horas') ?? null,
     [prayers],
@@ -237,6 +234,11 @@ const BreviaryPage: React.FC = () => {
   // Preferências de tipografia (persistidas cross-session, funciona offline).
   const { wrapperStyle: typographyStyle } = useReaderTypography();
 
+  const hierarchyHasSections = (hierarchy?.sections.length ?? 0) > 0;
+  const prayerConfigurationMissing = !loading && !prayersLoading && !prayersError && !hierarchyError
+    && (!prayer || !hierarchy || !hierarchyHasSections);
+  const prayerLoadFailed = !!prayersError || !!hierarchyError;
+
   // ── Dia inteiro contínuo (7 horas em fluxo único) ──
   // Coleta as 7 horas via useQueries (reativo, offline-first via IDB).
   const allHourQueries = useQueries({
@@ -249,6 +251,38 @@ const BreviaryPage: React.FC = () => {
         }))
       : [],
   });
+
+  if (!loading && !prayersLoading && (prayerLoadFailed || prayerConfigurationMissing)) {
+    const title = prayerLoadFailed
+      ? 'Não foi possível carregar a Liturgia das Horas'
+      : !prayer
+        ? 'Liturgia das Horas ainda não cadastrada'
+        : 'Estrutura da Liturgia das Horas incompleta';
+    const description = prayerLoadFailed
+      ? 'Houve uma falha ao consultar o catálogo ou a estrutura de oração. Tente novamente.'
+      : !prayer
+        ? 'O cadastro publicado “liturgia-das-horas” não foi encontrado. O conteúdo não será inventado nem substituído por dados fictícios.'
+        : 'O cadastro existe, mas ainda não possui seções canônicas publicadas. A equipe precisa completar a estrutura antes de liberar o leitor.';
+    return (
+      <>
+        <SEOHead title="Liturgia das Horas · Cathedra Digital" description="Estado de disponibilidade da Liturgia das Horas." path="/breviary" />
+        <section className="mx-auto max-w-2xl rounded-premium border border-border bg-card p-spacing-xl text-center space-y-spacing-md" role="status" aria-live="polite">
+          <Icons.BookOpen className="mx-auto h-8 w-8 text-primary" />
+          <h1 className="font-display text-premium-2xl font-bold text-foreground">{title}</h1>
+          <p className="font-serif leading-relaxed text-muted-foreground">{description}</p>
+          {prayerLoadFailed && (
+            <p className="text-premium-xs text-muted-foreground">
+              {[prayersError, hierarchyError].filter(Boolean).join(' · ')}
+            </p>
+          )}
+          <div className="flex flex-wrap justify-center gap-spacing-sm">
+            <Button onClick={() => { void reloadPrayers(); void reloadHierarchy(); }}>Tentar novamente</Button>
+            <Button variant="outline" onClick={() => { window.location.assign('/oracao'); }}>Voltar ao Livro de Orações</Button>
+          </div>
+        </section>
+      </>
+    );
+  }
 
   if (dayMode && prayer && hierarchy) {
     const orderedSections = ALL_HOUR_SLUGS
