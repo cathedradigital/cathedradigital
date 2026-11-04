@@ -67,11 +67,16 @@ jobs:
         with:
           node-version: "22.x"
 
-      - name: Install application dependencies
-        run: npm install
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: "1.3.0"
+
+      - name: Install application dependencies (frozen lockfile)
+        run: bun ci
 
       - name: Install Playwright browsers
-        run: npx playwright install --with-deps chromium
+        run: bunx playwright install --with-deps chromium
 
       - name: Build tested source
         run: |
@@ -80,13 +85,13 @@ jobs:
           . ./.env.production
           set +a
           node scripts/validate-supabase-build-env.mjs
-          npm run build
+          bun run build
 
       - name: Verify safe evidence handling with synthetic values
         run: node scripts/test-safe-playwright-evidence.mjs
 
       - name: Run public Playwright suite (desktop and mobile)
-        run: npm run test:e2e:public
+        run: bun run test:e2e:public
 
       - name: Validate sanitized public evidence
         id: safe_evidence
@@ -119,11 +124,16 @@ jobs:
         with:
           node-version: "22.x"
 
-      - name: Install application dependencies
-        run: npm install
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: "1.3.0"
+
+      - name: Install application dependencies (frozen lockfile)
+        run: bun ci
 
       - name: Install Playwright browsers
-        run: npx playwright install --with-deps chromium
+        run: bunx playwright install --with-deps chromium
 
       - name: Build trusted main
         run: |
@@ -132,7 +142,7 @@ jobs:
           . ./.env.production
           set +a
           node scripts/validate-supabase-build-env.mjs
-          npm run build
+          bun run build
 
       - name: Verify safe evidence handling with synthetic values
         run: node scripts/test-safe-playwright-evidence.mjs
@@ -146,7 +156,7 @@ jobs:
           E2E_TEST_PASSWORD: ${{ secrets.E2E_TEST_PASSWORD }}
 
       - name: Run complete authenticated Playwright suite
-        run: npx playwright test
+        run: bunx playwright test
         env:
           E2E_TEST_EMAIL: ${{ secrets.E2E_TEST_EMAIL }}
           E2E_TEST_PASSWORD: ${{ secrets.E2E_TEST_PASSWORD }}
