@@ -571,6 +571,10 @@ test('Rezar: Via-Sacra apresenta o portal, as 14 estações e inicia a primeira'
   await expect(page.getByTestId('via-sacra-journey')).toBeVisible();
 
   const landingPage = await page.context().newPage();
+  // Isola a landing do progresso persistido pela primeira sessão do portal.
+  await landingPage.addInitScript(() => {
+    localStorage.removeItem('cathedra:devotional-progress:viacrucis');
+  });
   const landing = await landingPage.goto('/viacrucis?enter=1');
   expect(landing?.ok(), '/viacrucis?enter=1 deve responder HTTP 2xx').toBeTruthy();
   await expect(landingPage.getByRole('heading', { name: 'Via Crucis' })).toBeVisible();
