@@ -22,6 +22,7 @@ interface UsePrayerHierarchyResult {
   blocks: PrayerBlock[];
   loading: boolean;
   error: Error | null;
+  reload: () => Promise<unknown>;
 }
 
 export function usePrayerHierarchy(
@@ -56,5 +57,6 @@ export function usePrayerHierarchy(
     blocks,
     loading: query.isLoading,
     error: query.error as Error | null,
+    reload: query.refetch,
   };
 }
