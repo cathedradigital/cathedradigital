@@ -570,17 +570,19 @@ test('Rezar: Via-Sacra apresenta o portal, as 14 estações e inicia a primeira'
   await page.getByRole('button', { name: 'Entrar em oração' }).click();
   await expect(page.getByTestId('via-sacra-journey')).toBeVisible();
 
-  const landing = await page.goto('/viacrucis?enter=1');
+  const landingPage = await page.context().newPage();
+  const landing = await landingPage.goto('/viacrucis?enter=1');
   expect(landing?.ok(), '/viacrucis?enter=1 deve responder HTTP 2xx').toBeTruthy();
-  await expect(page.getByRole('heading', { name: 'Via Crucis' })).toBeVisible();
-  await expect(page.getByTestId('via-sacra-intro')).toBeVisible();
-  await expect(page.locator('[data-testid^="via-sacra-station-tile-"]')).toHaveCount(14);
+  await expect(landingPage.getByRole('heading', { name: 'Via Crucis' })).toBeVisible();
+  await expect(landingPage.getByTestId('via-sacra-intro')).toBeVisible();
+  await expect(landingPage.locator('[data-testid^="via-sacra-station-tile-"]')).toHaveCount(14);
 
-  await page.getByTestId('via-sacra-start').click();
-  await expect(page.getByTestId('via-sacra-journey')).toBeVisible();
-  await expect(page.getByText('Escritura', { exact: true })).toBeVisible();
-  await expect(page.getByText('Meditação', { exact: true })).toBeVisible();
-  await expect(page.getByText('Oração', { exact: true })).toBeVisible();
+  await landingPage.getByTestId('via-sacra-start').click();
+  await expect(landingPage.getByTestId('via-sacra-journey')).toBeVisible();
+  await expect(landingPage.getByText('Escritura', { exact: true })).toBeVisible();
+  await expect(landingPage.getByText('Meditação', { exact: true })).toBeVisible();
+  await expect(landingPage.getByText('Oração', { exact: true })).toBeVisible();
+  await landingPage.close();
 });
 
 test('Rezar: Ladainhas abre o texto completo e permite localizar uma invocação', async ({ page }) => {
