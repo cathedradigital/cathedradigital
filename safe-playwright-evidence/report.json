@@ -1,0 +1,225 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-11-04T01:03:21.483Z",
+  "runStatus": "failed",
+  "counts": {
+    "total": 4,
+    "passed": 0,
+    "failed": 4,
+    "skipped": 0
+  },
+  "tests": [
+    {
+      "title": "chromium › estudar-hub-resilience.spec.ts › Estudar omite conexões quando a consulta do Nexus falha",
+      "project": "chromium",
+      "file": "e2e/estudar-hub-resilience.spec.ts",
+      "line": 3,
+      "column": 1,
+      "status": "failed",
+      "durationMs": 3,
+      "retry": 0,
+      "error": {
+        "name": "Error",
+        "detail": "Error: browserType.launch: Executable doesn't exist at /opt/ms-playwright/chromium_headless_shell-1248/chrome-headless-shell-linux64/chrome-headless-shell\n╔════════════════════════════════════════════════════════════╗\n║ Looks like Playwright was just installed or updated.       ║\n║ Please run the following command to download new browsers: ║\n║                                                            ║\n║     npx playwright install                                 ║\n║                                                            ║\n║ <3 Playwright Team                                         ║\n╚════════════════════════════════════════════════════════════╝",
+        "stack": "Error: browserType.launch: Executable doesn't exist at /opt/ms-playwright/chromium_headless_shell-1248/chrome-headless-shell-linux64/chrome-headless-shell\n╔════════════════════════════════════════════════════════════╗\n║ Looks like Playwright was just installed or updated.       ║\n║ Please run the following command to download new browsers: ║\n║                                                            ║\n║     npx playwright install                                 ║\n║                                                            ║\n║ <3 Playwright Team                                         ║\n╚════════════════════════════════════════════════════════════╝",
+        "steps": [
+          {
+            "title": "Before Hooks",
+            "durationMs": 23,
+            "error": "Error: browserType.launch: Executable doesn't exist at /opt/ms-playwright/chromium_headless_shell-1248/chrome-headless-shell-linux64/chrome-headless-shell\n╔════════════════════════════════════════════════════════════╗\n║ Looks like Playwright was just installed or updated.       ║\n║ Please run the following command to download new browsers: ║\n║                                                            ║\n║     npx playwright install                                 ║\n║                                                            ║\n║ <3 Playwright Team                                         ║\n╚════════════════════════════════════════════════════════════╝",
+            "steps": [
+              {
+                "title": "Fixture \"browser\"",
+                "durationMs": 9,
+                "error": "Error: browserType.launch: Executable doesn't exist at /opt/ms-playwright/chromium_headless_shell-1248/chrome-headless-shell-linux64/chrome-headless-shell\n╔════════════════════════════════════════════════════════════╗\n║ Looks like Playwright was just installed or updated.       ║\n║ Please run the following command to download new browsers: ║\n║                                                            ║\n║     npx playwright install                                 ║\n║                                                            ║\n║ <3 Playwright Team                                         ║\n╚════════════════════════════════════════════════════════════╝",
+                "steps": [
+                  {
+                    "title": "Launch browser",
+                    "durationMs": 5,
+                    "error": "Error: browserType.launch: Executable doesn't exist at /opt/ms-playwright/chromium_headless_shell-1248/chrome-headless-shell-linux64/chrome-headless-shell\n╔════════════════════════════════════════════════════════════╗\n║ Looks like Playwright was just installed or updated.       ║\n║ Please run the following command to download new browsers: ║\n║                                                            ║\n║     npx playwright install                                 ║\n║                                                            ║\n║ <3 Playwright Team                                         ║\n╚════════════════════════════════════════════════════════════╝"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "title": "After Hooks",
+            "durationMs": 12,
+            "error": null
+          },
+          {
+            "title": "Worker Cleanup",
+            "durationMs": 2,
+            "error": null,
+            "steps": [
+              {
+                "title": "Fixture \"browser\"",
+                "durationMs": 0,
+                "error": null
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "title": "chromium › estudar-hub-resilience.spec.ts › Estudar transforma João 3,16 em um destino bíblico interno",
+      "project": "chromium",
+      "file": "e2e/estudar-hub-resilience.spec.ts",
+      "line": 15,
+      "column": 1,
+      "status": "failed",
+      "durationMs": 3,
+      "retry": 0,
+      "error": {
+        "name": "Error",
+        "detail": "Error: browserType.launch: Executable doesn't exist at /opt/ms-playwright/chromium_headless_shell-1248/chrome-headless-shell-linux64/chrome-headless-shell\n╔════════════════════════════════════════════════════════════╗\n║ Looks like Playwright was just installed or updated.       ║\n║ Please run the following command to download new browsers: ║\n║                                                            ║\n║     npx playwright install                                 ║\n║                                                            ║\n║ <3 Playwright Team                                         ║\n╚════════════════════════════════════════════════════════════╝",
+        "stack": "Error: browserType.launch: Executable doesn't exist at /opt/ms-playwright/chromium_headless_shell-1248/chrome-headless-shell-linux64/chrome-headless-shell\n╔════════════════════════════════════════════════════════════╗\n║ Looks like Playwright was just installed or updated.       ║\n║ Please run the following command to download new browsers: ║\n║                                                            ║\n║     npx playwright install                                 ║\n║                                                            ║\n║ <3 Playwright Team                                         ║\n╚════════════════════════════════════════════════════════════╝",
+        "steps": [
+          {
+            "title": "Before Hooks",
+            "durationMs": 22,
+            "error": "Error: browserType.launch: Executable doesn't exist at /opt/ms-playwright/chromium_headless_shell-1248/chrome-headless-shell-linux64/chrome-headless-shell\n╔════════════════════════════════════════════════════════════╗\n║ Looks like Playwright was just installed or updated.       ║\n║ Please run the following command to download new browsers: ║\n║                                                            ║\n║     npx playwright install                                 ║\n║                                                            ║\n║ <3 Playwright Team                                         ║\n╚════════════════════════════════════════════════════════════╝",
+            "steps": [
+              {
+                "title": "Fixture \"browser\"",
+                "durationMs": 11,
+                "error": "Error: browserType.launch: Executable doesn't exist at /opt/ms-playwright/chromium_headless_shell-1248/chrome-headless-shell-linux64/chrome-headless-shell\n╔════════════════════════════════════════════════════════════╗\n║ Looks like Playwright was just installed or updated.       ║\n║ Please run the following command to download new browsers: ║\n║                                                            ║\n║     npx playwright install                                 ║\n║                                                            ║\n║ <3 Playwright Team                                         ║\n╚════════════════════════════════════════════════════════════╝",
+                "steps": [
+                  {
+                    "title": "Launch browser",
+                    "durationMs": 8,
+                    "error": "Error: browserType.launch: Executable doesn't exist at /opt/ms-playwright/chromium_headless_shell-1248/chrome-headless-shell-linux64/chrome-headless-shell\n╔════════════════════════════════════════════════════════════╗\n║ Looks like Playwright was just installed or updated.       ║\n║ Please run the following command to download new browsers: ║\n║                                                            ║\n║     npx playwright install                                 ║\n║                                                            ║\n║ <3 Playwright Team                                         ║\n╚════════════════════════════════════════════════════════════╝"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "title": "After Hooks",
+            "durationMs": 9,
+            "error": null
+          },
+          {
+            "title": "Worker Cleanup",
+            "durationMs": 2,
+            "error": null,
+            "steps": [
+              {
+                "title": "Fixture \"browser\"",
+                "durationMs": 0,
+                "error": null
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "title": "mobile-chrome › estudar-hub-resilience.spec.ts › Estudar omite conexões quando a consulta do Nexus falha",
+      "project": "mobile-chrome",
+      "file": "e2e/estudar-hub-resilience.spec.ts",
+      "line": 3,
+      "column": 1,
+      "status": "failed",
+      "durationMs": 3,
+      "retry": 0,
+      "error": {
+        "name": "Error",
+        "detail": "Error: browserType.launch: Executable doesn't exist at /opt/ms-playwright/chromium_headless_shell-1248/chrome-headless-shell-linux64/chrome-headless-shell\n╔════════════════════════════════════════════════════════════╗\n║ Looks like Playwright was just installed or updated.       ║\n║ Please run the following command to download new browsers: ║\n║                                                            ║\n║     npx playwright install                                 ║\n║                                                            ║\n║ <3 Playwright Team                                         ║\n╚════════════════════════════════════════════════════════════╝",
+        "stack": "Error: browserType.launch: Executable doesn't exist at /opt/ms-playwright/chromium_headless_shell-1248/chrome-headless-shell-linux64/chrome-headless-shell\n╔════════════════════════════════════════════════════════════╗\n║ Looks like Playwright was just installed or updated.       ║\n║ Please run the following command to download new browsers: ║\n║                                                            ║\n║     npx playwright install                                 ║\n║                                                            ║\n║ <3 Playwright Team                                         ║\n╚════════════════════════════════════════════════════════════╝",
+        "steps": [
+          {
+            "title": "Before Hooks",
+            "durationMs": 23,
+            "error": "Error: browserType.launch: Executable doesn't exist at /opt/ms-playwright/chromium_headless_shell-1248/chrome-headless-shell-linux64/chrome-headless-shell\n╔════════════════════════════════════════════════════════════╗\n║ Looks like Playwright was just installed or updated.       ║\n║ Please run the following command to download new browsers: ║\n║                                                            ║\n║     npx playwright install                                 ║\n║                                                            ║\n║ <3 Playwright Team                                         ║\n╚════════════════════════════════════════════════════════════╝",
+            "steps": [
+              {
+                "title": "Fixture \"browser\"",
+                "durationMs": 8,
+                "error": "Error: browserType.launch: Executable doesn't exist at /opt/ms-playwright/chromium_headless_shell-1248/chrome-headless-shell-linux64/chrome-headless-shell\n╔════════════════════════════════════════════════════════════╗\n║ Looks like Playwright was just installed or updated.       ║\n║ Please run the following command to download new browsers: ║\n║                                                            ║\n║     npx playwright install                                 ║\n║                                                            ║\n║ <3 Playwright Team                                         ║\n╚════════════════════════════════════════════════════════════╝",
+                "steps": [
+                  {
+                    "title": "Launch browser",
+                    "durationMs": 5,
+                    "error": "Error: browserType.launch: Executable doesn't exist at /opt/ms-playwright/chromium_headless_shell-1248/chrome-headless-shell-linux64/chrome-headless-shell\n╔════════════════════════════════════════════════════════════╗\n║ Looks like Playwright was just installed or updated.       ║\n║ Please run the following command to download new browsers: ║\n║                                                            ║\n║     npx playwright install                                 ║\n║                                                            ║\n║ <3 Playwright Team                                         ║\n╚════════════════════════════════════════════════════════════╝"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "title": "After Hooks",
+            "durationMs": 13,
+            "error": null
+          },
+          {
+            "title": "Worker Cleanup",
+            "durationMs": 2,
+            "error": null,
+            "steps": [
+              {
+                "title": "Fixture \"browser\"",
+                "durationMs": 0,
+                "error": null
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "title": "mobile-chrome › estudar-hub-resilience.spec.ts › Estudar transforma João 3,16 em um destino bíblico interno",
+      "project": "mobile-chrome",
+      "file": "e2e/estudar-hub-resilience.spec.ts",
+      "line": 15,
+      "column": 1,
+      "status": "failed",
+      "durationMs": 3,
+      "retry": 0,
+      "error": {
+        "name": "Error",
+        "detail": "Error: browserType.launch: Executable doesn't exist at /opt/ms-playwright/chromium_headless_shell-1248/chrome-headless-shell-linux64/chrome-headless-shell\n╔════════════════════════════════════════════════════════════╗\n║ Looks like Playwright was just installed or updated.       ║\n║ Please run the following command to download new browsers: ║\n║                                                            ║\n║     npx playwright install                                 ║\n║                                                            ║\n║ <3 Playwright Team                                         ║\n╚════════════════════════════════════════════════════════════╝",
+        "stack": "Error: browserType.launch: Executable doesn't exist at /opt/ms-playwright/chromium_headless_shell-1248/chrome-headless-shell-linux64/chrome-headless-shell\n╔════════════════════════════════════════════════════════════╗\n║ Looks like Playwright was just installed or updated.       ║\n║ Please run the following command to download new browsers: ║\n║                                                            ║\n║     npx playwright install                                 ║\n║                                                            ║\n║ <3 Playwright Team                                         ║\n╚════════════════════════════════════════════════════════════╝",
+        "steps": [
+          {
+            "title": "Before Hooks",
+            "durationMs": 28,
+            "error": "Error: browserType.launch: Executable doesn't exist at /opt/ms-playwright/chromium_headless_shell-1248/chrome-headless-shell-linux64/chrome-headless-shell\n╔════════════════════════════════════════════════════════════╗\n║ Looks like Playwright was just installed or updated.       ║\n║ Please run the following command to download new browsers: ║\n║                                                            ║\n║     npx playwright install                                 ║\n║                                                            ║\n║ <3 Playwright Team                                         ║\n╚════════════════════════════════════════════════════════════╝",
+            "steps": [
+              {
+                "title": "Fixture \"browser\"",
+                "durationMs": 10,
+                "error": "Error: browserType.launch: Executable doesn't exist at /opt/ms-playwright/chromium_headless_shell-1248/chrome-headless-shell-linux64/chrome-headless-shell\n╔════════════════════════════════════════════════════════════╗\n║ Looks like Playwright was just installed or updated.       ║\n║ Please run the following command to download new browsers: ║\n║                                                            ║\n║     npx playwright install                                 ║\n║                                                            ║\n║ <3 Playwright Team                                         ║\n╚════════════════════════════════════════════════════════════╝",
+                "steps": [
+                  {
+                    "title": "Launch browser",
+                    "durationMs": 5,
+                    "error": "Error: browserType.launch: Executable doesn't exist at /opt/ms-playwright/chromium_headless_shell-1248/chrome-headless-shell-linux64/chrome-headless-shell\n╔════════════════════════════════════════════════════════════╗\n║ Looks like Playwright was just installed or updated.       ║\n║ Please run the following command to download new browsers: ║\n║                                                            ║\n║     npx playwright install                                 ║\n║                                                            ║\n║ <3 Playwright Team                                         ║\n╚════════════════════════════════════════════════════════════╝"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "title": "After Hooks",
+            "durationMs": 20,
+            "error": null
+          },
+          {
+            "title": "Worker Cleanup",
+            "durationMs": 2,
+            "error": null,
+            "steps": [
+              {
+                "title": "Fixture \"browser\"",
+                "durationMs": 0,
+                "error": null
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}
