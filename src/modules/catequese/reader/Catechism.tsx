@@ -768,7 +768,11 @@ const Catechism: React.FC = memo(() => {
     }
   };
 
-  const handleNavigateToBible = (abbr: string, chapter: number) => navigate(`/bible?book=${abbr}&ch=${chapter}`);
+  const handleNavigateToBible = (abbr: string, chapter: number, verse?: number) => {
+    const params = new URLSearchParams({ book: abbr, ch: String(chapter) });
+    if (verse !== undefined && verse !== null && verse > 0) params.set('v', String(verse));
+    navigate(`/bible?${params.toString()}`);
+  };
   const handleNavigateToDoc = (docId: string) => navigate(`/magisterium?doc=${docId}`);
 
   const startPara = selectedSection?.paragraphs[0] || 1;
