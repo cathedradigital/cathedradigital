@@ -88,11 +88,11 @@ if (!/Deno\.env\.get\(["']SUPABASE_ANON_KEY["']\)/.test(publicBibleText)) {
 const editorialSanitizerChecks = [
   {
     path: "src/features/saints/editorialEngine/blocks/SaintBioBlock.tsx",
-    pattern: /DOMPurify\\.sanitize\\(html\\)/,
+    pattern: /DOMPurify\.sanitize\(html\)/,
   },
   {
     path: "src/pages/biblioteca/SaintWorkReaderPage.tsx",
-    pattern: /DOMPurify\\.sanitize\\(chapter\\.body_html \\?\\? ''\\)/,
+    pattern: /DOMPurify\.sanitize\(chapter\.body_html \?\? ''\)/,
   },
 ];
 for (const check of editorialSanitizerChecks) {
@@ -105,10 +105,10 @@ for (const check of editorialSanitizerChecks) {
 const vaticanPath = resolve(process.cwd(), "supabase/functions/vatican-document/index.ts");
 const vaticanSource = readFileSync(vaticanPath, "utf8");
 const redirectGuards = [
-  /redirect:\\s*["']manual["']/,
-  /normalizeUrl\\(nextUrl\\.toString\\(\\)\\)/,
-  /visited\\.has\\(current\\)/,
-  /redirectCount\\s*===\\s*5/,
+  /redirect:\s*["']manual["']/,
+  /normalizeUrl\(nextUrl\.toString\(\)\)/,
+  /visited\.has\(current\)/,
+  /redirectCount\s*===\s*5/,
 ];
 if (redirectGuards.some((pattern) => !pattern.test(vaticanSource))) {
   violations.push("supabase/functions/vatican-document/index.ts: every redirect must be manually fetched, revalidated against the Vatican allowlist, cycle-checked, and hop-limited");
