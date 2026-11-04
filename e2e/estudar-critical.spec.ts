@@ -195,7 +195,10 @@ test('Catecismo: §2262 preserva o texto oficial e abre a referência bíblica',
   await expect(paragraph).toContainText('No sermão da montanha, o Senhor lembra o preceito');
   const bibleRef = paragraph.getByRole('button', { name: /Mt 5, 21/i }).first();
   await expect(bibleRef).toBeVisible();
+  // A referência abre primeiro o popover editorial; a navegação interna
+  // acontece pelo comando explícito "Ir ao versículo".
   await bibleRef.click();
+  await page.getByRole('button', { name: 'Ir ao versículo 21', exact: true }).click();
   await expect(page).toHaveURL(/\/bible\?book=Mt&ch=5&v=21/);
 });
 
