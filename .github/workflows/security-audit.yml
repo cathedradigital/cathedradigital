@@ -10,7 +10,7 @@ permissions:
   contents: read
 
 jobs:
-  npm-audit:
+  dependency-audit:
     name: Dependency vulnerability audit
     runs-on: ubuntu-latest
     timeout-minutes: 20
@@ -18,46 +18,21 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v6
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          node-version: "22.x"
+          bun-version: "1.3.0"
 
-      - name: Generate an ephemeral lockfile for dependency resolution
-        run: npm install --package-lock-only --ignore-scripts --no-audit --no-fund
-
-      - name: Run npm audit and preserve the report
-        id: audit
-        continue-on-error: true
-        run: npm audit --json > npm-audit.json
-
-      - name: Summarize and enforce all findings
+      - name: Audit exact locked dependency graph
+        shell: bash
         run: |
-          node --input-type=module <<'NODE'
-          import fs from 'node:fs';
+          set -euo pipefail
+          bun audit | tee bun-audit.txt
 
-          const report = JSON.parse(fs.readFileSync('npm-audit.json', 'utf8'));
-          const counts = report.metadata?.vulnerabilities;
-          if (!counts) {
-            console.error('npm audit did not return a valid vulnerability summary.');
-            process.exit(2);
-          }
-
-          console.log(`npm audit: ${counts.total} total; ${counts.critical} critical; ${counts.high} high; ${counts.moderate} moderate; ${counts.low} low.`);
-          for (const [name, item] of Object.entries(report.vulnerabilities ?? {})) {
-            console.log(`- ${name}: ${item.severity}; direct=${item.isDirect}; fixAvailable=${JSON.stringify(item.fixAvailable)}`);
-          }
-
-          if ((counts.total ?? 0) > 0) {
-            console.error('Release blocked: every dependency vulnerability must be fixed or formally risk-accepted before production.');
-            process.exit(1);
-          }
-          NODE
-
-      - name: Upload npm audit report
-        if: always() && hashFiles('npm-audit.json') != ''
+      - name: Upload dependency audit report
+        if: always() && hashFiles('bun-audit.txt') != ''
         uses: actions/upload-artifact@v5
         with:
-          name: npm-audit-report
-          path: npm-audit.json
+          name: dependency-audit-report
+          path: bun-audit.txt
           retention-days: 14
