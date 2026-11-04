@@ -18,7 +18,7 @@ const ICONS = {
 
 const sourceHref = (source: StudyContext['sources'][number]): string | null => {
   if (source.kind === 'bible') {
-    const match = source.ref.match(/^(.+?)\\s+(\\d+),(\\d+)$/);
+    const match = source.ref.match(/^(.+?)\s+(\d+),(\d+)$/);
     if (!match) return null;
     const [, book, chapter, verse] = match;
     return '/bible?book=' + encodeURIComponent(book) + '&ch=' + chapter + '&v=' + verse;
@@ -30,6 +30,7 @@ const sourceHref = (source: StudyContext['sources'][number]): string | null => {
 const EstudarHubPage: React.FC = () => {
   const [journeys, setJourneys] = useState<Journey[]>([]);
   const [nexusCount, setNexusCount] = useState<number | null>(null);
+  const [nexusError, setNexusError] = useState(false);
   const [journeysLoading, setJourneysLoading] = useState(true);
   const [studyQuery, setStudyQuery] = useState('');
   const [studyContext, setStudyContext] = useState<StudyContext | null>(null);
@@ -44,10 +45,14 @@ const EstudarHubPage: React.FC = () => {
     ]).then(([journeyResult, nexusResult]) => {
       if (!active) return;
       if (journeyResult.data) setJourneys(journeyResult.data);
-      if (!nexusResult.error) setNexusCount(nexusResult.count ?? 0);
+      if (nexusResult.error) setNexusError(true);
+      else setNexusCount(nexusResult.count ?? 0);
       setJourneysLoading(false);
     }).catch(() => {
-      if (active) setJourneysLoading(false);
+      if (active) {
+        setNexusError(true);
+        setJourneysLoading(false);
+      }
     });
     return () => { active = false; };
   }, []);
@@ -205,7 +210,7 @@ const EstudarHubPage: React.FC = () => {
           )}
         </section>
 
-        <section aria-labelledby="estudar-conexoes" className="pb-8 md:pb-10">
+        {!nexusError && <section aria-labelledby="estudar-conexoes" className="pb-8 md:pb-10">
           <div className="rounded-2xl border border-stitch-secondary/20 bg-stitch-surface-container-low p-4 md:p-5">
             <div className="flex items-start gap-3">
               <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-stitch-secondary" aria-hidden="true" />
@@ -217,7 +222,7 @@ const EstudarHubPage: React.FC = () => {
               </div>
             </div>
           </div>
-        </section>
+        </section>}
 
         <section aria-labelledby="estudar-fontes" className="border-t border-stitch-outline-variant/20 pt-7 md:pt-9">
           <div className="mb-4 md:mb-5">

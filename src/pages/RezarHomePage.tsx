@@ -4,12 +4,9 @@ import {
   BookMarked,
   CalendarDays,
   ChevronRight,
-  Clock3,
   Cross,
   Heart,
   Moon,
-  Sparkles,
-  Sun,
   Sunrise,
 } from 'lucide-react';
 import { Link } from '@/lib/rr-compat';
@@ -27,7 +24,6 @@ const PILLARS = [
     to: '/breviary',
     action: 'Entrar na Liturgia das Horas',
     icon: Sunrise,
-    accent: 'from-amber-500/15 via-primary/5 to-transparent',
   },
   {
     number: '02',
@@ -39,7 +35,6 @@ const PILLARS = [
     to: '/lectio',
     action: 'Começar a leitura orante',
     icon: BookOpen,
-    accent: 'from-sky-500/15 via-primary/5 to-transparent',
   },
   {
     number: '03',
@@ -51,7 +46,6 @@ const PILLARS = [
     to: '/oracao/rosario',
     action: 'Rezar o Rosário',
     icon: Heart,
-    accent: 'from-rose-500/15 via-primary/5 to-transparent',
   },
 ] as const;
 
@@ -67,7 +61,7 @@ const OTHER_PATHS = [
 ] as const;
 
 const RezarHomePage: React.FC = () => (
-  <section className="catedra-page catedra-section pb-24 pt-8 md:pt-12">
+  <section data-catedra-module="rezar" className="catedra-page catedra-section pb-24 pt-8 md:pt-12">
     <EditorialHero density="minimal" align="center">
       <EditorialHero.Eyebrow>Ritmo, silêncio e presença de Deus.</EditorialHero.Eyebrow>
       <EditorialHero.Title>Rezar</EditorialHero.Title>
@@ -92,8 +86,8 @@ const RezarHomePage: React.FC = () => (
           {PILLARS.map((item) => {
             const Icon = item.icon;
             return (
-              <article key={item.to} className="group flex min-h-full flex-col overflow-hidden rounded-3xl border border-border/70 bg-card shadow-sm transition-all hover:-translate-y-1 hover:border-primary/35 hover:shadow-xl">
-                <div className={`relative flex min-h-36 items-center justify-between bg-gradient-to-br ${item.accent} px-6 py-6`}>
+              <article key={item.to} className="group flex min-h-full flex-col overflow-hidden rounded-3xl border border-border/70 bg-card shadow-sm transition-all hover:-translate-y-1 hover:border-primary/35 hover:shadow-xl motion-reduce:transition-none motion-reduce:hover:translate-y-0">
+                <div className="relative flex min-h-36 items-center justify-between bg-gradient-to-br from-[color-mix(in_srgb,var(--catedra-module-accent)_15%,transparent)] via-[color-mix(in_srgb,var(--catedra-module-accent)_5%,transparent)] to-transparent px-6 py-6">
                   <span className="font-serif text-5xl font-light text-primary/20">{item.number}</span>
                   <span className="flex h-14 w-14 items-center justify-center rounded-2xl border border-primary/10 bg-background/75 text-primary shadow-sm">
                     <Icon className="h-7 w-7" aria-hidden="true" />
