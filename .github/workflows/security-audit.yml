@@ -10,50 +10,13 @@ permissions:
   contents: read
 
 jobs:
-  refresh-compatible-lock:
-    if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'dependency/audit-fix2-20261104'
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    steps:
-      - name: Checkout trusted dependency branch
-        uses: actions/checkout@v6
-        with:
-          ref: ${{ github.event.pull_request.head.ref }}
-
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: "1.3.0"
-
-      - name: Refresh compatible dependency versions
-        run: bun update
-
-      - name: Commit refreshed lockfile
-        shell: bash
-        run: |
-          set -euo pipefail
-          if git diff --quiet -- package.json bun.lock; then
-            echo "No compatible dependency updates were available."
-            exit 0
-          fi
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add package.json bun.lock
-          git commit -m "chore(deps): refresh vulnerable locked packages"
-          git push origin "HEAD:${{ github.event.pull_request.head.ref }}"
-
   dependency-audit:
-    needs: refresh-compatible-lock
-    if: always()
     name: Dependency vulnerability audit
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
       - name: Checkout
         uses: actions/checkout@v6
-        with:
-          ref: ${{ github.event.pull_request.head.ref == 'dependency/audit-fix2-20261104' && github.event.pull_request.head.ref || github.sha }}
 
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
