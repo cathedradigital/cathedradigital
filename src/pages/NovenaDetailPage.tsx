@@ -69,6 +69,13 @@ const NovenaDetailPage: React.FC = () => {
     };
     setProgress(next);
     saveProgress(novena.slug, next);
+    if (nextDay !== currentDay) {
+      setSearchParams((previous) => {
+        const params = new URLSearchParams(previous);
+        params.set('dia', String(nextDay));
+        return params;
+      }, { replace: true });
+    }
   };
 
   const goToDay = (d: number) => {
