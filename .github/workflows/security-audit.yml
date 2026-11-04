@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   refresh-compatible-lock:
-    if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'dependency/audit-fix-20261104'
+    if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'dependency/audit-fix2-20261104'
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -53,7 +53,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
         with:
-          ref: ${{ github.event.pull_request.head.ref == 'dependency/audit-fix-20261104' && github.event.pull_request.head.ref || github.sha }}
+          ref: ${{ github.event.pull_request.head.ref == 'dependency/audit-fix2-20261104' && github.event.pull_request.head.ref || github.sha }}
 
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
