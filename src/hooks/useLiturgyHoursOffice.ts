@@ -14,6 +14,7 @@ import { useQuery, useQueryClient, type QueryClient } from '@tanstack/react-quer
 import { supabase } from '@/lib/db';
 import type { DailyLiturgy } from '@/core/liturgy/LiturgyProvider';
 import { getCachedHoursOffice, cacheHoursOffice } from '@/lib/offlineCache';
+import { ALL_HOUR_SLUGS, type HourSlug } from '@/core/liturgy/hour-slugs';
 
 export { ALL_HOUR_SLUGS };
 export type { HourSlug };
