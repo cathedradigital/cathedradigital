@@ -35,3 +35,9 @@
 - [ ] Corrigir falhas concretas de interface sem alterar conteúdo, banco ou autenticação
 - [ ] Executar regressões e segunda revisão no preview
 - [ ] Documentar dependências ausentes e verificações não disponíveis
+
+## Correções restritas — design system Estudar e Rezar
+- [x] Confirmar regex, escapes CSS, falha do Nexus e promessas de Rezar
+- [x] Corrigir apenas divergências confirmadas sem alterar navegação ou conteúdo
+- [ ] Executar lint, validadores, testes públicos e revisão desktop/390×844
+- [ ] Relatar verificações indisponíveis sem publicar
