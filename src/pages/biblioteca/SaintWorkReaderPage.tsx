@@ -1,3 +1,4 @@
+import DOMPurify from 'dompurify';
 /**
  * SaintWorkReaderPage — Leitor canônico da Biblioteca Patrística.
  *
@@ -312,7 +313,7 @@ const SaintWorkReaderPage: React.FC = () => {
         <article
           ref={articleRef}
           className="prose prose-lg dark:prose-invert max-w-none font-serif leading-relaxed"
-          dangerouslySetInnerHTML={{ __html: chapter.body_html }}
+          dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(chapter.body_html ?? '') }}
         />
         <div className="max-w-[68ch] mx-auto">
           <EditorialCredits

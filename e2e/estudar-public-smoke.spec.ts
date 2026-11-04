@@ -1,4 +1,9 @@
 import { test, expect } from '@playwright/test';
+import { readFileSync } from 'node:fs';
+import { createRequire } from 'node:module';
+
+const require = createRequire(import.meta.url);
+const DOMPURIFY_BROWSER_BUNDLE = require.resolve('dompurify/dist/purify.js');
 
 test('public browser smoke: landing and login render', async ({ page }) => {
   const bad: string[] = [];
@@ -524,4 +529,144 @@ test('Formar-se: rota protegida preserva destino ao exigir autenticação', asyn
   await expect(page).toHaveURL(/\/auth\?next=/);
   const next = new URL(page.url()).searchParams.get('next') ?? '';
   expect(decodeURIComponent(next)).toContain('/jornadas');
+});
+
+
+test('Rezar: Breviário explica cadastro ausente sem permanecer em skeleton', async ({ page }) => {
+  for (const legacySlug of ['terca', 'oficio-leituras']) {
+    const response = await page.goto(`/breviary?h=${legacySlug}`);
+    expect(response?.ok(), `/breviary?h=${legacySlug}: HTTP ${response?.status()}`).toBeTruthy();
+    await expect(
+      page.getByRole('heading', { name: 'Liturgia das Horas ainda não cadastrada' }),
+    ).toBeVisible({ timeout: 15_000 });
+    await expect(page.getByRole('button', { name: 'Tentar novamente' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Voltar ao Livro de Orações' })).toBeVisible();
+    await expect(page.locator('body')).not.toContainText(/Preparando Liturgia/i);
+  }
+});
+
+
+test('Rezar: Rosário apresenta os quatro conjuntos e inicia uma sessão', async ({ page }) => {
+  const response = await page.goto('/oracao/rosario');
+  expect(response?.ok(), `/oracao/rosario: HTTP ${response?.status()}`).toBeTruthy();
+  await expect(page.getByRole('heading', { name: 'Santo Rosário' })).toBeVisible();
+
+  for (const setName of ['Mistérios Gozosos', 'Mistérios Luminosos', 'Mistérios Dolorosos', 'Mistérios Gloriosos']) {
+    await expect(page.getByRole('button', { name: new RegExp(setName) })).toBeVisible();
+  }
+
+  await page.getByRole('button', { name: /Mistérios Gozosos/ }).click();
+  await expect(page.getByRole('heading', { name: 'Mistérios Gozosos' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Escolha o modo' })).toBeVisible();
+  await page.getByRole('button', { name: 'Iniciar Oração' }).click();
+  await expect(page.getByRole('heading', { name: 'Sinal da Cruz' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Sair da oração e voltar' })).toBeVisible();
+});
+
+test('Rezar: Via-Sacra apresenta o portal, as 14 estações e inicia a primeira', async ({ page }) => {
+  const response = await page.goto('/viacrucis');
+  expect(response?.ok(), `/viacrucis: HTTP ${response?.status()}`).toBeTruthy();
+  await expect(page.getByRole('heading', { name: 'Via Sacra' })).toBeVisible();
+  await page.getByRole('button', { name: 'Entrar em oração' }).click();
+  await expect(page.getByTestId('via-sacra-journey')).toBeVisible();
+
+  const landingPage = await page.context().newPage();
+  // Isola a landing do progresso persistido pela primeira sessão do portal.
+  await landingPage.addInitScript(() => {
+    localStorage.removeItem('cathedra:devotional-progress:viacrucis');
+  });
+  const landing = await landingPage.goto('/viacrucis?enter=1');
+  expect(landing?.ok(), '/viacrucis?enter=1 deve responder HTTP 2xx').toBeTruthy();
+  await expect(landingPage.getByRole('heading', { name: 'Via Crucis' })).toBeVisible();
+  await expect(landingPage.getByTestId('via-sacra-intro')).toBeVisible();
+  await expect(landingPage.locator('[data-testid^="via-sacra-station-tile-"]')).toHaveCount(14);
+
+  await landingPage.getByTestId('via-sacra-start').click();
+  await expect(landingPage.getByTestId('via-sacra-journey')).toBeVisible();
+  const activeJourney = landingPage.getByTestId('via-sacra-journey');
+  await expect(activeJourney.getByText('Escritura', { exact: true }).first()).toBeVisible();
+  await expect(activeJourney.getByText('Meditação', { exact: true }).first()).toBeVisible();
+  await expect(activeJourney.getByText('Oração', { exact: true }).first()).toBeVisible();
+  await landingPage.close();
+});
+
+test('Rezar: Ladainhas abre o texto completo e permite localizar uma invocação', async ({ page }) => {
+  const response = await page.goto('/litanies');
+  expect(response?.ok(), `/litanies: HTTP ${response?.status()}`).toBeTruthy();
+  await expect(page.getByRole('heading', { name: 'Ladainhas' })).toBeVisible();
+
+  await page.getByLabel('Buscar ladainha').fill('Sagrado Coração');
+  const litanyCard = page.getByRole('button', { name: /Litania do Sagrado Coração de Jesus/ });
+  await expect(litanyCard).toBeVisible();
+  await litanyCard.click();
+
+  await expect(page.getByRole('heading', { name: 'Litania do Sagrado Coração de Jesus' })).toBeVisible();
+  await expect(page.getByText('Pai celeste, que sois Deus,')).toBeVisible();
+  await expect(page.getByText('Coração de Jesus, fonte de vida e de santidade,')).toBeVisible();
+  await expect(page.locator('#litany-closing')).toBeVisible();
+});
+
+test('Rezar: Novena permite navegar pelos dias e registrar conclusão', async ({ page }) => {
+  const response = await page.goto('/novenas/espirito-santo');
+  expect(response?.ok(), `/novenas/espirito-santo: HTTP ${response?.status()}`).toBeTruthy();
+  await expect(page.getByText('Dia 1 de 9')).toBeVisible();
+  await expect(page.getByText('Espírito de Sabedoria').first()).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Ir para o dia 2' })).toBeVisible();
+
+  await page.getByRole('button', { name: 'Ir para o dia 2' }).click();
+  await expect(page).toHaveURL(/dia=2/);
+  await expect(page.getByText('Dia 2 de 9')).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Espírito de Entendimento' })).toBeVisible();
+
+  await page.getByRole('button', { name: /Concluir dia 2/ }).click();
+  await expect(page.getByText('1/9 dias completos')).toBeVisible();
+});
+
+
+
+test('Segurança editorial: DOMPurify preserva estrutura e remove conteúdo ativo', async ({ page }) => {
+  await page.goto('/');
+  await page.addScriptTag({ path: DOMPURIFY_BROWSER_BUNDLE });
+
+  const result = await page.evaluate(() => {
+    const purifier = (window as Window & { DOMPurify?: { sanitize: (html: string) => string } }).DOMPurify;
+    if (!purifier) throw new Error('DOMPurify browser bundle was not initialized.');
+
+    const dirty = `
+      <h2>Vida e missão</h2>
+      <p>Texto editorial <strong>essencial</strong> e <em>contextual</em>.</p>
+      <ul><li>Primeiro ponto preservado</li></ul>
+      <a href="https://www.vatican.va/content/vatican/pt.html">Fonte oficial</a>
+      <a href="javascript:window.__editorialXss=1">link inválido</a>
+      <img src="x" onerror="window.__editorialXss=2">
+      <script>window.__editorialXss=3</script>
+    `;
+    const clean = purifier.sanitize(dirty);
+    const article = document.createElement('article');
+    article.innerHTML = clean;
+    return {
+      heading: article.querySelector('h2')?.textContent,
+      strong: article.querySelector('strong')?.textContent,
+      emphasis: article.querySelector('em')?.textContent,
+      listItem: article.querySelector('li')?.textContent,
+      officialHref: article.querySelector('a[href^="https://"]')?.getAttribute('href'),
+      scriptCount: article.querySelectorAll('script').length,
+      eventHandlerCount: article.querySelectorAll('[onerror], [onclick]').length,
+      unsafeHrefCount: article.querySelectorAll('a[href^="javascript:"]').length,
+    };
+  });
+
+  expect(result.heading).toBe('Vida e missão');
+  expect(result.strong).toBe('essencial');
+  expect(result.emphasis).toBe('contextual');
+  expect(result.listItem).toBe('Primeiro ponto preservado');
+  expect(result.officialHref).toContain('vatican.va');
+  expect(result.scriptCount).toBe(0);
+  expect(result.eventHandlerCount).toBe(0);
+  expect(result.unsafeHrefCount).toBe(0);
+
+  const bioSource = readFileSync(new URL('../src/features/saints/editorialEngine/blocks/SaintBioBlock.tsx', import.meta.url), 'utf8');
+  const workSource = readFileSync(new URL('../src/pages/biblioteca/SaintWorkReaderPage.tsx', import.meta.url), 'utf8');
+  expect(bioSource).toContain('DOMPurify.sanitize(html)');
+  expect(workSource).toContain("DOMPurify.sanitize(chapter.body_html ?? '')");
 });

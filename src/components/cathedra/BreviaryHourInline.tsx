@@ -15,6 +15,7 @@ import { usePrayerHierarchy } from '@/prayer-engine/usePrayerHierarchy';
 import { useDailyLiturgy } from '@/hooks/useDailyLiturgy';
 import { useLiturgyHoursOffice, type HourSlug } from '@/hooks/useLiturgyHoursOffice';
 import { toIsoDateKey } from '@/core/liturgy/LiturgyProvider';
+import { normalizeHourSlug } from '@/core/liturgy/hour-slugs';
 import { flattenSectionToBlocks } from '@/prayer-engine/loadPrayerHierarchy';
 import { BreviaryContinuousReader, type BreviaryHourBundle } from './BreviaryContinuousReader';
 import { LiturgyRichHeader } from './primitives/liturgy/LiturgyRichHeader';
@@ -30,13 +31,10 @@ const CANONICAL_BASE = 'https://www.cathedradigital.com.br';
 
 // Mapeia hour_slug do banco → HourSlug usada pelo Próprio.
 // `hora-media` reutiliza `sexta` (Próprio atual cobre um Meio-dia canônico).
-const HOUR_SLUG_MAP: Record<string, HourSlug> = {
-  oficio: 'oficio',
-  laudes: 'laudes',
-  'hora-media': 'sexta',
-  vesperas: 'vesperas',
-  completas: 'completas',
-};
+function resolveOfficeHour(slug: string): HourSlug | null {
+  if (slug === 'hora-media') return 'sexta';
+  return normalizeHourSlug(slug);
+}
 
 interface Props {
   prayer: Prayer;
@@ -53,7 +51,7 @@ export const BreviaryHourInline: React.FC<Props> = ({ prayer }) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const meta = (prayer as unknown as { meta?: { hour_slug?: string } }).meta ?? {};
   const hourSlug = meta.hour_slug ?? prayer.slug.replace(/^breviario-/, '');
-  const officeHour = HOUR_SLUG_MAP[hourSlug] ?? null;
+  const officeHour = resolveOfficeHour(hourSlug);
 
   const selectedDate = useMemo(() => parseDateParam(searchParams.get('d')), [searchParams]);
   const isoDate = toIsoDateKey(selectedDate);

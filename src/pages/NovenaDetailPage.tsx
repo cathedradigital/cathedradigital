@@ -15,7 +15,7 @@ import { toast } from 'sonner';
 
 const NovenaDetailPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const novena = slug ? getNovenaBySlug(slug) : undefined;
 
   const [progress, setProgress] = useState<NovenaProgress | null>(null);
@@ -42,7 +42,7 @@ const NovenaDetailPage: React.FC = () => {
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [slug]);
+  }, [slug, searchParams]);
 
 
   const currentDay = progress?.currentDay ?? 1;
@@ -69,13 +69,26 @@ const NovenaDetailPage: React.FC = () => {
     };
     setProgress(next);
     saveProgress(novena.slug, next);
+    if (nextDay !== currentDay) {
+      setSearchParams((previous) => {
+        const params = new URLSearchParams(previous);
+        params.set('dia', String(nextDay));
+        return params;
+      }, { replace: true });
+    }
   };
 
   const goToDay = (d: number) => {
     if (!progress) return;
-    const next = { ...progress, currentDay: d };
+    const safeDay = Math.min(Math.max(1, d), totalDays);
+    const next = { ...progress, currentDay: safeDay };
     setProgress(next);
     saveProgress(novena.slug, next);
+    setSearchParams((previous) => {
+      const params = new URLSearchParams(previous);
+      params.set('dia', String(safeDay));
+      return params;
+    }, { replace: true });
   };
 
   const resetProgress = () => {
@@ -83,6 +96,11 @@ const NovenaDetailPage: React.FC = () => {
     const next: NovenaProgress = { startedAt: new Date().toISOString(), completedDays: [], currentDay: 1 };
     setProgress(next);
     saveProgress(novena.slug, next);
+    setSearchParams((previous) => {
+      const params = new URLSearchParams(previous);
+      params.set('dia', '1');
+      return params;
+    }, { replace: true });
   };
 
   const handleShare = async () => {

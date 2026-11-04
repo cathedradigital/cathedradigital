@@ -45,10 +45,10 @@ if (!String(publicJob.if ?? "").includes("pull_request")) {
   fail("Public job must execute for pull_request.");
 }
 const publicRuns = (publicJob.steps ?? []).map((step) => step.run ?? "").join("\n");
-if (!publicRuns.includes("npm run test:e2e:public")) {
+if (!/\b(?:npm|bun) run test:e2e:public\b/.test(publicRuns)) {
   fail("Public job must use the public Playwright script.");
 }
-if (/\bnpx\s+playwright\s+test\b/.test(publicRuns)) {
+if (/\b(?:npx|bunx)\s+playwright\s+test\b/.test(publicRuns)) {
   fail("Public job must not execute the full Playwright suite.");
 }
 if (
@@ -73,7 +73,7 @@ const authCheckout = (authenticatedJob.steps ?? []).find(
 if (authCheckout?.with?.ref !== "${{ github.sha }}") {
   fail("Authenticated job must checkout the exact trusted triggering SHA (github.sha).");
 }
-if (!(authenticatedJob.steps ?? []).some((step) => step.run === "npx playwright test")) {
+if (!(authenticatedJob.steps ?? []).some((step) => /^(?:npx|bunx) playwright test$/.test(step.run ?? ""))) {
   fail("Authenticated job must retain the complete Playwright suite.");
 }
 

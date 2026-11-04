@@ -14,23 +14,28 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # Cloudflare Workers Builds uses Node/npm; keep CI on the same install path.
+      # Node 22 runs tooling; Bun installs the exact dependency graph from bun.lock.
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "22.x"
 
-      - name: Install dependencies
-        run: npm install
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: "1.3.0"
+
+      - name: Install dependencies (frozen lockfile)
+        run: bun ci
 
       - name: Typecheck
-        run: npm run typecheck
+        run: bun run typecheck
 
       - name: Lint
-        run: npm run lint -- --quiet
+        run: bun run lint -- --quiet
 
       - name: Validate internal routes
-        run: npm run validate:links
+        run: bun run validate:links
 
       - name: Build (Cloudflare)
         run: |
@@ -39,4 +44,4 @@ jobs:
           source .env.production
           set +a
           node scripts/validate-supabase-build-env.mjs
-          npm run build
+          bun run build
