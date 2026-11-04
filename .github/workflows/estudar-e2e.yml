@@ -18,10 +18,12 @@ on:
       - "docs/quality/estudar-e2e.md"
       - ".github/workflows/estudar-e2e.yml"
       - ".github/workflows/cloudflare-deploy.yml"
+      - ".github/agents/**"
   push:
     branches: ["main"]
     paths:
       - ".github/workflows/cloudflare-deploy.yml"
+      - ".github/agents/**"
       - "src/**"
       - "public/**"
       - "e2e/**"
