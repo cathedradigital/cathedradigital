@@ -583,9 +583,10 @@ test('Rezar: Via-Sacra apresenta o portal, as 14 estações e inicia a primeira'
 
   await landingPage.getByTestId('via-sacra-start').click();
   await expect(landingPage.getByTestId('via-sacra-journey')).toBeVisible();
-  await expect(landingPage.getByText('Escritura', { exact: true })).toBeVisible();
-  await expect(landingPage.getByText('Meditação', { exact: true })).toBeVisible();
-  await expect(landingPage.getByText('Oração', { exact: true })).toBeVisible();
+  const activeJourney = landingPage.getByTestId('via-sacra-journey');
+  await expect(activeJourney.getByText('Escritura', { exact: true }).first()).toBeVisible();
+  await expect(activeJourney.getByText('Meditação', { exact: true }).first()).toBeVisible();
+  await expect(activeJourney.getByText('Oração', { exact: true }).first()).toBeVisible();
   await landingPage.close();
 });
 
