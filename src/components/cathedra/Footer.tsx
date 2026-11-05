@@ -262,8 +262,8 @@ const Footer: React.FC = React.memo(() => {
       aria-label={lang === 'pt' ? 'Rodapé' : 'Footer'}
     >
       <div className="mx-auto w-full max-w-[1280px] px-spacing-xl md:px-spacing-2xl lg:px-spacing-3xl pt-spacing-3xl md:pt-spacing-4xl pb-spacing-2xl">
-        {/* Faixa principal — 4 colunas equilibradas */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-spacing-2xl md:gap-spacing-3xl lg:gap-spacing-4xl">
+        {/* Faixa principal — cinco grupos de conteúdo */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-spacing-2xl md:gap-spacing-3xl lg:gap-spacing-xl">
           {/* Coluna 1 — Marca */}
           <div className="flex flex-col gap-spacing-lg">
             <div className="flex flex-col gap-2">

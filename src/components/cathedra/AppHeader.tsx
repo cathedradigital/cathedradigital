@@ -75,7 +75,7 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
         )}
         role="banner"
       >
-        <div className={cn("flex items-center justify-between py-0 px-spacing-sm md:px-[var(--layout-padding)] max-w-spacing-4xl mx-auto", !isLanding || user ? "h-full" : "")}>
+        <div className={cn("flex items-center justify-between py-0 px-spacing-sm md:px-[var(--layout-padding)] max-w-[var(--layout-max-width)] mx-auto", !isLanding || user ? "h-full" : "")}>
 
           {/* Logo Section — assinatura institucional única CATHEDRA */}
           <button

@@ -198,7 +198,7 @@ export function MobileModuleCarousel() {
           </div>
         </section>
       )}
-      <div className="flex min-h-[64px] items-center justify-around gap-1 overflow-x-auto px-2 py-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <div className="flex min-h-[64px] items-center justify-around gap-0.5 overflow-x-auto px-1 py-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {destinations.map((destination, index) => {
           const Icon = destination.icon;
           const active = index === activeIndex;
@@ -213,7 +213,7 @@ export function MobileModuleCarousel() {
               aria-label={`${t('navigation')}: ${destination.label}`}
               onClick={() => openIndex(index)}
               className={cn(
-                'group relative inline-flex min-h-[48px] min-w-[54px] shrink-0 flex-col items-center justify-center gap-1 rounded-xl border px-2 py-1 transition-all duration-200',
+                'group relative inline-flex min-h-[48px] min-w-[48px] flex-1 flex-col items-center justify-center gap-1 rounded-xl border px-1 py-1 transition-all duration-200',
                 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2',
                 active
                   ? 'border-[var(--module-carousel-accent)] bg-primary/[0.07] text-foreground shadow-sm'
@@ -227,7 +227,7 @@ export function MobileModuleCarousel() {
                 style={{ color: active ? destination.accent : undefined }}
                 strokeWidth={active ? 2.2 : 1.8}
               />
-              <span className={cn('max-w-[78px] truncate whitespace-nowrap text-[9px] font-semibold tracking-[0.005em] sm:text-[10px]', active && 'text-foreground')}>
+              <span className={cn('max-w-full text-center whitespace-normal break-words text-[9px] font-semibold leading-[1.1] tracking-[0.005em] sm:text-[10px]', active && 'text-foreground')}>
                 {destination.label}
               </span>
               {active && <span className="absolute inset-x-3 top-0 h-[2px] rounded-full" style={{ background: destination.accent }} />}
