@@ -215,7 +215,7 @@ const SEOVerificationPage = () => {
     if (customImage) return customImage;
     const encodedTitle = encodeURIComponent(title || 'Cathedra Digital');
     const cacheKey = new Date().toISOString().split('T')[0].substring(0, 7); // yyyy-mm
-    return `https://placehold.jp/40/1a1a1a/ffffff/1200x630.png?text=${encodedTitle}%0A%0ACátedra%20Digital&css=%7B%22font-family%22%3A%22serif%22%7D&v=${cacheKey}`;
+    return `https://placehold.jp/40/1a1a1a/ffffff/1200x630.png?text=${encodedTitle}%0A%0ACathedra%20Digital&css=%7B%22font-family%22%3A%22serif%22%7D&v=${cacheKey}`;
   };
 
   const copyToClipboard = (text: string, label: string) => {

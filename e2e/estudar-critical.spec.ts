@@ -13,6 +13,14 @@ async function login(page: Page, destination: string) {
   await page.getByLabel('Senha').fill(password!);
   await page.getByRole('button', { name: 'Entrar', exact: true }).click();
   const destinationPath = destination.split('?')[0];
+  const alert = page.getByRole('alert');
+  const outcome = await Promise.race([
+    page.waitForURL(url => url.pathname === destinationPath, { timeout: 20_000 }).then(() => 'authenticated' as const),
+    alert.waitFor({ state: 'visible', timeout: 20_000 }).then(() => 'rejected' as const),
+  ]);
+  if (outcome === 'rejected') {
+    throw new Error('Application rejected the configured E2E login: ' + (await alert.innerText()));
+  }
   await expect(page).toHaveURL(url => url.pathname === destinationPath);
 }
 
@@ -187,7 +195,10 @@ test('Catecismo: §2262 preserva o texto oficial e abre a referência bíblica',
   await expect(paragraph).toContainText('No sermão da montanha, o Senhor lembra o preceito');
   const bibleRef = paragraph.getByRole('button', { name: /Mt 5, 21/i }).first();
   await expect(bibleRef).toBeVisible();
+  // A referência abre primeiro o popover editorial; a navegação interna
+  // acontece pelo comando explícito "Ir ao versículo".
   await bibleRef.click();
+  await page.getByRole('button', { name: 'Ir ao versículo 21', exact: true }).click();
   await expect(page).toHaveURL(/\/bible\?book=Mt&ch=5&v=21/);
 });
 
@@ -246,4 +257,42 @@ test.describe('responsive critical flow', () => {
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1);
     expect(overflow).toBe(false);
   });
+});
+
+
+test('Formar-se: entrada editorial, filtros acessíveis e cartões navegáveis', async ({ page }) => {
+  const bad = watchBrowserHealth(page);
+  await login(page, '/jornadas');
+
+  await expect(page.getByRole('heading', { name: 'Formar-se', exact: true })).toBeVisible();
+  await expect(page.getByText(/Percursos para aprofundar a fé/i)).toBeVisible();
+
+  const filters = page.getByRole('group', { name: 'Filtrar percursos por categoria' });
+  await expect(filters).toBeVisible();
+  const all = filters.getByRole('button', { name: 'Todas', exact: true });
+  await expect(all).toHaveAttribute('aria-pressed', 'true');
+
+  const filterButtons = filters.getByRole('button');
+  if (await filterButtons.count() > 1) {
+    const secondFilter = filterButtons.nth(1);
+    await secondFilter.click();
+    await expect(secondFilter).toHaveAttribute('aria-pressed', 'true');
+    await all.click();
+    await expect(all).toHaveAttribute('aria-pressed', 'true');
+  }
+
+  const journeyLinks = page.locator('a[href^="/jornadas/"]');
+  if (await journeyLinks.count() > 0) {
+    await expect(journeyLinks.first()).toBeVisible();
+    await journeyLinks.first().focus();
+    await expect(journeyLinks.first()).toBeFocused();
+  } else {
+    await expect(page.getByText('Nenhuma jornada nesta trilha ainda.')).toBeVisible();
+  }
+
+  const hasHorizontalOverflow = await page.evaluate(() =>
+    document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
+  );
+  expect(hasHorizontalOverflow, 'Formar-se não deve criar overflow horizontal na página').toBe(false);
+  expect(bad, 'Formar-se: erros de console ou HTTP').toEqual([]);
 });

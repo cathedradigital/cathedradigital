@@ -301,7 +301,7 @@ export type SetURLSearchParams = (
 export function useSearchParams(
   defaultInit?: URLSearchParams | string
 ): [URLSearchParams, SetURLSearchParams] {
-  const { location, navigate } = useRouterContext();
+  const { location, router } = useRouterContext();
   const params = React.useMemo(
     () => new URLSearchParams(location.search || (defaultInit ? defaultInit.toString() : "")),
     [location.search, defaultInit]
@@ -316,9 +316,11 @@ export function useSearchParams(
         typeof resolved === "string"
           ? resolved
           : new URLSearchParams(resolved as Record<string, string>).toString();
-      navigate(`${location.pathname}?${next}`, options);
+      const href = `${location.pathname}${next ? `?${next}` : ""}`;
+      if (options?.replace) router.history.replace(href, options.state as never);
+      else router.history.push(href, options?.state as never);
     },
-    [navigate, location.pathname, location.search]
+    [router, location.pathname, location.search]
   );
   return [params, setParams];
 }

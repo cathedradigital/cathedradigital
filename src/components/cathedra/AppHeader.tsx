@@ -36,7 +36,7 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
   const avatarSrc = useAvatarUrl(user?.avatar, 96);
   const [isReady, setIsReady] = useState(false);
   const activeGroup = MODULE_NAVIGATION.find((group) =>
-    pathname === group.items[0]?.path || group.items.some((item) => pathname === item.path || (item.path !== '/' && pathname.startsWith(item.path + '/'))),
+    pathname === `/${group.key}` || pathname.startsWith(`/${group.key}/`) || pathname === group.items[0]?.path || group.items.some((item) => pathname === item.path || (item.path !== '/' && pathname.startsWith(item.path + '/'))),
   );
 
   useEffect(() => {

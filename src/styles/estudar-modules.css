@@ -426,7 +426,7 @@
     line-height: 1.2;
     letter-spacing: .1em;
   }
-  [data-catedra-module="bible"] .estudar-bible-book-card .group-hover\\:opacity-100 {
+  [data-catedra-module="bible"] .estudar-bible-book-card .group-hover\:opacity-100 {
     display: none;
   }
   [data-catedra-module="bible"] .estudar-chapter-nav {
@@ -594,7 +594,7 @@
     line-height: 1.15;
   }
 
-  [data-catedra-module="bible"] .estudar-bible-book-card .group-hover\\:opacity-100 {
+  [data-catedra-module="bible"] .estudar-bible-book-card .group-hover\:opacity-100 {
     display: none;
   }
 
@@ -625,7 +625,7 @@
     max-width: 76rem;
   }
 
-  [data-catedra-module="saints"] :is(.grid.grid-cols-1.md\\:grid-cols-2.lg\\:grid-cols-3) {
+  [data-catedra-module="saints"] :is(.grid.grid-cols-1.md\:grid-cols-2.lg\:grid-cols-3) {
     gap: .9rem;
   }
 
@@ -695,7 +695,7 @@
     padding: .9rem 1rem;
   }
 
-  [data-catedra-module="library"] :is(.grid.grid-cols-1.md\\:grid-cols-2, .grid.grid-cols-2.md\\:grid-cols-4) {
+  [data-catedra-module="library"] :is(.grid.grid-cols-1.md\:grid-cols-2, .grid.grid-cols-2.md\:grid-cols-4) {
     gap: .8rem;
   }
 }
@@ -868,7 +868,7 @@
     line-height: 1.15;
   }
 
-  [data-catedra-module="bible"] .estudar-bible-book-card .group-hover\\:opacity-100 {
+  [data-catedra-module="bible"] .estudar-bible-book-card .group-hover\:opacity-100 {
     display: none;
   }
 

@@ -52,6 +52,7 @@ Disallow: /transactions
 Disallow: /upgrade
 Disallow: /vendedor
 
+# Training and dataset crawlers remain disallowed by policy.
 User-agent: GPTBot
 Disallow: /
 

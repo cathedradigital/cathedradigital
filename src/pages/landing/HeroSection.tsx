@@ -26,7 +26,7 @@ const HeroSection = ({ onStart }: HeroSectionProps) => {
       className="relative w-full min-h-screen flex items-center justify-center px-spacing-lg overflow-hidden bg-background"
       aria-label="Cathedra Digital - Introdução"
     >
-      <h1 className="sr-only">Cathedra Digital — Biblioteca Espiritual e Mosteiro Digital</h1>
+      <h1 className="sr-only">Cathedra Digital — plataforma católica de oração, estudo e formação espiritual</h1>
       <Suspense fallback={<div className="absolute inset-0 bg-background" />}>
         <HeroBackground bgY={heroY} />
       </Suspense>

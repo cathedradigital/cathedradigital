@@ -11,8 +11,8 @@ export default defineConfig({
   retries: process.env.CI ? 1 : 0,
   reporter: [["./e2e/safe-reporter.mjs"]],
   // Authentication is exercised through the real application UI in the specs.
-  // Avoid a second, out-of-browser sign-in that can reject a valid app session
-  // before Playwright reaches the login flow being tested.
+  // Do not gate the browser suite with a second out-of-browser password grant:
+  // it can reject before the actual login flow is exercised.
   // Authenticated form values can appear in snapshots, screenshots and traces.
   // Keep assertions unchanged while disabling raw browser-state artifacts.
   use: { baseURL, trace: "off", screenshot: "off", video: "off" },

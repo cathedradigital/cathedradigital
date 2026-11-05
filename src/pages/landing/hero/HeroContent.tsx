@@ -81,8 +81,11 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart }: HeroContent
           Habite a profundidade do silêncio, <br /> 
           <span className="text-secondary">contemple a clareza da Verdade.</span>
         </p>
-        <p className="max-w-spacing-2xl mx-auto font-sans text-[9px] md:text-[11px] text-primary/20 uppercase tracking-[0.8em] md:tracking-[1em] font-black leading-relaxed select-none">
+        <p className="max-w-spacing-2xl mx-auto font-sans text-[9px] md:text-[11px] text-primary/45 uppercase tracking-[0.8em] md:tracking-[1em] font-black leading-relaxed select-none">
           O santuário digital para a sabedoria eterna
+        </p>
+        <p className="max-w-3xl mx-auto px-spacing-md font-sans text-sm sm:text-base md:text-lg text-foreground/65 leading-relaxed tracking-normal normal-case">
+          Uma plataforma católica que reúne Bíblia, Catecismo, Magistério, liturgia, oração e jornadas de formação para aprofundar a fé e acompanhar sua vida espiritual.
         </p>
       </motion.div>
 

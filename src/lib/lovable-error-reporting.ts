@@ -24,6 +24,9 @@ declare global {
 }
 
 export function reportLovableError(error: unknown, context: Record<string, unknown> = {}) {
+  // Cloudflare production must never invoke editor telemetry, even if a hook
+  // has been injected into the page. Keep reporting available in dev previews.
+  if (import.meta.env.PROD) return;
   if (typeof window === "undefined") return;
   window.__lovableEvents?.captureException?.(
     error,
