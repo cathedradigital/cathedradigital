@@ -8,13 +8,13 @@ const origins = [
   `https://${worker}.${worker}.workers.dev`,
 ];
 
-async function snippet(response) {
+async function snippet(response, limit = 16_384) {
   if (!response.body) return '';
   const reader = response.body.getReader();
   const decoder = new TextDecoder();
   let text = '';
   try {
-    while (text.length < 16_384) {
+    while (text.length < limit) {
       const part = await reader.read();
       if (part.done) break;
       text += decoder.decode(part.value, { stream: true });
@@ -22,7 +22,7 @@ async function snippet(response) {
   } finally {
     await reader.cancel().catch(() => {});
   }
-  return text.slice(0, 16_384);
+  return text.slice(0, limit);
 }
 
 async function probe(url, request) {
@@ -75,14 +75,19 @@ export async function diagnoseProduction({
   request = globalThis.fetch,
 } = {}) {
   const errors = [];
-  async function cf(path, label) {
+  async function cf(path, label, format = 'json') {
     let response;
     try {
       response = await request(`https://api.cloudflare.com/client/v4/${path}`, {
         method: 'GET', redirect: 'error',
-        headers: { authorization: `Bearer ${token}`, accept: 'application/json' },
+        headers: { authorization: `Bearer ${token}`, accept: format === 'source-hosts' ? '*/*' : 'application/json' },
         signal: AbortSignal.timeout(15_000),
       });
+      if (format === 'source-hosts' && response.ok) {
+        // Keep source and bindings private; report public project hostnames only.
+        const source = await snippet(response, 2 * 1024 * 1024);
+        return [...new Set(source.match(/\b[a-z0-9]{20}\.supabase\.co\b/gi) ?? [])].map(host => host.toLowerCase()).sort().slice(0, 20);
+      }
       const body = await response.json();
       if (!response.ok || body.success !== true) {
         // Never print raw API error messages: they can reflect request data.
@@ -99,15 +104,26 @@ export async function diagnoseProduction({
   const publicPromise = Promise.all(origins.flatMap(origin => ['/', '/auth'].map(path => probe(origin + path, request))));
   const cloudflare = { errors };
   if (token && /^[a-f\d]{32}$/i.test(accountId ?? '')) {
-    const [bindings, subdomain, zones] = await Promise.all([
+    const [bindings, subdomain, zones, settings, sourceHosts] = await Promise.all([
       cf(`accounts/${accountId}/workers/domains?zone_name=${domain}`, 'worker-domains'),
       cf(`accounts/${accountId}/workers/scripts/${worker}/subdomain`, 'worker-subdomain'),
       cf(`zones?name=${domain}&account.id=${accountId}`, 'zone'),
+      cf(`accounts/${accountId}/workers/scripts/${worker}/settings`, 'worker-public-config'),
+      cf(`accounts/${accountId}/workers/scripts/${worker}/content/v2`, 'worker-public-project-hosts', 'source-hosts'),
     ]);
     cloudflare.bindings = Array.isArray(bindings) ? bindings
       .filter(binding => [domain, `www.${domain}`].includes(binding.hostname))
       .map(binding => ({ hostname: binding.hostname, intendedWorker: binding.service === worker, enabled: binding.enabled })) : null;
     cloudflare.workersDevEnabled = subdomain?.enabled ?? null;
+    cloudflare.runtimePublicSupabaseHosts = Array.isArray(settings?.bindings) ? [...new Set(settings.bindings
+      .filter(binding => binding.type === 'plain_text' && ['SUPABASE_URL', 'VITE_SUPABASE_URL'].includes(binding.name))
+      .flatMap(binding => {
+        try {
+          const parsed = new URL(binding.text);
+          return parsed.protocol === 'https:' && /^[a-z0-9]{20}\.supabase\.co$/i.test(parsed.hostname) ? [parsed.hostname] : [];
+        } catch { return []; }
+      }))].sort() : null;
+    cloudflare.sourcePublicSupabaseHosts = Array.isArray(sourceHosts) ? sourceHosts : null;
     const matchingZones = Array.isArray(zones) ? zones.filter(zone => zone.name === domain) : [];
     if (matchingZones.length === 1 && /^[a-f\d]{32}$/i.test(matchingZones[0].id)) {
       const zone = matchingZones[0];

@@ -29,6 +29,13 @@ function fixture({ challenge = false, challengeStatus = 530, apiError = false, n
       result = [{ hostname: domain, service: 'cathedradigital', enabled: true }];
     } else if (url.pathname.endsWith('/subdomain')) {
       result = { enabled: true };
+    } else if (url.pathname.endsWith('/scripts/cathedradigital/settings')) {
+      result = { bindings: [
+        { name: 'SUPABASE_URL', type: 'plain_text', text: 'https://abcdefghijklmnopqrst.supabase.co' },
+        { name: 'PRIVATE_CONFIG', type: 'plain_text', text: token },
+      ] };
+    } else if (url.pathname.endsWith('/content/v2')) {
+      return new Response(`const endpoint = "https://abcdefghijklmnopqrst.supabase.co"; const privateValue = "${token}";`);
     } else if (url.pathname.endsWith('/zones')) {
       result = [{ id: 'b'.repeat(32), name: domain, status: 'active', paused: false }];
     } else if (url.pathname.endsWith('/dns_records')) {
@@ -68,6 +75,8 @@ test('read-only diagnostics isolate credentials and hide origin addresses', asyn
   assert.equal(report.public.length, 6);
   assert.equal(report.cloudflare.zone.status, 'active');
   assert.equal(report.cloudflare.bindings[0].intendedWorker, true);
+  assert.deepEqual(report.cloudflare.runtimePublicSupabaseHosts, ['abcdefghijklmnopqrst.supabase.co']);
+  assert.deepEqual(report.cloudflare.sourcePublicSupabaseHosts, ['abcdefghijklmnopqrst.supabase.co']);
   assert.equal(report.cloudflare.securityLevel, 'under_attack');
   assert.equal(report.cloudflare.botFightMode, true);
   assert.equal(report.cloudflare.customFirewallRules[0].scope, 'entire-zone');
