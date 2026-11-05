@@ -1,5 +1,7 @@
 # Auditoria responsiva de UI/UX — Cathedra Digital
 
+> **Atualização da revisão — 5 de novembro de 2026:** as seções abaixo preservam o histórico da inspeção de 3–4 de novembro. As afirmações de “sem push”, build pendente e divergência de projeto não representam o estado atual da PR #302. No SHA `2d354d3395d25112ffacf56810d8f9613a3d2d5a`, o [CI](https://github.com/cathedradigital/cathedradigital/actions/runs/42060128312) aprovou instalação, typecheck, lint e build; o [E2E público](https://github.com/cathedradigital/cathedradigital/actions/runs/42060128487) aprovou desktop e mobile. O job autenticado foi ignorado por ser uma PR, conforme a política de credenciais. A publicação exige os gates completos no SHA final da `main`. A revisão não altera URL, chave ou projeto Supabase nem comprova o ambiente publicado.
+
 **Data:** 3–4 de novembro de 2026
 **Base atual do patch:** `origin/main` / worktree `fix/responsive-ui-overflow-20261103`, SHA `4d32ef5311aa34199ad7507dde3aab6254d2611a`.
 **Site público inspecionado:** https://cathedradigital.com.br/
@@ -24,15 +26,15 @@ Rotas examinadas: `/`, `/estudar`, `/bible?book=Gn&ch=1`, `/catechism?p=279`, `/
 
 ### Evidência visual: mobile
 
-![Homepage mobile antes do ajuste, viewport 390×900; “Minha Jornada” está cortado na navegação inferior.](/home/ubuntu/catedradigital-ui-audit/docs/quality/assets/home-before-mobile-390x900.png)
+![Homepage mobile antes do ajuste, viewport 390×900; “Minha Jornada” está cortado na navegação inferior.](assets/home-before-mobile-390x900.png)
 
-![Simulação mobile após os estilos propostos, viewport 390×900; o rótulo longo passa a duas linhas. É uma injeção temporária no navegador, não um deploy.](/home/ubuntu/catedradigital-ui-audit/docs/quality/assets/home-after-simulation-mobile-390x900.png)
+![Simulação mobile após os estilos propostos, viewport 390×900; o rótulo longo passa a duas linhas. É uma injeção temporária no navegador, não um deploy.](assets/home-after-simulation-mobile-390x900.png)
 
 ### Evidência visual: desktop
 
-![Homepage desktop antes do ajuste, viewport 1440×900; o cabeçalho está deslocado para o centro-direita.](/home/ubuntu/catedradigital-ui-audit/docs/quality/assets/home-before-desktop-1440x900.png)
+![Homepage desktop antes do ajuste, viewport 1440×900; o cabeçalho está deslocado para o centro-direita.](assets/home-before-desktop-1440x900.png)
 
-![Simulação desktop após ampliar o container do cabeçalho, viewport 1440×900. É uma injeção temporária no navegador, não um deploy.](/home/ubuntu/catedradigital-ui-audit/docs/quality/assets/home-after-simulation-desktop-1440x900.png)
+![Simulação desktop após ampliar o container do cabeçalho, viewport 1440×900. É uma injeção temporária no navegador, não um deploy.](assets/home-after-simulation-desktop-1440x900.png)
 
 ## Observações sobre design system e UX
 
