@@ -39,6 +39,15 @@ function fixture({ challenge = false, challengeStatus = 530, apiError = false, n
         && (!url.searchParams.get('type') || record.type === url.searchParams.get('type')));
     } else if (url.pathname.endsWith('/workers/routes')) {
       result = [{ pattern: `${domain}/*`, script: 'cathedradigital' }];
+    } else if (url.pathname.endsWith('/settings/security_level')) {
+      result = { value: 'under_attack' };
+    } else if (url.pathname.endsWith('/bot_management')) {
+      result = { fight_mode: true, enable_js: true };
+    } else if (url.pathname.endsWith('/rulesets/phases/http_request_firewall_custom/entrypoint')) {
+      result = { rules: [
+        { action: 'managed_challenge', enabled: true, expression: 'true' },
+        { action: 'block', enabled: false, expression: `ip.src eq ${hiddenOrigin}` },
+      ] };
     } else {
       assert.fail(`Unexpected Cloudflare endpoint: ${url.pathname}`);
     }
@@ -59,6 +68,9 @@ test('read-only diagnostics isolate credentials and hide origin addresses', asyn
   assert.equal(report.public.length, 6);
   assert.equal(report.cloudflare.zone.status, 'active');
   assert.equal(report.cloudflare.bindings[0].intendedWorker, true);
+  assert.equal(report.cloudflare.securityLevel, 'under_attack');
+  assert.equal(report.cloudflare.botFightMode, true);
+  assert.equal(report.cloudflare.customFirewallRules[0].scope, 'entire-zone');
   assert.equal(report.cloudflare.records[0].originClass, 'other-origin');
   assert.equal(report.cloudflare.records[1].originClass, 'vercel');
   assert.deepEqual(dnsQueries.sort(), [domain, `www.${domain}`].flatMap(name => ['A', 'AAAA', 'CNAME'].map(type => [name, type])).sort());

@@ -112,10 +112,13 @@ export async function diagnoseProduction({
     if (matchingZones.length === 1 && /^[a-f\d]{32}$/i.test(matchingZones[0].id)) {
       const zone = matchingZones[0];
       cloudflare.zone = { name: zone.name, status: zone.status, paused: zone.paused };
-      const [recordGroups, routes] = await Promise.all([
+      const [recordGroups, routes, security, bots, firewall] = await Promise.all([
         Promise.all([domain, `www.${domain}`].flatMap(name => ['A', 'AAAA', 'CNAME'].map(type =>
           cf(`zones/${zone.id}/dns_records?name=${name}&type=${type}&per_page=100`, `dns-${name}-${type}`)))),
         cf(`zones/${zone.id}/workers/routes`, 'worker-routes'),
+        cf(`zones/${zone.id}/settings/security_level`, 'zone-security-level'),
+        cf(`zones/${zone.id}/bot_management`, 'bot-management'),
+        cf(`zones/${zone.id}/rulesets/phases/http_request_firewall_custom/entrypoint`, 'custom-firewall-rules'),
       ]);
       const records = recordGroups.every(Array.isArray) ? recordGroups.flat() : null;
       // Reveal classifications only; proxied DNS records can hide a private origin.
@@ -125,6 +128,15 @@ export async function diagnoseProduction({
       cloudflare.routes = Array.isArray(routes) ? routes
         .filter(route => String(route.pattern).includes(domain))
         .map(route => ({ pattern: route.pattern, intendedWorker: route.script === worker, excludesWorkers: !route.script })) : null;
+      cloudflare.securityLevel = ['under_attack', 'high', 'medium', 'low', 'essentially_off', 'off'].includes(security?.value) ? security.value : null;
+      cloudflare.botFightMode = typeof bots?.fight_mode === 'boolean' ? bots.fight_mode : null;
+      cloudflare.jsDetection = typeof bots?.enable_js === 'boolean' ? bots.enable_js : null;
+      cloudflare.customFirewallRules = Array.isArray(firewall?.rules) ? firewall.rules.map(rule => ({
+        enabled: rule.enabled !== false,
+        action: ['skip', 'block', 'managed_challenge', 'js_challenge', 'challenge', 'execute', 'log'].includes(rule.action) ? rule.action : 'other',
+        // Rule expressions may contain private addresses or header values.
+        scope: ['true', '(true)'].includes(String(rule.expression).trim().toLowerCase()) ? 'entire-zone' : 'conditional',
+      })) : null;
     }
   } else {
     errors.push({ resource: 'cloudflare-config-missing-or-invalid', http: null, codes: [] });
