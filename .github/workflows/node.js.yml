@@ -20,6 +20,9 @@ jobs:
         with:
           node-version: "22.x"
 
+      - name: Verify Lovable production isolation
+        run: node scripts/test-lovable-isolation.mjs
+
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
         with:
