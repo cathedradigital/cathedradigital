@@ -15,7 +15,7 @@ test('public browser smoke: landing and login render', async ({ page }) => {
   await expect(page).toHaveTitle(/Cathedra/i);
   await page.goto('/login');
   await expect(page.getByLabel('Email')).toBeVisible();
-  await expect(page.getByLabel('Senha')).toBeVisible();
+  await expect(page.getByLabel('Senha', { exact: true })).toBeVisible();
   expect(bad).toEqual([]);
 });
 
