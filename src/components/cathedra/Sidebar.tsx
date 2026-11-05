@@ -296,32 +296,46 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
             <header className="flex items-center justify-between gap-3 mb-3 pb-3" style={{ borderBottom: '1px solid rgba(201,168,76,0.25)' }}>
               <button
                 type="button"
-                className="flex items-baseline gap-2 cursor-pointer group rounded-md bg-transparent p-0 text-left outline-none focus-visible:ring-2 focus-visible:ring-[#c9a84c] focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                className="group flex min-w-0 flex-1 cursor-pointer items-center gap-2 rounded-md bg-transparent p-0 text-left outline-none focus-visible:ring-2 focus-visible:ring-[#c9a84c] focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                 onClick={(e) => handleNav('/', e)}
                 aria-label={t('sidebar_home_label')}
               >
-                <Icons.Logo className="w-12 h-12 text-primary" />
-                <div className="flex flex-col leading-none gap-1">
+                <Icons.Logo className="h-10 w-10 shrink-0 text-primary sm:h-11 sm:w-11" />
+                <div className="flex min-w-0 flex-col gap-0.5 leading-none">
                   <span
                     style={{
                       fontFamily: "'Playfair Display', serif",
                       fontWeight: 600,
-                      fontSize: '1.25rem',
-                      letterSpacing: '0.08em',
+                      fontSize: 'clamp(1rem, 4.6vw, 1.2rem)',
+                      letterSpacing: '0.055em',
                       color: 'hsl(var(--foreground))',
                     }}
+                    className="block max-w-full truncate uppercase"
                   >
-                    Cathedra Digital
+                    Cathedra
                   </span>
                   <span
                     style={{
                       fontFamily: 'Inter, sans-serif',
-                      fontSize: '0.68rem',
-                      fontWeight: 500,
-                      letterSpacing: '0.18em',
+                      fontSize: '0.6rem',
+                      fontWeight: 700,
+                      letterSpacing: '0.24em',
                       textTransform: 'uppercase',
+                      color: 'var(--gold-text)',
+                    }}
+                    className="block"
+                  >
+                    Digital
+                  </span>
+                  <span
+                    style={{
+                      fontFamily: 'Inter, sans-serif',
+                      fontSize: '0.58rem',
+                      fontWeight: 500,
+                      letterSpacing: '0.035em',
                       color: 'hsl(var(--muted-foreground))',
                     }}
+                    className="block max-w-full truncate pt-0.5"
                   >
                     {t('sidebar_tagline')}
                   </span>
@@ -333,7 +347,8 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                 variant="ghost"
                 size="icon"
                 onClick={onClose}
-                className="rounded-none min-h-11 min-w-11 border border-[rgba(201,168,76,0.35)] bg-transparent text-[color:var(--gold-text)] transition-all [@media(hover:hover)]:hover:bg-[#c9a84c] [@media(hover:hover)]:hover:text-[#0a0a0a] focus-visible:bg-[#c9a84c] focus-visible:text-[#0a0a0a] focus-visible:ring-2 focus-visible:ring-[#c9a84c]/40"
+                style={{ minHeight: 'var(--stitch-mobile-touch-min, 44px)', minWidth: 'var(--stitch-mobile-touch-min, 44px)' }}
+                className="min-h-[44px] min-w-[44px] rounded-full border border-[rgba(201,168,76,0.35)] bg-transparent text-[color:var(--gold-text)] transition-all [@media(hover:hover)]:hover:bg-[#c9a84c] [@media(hover:hover)]:hover:text-[#0a0a0a] focus-visible:bg-[#c9a84c] focus-visible:text-[#0a0a0a] focus-visible:ring-2 focus-visible:ring-[#c9a84c]/40"
                 aria-label={t('close_menu')}
               >
                 <Icons.X className="w-4 h-4" />
@@ -353,17 +368,24 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                       onClick={(event) => handleNav(item, event)}
                       onMouseEnter={() => prefetchRoute(item.path)}
                       onTouchStart={() => prefetchRoute(item.path)}
+                      style={{
+                        minHeight: 'var(--stitch-mobile-touch-min, 44px)',
+                        ...(isActive ? {
+                          borderLeftColor: 'var(--catedra-module-accent, #c9a84c)',
+                          backgroundColor: 'var(--catedra-module-accent-soft, rgba(201,168,76,0.10))',
+                        } : {}),
+                      }}
                       aria-current={isActive ? 'page' : undefined}
                       aria-label={isActive ? `${section.label}, ${t('current_page')}` : section.label}
-                      className={`group w-full flex min-h-11 items-center justify-start gap-3 rounded-md border px-3 py-2.5 text-sm font-medium outline-none transition-colors duration-200 ${
+                      className={`group w-full flex min-h-[44px] items-center justify-start gap-3 rounded-md border px-3 py-2.5 text-sm font-medium outline-none transition-colors duration-200 ${
                         isActive
-                          ? 'border-l-2 border-l-[#c9a84c] border-[#c9a84c]/15 bg-[#c9a84c]/[0.10] text-[color:var(--gold-text)]'
+                          ? 'border-l-2 border-l-[#c9a84c] border-[#c9a84c]/15 bg-[#c9a84c]/[0.10] font-semibold text-foreground'
                           : 'border-transparent text-foreground/75 hover:bg-[#c9a84c]/[0.055] hover:text-[color:var(--gold-text)]'
                       }`}
                     >
-                      <span className={isActive ? 'opacity-100' : 'opacity-80'}>{item.icon}</span>
+                      <span className={isActive ? 'opacity-100' : 'opacity-80'} style={isActive ? { color: 'var(--catedra-module-accent, #c9a84c)' } : undefined}>{item.icon}</span>
                       <span className="flex-1 text-left">{section.label}</span>
-                      {isActive && <span aria-hidden="true" className="h-1 w-1 rounded-full bg-[#c9a84c]" />}
+                      {isActive && <span aria-hidden="true" className="h-1 w-1 rounded-full" style={{ backgroundColor: 'var(--catedra-module-accent, #c9a84c)' }} />}
                     </Button>
                   );
                 }
@@ -373,7 +395,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                   defaultOpen={section.items.some((item) => currentPath === item.path || (item.path !== '/' && currentPath.startsWith(item.path + '/')))}
                 >
                   <CollapsibleTrigger asChild>
-                    <button className="group/trigger flex min-h-11 w-full items-center justify-between rounded-md px-2.5 py-2 transition-colors hover:bg-[#c9a84c]/[0.055] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c9a84c]/45 focus-visible:ring-offset-2">
+                    <button style={{ minHeight: 'var(--stitch-mobile-touch-min, 44px)' }} className="group/trigger flex min-h-[44px] w-full items-center justify-between rounded-md px-2.5 py-2 transition-colors hover:bg-[#c9a84c]/[0.055] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c9a84c]/45 focus-visible:ring-offset-2">
                       <span style={{ color: 'var(--gold-text)', fontFamily: 'Inter, sans-serif', fontSize: '0.68rem', fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase' }}>— {section.label}</span>
                       <Icons.ChevronDown className="w-3 h-3 transition-all group-data-[state=open]:rotate-180" strokeWidth={1.5} style={{ color: 'var(--gold-text)' }} />
                     </button>
@@ -395,24 +417,31 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                                 onClick={(e) => handleNav(item, e)}
                                 onMouseEnter={() => prefetchRoute(item.path)}
                                 onTouchStart={() => prefetchRoute(item.path)}
+                                style={{
+                                  minHeight: 'var(--stitch-mobile-touch-min, 44px)',
+                                  ...(isActive ? {
+                                    borderLeftColor: 'var(--catedra-module-accent, #c9a84c)',
+                                    backgroundColor: 'var(--catedra-module-accent-soft, rgba(201,168,76,0.10))',
+                                  } : {}),
+                                }}
                                  aria-current={isActive ? 'page' : undefined}
                                  aria-label={isActive ? `${item.label}, ${t('current_page')}` : item.label}
-                                className={`group w-full flex items-center justify-start gap-3 rounded-md border border-transparent px-3 py-2.5 text-xs font-medium outline-none transition-colors duration-200 h-auto min-h-11
+                                className={`group w-full flex items-center justify-start gap-3 rounded-md border border-transparent px-3 py-2.5 text-xs font-medium outline-none transition-colors duration-200 h-auto min-h-[44px]
                                   ${isActive
-                                    ? 'bg-[#c9a84c]/[0.10] text-[color:var(--gold-text)] border-l-2 border-l-[#c9a84c] shadow-[inset_0_0_0_1px_rgba(201,168,76,0.08)]'
+                                    ? 'bg-[#c9a84c]/[0.10] font-semibold text-foreground border-l-2 border-l-[#c9a84c] shadow-[inset_0_0_0_1px_rgba(201,168,76,0.08)]'
                                     : 'text-foreground/75 hover:bg-[#c9a84c]/[0.055] hover:text-[color:var(--gold-text)] hover:border-[#c9a84c]/10'}`}
                               >
-                                  <span className={`transition-all duration-300 transform ${isActive ? 'opacity-100 scale-105' : 'opacity-80'}`}>
+                                  <span className={`transition-all duration-300 transform ${isActive ? 'opacity-100 scale-105' : 'opacity-80'}`} style={isActive ? { color: 'var(--catedra-module-accent, #c9a84c)' } : undefined}>
                                     {item.icon}
                                   </span>
-                                <span className="min-w-0 flex-1 truncate text-left text-[0.875rem] leading-5 tracking-[0.01em]">{item.label}</span>
+                                <span className="min-w-0 flex-1 break-words whitespace-normal text-left text-[0.875rem] leading-5 tracking-[0.01em] [overflow-wrap:anywhere]">{item.label}</span>
                                 {item.path === AppRoute.CACHE_MANAGER && cacheCount !== null && cacheCount > 0 && (
                                   <span className="ml-auto text-premium-xs font-bold px-2 py-0.5 rounded-none flex-shrink-0" style={{ background: '#c9a84c', color: '#0a0a0a' }}>
                                     {cacheCount}
                                   </span>
                                 )}
                                 {/* Badge "PRO" removido da UI de uso — sinalização de plano fica na landing pública / /pricing. */}
-                                {isActive && <motion.div layoutId="sidebar-active" className="ml-auto w-1 h-1 flex-shrink-0" style={{ background: '#c9a84c' }} />}
+                                {isActive && <motion.div layoutId="sidebar-active" className="ml-auto w-1 h-1 flex-shrink-0" style={{ background: 'var(--catedra-module-accent, #c9a84c)' }} />}
                               </Button>
                             </li>
                           );

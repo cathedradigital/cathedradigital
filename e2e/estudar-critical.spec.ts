@@ -10,7 +10,7 @@ test.beforeEach(async () => {
 async function login(page: Page, destination: string) {
   await page.goto('/login?next=' + encodeURIComponent(destination));
   await page.getByLabel('Email').fill(email!);
-  await page.getByLabel('Senha').fill(password!);
+  await page.getByLabel('Senha', { exact: true }).fill(password!);
   await page.getByRole('button', { name: 'Entrar', exact: true }).click();
   const destinationPath = destination.split('?')[0];
   const alert = page.getByRole('alert');
@@ -287,7 +287,7 @@ test('Formar-se: entrada editorial, filtros acessíveis e cartões navegáveis',
     await journeyLinks.first().focus();
     await expect(journeyLinks.first()).toBeFocused();
   } else {
-    await expect(page.getByText('Nenhuma jornada nesta trilha ainda.')).toBeVisible();
+    await expect(page.getByText('Nenhuma jornada disponível nesta trilha ainda.', { exact: true })).toBeVisible();
   }
 
   const hasHorizontalOverflow = await page.evaluate(() =>

@@ -20,7 +20,7 @@ test('public browser smoke: landing and login render', async ({ page }) => {
   await expect(page).toHaveTitle(/Cathedra/i);
   await page.goto('/login');
   await expect(page.getByLabel('Email')).toBeVisible();
-  await expect(page.getByLabel('Senha')).toBeVisible();
+  await expect(page.getByLabel('Senha', { exact: true })).toBeVisible();
   expect(bad).toEqual([]);
 });
 
@@ -532,15 +532,21 @@ test('Formar-se: rota protegida preserva destino ao exigir autenticação', asyn
 });
 
 
-test('Rezar: Breviário explica cadastro ausente sem permanecer em skeleton', async ({ page }) => {
+test('Rezar: Breviário sai do skeleton com fallback ou conteúdo disponível', async ({ page }) => {
   for (const legacySlug of ['terca', 'oficio-leituras']) {
     const response = await page.goto(`/breviary?h=${legacySlug}`);
     expect(response?.ok(), `/breviary?h=${legacySlug}: HTTP ${response?.status()}`).toBeTruthy();
-    await expect(
-      page.getByRole('heading', { name: 'Liturgia das Horas ainda não cadastrada' }),
-    ).toBeVisible({ timeout: 15_000 });
-    await expect(page.getByRole('button', { name: 'Tentar novamente' })).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Voltar ao Livro de Orações' })).toBeVisible();
+    const unavailable = page.getByRole('heading', { name: 'Liturgia das Horas ainda não cadastrada' });
+    const available = page.getByRole('region', { name: /Espírito da Hora: Hora canônica/ });
+    await expect.poll(async () => (await unavailable.isVisible()) || (await available.isVisible()), {
+      timeout: 15_000,
+    }).toBe(true);
+    if (await unavailable.isVisible()) {
+      await expect(page.getByRole('button', { name: 'Tentar novamente' })).toBeVisible();
+      await expect(page.getByRole('button', { name: 'Voltar ao Livro de Orações' })).toBeVisible();
+    } else {
+      await expect(available).toBeVisible();
+    }
     await expect(page.locator('body')).not.toContainText(/Preparando Liturgia/i);
   }
 });

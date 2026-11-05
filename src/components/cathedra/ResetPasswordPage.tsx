@@ -76,25 +76,27 @@ const ResetPasswordPage: React.FC = () => {
 
       <div className="bg-card border border-border rounded-premium p-spacing-xl space-y-spacing-lg">
         {error && (
-          <div className="p-spacing-md bg-destructive/10 border border-destructive/20 rounded-premium text-premium-sm text-destructive font-medium">{error}</div>
+            <div role="alert" className="p-spacing-md bg-destructive/10 border border-destructive/20 rounded-premium text-premium-sm text-destructive font-medium">{error}</div>
         )}
         {success ? (
-          <div className="p-spacing-md bg-primary/10 border border-primary/20 rounded-premium text-premium-sm text-primary font-medium text-center">
+          <div role="status" className="p-spacing-md bg-primary/10 border border-primary/20 rounded-premium text-premium-sm text-primary font-medium text-center">
             Senha atualizada com sucesso! Redirecionando...
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-spacing-md">
             <div>
-              <label className="text-premium-xs font-black uppercase tracking-widest text-muted-foreground mb-spacing-xs block">Nova Senha</label>
+              <label htmlFor="reset-password" className="text-premium-xs font-black uppercase tracking-widest text-muted-foreground mb-spacing-xs block">Nova Senha</label>
               <input
+                id="reset-password" autoComplete="new-password"
                 type="password" value={password} onChange={e => setPassword(e.target.value)} required minLength={6}
                 placeholder="Mínimo 6 caracteres"
                 className="w-full px-spacing-md py-spacing-sm rounded-premium-full border border-border bg-background text-foreground text-premium-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
               />
             </div>
             <div>
-              <label className="text-premium-xs font-black uppercase tracking-widest text-muted-foreground mb-spacing-xs block">Confirmar Senha</label>
+              <label htmlFor="reset-confirm-password" className="text-premium-xs font-black uppercase tracking-widest text-muted-foreground mb-spacing-xs block">Confirmar Senha</label>
               <input
+                id="reset-confirm-password" autoComplete="new-password"
                 type="password" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} required minLength={6}
                 placeholder="Repita a nova senha"
                 className="w-full px-spacing-md py-spacing-sm rounded-premium-full border border-border bg-background text-foreground text-premium-sm focus:outline-none focus:ring-2 focus:ring-primary/50"

@@ -28,8 +28,7 @@ import { EditorialHero } from '@/components/editorial/harmony';
 import { supabase } from '@/lib/db';
 import { JourneyService } from '@/core/journey';
 import { useAuth } from '@/hooks/useAuth';
-import { AppRoute } from '@/types';
-import { SpaceLayout, SpaceHeader, SpaceDoors, type SpaceDoor, SpaceFooter } from '@/components/cathedra/space/SpaceLayout';
+import { SpaceLayout, SpaceFooter } from '@/components/cathedra/space/SpaceLayout';
 
 type JourneyRow = {
   id: string;
@@ -138,6 +137,16 @@ const AtriumJornadasPage: React.FC = () => {
     [journeys],
   );
 
+  const inProgress = journeys.filter(
+    (j) => (progressMap[j.id] ?? 0) > 0 && (progressMap[j.id] ?? 0) < j.steps_count,
+  );
+  const inProgressIds = useMemo(() => new Set(inProgress.map((j) => j.id)), [inProgress]);
+  const completedIds = useMemo(
+    () => new Set(journeys.filter((j) => j.steps_count > 0 && (progressMap[j.id] ?? 0) >= j.steps_count).map((j) => j.id)),
+    [journeys, progressMap],
+  );
+  const featured = journeys.find((j) => !inProgressIds.has(j.id) && !completedIds.has(j.id));
+
   const visible = useMemo(() => {
     const normalize = (value: string) => value.toLocaleLowerCase('pt-BR').normalize('NFD').replace(/[\u0300-\u036f]/g, '');
     const normalizedQuery = normalize(searchQuery.trim());
@@ -145,14 +154,9 @@ const AtriumJornadasPage: React.FC = () => {
       const matchesCategory = activeCategory === 'all' || j.category === activeCategory;
       const matchesDifficulty = activeDifficulty === 'all' || j.difficulty === activeDifficulty;
       const searchable = normalize(`${j.title} ${j.subtitle ?? ''} ${j.description ?? ''} ${j.category}`);
-      return matchesCategory && matchesDifficulty && (!normalizedQuery || searchable.includes(normalizedQuery));
+      return !inProgressIds.has(j.id) && j.id !== featured?.id && matchesCategory && matchesDifficulty && (!normalizedQuery || searchable.includes(normalizedQuery));
     });
-  }, [journeys, activeCategory, activeDifficulty, searchQuery]);
-
-  const featured = journeys[0];
-  const inProgress = journeys.filter(
-    (j) => (progressMap[j.id] ?? 0) > 0 && (progressMap[j.id] ?? 0) < j.steps_count,
-  );
+  }, [journeys, activeCategory, activeDifficulty, searchQuery, inProgressIds, featured?.id]);
 
   return (
     <div
@@ -176,10 +180,10 @@ const AtriumJornadasPage: React.FC = () => {
 
         {/* ─── Continuidade: prioridade para quem já começou ─── */}
         {inProgress.length > 0 && (
-          <section className="pt-12">
+          <section aria-labelledby="journeys-continue-title" className="pt-8 md:pt-12">
             <div className="mb-6 flex items-center justify-between">
-              <h2 className="font-stitch-display text-[24px] font-semibold leading-[32px] text-stitch-primary">
-                Continue sua formação
+              <h2 id="journeys-continue-title" className="font-stitch-display text-[22px] font-semibold leading-tight text-stitch-primary md:text-[24px] md:leading-[32px]">
+                Continuar
               </h2>
               <span className="font-stitch-body text-[12px] font-bold uppercase tracking-[0.15em] text-stitch-on-surface-variant">
                 {inProgress.length} em curso
@@ -193,23 +197,29 @@ const AtriumJornadasPage: React.FC = () => {
                   <Link
                     key={j.id}
                     to={`/jornadas/${j.id}`}
-                    className="group relative flex flex-col overflow-hidden rounded border border-stitch-outline-variant/30 bg-stitch-surface-container-lowest p-6 shadow-sm transition-shadow hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stitch-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-stitch-background"
+                    aria-label={`Continuar jornada ${j.title}. ${done} de ${j.steps_count} etapas concluídas.`}
+                    className="group relative flex min-w-0 flex-col overflow-hidden rounded-lg border border-stitch-outline-variant/30 bg-stitch-surface-container-lowest p-5 shadow-sm transition-shadow hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-stitch-secondary focus-visible:ring-offset-2 md:p-6"
                   >
                     <div className="absolute left-0 top-0 h-full w-1 origin-top scale-y-0 bg-stitch-secondary transition-transform group-hover:scale-y-100" />
                     <span className="font-stitch-body text-[12px] font-bold uppercase tracking-[0.15em] text-stitch-secondary">
                       {CATEGORY_META[j.category]?.label ?? j.category}
                     </span>
-                    <h3 className="mt-1 font-stitch-display text-[22px] leading-tight text-stitch-primary">
+                    <h3 className="mt-1 break-words font-stitch-display text-[20px] leading-tight text-stitch-primary [overflow-wrap:anywhere] md:text-[22px]">
                       {j.title}
                     </h3>
-                    <p className="mt-3 font-stitch-body text-[14px] text-stitch-on-surface-variant">
-                      Etapa {done} de {j.steps_count}
-                    </p>
-                    <div className="mt-4 flex items-center gap-3">
+                    <div className="mt-3 flex min-w-0 items-center justify-between gap-3">
+                      <p className="min-w-0 break-words font-stitch-body text-[13px] text-stitch-on-surface-variant">
+                        {done} de {j.steps_count} etapas concluídas
+                      </p>
+                      <span className="inline-flex min-h-[44px] shrink-0 items-center gap-1 rounded-full border border-stitch-secondary/35 px-3 font-stitch-body text-[10px] font-bold uppercase tracking-[0.1em] text-stitch-secondary transition-colors group-hover:bg-stitch-secondary/10 sm:text-[11px]">
+                        Continuar <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+                      </span>
+                    </div>
+                    <div className="mt-3 flex items-center gap-3">
                       <div
                         className="h-1 flex-1 overflow-hidden rounded-full bg-stitch-surface-container-highest"
                         role="progressbar"
-                        aria-label={`Progresso de ${j.title}`}
+                        aria-label={`Progresso na jornada ${j.title}`}
                         aria-valuemin={0}
                         aria-valuemax={100}
                         aria-valuenow={pct}
@@ -233,10 +243,11 @@ const AtriumJornadasPage: React.FC = () => {
 
         {/* ─── Jornada em destaque ───────────────────────────────────── */}
         {featured && (
-          <section className="pt-10 md:pt-16">
+          <section aria-labelledby="journey-featured-title" className="pt-10 md:pt-14">
             <Link
               to={`/jornadas/${featured.id}`}
-              className="group relative flex min-h-[360px] flex-col justify-end overflow-hidden bg-stitch-primary p-8 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stitch-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-stitch-background md:p-12"
+              aria-label={`Conhecer a jornada ${featured.title}`}
+              className="group relative flex min-h-[290px] min-w-0 flex-col justify-end overflow-hidden rounded-xl bg-stitch-primary p-5 focus:outline-none focus-visible:ring-2 focus-visible:ring-stitch-secondary focus-visible:ring-offset-2 sm:p-8 md:min-h-[360px] md:p-12"
             >
               <div
                 className="pointer-events-none absolute inset-0 opacity-[0.05]"
@@ -246,26 +257,26 @@ const AtriumJornadasPage: React.FC = () => {
                 }}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-stitch-primary via-stitch-primary/50 to-transparent" />
-              <div className="relative z-10 max-w-2xl text-stitch-primary-foreground">
+              <div className="relative z-10 min-w-0 max-w-2xl text-stitch-primary-foreground">
                 <span className="font-stitch-body text-[12px] font-bold uppercase tracking-[0.2em] text-stitch-secondary-fixed">
                   <Flame className="mr-2 inline h-3 w-3" />
                   Percurso em destaque
                 </span>
-                <h3 className="mt-2 font-stitch-display text-[32px] italic leading-tight text-stitch-primary-foreground md:text-[48px] md:leading-[56px] md:tracking-[-0.02em]">
+                <h3 id="journey-featured-title" className="mt-2 break-words font-stitch-display text-[clamp(2rem,8vw,3rem)] italic leading-[1.08] text-stitch-primary-foreground [overflow-wrap:anywhere] md:leading-[56px] md:tracking-[-0.02em]">
                   {featured.title}
                 </h3>
                 {featured.description && (
-                  <p className="mt-4 font-stitch-body text-[18px] leading-[28px] text-stitch-primary-foreground/80">
+                  <p className="mt-4 max-w-[60ch] break-words font-stitch-body text-[15px] leading-6 text-stitch-primary-foreground/80 [overflow-wrap:anywhere] md:text-[18px] md:leading-[28px]">
                     {featured.description}
                   </p>
                 )}
-                <div className="mt-6 flex flex-wrap items-center gap-4 font-stitch-body text-[12px] font-bold uppercase tracking-[0.15em] text-stitch-secondary-fixed">
+                <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 font-stitch-body text-[11px] font-bold uppercase tracking-[0.12em] text-stitch-secondary-fixed sm:text-[12px] sm:tracking-[0.15em]">
                   <span>{featured.steps_count} etapas</span>
                   {featured.duration_days && <span>· {featured.duration_days} dias</span>}
                   <span>· {DIFFICULTY_LABELS[featured.difficulty] ?? featured.difficulty}</span>
                 </div>
-                <span className="mt-8 inline-flex min-h-11 items-center border border-stitch-secondary-fixed px-6 py-2 font-stitch-body text-[14px] font-medium uppercase tracking-[0.1em] text-stitch-secondary-fixed transition-colors group-hover:bg-stitch-secondary-fixed group-hover:text-stitch-primary">
-                  Conhecer percurso
+                <span className="mt-6 inline-flex min-h-11 items-center justify-center border border-stitch-secondary-fixed px-5 text-center font-stitch-body text-[12px] font-medium uppercase tracking-[0.1em] text-stitch-secondary-fixed transition-colors group-hover:bg-stitch-secondary-fixed group-hover:text-stitch-primary sm:text-[14px]">
+                  Conhecer jornada
                 </span>
               </div>
             </Link>
@@ -321,7 +332,7 @@ const AtriumJornadasPage: React.FC = () => {
                     onClick={() => setActiveCategory(c)}
                     aria-pressed={active}
                     className={
-                      'inline-flex min-h-11 min-w-11 shrink-0 snap-start items-center justify-center gap-2 rounded-full border px-4 py-2 font-stitch-body text-[13px] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stitch-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-stitch-background ' +
+                      'inline-flex min-h-[var(--stitch-mobile-touch-min)] min-w-[var(--stitch-mobile-touch-min)] shrink-0 snap-start items-center justify-center gap-2 rounded-full border px-4 py-2 font-stitch-body text-[13px] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stitch-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-stitch-background ' +
                       (active
                         ? 'border-stitch-secondary bg-stitch-secondary/10 text-stitch-primary'
                         : 'border-stitch-outline-variant/40 bg-stitch-surface-container-low text-stitch-on-surface-variant hover:border-stitch-secondary hover:text-stitch-primary')
@@ -379,7 +390,7 @@ const AtriumJornadasPage: React.FC = () => {
                   <Link
                     key={j.id}
                     to={`/jornadas/${j.id}`}
-                    className="group relative flex min-h-[220px] flex-col border border-stitch-outline-variant/20 bg-stitch-surface-container-lowest p-5 transition-colors hover:border-stitch-secondary/40 hover:shadow-lg hover:shadow-black/[0.04] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stitch-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-stitch-background md:p-6"
+                    className="group relative flex min-h-[220px] min-w-0 flex-col border border-stitch-outline-variant/20 bg-stitch-surface-container-lowest p-5 transition-colors hover:border-stitch-secondary/40 hover:shadow-lg hover:shadow-black/[0.04] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stitch-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-stitch-background md:p-6"
                   >
                     <div className="absolute left-0 top-0 h-full w-1 origin-top scale-y-0 bg-stitch-secondary transition-transform group-hover:scale-y-100" />
                     <div className="mb-4 flex items-center justify-between">
@@ -391,7 +402,7 @@ const AtriumJornadasPage: React.FC = () => {
                     <span className="font-stitch-body text-[12px] font-bold uppercase tracking-[0.15em] text-stitch-secondary">
                       {meta.label}
                     </span>
-                    <h3 className="mt-1 font-stitch-display text-[20px] leading-tight text-stitch-primary transition-colors group-hover:text-stitch-secondary">
+                    <h3 className="mt-1 break-words font-stitch-display text-[20px] leading-tight text-stitch-primary transition-colors [overflow-wrap:anywhere] group-hover:text-stitch-secondary">
                       {j.title}
                     </h3>
                     {j.description && (
@@ -400,7 +411,7 @@ const AtriumJornadasPage: React.FC = () => {
                       </p>
                     )}
                     <div className="mt-6 flex items-center justify-between font-stitch-body text-[12px] font-bold uppercase tracking-[0.15em] text-stitch-on-surface-variant">
-                      <span>
+                      <span className="min-w-0 break-words [overflow-wrap:anywhere]">
                         {j.steps_count} etapas · {DIFFICULTY_LABELS[j.difficulty] ?? j.difficulty}
                       </span>
                       <ArrowRight className="h-4 w-4 text-stitch-secondary transition-transform group-hover:translate-x-1" />

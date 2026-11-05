@@ -5,7 +5,7 @@ import { supabase } from '@/lib/db';
 import { useAuth } from '@/hooks/useAuth';
 import { useNavigate, useSearchParams } from '@/lib/rr-compat';
 import { AppRoute } from '@/types';
-import { ArrowLeft, Loader2 } from 'lucide-react';
+import { ArrowLeft, Eye, EyeOff, Loader2 } from 'lucide-react';
 
 // Links enviados pelo Supabase devem sempre retornar ao domínio público oficial.
 // Não usar window.location.origin: em desenvolvimento/preview isso pode gerar
@@ -18,6 +18,27 @@ function safeNextPath(raw: string | null): string | null {
   if (!raw) return null;
   if (!raw.startsWith('/') || raw.startsWith('//')) return null;
   return raw;
+}
+
+function getAuthErrorMessage(error: unknown, mode: 'login' | 'signup' | 'forgot'): string {
+  const message = error instanceof Error ? error.message.toLowerCase() : '';
+  if (message.includes('invalid login credentials')) return 'Email ou senha incorretos.';
+  if (message.includes('email not confirmed')) return 'Confirme seu email pelo link enviado antes de entrar.';
+  if (message.includes('already registered') || message.includes('user already exists')) {
+    return 'Não foi possível criar a conta com esse email. Tente entrar ou redefinir sua senha.';
+  }
+  if (message.includes('password') && (message.includes('short') || message.includes('least'))) {
+    return 'A senha precisa ter pelo menos 6 caracteres.';
+  }
+  if (message.includes('rate limit') || message.includes('too many requests')) {
+    return 'Muitas tentativas em pouco tempo. Aguarde alguns minutos e tente novamente.';
+  }
+  if (message.includes('fetch') || message.includes('network') || message.includes('timeout')) {
+    return 'Não foi possível conectar. Verifique sua conexão e tente novamente.';
+  }
+  if (mode === 'forgot') return 'Não foi possível enviar o link agora. Tente novamente em instantes.';
+  if (mode === 'signup') return 'Não foi possível criar sua conta agora. Confira os dados e tente novamente.';
+  return 'Não foi possível entrar. Confira seus dados e tente novamente.';
 }
 
 interface AuthProps {
@@ -57,6 +78,7 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
   const [mode, setMode] = useState<'login' | 'signup' | 'forgot'>('login');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [name, setName] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -73,7 +95,7 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
         const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
           redirectTo: `${AUTH_REDIRECT_ORIGIN}/reset-password`,
         });
-        if (resetError) setError(resetError.message);
+        if (resetError) setError(getAuthErrorMessage(resetError, 'forgot'));
         else setSuccess('Se este email estiver cadastrado, você receberá um link para redefinir sua senha.');
         return;
       }
@@ -88,7 +110,7 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
           },
         });
         if (signUpError) {
-          setError(signUpError.message);
+          setError(getAuthErrorMessage(signUpError, 'signup'));
           return;
         }
 
@@ -106,7 +128,7 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
 
       const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({ email, password });
       if (signInError) {
-        setError(signInError.message === 'Invalid login credentials' ? 'Email ou senha incorretos.' : signInError.message);
+        setError(getAuthErrorMessage(signInError, 'login'));
       } else {
         handledSessionUserId.current = signInData.user?.id ?? null;
         handleSuccess();
@@ -120,9 +142,11 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
   };
 
   const switchMode = (newMode: 'login' | 'signup' | 'forgot') => {
+    if (loading) return;
     setMode(newMode);
     setError('');
     setSuccess('');
+    setShowPassword(false);
   };
 
   const title = mode === 'login' ? 'Entrar' : mode === 'signup' ? 'Criar Conta' : 'Redefinir Senha';
@@ -142,7 +166,7 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
   };
 
   return (
-    <div className="cathedra-noir relative flex min-h-screen w-full items-center justify-center px-6 py-16 md:px-12">
+      <div className="cathedra-noir relative flex min-h-[100svh] w-full items-center justify-center px-4 py-20 sm:px-6 md:px-12">
       <Helmet>
         <title>{title} · Cathedra Digital</title>
         <meta name="description" content="Acesse a Cathedra Digital para retomar sua caminhada de estudo, oração e formação." />
@@ -160,8 +184,9 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
 
       {/* Voltar */}
       <button
+        type="button"
         onClick={() => navigate(AppRoute.HOME)}
-        className="group absolute left-4 top-4 inline-flex min-h-11 items-center gap-2 px-2 text-premium-xs tracking-[0.28em] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary/50 focus-visible:ring-offset-2 md:left-10 md:top-8"
+        className="group absolute left-3 top-3 inline-flex min-h-[44px] items-center gap-2 rounded-md px-3 text-premium-xs tracking-[0.2em] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary/50 focus-visible:ring-offset-2 sm:left-4 sm:top-4 md:left-10 md:top-8"
         style={{ color: 'var(--noir-text-faint)', fontFamily: 'Inter, sans-serif' }}
         onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--gold)')}
         onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--noir-text-faint)')}
@@ -170,11 +195,11 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
         VOLTAR
       </button>
 
-      <div className="relative z-10 flex w-full max-w-md flex-col items-center">
+      <main className="relative z-10 flex w-full max-w-md flex-col items-center">
         {/* Cabeçalho editorial */}
-        <div data-rise className="mb-12 flex flex-col items-center text-center">
+        <div data-rise className="mb-8 flex flex-col items-center text-center sm:mb-10">
           <span
-            className="mb-6 inline-block text-premium-xs font-medium uppercase tracking-[0.32em]"
+            className="mb-4 inline-block text-[10px] font-medium uppercase tracking-[0.24em] sm:mb-6 sm:text-premium-xs sm:tracking-[0.32em]"
             style={{ color: 'var(--gold)', fontFamily: 'Inter, sans-serif' }}
           >
             Sanctuarium Spiritus
@@ -184,7 +209,7 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
             style={{
               fontFamily: "'Playfair Display', serif",
               fontWeight: 500,
-              fontSize: 'clamp(2.5rem, 8vw, 3.75rem)',
+              fontSize: 'clamp(2.25rem, 8vw, 3.5rem)',
               color: 'var(--noir-text)',
               letterSpacing: '0.02em',
             }}
@@ -192,7 +217,7 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
             {title}
           </h1>
           <p
-            className="max-w-sm text-base italic leading-relaxed"
+            className="max-w-sm text-sm italic leading-relaxed sm:text-base"
             style={{ fontFamily: "'Playfair Display', serif", color: 'var(--noir-text-muted)' }}
           >
             {subtitle}
@@ -203,8 +228,9 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
         {error && (
           <div
             data-rise="1"
+            id="auth-error"
             role="alert"
-            className="mb-6 w-full px-4 py-3 text-sm"
+            className="mb-5 w-full break-words rounded-md px-4 py-3 text-sm leading-relaxed [overflow-wrap:anywhere]"
             style={{
               borderLeft: '2px solid #b06060',
               color: '#e8b0b0',
@@ -218,8 +244,9 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
         {success && (
           <div
             data-rise="1"
+            id="auth-success"
             role="status"
-            className="mb-6 w-full px-4 py-3 text-sm"
+            className="mb-5 w-full break-words rounded-md px-4 py-3 text-sm leading-relaxed [overflow-wrap:anywhere]"
             style={{
               borderLeft: '2px solid var(--gold)',
               color: 'var(--gold-light)',
@@ -232,7 +259,7 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
         )}
 
         {/* Formulário */}
-        <form data-rise="2" onSubmit={handleSubmit} className="flex w-full flex-col gap-8">
+        <form data-rise="2" onSubmit={handleSubmit} aria-busy={loading} className="flex w-full flex-col gap-6 rounded-xl border border-[color:var(--noir-line)] bg-black/10 p-5 sm:gap-7 sm:p-7">
           {mode === 'signup' && (
             <div className="flex flex-col gap-2">
               <label
@@ -249,7 +276,8 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
                 onChange={(e) => setName(e.target.value)}
                 required
                 placeholder="Como devemos chamá-lo?"
-                className="w-full py-2 text-lg placeholder:italic placeholder:opacity-40 focus:outline-none"
+                autoComplete="name"
+                className="min-h-12 w-full rounded-md px-3 py-2 text-base placeholder:italic placeholder:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary/70 focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:text-lg"
                 style={inputStyle}
               />
             </div>
@@ -270,8 +298,13 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
               onChange={(e) => setEmail(e.target.value)}
               required
               autoComplete="email"
+              autoCapitalize="none"
+              spellCheck={false}
+              inputMode="email"
+              aria-invalid={Boolean(error)}
+              aria-describedby={error ? 'auth-error' : success ? 'auth-success' : undefined}
               placeholder="seu@email.com"
-              className="w-full py-2 text-lg placeholder:italic placeholder:opacity-40 focus:outline-none"
+              className="min-h-12 w-full rounded-md px-3 py-2 text-base placeholder:italic placeholder:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary/70 focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:text-lg"
               style={inputStyle}
             />
           </div>
@@ -285,25 +318,38 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
               >
                 Senha
               </label>
+              <div className="relative">
               <input
                 id="auth-password"
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                minLength={6}
+                minLength={mode === 'signup' ? 6 : undefined}
                 autoComplete={mode === 'signup' ? 'new-password' : 'current-password'}
-                placeholder="Mínimo 6 caracteres"
-                className="w-full py-2 text-lg placeholder:italic placeholder:opacity-40 focus:outline-none"
+                placeholder={mode === 'signup' ? 'Mínimo 6 caracteres' : 'Digite sua senha'}
+                aria-invalid={Boolean(error)}
+                aria-describedby={error ? 'auth-error' : undefined}
+                className="min-h-12 w-full rounded-md py-2 pl-3 pr-12 text-base placeholder:italic placeholder:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary/70 focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:text-lg"
                 style={inputStyle}
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword((visible) => !visible)}
+                aria-label={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
+                aria-pressed={showPassword}
+                className="absolute right-1 top-1/2 inline-flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-md text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary/70"
+              >
+                {showPassword ? <EyeOff className="h-5 w-5" aria-hidden="true" /> : <Eye className="h-5 w-5" aria-hidden="true" />}
+              </button>
+              </div>
             </div>
           )}
 
           <button
             type="submit"
             disabled={loading}
-            className="group mt-2 inline-flex min-h-11 w-full items-center justify-center gap-3 border px-8 py-4 text-xs uppercase tracking-[0.32em] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary/50 focus-visible:ring-offset-2 disabled:opacity-40"
+            className="group mt-1 inline-flex min-h-[48px] w-full items-center justify-center gap-3 rounded-md border px-5 py-3 text-xs uppercase tracking-[0.24em] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary/50 focus-visible:ring-offset-2 disabled:cursor-wait disabled:opacity-60 sm:tracking-[0.32em]"
             style={{
               borderColor: 'var(--gold)',
               color: 'var(--gold)',
@@ -321,8 +367,8 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
               e.currentTarget.style.color = 'var(--gold)';
             }}
           >
-            {loading ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden /> : null}
-            {mode === 'login' ? 'Entrar' : mode === 'signup' ? 'Criar Conta' : 'Enviar Link'}
+            {loading ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" /> : null}
+            <span aria-live="polite">{loading ? 'Aguarde…' : mode === 'login' ? 'Entrar' : mode === 'signup' ? 'Criar Conta' : 'Enviar Link'}</span>
           </button>
         </form>
 
@@ -447,8 +493,9 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
           {mode === 'login' && (
             <button
               type="button"
+              disabled={loading}
               onClick={() => switchMode('forgot')}
-              className="text-xs tracking-widest transition-colors"
+              className="inline-flex min-h-[44px] items-center justify-center px-3 text-xs tracking-widest transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary/70"
               style={{ color: 'var(--noir-text-muted)', fontFamily: 'Inter, sans-serif' }}
               onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--gold-light)')}
               onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--noir-text-muted)')}
@@ -458,8 +505,9 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
           )}
           <button
             type="button"
+            disabled={loading}
             onClick={() => switchMode(mode === 'login' ? 'signup' : 'login')}
-            className="text-sm tracking-wide transition-colors"
+            className="inline-flex min-h-[44px] items-center justify-center px-3 text-sm tracking-wide transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary/70"
             style={{ color: 'var(--gold)', fontFamily: "'Playfair Display', serif", fontStyle: 'italic' }}
             onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--gold-light)')}
             onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--gold)')}
@@ -479,7 +527,7 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onSignupSuccess }) => {
         >
           Acesso essencial · 100% gratuito
         </p>
-      </div>
+      </main>
     </div>
   );
 };

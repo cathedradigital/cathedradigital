@@ -1,9 +1,9 @@
 # Design System — Formar-se
 
-**Produto:** Cathedra Digital  
-**Módulo:** Formar-se  
-**Versão:** 1.0.0  
-**Estado:** proposta implementada parcialmente; validação visual e automatizada pendente  
+**Produto:** Cathedra Digital<br>
+**Módulo:** Formar-se<br>
+**Versão:** 1.0.0<br>
+**Estado:** proposta implementada parcialmente; validação visual e automatizada pendente<br>
 **Escopo:** somente a experiência de Formar-se. Os tokens globais e a Sidebar compartilhada permanecem sob governança transversal.
 
 ## 1. Direção editorial
