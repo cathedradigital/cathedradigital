@@ -14,7 +14,7 @@ test('Glossário: consulta legado sem status e filtra localmente quando o RPC fa
   const term = page.getByRole('link').filter({ has: page.getByRole('heading', { name: 'Termo de teste' }) });
   await expect(term).toBeVisible();
   expect(projections.some((projection) => !projection.split(',').includes('status'))).toBe(true);
-  const search = page.getByRole('textbox').first();
+  const search = page.getByRole('searchbox', { name: 'Buscar verbete', exact: true });
   await search.fill('inexistente');
   await expect(term).toHaveCount(0);
   await search.fill('teste');
