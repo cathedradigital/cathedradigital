@@ -69,6 +69,53 @@ function originClass(record) {
   return 'other-origin';
 }
 
+export async function inspectPublicAuthConfig(request = globalThis.fetch) {
+  const origin = origins[2];
+  const documentUrl = origin + '/auth';
+  const pending = [documentUrl];
+  const queued = new Set(pending);
+  const hosts = new Set();
+  const deadline = Date.now() + 60_000;
+  let remaining = 8 * 1024 * 1024;
+  const report = { documentStatus: null, candidateSupabaseHosts: [], scannedAssets: 0, readFailures: 0, limited: false };
+
+  // Inspect public build assets without evaluating JavaScript or receiving credentials.
+  while (pending.length && remaining > 0 && Date.now() < deadline && !hosts.size) {
+    const url = pending.shift();
+    try {
+      const response = await request(url, { method: 'GET', redirect: 'error', signal: AbortSignal.timeout(10_000) });
+      if (url === documentUrl) report.documentStatus = response.status;
+      const contentType = response.headers.get('content-type') ?? '';
+      const expectedType = url === documentUrl ? /text\/html/i : /(?:java|ecma)script|text\/plain|application\/octet-stream/i;
+      if (!response.ok || !expectedType.test(contentType)) {
+        await response.body?.cancel();
+        report.readFailures++;
+        continue;
+      }
+      const limit = Math.min(remaining, 1024 * 1024);
+      const body = await snippet(response, limit);
+      remaining -= body.length;
+      if (body.length === limit) report.limited = true;
+      if (url !== documentUrl) report.scannedAssets++;
+      for (const host of body.match(/\b[a-z0-9]{20}\.supabase\.co\b/gi) ?? []) hosts.add(host.toLowerCase());
+      for (const match of body.matchAll(/["']([^"'\s<>]+\.m?js)["']/g)) {
+        let next;
+        try { next = new URL(match[1], url); } catch { continue; }
+        if (next.origin !== origin || next.username || next.password || next.search || next.hash
+          || !/^\/assets\/[a-z0-9_./@-]+\.m?js$/i.test(next.pathname) || queued.has(next.href)) continue;
+        if (queued.size >= 49) { report.limited = true; continue; }
+        queued.add(next.href);
+        pending.push(next.href);
+      }
+    } catch {
+      report.readFailures++;
+    }
+  }
+  if (remaining <= 0 || Date.now() >= deadline) report.limited = true;
+  report.candidateSupabaseHosts = [...hosts].sort().slice(0, 20);
+  return report;
+}
+
 export async function diagnoseProduction({
   token = process.env.CLOUDFLARE_API_TOKEN,
   accountId = process.env.CLOUDFLARE_ACCOUNT_ID,
@@ -102,6 +149,7 @@ export async function diagnoseProduction({
   }
 
   const publicPromise = Promise.all(origins.flatMap(origin => ['/', '/auth'].map(path => probe(origin + path, request))));
+  const publicAuthPromise = inspectPublicAuthConfig(request);
   const cloudflare = { errors };
   if (token && /^[a-f\d]{32}$/i.test(accountId ?? '')) {
     const [bindings, subdomain, zones, settings, sourceHosts] = await Promise.all([
@@ -162,6 +210,7 @@ export async function diagnoseProduction({
     observedAt: new Date().toISOString(),
     publicHealthy: publicResults.every(result => result.status === 200 && result.kind === 'html'),
     public: publicResults,
+    publicAuthConfig: await publicAuthPromise,
     cloudflare,
   };
 }

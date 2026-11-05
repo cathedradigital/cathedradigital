@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { diagnoseProduction } from './diagnose-production.mjs';
+import { diagnoseProduction, inspectPublicAuthConfig } from './diagnose-production.mjs';
 
 const token = 'synthetic-token-must-never-be-logged';
 const accountId = 'a'.repeat(32);
@@ -123,4 +123,46 @@ test('public failures and Cloudflare permission errors stay visible without secr
   assert.equal(report.cloudflare.errors[0].http, 403);
   assert.deepEqual(report.cloudflare.errors[0].codes, [10000]);
   assert.equal(JSON.stringify(report).includes(token), false);
+});
+
+test('deployed auth config follows only public same-origin JavaScript assets without credentials', async () => {
+  const origin = 'https://cathedradigital.cathedradigital.workers.dev';
+  const paths = [];
+  const bodies = {
+    '/auth': '<script type="module" src="/assets/entry.js"></script>',
+    '/assets/entry.js': 'import "https://unrelated.example/assets/external.js"; import "/logout.js"; import "./private.js?token=synthetic"; import "./supabase.js";',
+    '/assets/supabase.js': `const endpoint="https://abcdefghijklmnopqrst.supabase.co"; const other="${token}";`,
+  };
+  const report = await inspectPublicAuthConfig(async (input, options) => {
+    const url = new URL(input);
+    paths.push(url.pathname);
+    assert.equal(url.origin, origin);
+    assert.equal(options.method, 'GET');
+    assert.equal(options.redirect, 'error');
+    assert.equal(new Headers(options.headers).has('authorization'), false);
+    assert.ok(Object.hasOwn(bodies, url.pathname), 'must not follow arbitrary links or query strings');
+    return new Response(bodies[url.pathname], { headers: { 'content-type': url.pathname === '/auth' ? 'text/html' : 'text/javascript' } });
+  });
+  assert.deepEqual(paths, ['/auth', '/assets/entry.js', '/assets/supabase.js']);
+  assert.deepEqual(report.candidateSupabaseHosts, ['abcdefghijklmnopqrst.supabase.co']);
+  assert.equal(report.scannedAssets, 2);
+  assert.equal(report.readFailures, 0, 'fetch assertions must not be swallowed as inspection failures');
+  assert.equal(JSON.stringify(report).includes(token), false);
+});
+
+test('deployed auth config bounds asset reads and reports unsuccessful inspection', async () => {
+  let calls = 0;
+  const limited = await inspectPublicAuthConfig(async (input) => {
+    calls++;
+    return new Response(new URL(input).pathname === '/auth'
+      ? Array.from({ length: 80 }, (_, i) => `<script src="/assets/part-${i}.js"></script>`).join('')
+      : 'export const value=1;', { headers: { 'content-type': calls === 1 ? 'text/html' : 'text/javascript' } });
+  });
+  assert.ok(calls <= 49, 'must cap requests regardless of supplied asset references');
+  assert.equal(limited.limited, true);
+  const unavailable = await inspectPublicAuthConfig(async () => new Response(token, { status: 403 }));
+  assert.equal(unavailable.documentStatus, 403);
+  assert.deepEqual(unavailable.candidateSupabaseHosts, []);
+  assert.equal(unavailable.readFailures, 1);
+  assert.equal(JSON.stringify(unavailable).includes(token), false);
 });
