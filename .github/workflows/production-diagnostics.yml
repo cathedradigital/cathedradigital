@@ -1,0 +1,34 @@
+name: Production access diagnostics
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/production-diagnostics.yml
+      - scripts/diagnose-production.mjs
+      - scripts/diagnose-production.test.mjs
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  inspect-production:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22.x'
+      - name: Verify credential isolation and sanitized reporting
+        run: node --test scripts/diagnose-production.test.mjs
+      - name: Inspect current public endpoints and Cloudflare routing (read-only)
+        run: node scripts/diagnose-production.mjs
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
