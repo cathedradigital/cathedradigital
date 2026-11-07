@@ -217,6 +217,7 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
   const [cacheSyncVersion, setCacheSyncVersion] = useState(8); // Bumped to v8 for AI Translation stabilization
   const [diagnosticLogs, setDiagnosticLogs] = useState<any[]>([]);
   const [sessionId] = useState(() => sessionStorage.getItem('cathedra_session_id') || `sess_${crypto.randomUUID()}`);
+  const fetchRequestRef = useRef(0);
 
   
   // New States for Annotations and Progress
@@ -293,7 +294,14 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
   // Re-busca o capítulo quando o usuário troca a tradução ou alterna a
   // modernização ortográfica (chave de cache muda no servidor).
   const reloadKey = `${settings.bibleTranslationId ?? 'primary'}|${settings.bibleModernize ? 1 : 0}`;
+  const initialReloadKeyRef = useRef<string | null>(null);
   useEffect(() => {
+    if (initialReloadKeyRef.current === null) {
+      initialReloadKeyRef.current = reloadKey;
+      return;
+    }
+    if (initialReloadKeyRef.current === reloadKey) return;
+    initialReloadKeyRef.current = reloadKey;
     if (selectedBook && selectedChapter) {
       fetchVerses(selectedBook.abbr, selectedChapter);
     }
@@ -627,6 +635,8 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
 
   const fetchVerses = async (abbr: string, chapter: number) => {
     const runId = `${abbr}-${chapter}-${Date.now()}`;
+    const requestId = ++fetchRequestRef.current;
+    const isCurrentRequest = () => requestId === fetchRequestRef.current;
     biblePerf.start(runId, abbr, chapter);
 
     setIsLoading(true);
@@ -644,6 +654,7 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
         const isExpired = Date.now() - (cachedData.timestamp || 0) > 1000 * 60 * 60 * 24 * 7;
 
         if (!isLegacy && !isExpired) {
+          if (!isCurrentRequest()) return;
           setVerses(cachedData.verses.map((v: any) => ({ ...v, chapter })));
           setIsLoading(false);
           setSourceInfo(`Cache Local (v${cacheSyncVersion})`);
@@ -694,6 +705,7 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
     // Hidrata conexões assim que chegarem, sem bloquear o render do texto
     connectionsPromise
       .then(({ data: dbConnections }) => {
+        if (!isCurrentRequest()) return;
         if (dbConnections && dbConnections.length > 0) {
           setDynamicConnections((prev) => {
             const newConns: Record<string, any[]> = { ...prev };
@@ -721,6 +733,8 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
 
     try {
       const { data, error, response } = await textPromise;
+
+      if (!isCurrentRequest()) return;
 
       if (response?.status === 304) {
         const cachedRes = JSON.parse(localStorage.getItem(offlineKey) || '{}');
@@ -877,6 +891,7 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
         });
       }
     } catch (error: any) {
+      if (!isCurrentRequest()) return;
       setVerses([]);
       setSourceInfo('Erro no Carregamento');
       toast.error('Erro ao carregar texto sagrado', {
@@ -885,7 +900,7 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
       });
       biblePerf.end(runId, { status: 'error', source: 'error' });
     } finally {
-      setIsLoading(false);
+      if (isCurrentRequest()) setIsLoading(false);
     }
   };
 
