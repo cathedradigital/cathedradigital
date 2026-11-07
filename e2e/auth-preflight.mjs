@@ -34,7 +34,7 @@ function createSupabaseFetch(publishableKey) {
 }
 
 export default async function globalSetup() {
-  const email = process.env.E2E_TEST_EMAIL;
+  const email = process.env.E2E_TEST_EMAIL?.trim();
   const password = process.env.E2E_TEST_PASSWORD;
 
   // Public PR smoke tests intentionally run without authenticated secrets.

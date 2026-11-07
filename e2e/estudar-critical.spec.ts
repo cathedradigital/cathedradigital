@@ -1,6 +1,6 @@
 import { test, expect, Page } from '@playwright/test';
 
-const email = process.env.E2E_TEST_EMAIL;
+const email = process.env.E2E_TEST_EMAIL?.trim();
 const password = process.env.E2E_TEST_PASSWORD;
 
 test.beforeEach(async () => {
