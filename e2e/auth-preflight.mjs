@@ -1,4 +1,6 @@
 import fs from 'node:fs';
+import path from 'node:path';
+import { pathToFileURL } from 'node:url';
 import { createClient } from '@supabase/supabase-js';
 
 function readProductionValue(name) {
@@ -72,4 +74,11 @@ export default async function globalSetup() {
     if (error instanceof Error && error.message.startsWith('E2E_AUTH_')) throw error;
     throw new Error('E2E_AUTH_PREFLIGHT_NETWORK_FAILURE: could not complete authentication against the configured Supabase project.');
   }
+}
+
+if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href) {
+  globalSetup().catch((error) => {
+    console.error(error instanceof Error ? error.message : 'E2E_AUTH_PREFLIGHT_FAILED: unknown failure.');
+    process.exitCode = 1;
+  });
 }
