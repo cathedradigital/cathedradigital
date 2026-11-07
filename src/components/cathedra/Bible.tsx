@@ -735,9 +735,18 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
       };
     })().catch(() => null);
 
-    const textResultPromise = Promise.race([
-      textPromise,
-      databaseFallbackPromise,
+    const validTextResult = (result: any) => {
+      if (!result || result.error) return false;
+      if (result.response?.status === 304) return true;
+      return Array.isArray(result.data?.verses) && result.data.verses.length > 0;
+    };
+
+    // Uma rejeição rápida da Edge Function não pode impedir o fallback.
+    // Promise.any ignora respostas inválidas e aceita a primeira fonte que
+    // realmente entregar versículos utilizáveis.
+    const textResultPromise = Promise.any([
+      textPromise.then((result) => validTextResult(result) ? result : Promise.reject(new Error('invalid_edge_response'))),
+      databaseFallbackPromise.then((result) => validTextResult(result) ? result : Promise.reject(new Error('database_fallback_unavailable'))),
     ]);
 
     const connectionsPromise = Promise.resolve(

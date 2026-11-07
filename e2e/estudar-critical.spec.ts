@@ -73,8 +73,10 @@ test('Catecismo: anotação → Diário → retorno exato ao parágrafo', async 
   const bad = watchBrowserHealth(page);
   const marker = 'E2E-CATECHISM-' + Date.now();
   await login(page, '/catechism?p=1');
-  await expect(page.getByRole('button', { name: /Anotar/i }).first()).toBeVisible();
-  await page.getByRole('button', { name: /Anotar/i }).first().click();
+  const paragraph = page.locator('article[aria-labelledby="heading-p1"]');
+  const annotate = paragraph.getByRole('button', { name: 'Adicionar anotação ao parágrafo 1' });
+  await expect(annotate).toBeVisible();
+  await annotate.click();
   await saveReflection(page, marker);
   const note = await openStudyJournal(page, marker);
   await note.getByRole('button', { name: /Ver Contexto/i }).click();
@@ -205,7 +207,7 @@ test('Catecismo: §2262 preserva o texto oficial e abre a referência bíblica',
 test('Catecismo: proveniência do texto oficial fica visível e navegável', async ({ page }) => {
   await login(page, '/catechism?p=1');
   await expect(page.locator('#p1')).toBeVisible();
-  const source = page.getByText('Santa Sé · vatican.va', { exact: true });
+  const source = page.locator('article[aria-labelledby="heading-p1"]').getByRole('link', { name: 'Santa Sé · vatican.va', exact: true });
   await expect(source).toBeVisible();
   await expect(source).toHaveAttribute('href', /vatican\.va/);
 });
@@ -214,7 +216,7 @@ test('Catecismo: Conexo prioriza relação curada e mantém a referência naveg�
   const bad = watchBrowserHealth(page);
   await login(page, '/catechism?p=279');
   await expect(page.locator('#p279')).toBeVisible();
-  await expect(page.getByText('Gn 1:1', { exact: true })).toBeVisible();
+  await expect(page.getByRole('link', { name: 'Gn 1:1 Meditar na Escritura', exact: true })).toBeVisible();
   await expect(page.getByText('Referência editorial', { exact: true })).toBeVisible();
   expect(bad).toEqual([]);
 });
