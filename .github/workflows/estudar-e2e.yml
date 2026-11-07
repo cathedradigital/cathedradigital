@@ -142,14 +142,8 @@ jobs:
           E2E_TEST_EMAIL: ${{ secrets.E2E_TEST_EMAIL }}
           E2E_TEST_PASSWORD: ${{ secrets.E2E_TEST_PASSWORD }}
 
-      - name: Preflight authenticated E2E credentials against configured Supabase
-        run: node e2e/auth-preflight.mjs
-        env:
-          E2E_TEST_EMAIL: ${{ secrets.E2E_TEST_EMAIL }}
-          E2E_TEST_PASSWORD: ${{ secrets.E2E_TEST_PASSWORD }}
-
       - name: Run complete authenticated Playwright suite
-        run: bunx playwright test
+        run: node e2e/auth-preflight.mjs && bunx playwright test
         env:
           E2E_TEST_EMAIL: ${{ secrets.E2E_TEST_EMAIL }}
           E2E_TEST_PASSWORD: ${{ secrets.E2E_TEST_PASSWORD }}
