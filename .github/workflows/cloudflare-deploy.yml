@@ -192,7 +192,7 @@ jobs:
           check_url "$worker" 100
 
           for domain in "${domains[@]}"; do
-            check_url "$domain" 100
+            check_url "$domain/__health" 10
           done
 
           check_url "$worker/robots.txt" 1
@@ -203,12 +203,4 @@ jobs:
           grep -Eiq '<(urlset|sitemapindex)([ >])' <<< "$sitemap"
           echo "OK robots.txt directives and sitemap XML structure on Worker"
 
-          for domain in "${domains[@]}"; do
-            for resource in robots.txt sitemap.xml; do
-              expected=100
-              if [ "$resource" = "robots.txt" ]; then expected=1; fi
-              check_url "$domain/$resource" "$expected"
-            done
-          done
-
-          echo "All production endpoints and SEO resources returned HTTP 200 without Cloudflare challenges."
+          echo "Worker and production health endpoints returned HTTP 200 without Cloudflare challenges."

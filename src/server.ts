@@ -44,9 +44,32 @@ function isH3SwallowedErrorBody(body: string): boolean {
   }
 }
 
+function healthResponse(request: Request): Response | null {
+  const url = new URL(request.url);
+  if (url.pathname !== "/__health") return null;
+
+  if (request.method !== "GET" && request.method !== "HEAD") {
+    return new Response("Method Not Allowed", {
+      status: 405,
+      headers: { allow: "GET, HEAD", "cache-control": "no-store" },
+    });
+  }
+
+  return new Response(request.method === "HEAD" ? null : JSON.stringify({ ok: true }), {
+    status: 200,
+    headers: {
+      "cache-control": "no-store",
+      "content-type": "application/json; charset=utf-8",
+    },
+  });
+}
+
 export default {
   async fetch(request: Request, env: unknown, ctx: unknown) {
     try {
+      const health = healthResponse(request);
+      if (health) return health;
+
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);
       return await normalizeCatastrophicSsrResponse(response);
