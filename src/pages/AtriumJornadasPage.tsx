@@ -154,13 +154,15 @@ const AtriumJornadasPage: React.FC = () => {
       const matchesCategory = activeCategory === 'all' || j.category === activeCategory;
       const matchesDifficulty = activeDifficulty === 'all' || j.difficulty === activeDifficulty;
       const searchable = normalize(`${j.title} ${j.subtitle ?? ''} ${j.description ?? ''} ${j.category}`);
-      return !inProgressIds.has(j.id) && j.id !== featured?.id && matchesCategory && matchesDifficulty && (!normalizedQuery || searchable.includes(normalizedQuery));
+      return j.id !== featured?.id && matchesCategory && matchesDifficulty && (!normalizedQuery || searchable.includes(normalizedQuery));
     });
-  }, [journeys, activeCategory, activeDifficulty, searchQuery, inProgressIds, featured?.id]);
+  }, [journeys, activeCategory, activeDifficulty, searchQuery, featured?.id]);
 
   return (
     <div
+      data-catedra-module="formar-se"
       className="min-h-screen w-full bg-background text-foreground"
+      aria-busy={loading}
     >
       <Helmet>
         <title>Cathedra Digital — Formação</title>
@@ -395,9 +397,16 @@ const AtriumJornadasPage: React.FC = () => {
                     <div className="absolute left-0 top-0 h-full w-1 origin-top scale-y-0 bg-stitch-secondary transition-transform group-hover:scale-y-100" />
                     <div className="mb-4 flex items-center justify-between">
                       <meta.Icon className="h-6 w-6 text-stitch-secondary" />
-                      <span className="font-stitch-display text-[32px] italic text-stitch-secondary/75">
-                        {String(i + 1).padStart(2, '0')}
-                      </span>
+                      <div className="flex items-center gap-3">
+                        {completedIds.has(j.id) && (
+                          <span className="rounded-full border border-stitch-secondary/35 px-2.5 py-1 font-stitch-body text-[10px] font-bold uppercase tracking-[0.12em] text-stitch-secondary">
+                            Concluída
+                          </span>
+                        )}
+                        <span className="font-stitch-display text-[32px] italic text-stitch-secondary/75">
+                          {String(i + 1).padStart(2, '0')}
+                        </span>
+                      </div>
                     </div>
                     <span className="font-stitch-body text-[12px] font-bold uppercase tracking-[0.15em] text-stitch-secondary">
                       {meta.label}
@@ -420,7 +429,7 @@ const AtriumJornadasPage: React.FC = () => {
                       <div
                         className="mt-4 h-1 overflow-hidden rounded-full bg-stitch-surface-container-highest"
                         role="progressbar"
-                        aria-label={`Progresso de ${j.title}`}
+                        aria-label={`Progresso de ${j.title}: ${Math.min(100, Math.round((done / Math.max(j.steps_count, 1)) * 100))}%`}
                         aria-valuemin={0}
                         aria-valuemax={100}
                         aria-valuenow={Math.min(100, Math.round((done / Math.max(j.steps_count, 1)) * 100))}
