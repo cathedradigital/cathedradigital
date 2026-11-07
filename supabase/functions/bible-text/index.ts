@@ -91,9 +91,12 @@ async function sha256Hex(value: string) {
 
 async function loadStoredBibleChapter(abbrev: string, chapter: number) {
   const supabaseUrl = Deno.env.get("SUPABASE_URL");
-  const anonKey = Deno.env.get("SUPABASE_ANON_KEY");
-  if (!supabaseUrl || !anonKey) return null;
-  const db = createClient(supabaseUrl, anonKey, { auth: { persistSession: false, autoRefreshToken: false } });
+  // O conteúdo editorial não tem SELECT exposto diretamente ao navegador.
+  // Esta função é o limite confiável do servidor, então consulta o cache
+  // interno com a service role antes de recorrer à fonte externa lenta.
+  const serverKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") || Deno.env.get("SUPABASE_ANON_KEY");
+  if (!supabaseUrl || !serverKey) return null;
+  const db = createClient(supabaseUrl, serverKey, { auth: { persistSession: false, autoRefreshToken: false } });
   const storageAbbrevs = [abbrev, CANONICAL_ALIASES[abbrev]].filter(Boolean);
   const { data: book, error: bookError } = await db
     .from("bible_books")
