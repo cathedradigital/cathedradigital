@@ -692,6 +692,54 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
       })
       .finally(() => biblePerf.mark(runId, 'text:end'));
 
+    // A Edge Function pode sofrer cold start ou ficar aguardando uma fonte
+    // externa. O conteúdo canônico já está no banco público; consultá-lo em
+    // paralelo evita que o leitor autenticado fique vazio por causa dessa
+    // dependência remota. A função continua vencendo quando responde primeiro
+    // (inclusive para tradução e modernização).
+    const databaseFallbackPromise = (async () => {
+      const { data: book } = await supabase
+        .from('bible_books')
+        .select('id,name,abbrev')
+        .eq('abbrev', abbr)
+        .maybeSingle();
+      if (!book?.id) return null;
+
+      const { data: chapterRow } = await supabase
+        .from('bible_chapters')
+        .select('id,source_name')
+        .eq('book_id', book.id)
+        .eq('number', chapter)
+        .maybeSingle();
+      if (!chapterRow?.id) return null;
+
+      const { data: rows } = await supabase
+        .from('bible_verses')
+        .select('number,text')
+        .eq('chapter_id', chapterRow.id)
+        .order('number');
+      const verses = (rows ?? [])
+        .map((row: any) => ({ number: Number(row.number), text: String(row.text ?? '').trim() }))
+        .filter((row: any) => Number.isInteger(row.number) && row.number > 0 && row.text.length > 0);
+      if (!verses.length) return null;
+
+      return {
+        data: {
+          book: book.name,
+          chapter,
+          verses,
+          source: chapterRow.source_name || 'Cathedra Bible Database',
+        },
+        error: null,
+        response: undefined,
+      };
+    })().catch(() => null);
+
+    const textResultPromise = Promise.race([
+      textPromise,
+      databaseFallbackPromise,
+    ]);
+
     const connectionsPromise = Promise.resolve(
       supabase
         .from('nexus_relations')
@@ -732,7 +780,9 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
 
 
     try {
-      const { data, error, response } = await textPromise;
+      const result = await textResultPromise;
+      if (!result) throw new Error('bible_text_unavailable');
+      const { data, error, response } = result;
 
       if (!isCurrentRequest()) return;
 
