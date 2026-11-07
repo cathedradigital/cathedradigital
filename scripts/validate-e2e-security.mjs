@@ -73,7 +73,7 @@ const authCheckout = (authenticatedJob.steps ?? []).find(
 if (authCheckout?.with?.ref !== "${{ github.sha }}") {
   fail("Authenticated job must checkout the exact trusted triggering SHA (github.sha).");
 }
-if (!(authenticatedJob.steps ?? []).some((step) => /^(?:npx|bunx) playwright test$/.test(step.run ?? ""))) {
+if (!(authenticatedJob.steps ?? []).some((step) => /\b(?:npx|bunx) playwright test\b/.test(step.run ?? ""))) {
   fail("Authenticated job must retain the complete Playwright suite.");
 }
 
