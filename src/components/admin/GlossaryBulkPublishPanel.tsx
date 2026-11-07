@@ -159,7 +159,7 @@ export default function GlossaryBulkPublishPanel({ onPublished }: Props) {
         <div>
           <CardTitle className="text-base">Publicação em lote</CardTitle>
           <p className="text-xs text-muted-foreground mt-1">
-            Publica rascunhos com os 11 campos editoriais preenchidos. O processo respeita o
+            Publicar rascunhos com os 11 campos editoriais preenchidos. O processo respeita o
             trigger de validação — verbetes incompletos são ignorados automaticamente.
           </p>
         </div>

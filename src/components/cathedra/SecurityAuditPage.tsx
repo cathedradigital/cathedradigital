@@ -146,7 +146,7 @@ const SecurityAuditPage = () => {
               </div>
               <div className="space-y-spacing-xs">
                 <p className="text-premium-xs font-bold text-muted-foreground uppercase">Ameaças Bloqueadas</p>
-                <p className="text-premium-xs font-bold text-foreground">0 detectadas esta semana</p>
+                <p className="text-premium-xs font-bold text-foreground">Nenhuma ameaça detectada esta semana</p>
               </div>
             </div>
             <div className="pt-spacing-md border-t border-border/40 text-premium-xs text-muted-foreground italic leading-relaxed">

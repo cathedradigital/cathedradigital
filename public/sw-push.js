@@ -9,8 +9,8 @@ self.addEventListener("push", function (event) {
 
   const options = {
     body: data.body,
-    icon: "/favicon.svg",
-    badge: "/favicon.svg",
+    icon: "/cathedra-favicon.svg",
+    badge: "/cathedra-favicon.svg",
     data: { url: data.url || "/dashboard" },
     vibrate: [100, 50, 100],
     actions: [{ action: "open", title: "Abrir" }],

@@ -2061,7 +2061,7 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
                                                   label: `${selectedBook.name} ${selectedChapter}:${v.number}`,
                                                 });
                                                 if (conn.type === 'catechism') navigate(`/catechism?p=${conn.id}`);
-                                                else if (conn.type === 'document') navigate(`/magisterium?doc=${conn.id}`);
+                                                else if (conn.type === 'document') navigate(`/magisterium/${encodeURIComponent(conn.id)}`);
                                                 else if (conn.type === 'bible' || conn.type === 'cross_ref') {
                                                   const parts = String(conn.id).split('-');
                                                   if (parts.length >= 2) navigate(`/bible?book=${parts[0]}&ch=${parts[1]}${parts[2] ? `&v=${parts[2]}` : ''}`);

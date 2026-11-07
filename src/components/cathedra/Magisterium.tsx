@@ -280,11 +280,20 @@ const Magisterium: React.FC = () => {
     const topicParam = new URLSearchParams(window.location.search).get('topic');
     const docParam = new URLSearchParams(window.location.search).get('doc');
 
-    if (topicParam || docParam) {
-      if (topicParam) {
-        const found = SPIRITUAL_GUIDANCE.find(g => g.id === topicParam);
-        if (found) setSelectedGuidance(found);
+    if (docParam) {
+      const normalizedDoc = decodeURIComponent(docParam).trim();
+      const foundDocument = MAGISTERIUM_DOCUMENTS.find(
+        document => document.id === normalizedDoc || document.title === normalizedDoc,
+      );
+      if (foundDocument) {
+        navigate(`/magisterium/${foundDocument.id}`, { replace: true });
       }
+      return;
+    }
+
+    if (topicParam) {
+      const found = SPIRITUAL_GUIDANCE.find(g => g.id === topicParam);
+      if (found) setSelectedGuidance(found);
       return;
     }
 
@@ -317,7 +326,7 @@ const Magisterium: React.FC = () => {
       setShouldAutoResume(false);
     };
     fetchLastRead();
-  }, [shouldAutoResume]);
+  }, [navigate, shouldAutoResume]);
 
   const MemoizedRelatio = useMemo(() => {
     if (activeTab !== 'guidance' || !selectedGuidance) return null;
