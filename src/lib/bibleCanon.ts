@@ -164,10 +164,20 @@ export function findBookByAbbr(abbr: string): BibleBook | undefined {
   if (BY_ABBR[trimmed]) return BY_ABBR[trimmed];
   const cap = trimmed.charAt(0).toUpperCase() + trimmed.slice(1);
   if (BY_ABBR[cap]) return BY_ABBR[cap];
-  // Tolerate spaces/punctuation (e.g. "2 Cr", "2.Cr", "2-cr") with case-insensitive fallback.
-  const compact = trimmed.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, '');
+  // Tolerate accents, spaces and punctuation (e.g. "joao", "2.Cr",
+  // "2-cr") so legacy deep-links continue resolving to the canonical book.
+  const compact = trimmed
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^\p{L}\p{N}]+/gu, '');
   for (const [k, v] of Object.entries(BY_ABBR)) {
-    if (k.toLowerCase() === compact) return v;
+    const normalizedKey = k
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase()
+      .replace(/[^\p{L}\p{N}]+/gu, '');
+    if (normalizedKey === compact) return v;
   }
   return undefined;
 }
