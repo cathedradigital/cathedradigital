@@ -92,6 +92,11 @@ const AtriumJornadasPage: React.FC = () => {
         }
         if (!cancelled && data) setJourneys(data as JourneyRow[]);
 
+        // O conteúdo editorial não pode ficar preso aguardando o progresso
+        // privado do usuário. Renderize as jornadas assim que a consulta
+        // pública terminar; o progresso é uma hidratação secundária.
+        if (!cancelled) setLoading(false);
+
         if (user) {
           const progressRes = await JourneyService.listUserJourneyProgress(user.id);
           if (progressRes.error) {

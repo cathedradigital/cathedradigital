@@ -24,6 +24,10 @@ async function login(page: Page, destination: string) {
   await expect(page).toHaveURL(url => url.pathname === destinationPath);
 }
 
+async function waitForBibleVerse(page: Page, verse = 1) {
+  await expect(page.locator('#verse-' + verse)).toBeVisible({ timeout: 30_000 });
+}
+
 function watchBrowserHealth(page: Page) {
   const bad: string[] = [];
   page.on('console', message => { if (message.type() === 'error') bad.push('console: ' + message.text()); });
@@ -57,15 +61,15 @@ test('auth redirect preserves protected destination', async ({ page }) => {
 test('Bíblia: anotação → Diário → retorno exato ao versículo', async ({ page }) => {
   const bad = watchBrowserHealth(page);
   const marker = 'E2E-BIBLE-' + Date.now();
-  await login(page, '/bible?book=joao&chapter=1&v=1');
-  await expect(page.locator('#verse-1')).toBeVisible();
+  await login(page, '/bible?book=Jo&ch=1&v=1');
+  await waitForBibleVerse(page);
   await page.locator('#verse-1').click();
   await saveReflection(page, marker);
   const note = await openStudyJournal(page, marker);
   await note.getByRole('button', { name: /Ver Contexto/i }).click();
   expect(page.url()).toContain('/bible?');
   expect(page.url()).toContain('v=1');
-  await expect(page.locator('#verse-1')).toBeVisible();
+  await waitForBibleVerse(page);
   expect(bad).toEqual([]);
 });
 
@@ -99,27 +103,27 @@ test('Magistério: anotação → Diário → retorno ao documento/parágrafo', 
 
 test('Bíblia: leitor oferece retorno para a tela anterior', async ({ page }) => {
   await login(page, '/bible?book=Jo&ch=3');
-  await expect(page.locator('#verse-1')).toBeVisible();
+  await waitForBibleVerse(page);
   const back = page.getByTestId('bible-reader-back');
   await expect(back).toBeVisible();
   await expect(back).toHaveAttribute('aria-label', 'Voltar para a tela anterior');
 });
 
 test('Bíblia: reload → back → forward preservam o deep-link do versículo', async ({ page }) => {
-  await login(page, '/bible?book=joao&chapter=1&v=1');
-  await expect(page.locator('#verse-1')).toBeVisible();
+  await login(page, '/bible?book=Jo&ch=1&v=1');
+  await waitForBibleVerse(page);
   await page.reload();
-  await expect(page.locator('#verse-1')).toBeVisible();
+  await waitForBibleVerse(page);
   await page.goBack();
   await page.goForward();
   expect(page.url()).toContain('/bible?');
   expect(page.url()).toContain('v=1');
-  await expect(page.locator('#verse-1')).toBeVisible();
+  await waitForBibleVerse(page);
 });
 
 test('Bíblia: seletor de livro e capítulo permanece sincronizado com a URL canônica', async ({ page }) => {
   await login(page, '/bible?book=Jo&ch=3');
-  await expect(page.locator('#verse-1')).toBeVisible();
+  await waitForBibleVerse(page);
 
   await page.getByRole('button', { name: 'Escolher livro e capítulo' }).click();
   await expect(page.getByText('João', { exact: true })).toBeVisible();
