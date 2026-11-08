@@ -455,30 +455,30 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
             </nav>
 
             <div className="mt-2 max-h-[50dvh] shrink-0 space-y-3 overflow-y-auto overscroll-contain border-t border-stitch-outline-variant/30 pt-4 touch-pan-y no-scrollbar">
-              <div className="flex flex-col gap-spacing-sm">
+              <div className="space-y-3 rounded-2xl border border-stitch-outline-variant/25 bg-stitch-surface-container-low/70 p-2.5">
                 <div className="grid grid-cols-2 gap-2">
                   <Button 
                     variant="ghost"
                     onClick={onToggleDark} 
-                    className="min-h-11 h-auto rounded-lg border border-primary/[0.01] dark:border-white/[0.01] bg-primary/[0.01] dark:bg-white/[0.01] flex items-center justify-center gap-spacing-xs transition-all hover:bg-primary/5 dark:hover:bg-white/5 group/btn"
+                    className="min-h-11 h-auto rounded-xl border border-stitch-outline-variant/30 bg-stitch-surface-container-lowest flex items-center justify-center gap-2 transition-colors hover:border-stitch-secondary/45 hover:bg-stitch-secondary-container/15 group/btn"
                     aria-label={isDark ? t('light') : t('dark')}
                   >
-                    {isDark ? <Icons.Sun className="w-spacing-sm h-spacing-sm text-primary/40 group-hover/btn:text-primary transition-colors" /> : <Icons.Moon className="w-spacing-sm h-spacing-sm opacity-30 group-hover/btn:opacity-60 transition-opacity" />}
-                    <span className="text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground/60 group-hover/btn:text-muted-foreground transition-colors">{isDark ? t('light') : t('dark')}</span>
+                    {isDark ? <Icons.Sun className="h-4 w-4 text-stitch-secondary transition-colors" /> : <Icons.Moon className="h-4 w-4 text-stitch-on-surface-variant transition-colors group-hover/btn:text-stitch-secondary" />}
+                    <span className="font-stitch-body text-[10px] font-bold uppercase tracking-[0.13em] text-stitch-on-surface-variant transition-colors group-hover/btn:text-stitch-primary">{isDark ? t('light') : t('dark')}</span>
                   </Button>
 
                   <Button 
                     variant="ghost"
                     data-testid="a11y-trigger"
                     onClick={onOpenA11y} 
-                    className={`min-h-11 h-auto rounded-premium border flex items-center justify-center gap-spacing-xs transition-all ${
-                      isHighContrast 
-                        ? 'bg-primary/10 border-primary/20 text-primary' 
-                        : 'border-primary/[0.01] dark:border-white/[0.01] bg-primary/[0.01] dark:bg-white/[0.01] text-muted-foreground/30 hover:bg-primary/5'
+                    className={`min-h-11 h-auto rounded-xl border flex items-center justify-center gap-2 transition-colors ${
+                      isHighContrast
+                        ? 'border-stitch-secondary/50 bg-stitch-secondary-container/25 text-stitch-primary'
+                        : 'border-stitch-outline-variant/30 bg-stitch-surface-container-lowest text-stitch-on-surface-variant hover:border-stitch-secondary/45 hover:bg-stitch-secondary-container/15'
                     }`}
                   >
-                    <Icons.ShieldCheck className="w-spacing-sm h-spacing-sm" />
-                    <span className="text-xs font-semibold uppercase tracking-[0.12em]">{t('accessibility')}</span>
+                    <Icons.ShieldCheck className="h-4 w-4" />
+                    <span className="font-stitch-body text-[10px] font-bold uppercase tracking-[0.13em]">{t('accessibility')}</span>
                   </Button>
                 </div>
 
@@ -486,21 +486,21 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                   <Button 
                     variant="ghost"
                     onClick={onToggleSpeak} 
-                    className={`w-full min-h-11 h-auto rounded-premium border flex items-center justify-center gap-spacing-sm transition-all ${
-                      isSpeaking 
-                        ? 'bg-primary/10 border-primary/20 text-primary' 
-                        : 'border-primary/[0.01] dark:border-white/[0.01] bg-primary/[0.01] dark:bg-white/[0.01] text-muted-foreground/30 hover:bg-primary/5'
+                    className={`w-full min-h-11 h-auto rounded-xl border flex items-center justify-center gap-2 transition-colors ${
+                      isSpeaking
+                        ? 'border-stitch-secondary/50 bg-stitch-secondary-container/25 text-stitch-primary'
+                        : 'border-stitch-outline-variant/30 bg-stitch-surface-container-lowest text-stitch-on-surface-variant hover:border-stitch-secondary/45 hover:bg-stitch-secondary-container/15'
                     }`}
                   >
-                    {isSpeaking ? <Icons.MessageCircle className="w-spacing-sm h-spacing-sm animate-pulse" /> : <Icons.Volume2 className="w-spacing-sm h-spacing-sm" />}
-                    <span className="text-xs font-semibold uppercase tracking-[0.12em]">{isSpeaking ? t('stop') : t('listen')}</span>
+                    {isSpeaking ? <Icons.MessageCircle className="h-4 w-4 animate-pulse" /> : <Icons.Volume2 className="h-4 w-4" />}
+                    <span className="font-stitch-body text-[10px] font-bold uppercase tracking-[0.15em]">{isSpeaking ? t('stop') : t('listen')}</span>
                   </Button>
                 )}
 
                 <div className="pt-1">
                   <label
                     htmlFor="cathedra-language"
-                    className="mb-2 block text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground/70"
+                    className="mb-2 block font-stitch-body text-[10px] font-bold uppercase tracking-[0.18em] text-stitch-on-surface-variant"
                   >
                     {t('language_select')}
                   </label>
@@ -513,7 +513,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                           new CustomEvent('change-lang', { detail: e.target.value }),
                         )
                       }
-                      className="w-full min-h-11 appearance-none rounded-premium-lg border border-primary/10 bg-background/70 px-3 pr-9 text-xs font-semibold text-foreground outline-none transition-colors focus:border-primary/30 focus:ring-2 focus:ring-primary/10"
+                      className="w-full min-h-11 appearance-none rounded-xl border border-stitch-outline-variant/35 bg-stitch-surface-container-lowest px-3 pr-9 font-stitch-body text-[13px] font-bold text-stitch-on-surface outline-none transition-colors focus:border-stitch-secondary focus:ring-2 focus:ring-stitch-secondary/15"
                       aria-label={t('language_select')}
                     >
                       {SUPPORTED_LOCALES.map((locale) => (
@@ -524,7 +524,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                     </select>
                     <Icons.ChevronDown
                       aria-hidden="true"
-                      className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground/50"
+                      className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-stitch-on-surface-variant"
                     />
                   </div>
                 </div>
@@ -535,24 +535,24 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
               </div>
 
               {user ? (
-                <div className="p-3 bg-primary/[0.025] dark:bg-white/[0.02] rounded-xl border border-primary/10">
+                <div className="rounded-2xl border border-stitch-outline-variant/30 bg-stitch-surface-container-low p-3">
                   <Button
                     type="button"
                     variant="ghost"
                     onClick={() => handleNav(AppRoute.PROFILE)}
                     aria-label={`${t('profile_open')}: ${user.name}`}
-                    className="flex w-full min-h-11 h-auto items-center justify-start gap-spacing-sm rounded-lg px-1 text-left group"
+                    className="flex w-full min-h-11 h-auto items-center justify-start gap-3 rounded-xl px-1 text-left group"
                   >
-                    <div className="w-11 h-11 shrink-0 rounded-full bg-primary/90 flex items-center justify-center text-primary-foreground font-bold shadow-premium-none group-hover:scale-105 transition-transform overflow-hidden">
+                    <div className="h-11 w-11 shrink-0 overflow-hidden rounded-full bg-stitch-primary flex items-center justify-center font-bold text-stitch-on-primary transition-transform group-hover:scale-105">
                       {avatarSrc ? (
                         <img src={avatarSrc} alt={user.name} className="w-full h-full object-cover" />
                       ) : (
-                        <span className="text-premium-xs">{user.name.charAt(0).toUpperCase()}</span>
+                        <span className="font-stitch-body text-sm">{user.name.charAt(0).toUpperCase()}</span>
                       )}
                     </div>
                     <div className="flex-1 min-w-spacing-0">
-                      <p className="text-sm font-semibold truncate text-primary">{user.name}</p>
-                      <p className="text-xs uppercase text-primary/70 font-semibold tracking-[0.1em] mt-spacing-3xs">{user.isPremium ? t('member_premium') : t('free_account')}</p>
+                      <p className="truncate font-stitch-display text-[17px] text-stitch-primary">{user.name}</p>
+                      <p className="mt-0.5 font-stitch-body text-[10px] font-bold uppercase tracking-[0.12em] text-stitch-secondary">{user.isPremium ? t('member_premium') : t('free_account')}</p>
                     </div>
                   </Button>
                   
@@ -560,7 +560,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                     {!user.isPremium && (
                       <Button 
                         onClick={() => handleNav(AppRoute.UPGRADE)}
-                        className="flex-1 min-h-11 h-auto bg-primary/10 text-primary hover:bg-primary hover:text-primary-foreground rounded-premium-lg text-premium-xs font-bold uppercase tracking-widest transition-all"
+                        className="flex-1 min-h-11 h-auto rounded-xl bg-stitch-secondary-container text-stitch-on-secondary-container font-stitch-body text-[10px] font-bold uppercase tracking-[0.14em] transition-colors hover:bg-stitch-secondary hover:text-stitch-on-secondary"
                       >
                         {t('upgrade')}
                       </Button>
@@ -570,14 +570,14 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                       size="icon"
                       onClick={onSignOut}
                       aria-label={t('sign_out')}
-                      className="min-h-11 min-w-11 rounded-premium-lg text-primary/70 hover:text-destructive hover:bg-destructive/10 transition-colors"
+                      className="min-h-11 min-w-11 rounded-xl text-stitch-on-surface-variant transition-colors hover:bg-stitch-error-container hover:text-stitch-on-error-container"
                     >
                       <Icons.LogOut className="w-spacing-sm h-spacing-sm" aria-hidden="true" />
                     </Button>
                   </div>
                 </div>
               ) : (
-                <Button onClick={() => handleNav(AppRoute.LOGIN)} className="w-full min-h-11 h-auto bg-primary/90 hover:bg-primary text-primary-foreground rounded-premium font-bold uppercase text-xs tracking-[0.2em] transition-all">
+                <Button onClick={() => handleNav(AppRoute.LOGIN)} className="w-full min-h-11 h-auto rounded-xl bg-stitch-primary text-stitch-on-primary font-stitch-body text-[11px] font-bold uppercase tracking-[0.2em] transition-colors hover:bg-stitch-primary-container">
                   {t('enter')}
                 </Button>
               )}

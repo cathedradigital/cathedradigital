@@ -166,8 +166,9 @@ const AtriumJornadasPage: React.FC = () => {
 
   return (
     <div
+      data-catedra-module-root
       data-catedra-module="formar-se"
-      className="min-h-screen w-full bg-background text-foreground"
+      className="min-h-screen w-full bg-stitch-background text-stitch-on-background"
       aria-busy={loading}
     >
       <Helmet>
