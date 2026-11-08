@@ -285,7 +285,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
               duration: settings.reduceAnimations ? 0.16 : 0.28, 
               ease: [0.16, 1, 0.3, 1] 
             }}
-            className="fixed inset-y-0 left-0 z-[170] flex w-[min(328px,88vw)] flex-col overflow-hidden border-r border-[#c9a84c]/15 bg-[hsl(var(--background))] px-4 shadow-[18px_0_48px_rgba(0,0,0,0.22)] backdrop-blur-xl admin-hide touch-none pt-[calc(1rem+env(safe-area-inset-top,0px))] pb-[calc(1rem+env(safe-area-inset-bottom,0px))] will-change-transform sm:px-5"
+            className="fixed inset-y-0 left-0 z-[170] flex w-[min(328px,88vw)] flex-col overflow-hidden border-r border-stitch-outline-variant/35 bg-stitch-background/95 px-4 shadow-[18px_0_48px_rgba(0,0,0,0.18)] backdrop-blur-xl admin-hide touch-none pt-[calc(1rem+env(safe-area-inset-top,0px))] pb-[calc(1rem+env(safe-area-inset-bottom,0px))] will-change-transform sm:px-5"
             role="dialog"
             aria-modal="true"
             aria-label={t('navigation')}
@@ -293,7 +293,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
             tabIndex={-1}
           >
             {/* Mobile Header — Noir & Gold wordmark */}
-            <header className="flex items-center justify-between gap-3 mb-3 pb-3" style={{ borderBottom: '1px solid rgba(201,168,76,0.25)' }}>
+            <header className="mb-4 flex items-center justify-between gap-3 border-b border-stitch-outline-variant/30 pb-4">
               <button
                 type="button"
                 className="group flex min-w-0 flex-1 cursor-pointer items-center gap-2 rounded-md bg-transparent p-0 text-left outline-none focus-visible:ring-2 focus-visible:ring-[#c9a84c] focus-visible:ring-offset-2 focus-visible:ring-offset-background"
@@ -348,14 +348,14 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                 size="icon"
                 onClick={onClose}
                 style={{ minHeight: 'var(--stitch-mobile-touch-min, 44px)', minWidth: 'var(--stitch-mobile-touch-min, 44px)' }}
-                className="min-h-[44px] min-w-[44px] rounded-full border border-[rgba(201,168,76,0.35)] bg-transparent text-[color:var(--gold-text)] transition-all [@media(hover:hover)]:hover:bg-[#c9a84c] [@media(hover:hover)]:hover:text-[#0a0a0a] focus-visible:bg-[#c9a84c] focus-visible:text-[#0a0a0a] focus-visible:ring-2 focus-visible:ring-[#c9a84c]/40"
+                className="min-h-[44px] min-w-[44px] rounded-full border border-stitch-outline-variant/40 bg-stitch-surface-container-low text-stitch-on-surface-variant transition-colors [@media(hover:hover)]:hover:border-stitch-secondary [@media(hover:hover)]:hover:bg-stitch-secondary-container [@media(hover:hover)]:hover:text-stitch-primary focus-visible:ring-2 focus-visible:ring-stitch-secondary/40"
                 aria-label={t('close_menu')}
               >
                 <Icons.X className="w-4 h-4" />
               </Button>
             </header>
 
-            <nav aria-label={t('navigation')} className="min-h-0 flex-1 space-y-2 overflow-y-auto overscroll-contain pb-4 pr-1 no-scrollbar">
+            <nav aria-label={t('navigation')} className="min-h-0 flex-1 space-y-3 overflow-y-auto overscroll-contain pb-4 pr-1 no-scrollbar">
               {sections.map((section, sectionIdx) => {
                 if (section.items.length === 0) return null;
                 if (sectionIdx === 0 && section.items.length === 1) {
@@ -395,9 +395,9 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                   defaultOpen={section.items.some((item) => currentPath === item.path || (item.path !== '/' && currentPath.startsWith(item.path + '/')))}
                 >
                   <CollapsibleTrigger asChild>
-                    <button style={{ minHeight: 'var(--stitch-mobile-touch-min, 44px)' }} className="group/trigger flex min-h-[44px] w-full items-center justify-between rounded-md px-2.5 py-2 transition-colors hover:bg-[#c9a84c]/[0.055] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c9a84c]/45 focus-visible:ring-offset-2">
-                      <span style={{ color: 'var(--gold-text)', fontFamily: 'Inter, sans-serif', fontSize: '0.68rem', fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase' }}>— {section.label}</span>
-                      <Icons.ChevronDown className="w-3 h-3 transition-all group-data-[state=open]:rotate-180" strokeWidth={1.5} style={{ color: 'var(--gold-text)' }} />
+                    <button style={{ minHeight: 'var(--stitch-mobile-touch-min, 44px)' }} className="group/trigger flex min-h-[44px] w-full items-center justify-between rounded-lg border border-transparent px-3 py-2 transition-colors hover:border-stitch-outline-variant/30 hover:bg-stitch-surface-container-low focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stitch-secondary/45 focus-visible:ring-offset-2">
+                      <span className="font-stitch-body text-[10px] font-bold uppercase tracking-[0.18em] text-stitch-secondary">{section.label}</span>
+                      <Icons.ChevronDown className="h-3.5 w-3.5 text-stitch-on-surface-variant transition-all group-data-[state=open]:rotate-180" strokeWidth={1.5} />
                     </button>
                   </CollapsibleTrigger>
                   <CollapsibleContent>
@@ -407,7 +407,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                       exit={{ opacity: 0, height: 0 }}
                       className="overflow-hidden px-0.5"
                     >
-                      <ul className="mt-1 space-y-1 border-l border-[#c9a84c]/15 pl-2">
+                      <ul className="mt-1 space-y-1 border-l border-stitch-secondary/20 pl-2">
                         {section.items.map((item, idx) => {
                           const isActive = item.path === activePath;
                           return (
@@ -454,7 +454,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
               })}
             </nav>
 
-            <div className="shrink-0 max-h-[50dvh] overflow-y-auto overscroll-contain touch-pan-y border-t border-primary/10 pt-3 mt-2 space-y-3 no-scrollbar">
+            <div className="mt-2 max-h-[50dvh] shrink-0 space-y-3 overflow-y-auto overscroll-contain border-t border-stitch-outline-variant/30 pt-4 touch-pan-y no-scrollbar">
               <div className="flex flex-col gap-spacing-sm">
                 <div className="grid grid-cols-2 gap-2">
                   <Button 

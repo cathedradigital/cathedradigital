@@ -10,7 +10,6 @@ import {
   Sunrise,
 } from 'lucide-react';
 import { Link } from '@/lib/rr-compat';
-import { EditorialHero } from '@/components/editorial/harmony';
 import { SpaceFooter } from '@/components/cathedra/space/SpaceLayout';
 
 const PILLARS = [
@@ -61,23 +60,21 @@ const OTHER_PATHS = [
 ] as const;
 
 const RezarHomePage: React.FC = () => (
-  <section data-catedra-module="rezar" className="catedra-page catedra-section pb-24 pt-8 md:pt-12">
-    <EditorialHero density="minimal" align="center">
-      <EditorialHero.Eyebrow>Ritmo, silêncio e presença de Deus.</EditorialHero.Eyebrow>
-      <EditorialHero.Title>Rezar</EditorialHero.Title>
-      <EditorialHero.Subtitle>
-        Três caminhos centrais para ordenar a oração: a liturgia da Igreja, a escuta da Palavra e a contemplação dos mistérios de Cristo.
-      </EditorialHero.Subtitle>
-    </EditorialHero>
+  <section data-catedra-module-root data-catedra-module="rezar" className="min-h-screen w-full min-w-0 overflow-x-hidden bg-stitch-background text-stitch-on-background pb-24 pt-6 md:pt-12">
+    <header className="catedra-page catedra-section mx-auto max-w-3xl px-4 pb-8 text-center sm:px-5 md:pb-10">
+      <p className="font-stitch-body text-[10px] font-bold uppercase tracking-[0.24em] text-stitch-secondary md:text-[12px] md:tracking-[0.32em]">Ritmo, silêncio e presença de Deus</p>
+      <h1 className="mt-2 font-stitch-display text-[36px] leading-tight text-stitch-primary md:mt-3 md:text-[56px]">Rezar</h1>
+      <p className="mt-3 font-stitch-body text-[15px] leading-6 text-stitch-on-surface-variant md:text-[18px] md:leading-7">Três caminhos para ordenar a oração: a liturgia da Igreja, a escuta da Palavra e a contemplação dos mistérios de Cristo.</p>
+    </header>
 
-    <div className="mx-auto max-w-6xl space-y-16">
+    <div className="catedra-page mx-auto max-w-6xl space-y-14 px-4 sm:px-5 md:space-y-16">
       <section aria-labelledby="rezar-caminhos" className="space-y-6">
         <header className="mx-auto max-w-3xl space-y-2 text-center">
-          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-primary/75">Caminhos essenciais</p>
-          <h2 id="rezar-caminhos" className="font-serif text-2xl text-foreground md:text-3xl">
+          <p className="font-stitch-body text-[10px] font-bold uppercase tracking-[0.2em] text-stitch-secondary md:text-[11px]">Caminhos essenciais</p>
+          <h2 id="rezar-caminhos" className="font-stitch-display text-[24px] leading-tight text-stitch-primary md:text-[30px]">
             Uma vida de oração, três caminhos
           </h2>
-          <p className="text-sm leading-relaxed text-muted-foreground">
+          <p className="font-stitch-body text-sm leading-6 text-stitch-on-surface-variant">
             Escolha por onde deseja começar. Cada espaço conduz a uma experiência própria, com sequência e conteúdo adequados à oração.
           </p>
         </header>
@@ -86,25 +83,25 @@ const RezarHomePage: React.FC = () => (
           {PILLARS.map((item) => {
             const Icon = item.icon;
             return (
-              <article key={item.to} className="group flex min-h-full flex-col overflow-hidden rounded-3xl border border-border/70 bg-card shadow-sm transition-all hover:-translate-y-1 hover:border-primary/35 hover:shadow-xl motion-reduce:transition-none motion-reduce:hover:translate-y-0">
-                <div className="relative flex min-h-36 items-center justify-between bg-gradient-to-br from-[color-mix(in_srgb,var(--catedra-module-accent)_15%,transparent)] via-[color-mix(in_srgb,var(--catedra-module-accent)_5%,transparent)] to-transparent px-6 py-6">
-                  <span className="font-serif text-5xl font-light text-primary/20">{item.number}</span>
-                  <span className="flex h-14 w-14 items-center justify-center rounded-2xl border border-primary/10 bg-background/75 text-primary shadow-sm">
+              <article key={item.to} className="group flex min-h-full flex-col overflow-hidden rounded-2xl border border-stitch-outline-variant/30 bg-stitch-surface-container-lowest shadow-sm transition-all hover:-translate-y-0.5 hover:border-stitch-secondary hover:shadow-lg motion-reduce:transition-none motion-reduce:hover:translate-y-0">
+                <div className="relative flex min-h-32 items-center justify-between border-b border-stitch-outline-variant/20 bg-stitch-secondary-container/20 px-5 py-5 md:px-6">
+                  <span className="font-stitch-display text-5xl font-light text-stitch-secondary/35">{item.number}</span>
+                  <span className="flex h-12 w-12 items-center justify-center rounded-xl border border-stitch-secondary/20 bg-stitch-surface-container-lowest text-stitch-secondary shadow-sm">
                     <Icon className="h-7 w-7" aria-hidden="true" />
                   </span>
-                  <span className="absolute bottom-4 left-6 text-[10px] font-bold uppercase tracking-[0.18em] text-primary/75">
+                  <span className="absolute bottom-3 left-5 font-stitch-body text-[10px] font-bold uppercase tracking-[0.16em] text-stitch-secondary md:left-6">
                     {item.eyebrow}
                   </span>
                 </div>
-                <div className="flex flex-1 flex-col p-6">
-                  <h3 className="font-serif text-2xl font-semibold text-foreground group-hover:text-primary">{item.title}</h3>
-                  <p className="mt-3 flex-1 text-sm leading-7 text-muted-foreground">{item.description}</p>
-                  <p className="mt-5 border-t border-border/70 pt-4 text-xs font-medium leading-relaxed text-primary/80">
+                <div className="flex flex-1 flex-col p-5 md:p-6">
+                  <h3 className="font-stitch-display text-[24px] leading-tight text-stitch-primary group-hover:text-stitch-secondary">{item.title}</h3>
+                  <p className="mt-3 flex-1 font-stitch-body text-sm leading-6 text-stitch-on-surface-variant">{item.description}</p>
+                  <p className="mt-5 border-t border-stitch-outline-variant/25 pt-4 font-stitch-body text-xs font-medium leading-relaxed text-stitch-secondary">
                     {item.detail}
                   </p>
                   <Link
                     to={item.to}
-                    className="mt-5 inline-flex min-h-11 items-center justify-between gap-3 rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                    className="mt-5 inline-flex min-h-11 items-center justify-between gap-3 rounded-xl bg-stitch-secondary px-4 py-3 font-stitch-body text-sm font-bold text-stitch-secondary-on-container transition-colors hover:bg-stitch-secondary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stitch-secondary focus-visible:ring-offset-2"
                   >
                     {item.action}
                     <ChevronRight className="h-4 w-4 shrink-0" aria-hidden="true" />
@@ -118,10 +115,10 @@ const RezarHomePage: React.FC = () => (
 
       <section aria-labelledby="rezar-outras-formas" className="space-y-5">
         <header className="mx-auto max-w-3xl space-y-2 text-center">
-          <h2 id="rezar-outras-formas" className="font-serif text-2xl text-foreground md:text-3xl">
+          <h2 id="rezar-outras-formas" className="font-stitch-display text-[24px] leading-tight text-stitch-primary md:text-[30px]">
             Outras formas de oração
           </h2>
-          <p className="text-sm leading-relaxed text-muted-foreground">
+          <p className="font-stitch-body text-sm leading-6 text-stitch-on-surface-variant">
             Outras práticas e recursos da tradição espiritual da Igreja, organizados em um só lugar.
           </p>
         </header>
@@ -132,16 +129,16 @@ const RezarHomePage: React.FC = () => (
               <Link
                 key={item.to}
                 to={item.to}
-                className="group flex min-h-24 items-center gap-3 rounded-2xl border border-border/70 bg-card px-4 py-4 text-left transition-all hover:border-primary/40 hover:bg-primary/[0.025] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                className="group flex min-h-24 items-center gap-3 rounded-2xl border border-stitch-outline-variant/30 bg-stitch-surface-container-lowest px-4 py-4 text-left transition-all hover:border-stitch-secondary hover:bg-stitch-secondary-container/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stitch-secondary"
               >
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-stitch-secondary-container text-stitch-secondary">
                   <Icon className="h-5 w-5" aria-hidden="true" />
                 </span>
                 <span className="min-w-0 flex-1">
-                  <span className="block font-serif text-base font-semibold text-foreground group-hover:text-primary">{item.label}</span>
-                  <span className="mt-1 block text-xs leading-relaxed text-muted-foreground">{item.description}</span>
+                  <span className="block font-stitch-display text-[17px] text-stitch-primary group-hover:text-stitch-secondary">{item.label}</span>
+                  <span className="mt-1 block font-stitch-body text-xs leading-5 text-stitch-on-surface-variant">{item.description}</span>
                 </span>
-                <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-1" aria-hidden="true" />
+                <ChevronRight className="h-4 w-4 shrink-0 text-stitch-on-surface-variant transition-transform group-hover:translate-x-1 group-hover:text-stitch-secondary" aria-hidden="true" />
               </Link>
             );
           })}
