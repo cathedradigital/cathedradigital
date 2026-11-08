@@ -18,6 +18,7 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 import { PrayerTTSButton } from '../../PrayerTTSButton';
+import { getLiturgyStudyNote, LiturgyStudyNote } from './LiturgyStudyNote';
 
 export type LiturgyBlockVariant =
   | 'default'
@@ -68,6 +69,7 @@ export const LiturgyBlockCard: React.FC<LiturgyBlockCardProps> = ({
       : 'border-border/60 bg-card/60';
 
   const ttsText = text ? [title, text].filter(Boolean).join('. ') : null;
+  const studyNote = getLiturgyStudyNote(title, kicker);
 
   return (
     <section
@@ -120,6 +122,10 @@ export const LiturgyBlockCard: React.FC<LiturgyBlockCardProps> = ({
         <p className="mt-spacing-sm font-stitch-body text-premium-xs italic text-muted-foreground">
           {note}
         </p>
+      )}
+
+      {studyNote && !loading && (
+        <LiturgyStudyNote note={studyNote} />
       )}
     </section>
   );

@@ -40,6 +40,7 @@ import { LiturgyBlockCard } from './primitives/liturgy/LiturgyBlockCard';
 import { EditorialClosure } from '@/components/reader';
 import { resolveEditorialClosure } from '@/lib/editorial/resolveClosure';
 import { MissaClosingActionCard } from './primitives/liturgy/MissaClosingActionCard';
+import { getLiturgyStudyNote, LiturgyStudyNote } from './primitives/liturgy/LiturgyStudyNote';
 
 interface Props {
   prayer: Prayer;
@@ -164,6 +165,13 @@ const PostCommunionSlot: React.FC<{ proper: MissalProperRow | null; loading: boo
 const PrayerBlockView: React.FC<{ block: PrayerBlock; index: number; celebrationMode?: boolean }> = ({ block, index, celebrationMode }) => {
   const isMainPrayer = block.kind === 'prayer' || block.kind === 'intro' || block.kind === 'closing';
   const tts = block.body ? [block.title, block.body].filter(Boolean).join('. ') : null;
+  const studyNote = getLiturgyStudyNote(block.title, `${block.subtitle ?? ''} ${block.optionGroup ?? ''}`) ?? (isMainPrayer
+    ? {
+        label: 'Esta oração faz parte da resposta litúrgica da Igreja ao mistério celebrado.',
+        explanation: 'Cada oração do Ordinário possui um lugar próprio no movimento da Missa: reunir, escutar, oferecer, agradecer, interceder ou receber. Entender sua função ajuda a participar com atenção e não apenas acompanhar as palavras.',
+        practice: 'Leia o título e a rubrica, identifique o que está sendo pedido ou proclamado e faça uma pausa para rezar com suas próprias palavras.',
+      }
+    : null);
   return (
     <article id={`block-${block.id}`} data-block-id={block.id} className="scroll-mt-24 py-spacing-sm">
       {block.title && (
@@ -203,6 +211,9 @@ const PrayerBlockView: React.FC<{ block: PrayerBlock; index: number; celebration
         <aside role="note" aria-label="Rubrica litúrgica" className="mt-spacing-sm border-l-2 border-destructive pl-spacing-sm">
           <p className="font-serif italic text-premium-sm leading-relaxed text-destructive">{block.rubric}</p>
         </aside>
+      )}
+      {studyNote && !celebrationMode && (
+        <LiturgyStudyNote note={studyNote} meditation={block.meditation} compact />
       )}
     </article>
   );

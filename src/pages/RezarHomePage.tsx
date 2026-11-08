@@ -50,7 +50,7 @@ const PILLARS = [
 
 const OTHER_PATHS = [
   { label: 'Liturgia do dia', description: 'Leituras, salmo e Evangelho da celebração.', to: '/liturgia', icon: CalendarDays },
-  { label: 'Missal', description: 'Acompanhar o ordinário e o próprio da Missa.', to: '/missal', icon: BookMarked },
+  { label: 'Missal', description: 'Rezar a Missa e estudar o sentido de cada oração.', to: '/missal', icon: BookMarked },
   { label: 'Via-Sacra', description: 'Meditar o caminho da Paixão do Senhor.', to: '/viacrucis', icon: Cross },
   { label: 'Ladainhas', description: 'Rezar com a Igreja em invocações e súplicas.', to: '/litanies', icon: BookMarked },
   { label: 'Novenas', description: 'Percursos de oração e preparação ao longo de nove dias.', to: '/novenas', icon: CalendarDays },

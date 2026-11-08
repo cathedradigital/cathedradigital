@@ -455,6 +455,15 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
             </nav>
 
             <div className="mt-2 max-h-[50dvh] shrink-0 space-y-3 overflow-y-auto overscroll-contain border-t border-stitch-outline-variant/30 pt-4 touch-pan-y no-scrollbar">
+              <Button
+                type="button"
+                variant="ghost"
+                onClick={(event) => handleNav(AppRoute.HOJE, event)}
+                className="flex min-h-11 w-full items-center justify-between rounded-xl border border-stitch-secondary/35 bg-stitch-secondary-container/20 px-3 font-stitch-body text-[10px] font-bold uppercase tracking-[0.16em] text-stitch-primary transition-colors hover:border-stitch-secondary hover:bg-stitch-secondary-container/35 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stitch-secondary"
+              >
+                <span className="flex items-center gap-2"><Icons.Home className="h-4 w-4 text-stitch-secondary" /> Painel do dia</span>
+                <Icons.ChevronRight className="h-4 w-4 text-stitch-secondary" aria-hidden="true" />
+              </Button>
               <div className="space-y-3 rounded-2xl border border-stitch-outline-variant/25 bg-stitch-surface-container-low/70 p-2.5">
                 <div className="grid grid-cols-2 gap-2">
                   <Button 
