@@ -88,8 +88,11 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
               window.scrollTo({ top: 0, behavior: 'instant' });
             }}
           >
-            <div className="flex items-center gap-2">
-              <Icons.Logo className="w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 text-primary transition-all duration-300 group-hover:scale-105 shrink-0" />
+            <div className="flex items-center gap-2.5">
+              <span className="relative flex h-14 w-14 items-center justify-center rounded-full border border-primary/25 bg-background/25 p-1.5 transition-all duration-300 group-hover:border-primary/50 group-hover:bg-primary/[0.04] sm:h-16 sm:w-16 md:h-20 md:w-20 lg:h-24 lg:w-24">
+                <span aria-hidden="true" className="absolute inset-1 rounded-full border border-primary/10" />
+                <Icons.Logo className="relative h-full w-full text-primary transition-transform duration-300 group-hover:scale-105" />
+              </span>
               <div className="flex flex-col leading-none gap-0.5">
                 <span
                   className="text-primary/90 group-hover:text-primary transition-colors"
@@ -105,6 +108,9 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
                 </span>
                 <span className="hidden md:block text-[7px] text-gold uppercase tracking-[0.32em] font-bold">
                   DIGITAL
+                </span>
+                <span className="hidden xl:block mt-1 text-[6px] uppercase tracking-[0.22em] text-primary/45">
+                  Studium · Oratio · Formatio
                 </span>
               </div>
             </div>
