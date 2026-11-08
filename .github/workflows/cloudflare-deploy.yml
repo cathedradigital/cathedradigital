@@ -14,7 +14,7 @@ on:
         default: false
 
 concurrency:
-  group: cloudflare-production
+  group: ${{ github.event_name == 'workflow_dispatch' && 'cloudflare-production-fast-track' || 'cloudflare-production' }}
   cancel-in-progress: true
 
 jobs:
