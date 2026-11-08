@@ -5,6 +5,13 @@ on:
     workflows: ["CI", "Estudar E2E", "Security Audit", "Estudar final audit"]
     types: [completed]
     branches: ["main"]
+  workflow_dispatch:
+    inputs:
+      fast_track:
+        description: "Publicar manualmente mantendo build, auditorias e validação de produção"
+        required: true
+        type: boolean
+        default: false
 
 concurrency:
   group: cloudflare-production
@@ -23,10 +30,25 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
-            const sha = context.payload.workflow_run.head_sha;
-            const branch = context.payload.workflow_run.head_branch;
+            const manual = context.eventName === "workflow_dispatch";
+            const fastTrack = manual && context.payload.inputs?.fast_track === "true";
+            const sha = manual ? context.sha : context.payload.workflow_run.head_sha;
+            const branch = manual ? context.ref.replace("refs/heads/", "") : context.payload.workflow_run.head_branch;
             if (branch !== "main") {
               core.setFailed(`Refusing deployment from branch ${branch}`);
+              return;
+            }
+
+            if (manual) {
+              if (!fastTrack) {
+                core.setFailed("Manual deployment requires fast_track=true.");
+                return;
+              }
+              core.warning(`FAST-TRACK authorized for SHA ${sha}: authenticated E2E gate is intentionally bypassed for this manual run.`);
+              await core.summary
+                .addHeading("Fast-track deployment")
+                .addRaw(`Manual fast-track authorized for SHA ${sha}. CI/build, security audits, Cloudflare authorization, and production endpoint checks remain enabled.`)
+                .write();
               return;
             }
 
@@ -85,7 +107,7 @@ jobs:
       - name: Checkout the exact validated SHA
         uses: actions/checkout@v6
         with:
-          ref: ${{ github.event.workflow_run.head_sha }}
+          ref: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_sha || github.sha }}
 
       - name: Verify Cloudflare credentials
         env:
