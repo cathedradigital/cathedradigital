@@ -172,6 +172,10 @@ const AtriumNexusPage: React.FC = () => {
       <MobileTopBar kicker="Cathedra Digital" title="Nexus" transparent />
     <div
       className="min-h-screen w-full min-w-0 overflow-x-hidden bg-stitch-background text-stitch-on-background"
+      style={{
+        backgroundImage:
+          'radial-gradient(circle at 12% 8%, hsl(var(--stitch-secondary) / 0.08), transparent 30%), radial-gradient(circle at 88% 42%, hsl(var(--stitch-primary) / 0.05), transparent 34%)',
+      }}
      data-catedra-module-root data-catedra-module="nexus">
       <Helmet>
         <title>Cathedra Digital — Nexus Theologicus</title>

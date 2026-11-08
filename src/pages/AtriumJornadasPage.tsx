@@ -22,6 +22,7 @@ import {
   Stethoscope,
   Zap,
   Flame,
+  Network,
   Search,
 } from 'lucide-react';
 import { EditorialHero } from '@/components/editorial/harmony';
@@ -465,6 +466,25 @@ const AtriumJornadasPage: React.FC = () => {
               {progressError}
             </p>
           )}
+
+          <section aria-labelledby="formar-nexus" className="mt-12 border-t border-stitch-outline-variant/20 pt-8 md:mt-16 md:pt-10">
+            <div className="flex flex-col gap-4 rounded-2xl border border-stitch-secondary/25 bg-stitch-secondary-container/15 p-5 md:flex-row md:items-center md:justify-between md:p-6">
+              <div className="flex min-w-0 items-start gap-3">
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-stitch-surface-container-lowest text-stitch-secondary">
+                  <Network className="h-4 w-4" aria-hidden="true" />
+                </span>
+                <div className="min-w-0">
+                  <p className="font-stitch-body text-[10px] font-bold uppercase tracking-[0.18em] text-stitch-secondary">Nexus da formação</p>
+                  <h2 id="formar-nexus" className="mt-1 font-stitch-display text-[20px] leading-tight text-stitch-primary md:text-[22px]">Continue pelas conexões</h2>
+                  <p className="mt-1.5 max-w-2xl font-stitch-body text-[13px] leading-5 text-stitch-on-surface-variant">Cada jornada encontra outras fontes da Tradição. Explore os temas e relações que ampliam o caminho.</p>
+                </div>
+              </div>
+              <div className="flex shrink-0 flex-wrap gap-2 md:justify-end">
+                <Link to="/nexus" className="inline-flex min-h-11 items-center gap-2 rounded-full border border-stitch-secondary/45 px-4 py-2 font-stitch-body text-[11px] font-bold uppercase tracking-[0.12em] text-stitch-secondary transition-colors hover:bg-stitch-secondary/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stitch-secondary">Abrir Nexus <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" /></Link>
+                <Link to="/temas" className="inline-flex min-h-11 items-center rounded-full border border-stitch-outline-variant/40 px-4 py-2 font-stitch-body text-[11px] font-bold uppercase tracking-[0.12em] text-stitch-on-surface-variant transition-colors hover:border-stitch-secondary hover:text-stitch-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stitch-secondary">Ver temas</Link>
+              </div>
+            </div>
+          </section>
 
           <SpaceFooter 
             note='"Ensina-me, Senhor, o teu caminho, e guia-me por vereda plana." — Sl 27,11'

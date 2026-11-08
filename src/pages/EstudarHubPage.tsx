@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ArrowRight, BookMarked, BookOpen, Compass, Landmark, Sparkles } from 'lucide-react';
+import { ArrowRight, BookMarked, BookOpen, Compass, Landmark, Network, Sparkles } from 'lucide-react';
 import { Helmet } from '@/lib/helmet-compat';
 import { Link } from '@/lib/rr-compat';
 import { MODULE_NAVIGATION } from '@/config/moduleNavigation';
@@ -259,6 +259,25 @@ const EstudarHubPage: React.FC = () => {
               );
             })}
           </div>
+        </section>
+
+        <section aria-labelledby="estudar-nexus" className="mt-7 md:mt-9">
+          <Link
+            to="/nexus"
+            className="group flex min-w-0 items-center justify-between gap-4 rounded-2xl border border-stitch-secondary/25 bg-stitch-secondary-container/20 p-4 transition-all hover:-translate-y-0.5 hover:border-stitch-secondary hover:shadow-lg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-stitch-secondary md:p-5"
+          >
+            <div className="flex min-w-0 items-start gap-3">
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-stitch-surface-container-lowest text-stitch-secondary">
+                <Network className="h-4 w-4" aria-hidden="true" />
+              </span>
+              <div className="min-w-0">
+                <p className="font-stitch-body text-[10px] font-bold uppercase tracking-[0.16em] text-stitch-secondary">Nexus Theologicus</p>
+                <h2 id="estudar-nexus" className="mt-1 font-stitch-display text-[18px] leading-tight text-stitch-primary md:text-[20px]">Uma fonte leva à outra</h2>
+                <p className="mt-1.5 max-w-2xl font-stitch-body text-[12px] leading-5 text-stitch-on-surface-variant md:text-[13px]">Percorra as conexões entre Escritura, Catecismo, Magistério e jornadas de formação.</p>
+              </div>
+            </div>
+            <ArrowRight className="h-5 w-5 shrink-0 text-stitch-secondary transition-transform group-hover:translate-x-1" aria-hidden="true" />
+          </Link>
         </section>
 
         <section className="mt-7 md:mt-9" aria-labelledby="estudar-principio">
