@@ -16,7 +16,7 @@ import { TagBubble } from './ThemeChip';
 import { getTabProps, getTabPanelProps, useTabNavigation, useRovingTabindex } from './TabUtils';
 import { useSpiritualProfile } from '@/hooks/useSpiritualProfile';
 import { PROFILES, type ProfileId } from './SpiritualQuiz';
-import ContemplativeLayout from './ContemplativeLayout';
+import { MobileTopBar } from '@/components/mobile/MobileTopBar';
 
 
 interface Tag {
@@ -131,39 +131,34 @@ const TemasPage = () => {
   }, [queryClient]);
 
   return (
-    <ContemplativeLayout>
-      <div className="desktop-main px-spacing-md stack-rhythm">
-        <header className="space-y-spacing-md text-center header-margin-rhythm">
-          <div className="flex justify-center mb-spacing-md">
-            <div className="w-spacing-3xl h-spacing-2xs bg-gradient-to-r from-transparent via-primary/50 to-transparent rounded-premium shadow-[0_0_15px_rgba(var(--primary),0.3)]" />
-          </div>
-          <h1 className="text-premium-4xl sm:text-premium-6xl md:text-premium-8xl font-black tracking-tighter bg-gradient-to-b from-foreground to-foreground/70 bg-clip-text text-transparent leading-[0.9] flex flex-col sm:block">
-            <span>Nexus</span> <span className="text-primary/90">Temas</span>
-          </h1>
-          <p className="text-muted-foreground text-premium-base sm:text-premium-xl max-w-spacing-2xl mx-auto font-serif italic leading-relaxed">
-            "Fides quaerens intellectum" — Explore conexões sagradas entre as Escrituras e a Tradição.
-          </p>
+    <div data-catedra-module-root data-catedra-module="nexus" className="min-h-screen w-full min-w-0 overflow-x-hidden bg-stitch-background text-stitch-on-background">
+      <MobileTopBar kicker="Cathedra Digital" title="Temas" transparent />
+      <main className="catedra-page catedra-section mx-auto min-w-0 px-4 pb-16 pt-6 sm:px-5 md:px-8 md:pt-12">
+        <header className="mb-8 max-w-3xl md:mb-10">
+          <p className="font-stitch-body text-[10px] font-bold uppercase tracking-[0.24em] text-stitch-secondary md:text-[12px] md:tracking-[0.32em]">Nexus Theologicus</p>
+          <h1 className="mt-2 font-stitch-display text-[34px] leading-tight text-stitch-primary md:mt-3 md:text-[52px]">Temas que conectam</h1>
+          <p className="mt-3 max-w-2xl font-stitch-body text-[15px] leading-6 text-stitch-on-surface-variant md:text-[18px] md:leading-7">Explore os fios que aproximam Escritura, Catecismo, Magistério e vida cristã.</p>
         </header>
 
-        <div className="stack-rhythm">
-          <div className="flex flex-col sm:flex-row items-center gap-spacing-xs sm:gap-spacing-md bg-card/60 p-spacing-xs sm:p-spacing-sm rounded-premium border border-border/40 shadow-premium-hover sticky top-spacing-xs sm:top-spacing-md z-20 transition-all duration-500 hover:shadow-premium-hover hover:border-primary/20 group/nav">
+        <div className="space-y-6">
+          <div className="sticky top-2 z-20 flex flex-col gap-3 rounded-2xl border border-stitch-outline-variant/30 bg-stitch-surface-container-lowest/95 p-3 shadow-sm backdrop-blur-md sm:p-4">
             <FuzzySearchInput
-              className="flex-1 w-full"
+              className="w-full"
               value={searchQuery}
               onChange={setSearchQuery}
-              placeholder="Buscar tema (ex: Amor, Graça...)"
+              placeholder="Buscar um tema, como Amor ou Graça"
               isSearching={isSearchPending}
             />
             
-            <div role="tablist" aria-label="Filtrar temas por categoria" className="flex items-center gap-spacing-2xs overflow-x-auto w-full sm:w-auto px-spacing-xs pb-spacing-xs sm:pb-spacing-0 scrollbar-none scroll-smooth">
+            <div role="tablist" aria-label="Filtrar temas por categoria" className="flex w-full items-center gap-2 overflow-x-auto px-1 pb-1 scrollbar-none">
               {categories.map((cat, idx) => (
                 <motion.button
                   key={cat}
                   {...getTabProps(`tab-category-${idx}`, `panel-temas`, activeCategory === cat, `
-                    whitespace-nowrap px-spacing-sm sm:px-spacing-md py-spacing-xs sm:py-spacing-xs rounded-premium-full sm:rounded-premium-full text-premium-xs sm:text-premium-xs font-black uppercase tracking-[0.15em] sm:tracking-[0.2em] transition-all duration-300 focus-visible:ring-2 focus-visible:ring-primary outline-none
-                    ${activeCategory === cat 
-                      ? 'bg-primary text-primary-foreground shadow-premium shadow-primary/20 scale-105' 
-                      : 'bg-muted/40 text-muted-foreground/70 hover:bg-muted hover:text-foreground hover:scale-102 border border-transparent hover:border-border/50'
+                    min-h-10 whitespace-nowrap rounded-full border px-4 py-2 font-stitch-body text-[11px] font-bold uppercase tracking-[0.12em] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stitch-secondary
+                    ${activeCategory === cat
+                      ? 'border-stitch-secondary bg-stitch-secondary text-stitch-secondary-on-container'
+                      : 'border-stitch-outline-variant/40 bg-stitch-surface-container-low text-stitch-on-surface-variant hover:border-stitch-secondary hover:text-stitch-primary'
                     }
                   `)}
                   initial={false}
@@ -177,25 +172,22 @@ const TemasPage = () => {
               ))}
             </div>
           </div>
-
           <div className="relative">
-            <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-transparent  opacity-30 pointer-events-none" />
-            
-            <div {...getTabPanelProps('panel-temas', `tab-category-${categories.indexOf(activeCategory)}`, true, "relative overflow-hidden rounded-premium border border-border/30 bg-card/20 outline-none")}>
+            <div {...getTabPanelProps('panel-temas', `tab-category-${categories.indexOf(activeCategory)}`, true, "relative overflow-hidden rounded-2xl border border-stitch-outline-variant/30 bg-stitch-surface-container-lowest outline-none")}>
               {loadingTags ? (
-                <div className="flex flex-col items-center gap-spacing-md py-spacing-2xl w-full justify-center">
+                  <div className="flex min-h-48 flex-col items-center justify-center gap-3 py-10">
                   <div className="relative">
-                    <Icons.Loader2 className="h-spacing-xl w-spacing-xl animate-spin text-primary/60" />
-                    <div className="absolute inset-0 bg-primary/20  animate-pulse rounded-premium" />
+                    <Icons.Loader2 className="h-7 w-7 animate-spin text-stitch-secondary" />
+                    <div className="absolute inset-0 animate-pulse rounded-full bg-stitch-secondary/15" />
                   </div>
-                  <span className="text-premium-sm font-bold text-muted-foreground/60 tracking-widest uppercase">Consultando Nexus...</span>
+                  <span className="font-stitch-body text-[11px] font-bold uppercase tracking-[0.16em] text-stitch-on-surface-variant">Consultando Nexus...</span>
                 </div>
               ) : filteredTags.length === 0 ? (
-                <div className="py-spacing-3xl px-spacing-xl text-center w-full space-y-spacing-md">
-                  <div className="w-spacing-3xl h-spacing-3xl bg-muted/30 rounded-premium flex items-center justify-center mx-auto">
-                    <Icons.Search className="w-spacing-lg h-spacing-lg text-muted-foreground/60" />
+                <div className="flex min-h-48 flex-col items-center justify-center gap-3 px-6 py-10 text-center">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-stitch-secondary-container/30">
+                    <Icons.Search className="h-5 w-5 text-stitch-secondary" />
                   </div>
-                  <p className="text-premium-sm text-muted-foreground/60 italic font-medium tracking-wide">Nenhum tema encontrado para sua busca teológica.</p>
+                  <p className="font-stitch-body text-sm text-stitch-on-surface-variant">Nenhum tema encontrado para sua busca.</p>
                 </div>
               ) : (
                 <>
@@ -213,8 +205,8 @@ const TemasPage = () => {
                       </Button>
                     </div>
                   )}
-                  <div className="relative p-spacing-lg sm:p-spacing-xl">
-                    <div className="flex flex-wrap justify-center gap-spacing-xs sm:gap-spacing-sm max-w-5xl mx-auto" role="list" ref={tagsContainerRef}>
+                  <div className="relative p-5 sm:p-8">
+                    <div className="mx-auto flex max-w-5xl flex-wrap justify-center gap-2.5 sm:gap-3" role="list" ref={tagsContainerRef}>
                       {filteredTags.map((tag, idx) => (
                         <div key={tag.id} role="listitem">
                           <TagBubble
@@ -223,20 +215,20 @@ const TemasPage = () => {
                             isSuggested={suggestedSlugs.has(tag.slug)}
                             onKeyDown={(e) => handleRovingKeyDown(e, idx, () => {})}
                             tabIndex={activeIndex === idx ? 0 : -1}
-                            className="px-spacing-md py-spacing-xs text-premium-xs sm:text-premium-small uppercase tracking-widest"
+                            className="rounded-full border border-stitch-outline-variant/40 bg-stitch-surface-container-low px-3 py-2 font-stitch-body text-[11px] font-bold uppercase tracking-[0.1em] text-stitch-on-surface-variant transition-colors hover:border-stitch-secondary hover:text-stitch-primary sm:px-4"
                             profileId={profileId as ProfileId}
                           />
                         </div>
                       ))}
                     </div>
                   </div>
-                  <div className="flex items-center justify-center gap-spacing-sm px-spacing-xl pb-spacing-lg pt-spacing-xs">
-                    <div className="flex items-center gap-spacing-xs bg-muted/20 px-spacing-md py-spacing-2xs rounded-premium border border-border/20">
-                      <span className="text-premium-xs font-black uppercase tracking-widest text-muted-foreground/60 tabular-nums">
+                  <div className="flex items-center justify-center gap-2 border-t border-stitch-outline-variant/20 px-5 pb-5 pt-3">
+                    <div className="flex items-center gap-2 rounded-full border border-stitch-outline-variant/30 bg-stitch-surface-container-low px-3 py-1.5">
+                      <span className="font-stitch-body text-[10px] font-bold uppercase tracking-[0.14em] text-stitch-on-surface-variant tabular-nums">
                         {filteredTags.length} conexões sagradas
                       </span>
-                      <div className="w-spacing-2xs h-spacing-2xs rounded-premium bg-primary/30" />
-                      <Icons.Sparkles className="w-spacing-sm h-spacing-sm text-primary/40 animate-pulse" />
+                      <div className="h-1.5 w-1.5 rounded-full bg-stitch-secondary/60" />
+                      <Icons.Sparkles className="h-3.5 w-3.5 text-stitch-secondary" />
                     </div>
                   </div>
                 </>
@@ -245,24 +237,23 @@ const TemasPage = () => {
           </div>
         </div>
         
-        <div className="min-h-[400px] mt-spacing-2xl">
+        <div className="mt-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="h-[300px] flex flex-col items-center justify-center text-center p-spacing-2xl bg-muted/10 rounded-premium border border-dashed border-border/40 relative overflow-hidden group"
+            className="flex flex-col items-center justify-center rounded-2xl border border-stitch-secondary/20 bg-stitch-secondary-container/10 px-6 py-8 text-center"
           >
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-secondary/5 opacity-50" />
-            <div className="w-spacing-4xl h-spacing-4xl rounded-premium bg-primary/5 flex items-center justify-center mb-spacing-xl border border-primary/10 shadow-premium-md group-hover:scale-110 transition-transform duration-500">
-              <Icons.Tag className="h-spacing-2xl w-spacing-2xl text-primary/60" />
+            <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-stitch-surface-container-lowest text-stitch-secondary">
+              <Icons.Tag className="h-5 w-5" />
             </div>
-            <h3 className="text-premium-3xl font-black mb-spacing-md text-foreground tracking-tight">Descubra os tesouros da Fé</h3>
-            <p className="text-muted-foreground text-premium-lg max-w-spacing-md font-serif italic">
-              Selecione uma das "bolhas" acima para navegar pelos conteúdos da Bíblia, Catecismo e Magistério relacionados ao tema.
+            <h3 className="font-stitch-display text-[22px] leading-tight text-stitch-primary">Descubra os tesouros da Fé</h3>
+            <p className="mt-2 max-w-2xl font-stitch-body text-sm leading-6 text-stitch-on-surface-variant">
+              Selecione um tema acima para percorrer os conteúdos relacionados da Bíblia, Catecismo e Magistério.
             </p>
           </motion.div>
         </div>
-      </div>
-    </ContemplativeLayout>
+      </main>
+    </div>
   );
 };
 
