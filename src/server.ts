@@ -64,6 +64,27 @@ function healthResponse(request: Request): Response | null {
   });
 }
 
+function withAssetCache(request: Request, response: Response): Response {
+  const url = new URL(request.url);
+  const isVersionedAsset =
+    request.method === "GET" &&
+    url.pathname.startsWith("/assets/") &&
+    /-[a-z0-9_-]{8,}\.(js|css|map|svg|png|jpg|jpeg|webp|avif|woff2?)$/i.test(
+      url.pathname,
+    );
+
+  if (!isVersionedAsset || response.status !== 200) return response;
+
+  const headers = new Headers(response.headers);
+  headers.set("Cache-Control", "public, max-age=31536000, s-maxage=31536000, immutable");
+
+  return new Response(response.body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers,
+  });
+}
+
 export default {
   async fetch(request: Request, env: unknown, ctx: unknown) {
     try {
@@ -72,7 +93,8 @@ export default {
 
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);
-      return await normalizeCatastrophicSsrResponse(response);
+      const normalizedResponse = await normalizeCatastrophicSsrResponse(response);
+      return withAssetCache(request, normalizedResponse);
     } catch (error) {
       console.error(error);
       return new Response(renderErrorPage(), {
