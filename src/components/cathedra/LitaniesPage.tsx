@@ -4,6 +4,7 @@ import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { useDevotionalReader } from '@/components/mobile/DevotionalReaderContext';
 import { EditorialHero } from '@/components/editorial/harmony/EditorialHero';
 import { EditorialCard } from '@/components/editorial/harmony/EditorialCard';
+import { StudyApplicationBlock, type StudyApplicationContent } from '@/components/cathedra/primitives/study/StudyApplicationBlock';
 
 
 
@@ -213,6 +214,37 @@ const CATEGORY_COLORS: Record<string, string> = {
   'Santos': 'bg-amber-50 text-amber-700 border-secondary',
 };
 
+const LITANY_STUDY: Record<string, StudyApplicationContent> = {
+  'sagrado-coracao': {
+    what: 'Uma ladainha cristológica de invocações ao Coração de Jesus, contemplando quem Cristo é e os frutos do seu amor redentor.',
+    why: 'A resposta “tende piedade de nós” transforma cada título em súplica. A oração conduz do reconhecimento do amor de Cristo ao desejo de que o próprio coração seja conformado ao dele.',
+    how: 'Leia a invocação lentamente e deixe a resposta completar seu sentido. Depois de alguns títulos, faça uma pausa breve e retome uma qualidade de Jesus que você precisa viver hoje.',
+    application: 'Escolha uma invocação — misericórdia, paciência, paz ou caridade — e transforme-a em um gesto concreto nas próximas horas.',
+    references: 'A ladainha contempla imagens bíblicas do Coração de Cristo, da Encarnação, da Paixão e da misericórdia. O encerramento pede que nosso coração se torne semelhante ao de Jesus.',
+  },
+  'nossa-senhora': {
+    what: 'A Ladainha Lauretana reúne títulos bíblicos e tradicionais de Maria e responde a cada um com um pedido de intercessão.',
+    why: 'A Igreja não coloca Maria no lugar de Cristo. Ao chamá-la de Mãe, Virgem, Porta do Céu ou Rainha, reconhece a obra de Deus nela e pede que sua intercessão conduza o povo ao Filho.',
+    how: 'Reze as invocações como uma leitura orante: escolha um grupo de títulos — maternidade, virtudes, imagens bíblicas ou realeza — e perceba o caminho espiritual que ele forma.',
+    application: 'Peça uma virtude concreta à imitação de Maria: escuta, prudência, fidelidade, esperança ou serviço. Expresse-a em uma decisão simples.',
+    references: 'Os títulos dialogam com a Escritura, a tradição mariana e a oração da Igreja. “Rogai por nós” mantém a súplica voltada para a graça de Cristo.',
+  },
+  'todos-santos': {
+    what: 'A Ladainha de Todos os Santos é uma oração de intercessão que reúne anjos, apóstolos, mártires, pastores, virgens e todos os santos diante de Deus.',
+    why: 'Ela manifesta a comunhão dos santos: a Igreja peregrina não caminha sozinha, mas participa do louvor e da intercessão daqueles que já testemunharam o Evangelho.',
+    how: 'Reze a lista sem pressa, percebendo a diversidade das vocações. Ao ouvir um nome, recorde que a santidade pode assumir formas concretas de serviço, coragem, estudo, família ou martírio.',
+    application: 'Escolha um santo ou grupo de santos invocado e peça a graça de imitar uma atitude específica do seu testemunho nesta semana.',
+    references: 'A forma responsorial é usada em momentos solenes da oração da Igreja e em celebrações como a Vigília Pascal, ordenações e consagrações, conforme os livros litúrgicos.',
+  },
+  'sao-jose': {
+    what: 'A Ladainha de São José contempla sua missão na história da salvação e pede sua intercessão como esposo de Maria, guardião do Redentor e servidor fiel.',
+    why: 'Os títulos mostram que a santidade de José aparece na obediência silenciosa, no trabalho, na proteção da família e na disponibilidade ao plano de Deus.',
+    how: 'Reze cada invocação como uma escola de virtudes. Detenha-se especialmente nos títulos que tocam sua realidade atual: família, trabalho, doença, decisões ou cuidado dos vulneráveis.',
+    application: 'Escolha uma virtude de José — justiça, castidade, prudência, fortaleza, obediência ou fidelidade — e traduza-a em uma atitude doméstica e concreta.',
+    references: 'A ladainha se apoia nos Evangelhos da infância de Jesus e na tradição da Igreja sobre São José. Seu encerramento recorda sua missão de guardião e servidor.',
+  },
+};
+
 const LitaniesPage: React.FC = () => {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
@@ -239,6 +271,12 @@ const LitaniesPage: React.FC = () => {
     const scrollTo = (el: HTMLElement | null) =>
       el?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     const items = [
+      {
+        id: 'study',
+        label: 'Estudo e aplicação',
+        hint: 'Contexto e método',
+        onSelect: () => scrollTo(document.getElementById('litany-study')),
+      },
       ...(litany.opening
         ? [{ id: 'opening', label: 'Abertura', hint: 'Kyrie', onSelect: () => scrollTo(openingRef.current) }]
         : []),
@@ -282,6 +320,14 @@ const LitaniesPage: React.FC = () => {
             <h1 className="text-premium-3xl md:text-premium-4xl font-serif font-bold text-foreground leading-tight">{litany.title}</h1>
             {litany.latin && <p className="text-premium-base font-serif italic text-muted-foreground opacity-70">{litany.latin}</p>}
           </div>
+        </div>
+
+        <div id="litany-study" className="scroll-mt-24">
+          <StudyApplicationBlock
+            content={LITANY_STUDY[litany.id]}
+            heading="Estudo e aplicação da Ladainha"
+            eyebrow={`${litany.category} · ${litany.invocations.length} invocações`}
+          />
         </div>
 
         <div className="premium-card p-spacing-xl md:p-spacing-3xl space-y-spacing-xl">

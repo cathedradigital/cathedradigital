@@ -32,6 +32,7 @@ import { usePrayerEngineSession } from '@/prayer-engine/usePrayerEngineSession';
 import type { Prayer } from '@/hooks/usePrayers';
 import type { DBMystery, DBSection } from '@/prayer-engine/loadPrayerHierarchy';
 import { cn } from '@/lib/utils';
+import { StudyApplicationBlock, type StudyApplicationContent } from '@/components/cathedra/primitives/study/StudyApplicationBlock';
 
 export type PrayerPortalTheme = 'church' | 'passion' | 'dawn' | 'noon' | 'sunset' | 'night';
 
@@ -76,6 +77,8 @@ interface Props {
   theme?: PrayerPortalTheme;
   /** Ícone de destaque exibido no Hero.Meta e circulo do highlight. */
   accentIcon?: LucideIcon;
+  /** Contexto formativo exibido antes do início da oração. */
+  study?: StudyApplicationContent;
 }
 
 
@@ -112,6 +115,7 @@ const PrayerPortal: React.FC<Props> = ({
   backLabel = '← Voltar ao Livro de Orações',
   theme = 'church',
   accentIcon,
+  study,
 }) => {
   const AccentIcon = accentIcon ?? Heart;
 
@@ -297,6 +301,14 @@ const PrayerPortal: React.FC<Props> = ({
         </section>
       )}
 
+      {study && (
+        <StudyApplicationBlock
+          content={study}
+          className="mt-10"
+          heading="Estudo e aplicação antes de rezar"
+        />
+      )}
+
       {/* 3 — Preparar o coração */}
       <section
         aria-labelledby="portal-prepare"
@@ -425,4 +437,3 @@ const PrayerPortal: React.FC<Props> = ({
 };
 
 export default PrayerPortal;
-

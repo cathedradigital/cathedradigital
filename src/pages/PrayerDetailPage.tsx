@@ -32,6 +32,7 @@ import PoenitentiaPage from '@/components/cathedra/PoenitentiaPage';
 import PrayerErrorBoundary from '@/components/prayer/PrayerErrorBoundary';
 import { useAuth } from '@/hooks/useAuth';
 import { logPrayerDiagnostics, serializeSearchParams, type PrayerErrorContext } from '@/lib/prayer/telemetry';
+import { StudyApplicationBlock, getPrayerStudyContent } from '@/components/cathedra/primitives/study/StudyApplicationBlock';
 
 
 const FONT_STEPS = [
@@ -129,6 +130,14 @@ const PrayerDetailPageInner: React.FC = () => {
   }
 
   const kicker = prayer.kicker ?? `Cathedra Digital · ${PRAYER_CATEGORY_LABEL[prayer.category]}`;
+  const studyContent = getPrayerStudyContent({
+    title: prayer.title,
+    slug: prayer.slug,
+    category: prayer.category,
+    explanation: prayer.explanation,
+    meditation: prayer.meditation,
+    sourceRef: (prayer as unknown as { source_ref?: string }).source_ref,
+  });
 
   // Sprint 1.0 — Prayer Engine v2: conteúdo servido 100% pelo banco hierárquico.
   const engineV2 = (prayer as { engine_version?: number }).engine_version === 2;
@@ -171,6 +180,7 @@ const PrayerDetailPageInner: React.FC = () => {
               theme={themeInfo.theme}
               accentIcon={themeInfo.accentIcon}
               quote={themeInfo.quote}
+              study={studyContent}
             />
           );
         }
@@ -182,6 +192,7 @@ const PrayerDetailPageInner: React.FC = () => {
             accentIcon={themeInfo.accentIcon}
             quote={themeInfo.quote}
             showRhythm={false}
+            study={studyContent}
             highlight={{
               eyebrow: PRAYER_CATEGORY_LABEL[prayer.category],
               title: hierarchy.activeSection?.title ?? prayer.title,
@@ -332,6 +343,8 @@ const PrayerDetailPageInner: React.FC = () => {
             ))}
           </ol>
         </section>
+
+        <StudyApplicationBlock content={studyContent} className="mt-10" />
 
         {/* Latim */}
         {prayer.content_latin && (
