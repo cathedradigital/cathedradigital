@@ -266,20 +266,31 @@ export const JourneyService = {
   ): Promise<ServiceResult<JourneyProgress>> {
     try {
       if (JourneyAdapter.isLegacyId(journeyId)) return fail(LEGACY_WRITE_ERROR);
-      const { data: step } = await JourneyService.getStep(journeyId, stepOrder);
+      const { data: step, error: stepError } = await JourneyService.getStep(journeyId, stepOrder);
+      if (stepError) throw stepError;
       if (!step) throw new Error(`Passo ${stepOrder} não encontrado`);
       const { data, error } = await supabase
         .from('journey_progress')
-        .insert({
+        .upsert({
           user_id: userId,
           journey_id: journeyId,
           step_id: step.id,
           reflection: reflection ?? null,
-        })
+        }, { onConflict: 'user_id,step_id', ignoreDuplicates: true })
         .select()
         .maybeSingle();
       if (error) throw error;
-      return ok(data as JourneyProgress);
+      if (data) return ok(data as JourneyProgress);
+
+      const { data: existing, error: existingError } = await supabase
+        .from('journey_progress')
+        .select('*')
+        .eq('user_id', userId)
+        .eq('step_id', step.id)
+        .maybeSingle();
+      if (existingError) throw existingError;
+      if (!existing) throw new Error('Não foi possível confirmar a conclusão da etapa.');
+      return ok(existing as JourneyProgress);
     } catch (e) {
       return fail(e);
     }

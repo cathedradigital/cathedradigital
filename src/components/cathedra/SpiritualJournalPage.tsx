@@ -41,23 +41,28 @@ const SpiritualJournalPage = () => {
   const [entries, setEntries] = useState<JournalEntry[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isFetching, setIsFetching] = useState(true);
+  const [fetchError, setFetchError] = useState(false);
 
   const fetchEntries = async () => {
     if (!user) return;
     setIsFetching(true);
-    const { data, error } = await supabase
-      .from('spiritual_journal')
-      .select('*')
-      .eq('user_id', user.id)
-      .order('entry_date', { ascending: false })
-      .limit(30);
-    
-    if (error) {
+    setFetchError(false);
+    try {
+      const { data, error } = await supabase
+        .from('spiritual_journal')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('entry_date', { ascending: false })
+        .limit(30);
+
+      if (error) throw error;
+      setEntries((data ?? []) as JournalEntry[]);
+    } catch (error) {
       console.error('Error fetching journal:', error);
-    } else {
-      setEntries(data as JournalEntry[]);
+      setFetchError(true);
+    } finally {
+      setIsFetching(false);
     }
-    setIsFetching(false);
   };
 
   useEffect(() => {
@@ -192,6 +197,15 @@ const SpiritualJournalPage = () => {
                   {[1, 2].map((i) => (
                     <div key={i} className="h-spacing-4xl bg-muted/10 animate-pulse rounded-premium border border-border/10" />
                   ))}
+                </div>
+              ) : fetchError ? (
+                <div role="alert" className="space-y-spacing-lg text-center py-spacing-3xl">
+                  <p className="text-premium-sm text-muted-foreground">
+                    Não foi possível carregar suas reflexões. Tente novamente.
+                  </p>
+                  <Button variant="ghost" onClick={() => void fetchEntries()}>
+                    Tentar novamente
+                  </Button>
                 </div>
               ) : entries.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-1 gap-spacing-2xl">
