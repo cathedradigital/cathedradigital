@@ -381,12 +381,11 @@ const Index = () => {
               t={t} 
             />
           </Suspense>
-          
-          <Suspense fallback={null}>
-            <CookieConsent />
-          </Suspense>
         </ContemplativeLayout>
       )}
+      <Suspense fallback={null}>
+        <CookieConsent />
+      </Suspense>
     </div>
   );
 };
