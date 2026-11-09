@@ -24,6 +24,30 @@ test('public browser smoke: landing and login render', async ({ page }) => {
   expect(bad).toEqual([]);
 });
 
+test('Quiz da Fé abre e permite responder a primeira pergunta', async ({ page }) => {
+  const errors: string[] = [];
+  const badResponses: string[] = [];
+  page.on('console', message => {
+    if (message.type() === 'error') errors.push(message.text());
+  });
+  page.on('response', response => {
+    if (response.status() >= 400) badResponses.push(`${response.status()}: ${response.url()}`);
+  });
+
+  const response = await page.goto('/quiz');
+  expect(response?.ok(), `/quiz: HTTP ${response?.status()}`).toBeTruthy();
+  await expect(page.getByRole('heading', { name: 'Quiz da Fé' })).toBeVisible();
+  await expect(page.getByText(/Pergunta 1\//)).toBeVisible();
+
+  const options = page.locator('button.w-full.text-left:visible:has(span.w-spacing-xl)');
+  await expect(options).toHaveCount(4);
+  await options.first().click();
+  await expect(page.getByRole('button', { name: /Próxima Pergunta|Ver Resultado Final/ })).toBeVisible();
+
+  expect(errors, '/quiz: console errors').toEqual([]);
+  expect(badResponses, '/quiz: HTTP errors').toEqual([]);
+});
+
 test('Documentos e Catecismo abrem sem erro de navegação', async ({ page }) => {
   for (const route of ['/magisterium', '/catechism']) {
     const errors: string[] = [];

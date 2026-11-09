@@ -126,6 +126,7 @@ const Catechism = lazy(() =>
 const Magisterium = lazy(() => import('./components/cathedra/Magisterium'));
 const MagisteriumViewer = lazy(() => import('./components/cathedra/MagisteriumViewer'));
 const EstudarHubPage = lazy(() => import('./pages/EstudarHubPage'));
+const Certamen = lazy(() => import('./components/cathedra/Certamen'));
 const Auth = lazy(() => import('./components/cathedra/Auth'));
 const OAuthConsent = lazy(() => import('./pages/OAuthConsent'));
 const ProfilePage = lazy(() => import('./components/cathedra/ProfilePage'));
@@ -668,6 +669,7 @@ const AppLayout: React.FC = () => {
 
 
               <Route path="/estudar" element={<Suspense fallback={<BibleSkeleton />}><EstudarHubPage /></Suspense>} />
+              <Route path="/quiz" element={<Suspense fallback={<LoadingFallback />}><Certamen /></Suspense>} />
               <Route path="/bible" element={<Suspense fallback={<BibleSkeleton />}><AtriumBibleReader /></Suspense>} />
               <Route path="/bible-legacy" element={<Navigate to="/bible" replace />} />
               <Route path="/biblia" element={<Navigate to="/bible" replace />} />
