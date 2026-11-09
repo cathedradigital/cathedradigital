@@ -29,7 +29,15 @@ interface RawReadings {
 
 function normalizeSecond(raw: RawReadings['segundaLeitura']): Reading | null {
   if (!raw) return null;
-  if (typeof raw === 'string') return null;
+  if (typeof raw === 'string') {
+    const text = raw.trim();
+    if (!text || /^(não há|nao ha) segunda leitura\b/i.test(text)) return null;
+    return {
+      referencia: 'Segunda Leitura',
+      titulo: 'Segunda Leitura',
+      texto: text,
+    };
+  }
   return raw;
 }
 
