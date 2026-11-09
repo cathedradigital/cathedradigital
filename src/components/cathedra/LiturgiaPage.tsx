@@ -147,32 +147,41 @@ const LiturgiaPage: React.FC = () => {
     year: 'numeric',
   });
 
+  const celebrationTitle = readings?.liturgia || readings?.dia || 'Liturgia do Dia';
+  const readingCount = [
+    readings?.primeiraLeitura,
+    readings?.salmo,
+    readings?.segundaLeitura,
+    readings?.evangelho,
+  ].filter(Boolean).length;
+
   const liturgyHero = readings ? (
     <EditorialHero
       kicker="Liturgia"
-      title={readings.liturgia || readings.dia || 'Liturgia do Dia'}
-      subtitle={formattedDate}
+      title={celebrationTitle}
+      subtitle={`${formattedDate}${isToday ? ' · hoje' : ''}`}
       align="center"
       size="md"
     />
   ) : null;
 
   return (
-    <div className="flex flex-col md:flex-row w-full min-h-screen">
+    <div className="flex flex-col md:flex-row w-full min-h-screen bg-background">
       {/* Desktop Sidebar: Liturgical Sacred Image */}
-      <div className="hidden md:flex md:w-[40%] sticky top-0 h-screen overflow-hidden bg-primary/5 border-r border-primary/5">
+      <aside className="hidden md:flex md:w-[32%] lg:w-[35%] sticky top-0 h-screen overflow-hidden bg-primary/[0.035] border-r border-primary/10">
         <SacredImage 
           src={undefined} // Will use default sacred visuals if none provided
-          className="w-full h-full object-cover opacity-60 mix-blend-multiply" 
+          className="w-full h-full object-cover opacity-45 mix-blend-multiply"
           alt={readings?.liturgia || "Liturgia"} 
         />
-        <div className="absolute inset-0 bg-gradient-to-l from-background via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-l from-background via-background/20 to-transparent" />
         <div className="absolute inset-0 flex flex-col items-center justify-center p-spacing-xl text-center space-y-spacing-lg">
            <div className="w-spacing-4xl h-spacing-4xl mx-auto rounded-full bg-secondary/10 flex items-center justify-center border border-secondary/20 shadow-premium">
              <Icons.Liturgy className="w-spacing-xl h-spacing-xl text-secondary" />
            </div>
            <div className="space-y-spacing-xs">
-             <h2 className="font-display text-4xl text-primary/40 tracking-widest uppercase italic">Liturgia</h2>
+             <p className="text-[10px] uppercase tracking-[0.45em] text-secondary/70 font-black">Cathedra Digital</p>
+             <h2 className="font-display text-4xl text-primary/50 tracking-widest uppercase italic">Liturgia</h2>
              <p className="text-[10px] uppercase tracking-[0.4em] text-secondary/60 font-bold">Verbum Domini</p>
            </div>
            
@@ -182,15 +191,18 @@ const LiturgiaPage: React.FC = () => {
                 <span className="text-[9px] font-black uppercase tracking-widest text-primary/60">{readings.cor || readings.colorToken}</span>
              </div>
            )}
+           <p className="max-w-[18rem] text-sm leading-relaxed text-muted-foreground/80 font-serif italic">
+             A Palavra celebrada em comunhão com a Igreja.
+           </p>
         </div>
-      </div>
+      </aside>
 
-      <div className="flex-1 overflow-y-auto">
+      <main className="flex-1 min-w-0 overflow-y-auto">
       <SEOHead title="Liturgia do Dia" description="Leituras do dia." path="/liturgia" keywords="liturgia" />
       
       {/* Header Fixo com Abas */}
-      <div className="sticky top-0 z-40 bg-background/80 backdrop-blur-md border-b border-border/40 py-spacing-sm px-spacing-md flex justify-center">
-        <div className="bg-muted/40 p-spacing-2xs rounded-[2.5rem] border border-border/40 flex gap-spacing-2xs w-full max-w-lg shadow-premium-md" role="tablist" aria-label="Navegação da Liturgia">
+      <div className="sticky top-0 z-40 bg-background/90 backdrop-blur-xl border-b border-border/50 py-spacing-sm px-spacing-md flex justify-center">
+        <div className="bg-muted/50 p-spacing-2xs rounded-[2.5rem] border border-border/50 flex gap-spacing-2xs w-full max-w-xl shadow-premium-md" role="tablist" aria-label="Navegação da Liturgia">
           {[
             { id: 'liturgia', label: 'Liturgia', icon: <Icons.Liturgy className="w-spacing-md h-spacing-md" /> },
             { id: 'missal', label: 'Missal', icon: <Icons.Cross className="w-spacing-md h-spacing-md" /> },
@@ -205,7 +217,7 @@ const LiturgiaPage: React.FC = () => {
               onClick={() => setActiveTab(tab.id)}
               onKeyDown={(e) => handleTabKeyDown(e, idx, 3, (newIdx) => setActiveTab(tabList[newIdx]), 'tab-')}
             >
-              {tab.icon} <span className="hidden sm:inline">{tab.label}</span>
+              {tab.icon} <span>{tab.label}</span>
             </Button>
           ))}
         </div>
@@ -261,6 +273,22 @@ const LiturgiaPage: React.FC = () => {
                       colorToken={readings.colorToken}
                     />
                   )}
+                  {readings && (
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-spacing-xs max-w-2xl mx-auto" aria-label="Resumo litúrgico">
+                      <div className="rounded-premium border border-border/50 bg-muted/25 px-spacing-sm py-spacing-xs text-center">
+                        <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold">Leituras</p>
+                        <p className="text-premium-sm font-black text-primary">{readingCount}</p>
+                      </div>
+                      <div className="rounded-premium border border-border/50 bg-muted/25 px-spacing-sm py-spacing-xs text-center">
+                        <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold">Tempo</p>
+                        <p className="text-premium-sm font-black text-primary truncate">{readings.season || 'Ano litúrgico'}</p>
+                      </div>
+                      <div className="col-span-2 sm:col-span-1 rounded-premium border border-border/50 bg-muted/25 px-spacing-sm py-spacing-xs text-center">
+                        <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold">Percurso</p>
+                        <p className="text-premium-sm font-black text-primary">Palavra · oração</p>
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 {profile?.diocese && (
@@ -274,6 +302,14 @@ const LiturgiaPage: React.FC = () => {
                 )}
 
                 {isLoading && <LiturgiaSkeleton />}
+                {!isLoading && !readings && (
+                  <div className="rounded-[2rem] border border-dashed border-border/70 bg-muted/20 px-spacing-xl py-spacing-3xl text-center space-y-spacing-sm" role="status">
+                    <Icons.Liturgy className="mx-auto w-spacing-2xl h-spacing-2xl text-secondary/70" />
+                    <h2 className="font-display text-premium-xl text-primary">Liturgia indisponível para esta data</h2>
+                    <p className="max-w-md mx-auto text-sm leading-relaxed text-muted-foreground">Escolha outra data ou retorne ao dia de hoje para continuar sua oração.</p>
+                    {!isToday && <Button variant="secondary" className="rounded-premium-full mt-spacing-sm" onClick={() => setSelectedDate(new Date())}>Voltar para hoje</Button>}
+                  </div>
+                )}
                 {readings && (
                   <div className="space-y-spacing-xl">
                     {readings.primeiraLeitura && (
@@ -402,7 +438,7 @@ const LiturgiaPage: React.FC = () => {
           {activeTab === 'calendario' && <div id="panel-calendario" role="tabpanel" aria-labelledby="tab-calendario" className="animate-in fade-in slide-in-from-bottom-spacing-md duration-500 outline-none pt-spacing-xl max-w-5xl mx-auto" tabIndex={0}><LiturgicalCalendarPage /></div>}
         </Suspense>
       </div>
-      </div>
+      </main>
     </div>
   );
 };
