@@ -705,11 +705,7 @@ test('Segurança editorial: DOMPurify preserva estrutura e remove conteúdo ativ
 test('Liturgia: provider registrado, fallback para Railway e erro de função não vira queda do banco', async ({ page }) => {
   let railwayRequests = 0;
   await page.route('**/functions/v1/liturgical-calendar**', route =>
-    route.fulfill({
-      status: 404,
-      contentType: 'application/json',
-      body: JSON.stringify({ code: 'NOT_FOUND', message: 'Requested function was not found' }),
-    }),
+    route.abort('failed'),
   );
   await page.route('**/functions/v1/saint-of-the-day**', route =>
     route.fulfill({
