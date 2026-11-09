@@ -70,6 +70,14 @@ const LiturgiaPage: React.FC = () => {
   const tabList = ['liturgia', 'missal', 'calendario'];
 
   const { profile } = useAuth();
+  const setActiveTab = useCallback(
+    (tab: string) => {
+      const next = new URLSearchParams(searchParams);
+      next.set('tab', tab);
+      setSearchParams(next, { replace: false });
+    },
+    [searchParams, setSearchParams],
+  );
 
   // Data controlada por `?d=YYYY-MM-DD` (deep link + navegação nativa).
   const selectedDate = useMemo(
@@ -194,8 +202,8 @@ const LiturgiaPage: React.FC = () => {
               {...getTabProps(`tab-${tab.id}`, `panel-${tab.id}`, activeTab === tab.id, `flex-1 flex items-center justify-center gap-spacing-2xs px-spacing-xs py-spacing-sm rounded-premium-full text-[10px] sm:text-premium-sm font-black uppercase tracking-wider transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none min-w-0 ${
                 activeTab === tab.id ? 'bg-background shadow-premium-hover text-primary hover:bg-background' : 'bg-transparent text-muted-foreground hover:text-foreground hover:bg-muted/60'
               }`)}
-              onClick={() => setSearchParams({ tab: tab.id })}
-              onKeyDown={(e) => handleTabKeyDown(e, idx, 3, (newIdx) => setSearchParams({ tab: tabList[newIdx] }), 'tab-')}
+              onClick={() => setActiveTab(tab.id)}
+              onKeyDown={(e) => handleTabKeyDown(e, idx, 3, (newIdx) => setActiveTab(tabList[newIdx]), 'tab-')}
             >
               {tab.icon} <span className="hidden sm:inline">{tab.label}</span>
             </Button>
@@ -242,6 +250,16 @@ const LiturgiaPage: React.FC = () => {
                     <div className="flex items-center justify-center gap-spacing-xs text-premium-xs font-black uppercase tracking-widest text-muted-foreground bg-muted/50 rounded-premium px-spacing-md py-spacing-xs mx-auto w-fit">
                       <Icons.WifiOff className="w-spacing-sm h-spacing-sm" /> <span>Modo Offline</span>
                     </div>
+                  )}
+                  {readings && (
+                    <LiturgyDayHeader
+                      formattedDate={formattedDate}
+                      isToday={isToday}
+                      liturgia={readings.liturgia || 'Liturgia do Dia'}
+                      dia={readings.dia}
+                      season={readings.season}
+                      colorToken={readings.colorToken}
+                    />
                   )}
                 </div>
 
