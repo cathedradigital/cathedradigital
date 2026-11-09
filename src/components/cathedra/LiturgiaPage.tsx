@@ -102,7 +102,13 @@ const LiturgiaPage: React.FC = () => {
   // Kernel eclesial (SSoT) — santo, calendário e liturgia vêm daqui.
   const church = useChurchContext(selectedDate);
   const saint = church.todaySaint;
-  const { liturgy: readings, isLoading, isOfflineData } = useDailyLiturgy(selectedDate);
+  const {
+    liturgy: readings,
+    isLoading,
+    isError: isLiturgyError,
+    isOfflineData,
+    refresh: refreshLiturgy,
+  } = useDailyLiturgy(selectedDate);
 
   const { meditation, isLoading: isMeditationLoading, isFetching: isMeditationFetching, retry: retryMeditation } = useLiturgyMeditation(
     selectedIso,
@@ -260,7 +266,7 @@ const LiturgiaPage: React.FC = () => {
                   />
                   {isOfflineData && (
                     <div className="flex items-center justify-center gap-spacing-xs text-premium-xs font-black uppercase tracking-widest text-muted-foreground bg-muted/50 rounded-premium px-spacing-md py-spacing-xs mx-auto w-fit">
-                      <Icons.WifiOff className="w-spacing-sm h-spacing-sm" /> <span>Modo Offline</span>
+                      <Icons.WifiOff className="w-spacing-sm h-spacing-sm" /> <span>Dados carregados do cache</span>
                     </div>
                   )}
                   {readings && (
@@ -305,8 +311,19 @@ const LiturgiaPage: React.FC = () => {
                 {!isLoading && !readings && (
                   <div className="rounded-[2rem] border border-dashed border-border/70 bg-muted/20 px-spacing-xl py-spacing-3xl text-center space-y-spacing-sm" role="status">
                     <Icons.Liturgy className="mx-auto w-spacing-2xl h-spacing-2xl text-secondary/70" />
-                    <h2 className="font-display text-premium-xl text-primary">Liturgia indisponível para esta data</h2>
-                    <p className="max-w-md mx-auto text-sm leading-relaxed text-muted-foreground">Escolha outra data ou retorne ao dia de hoje para continuar sua oração.</p>
+                    <h2 className="font-display text-premium-xl text-primary">
+                      {isLiturgyError ? 'Não foi possível carregar a Liturgia agora' : 'Liturgia indisponível para esta data'}
+                    </h2>
+                    <p className="max-w-md mx-auto text-sm leading-relaxed text-muted-foreground">
+                      {isLiturgyError
+                        ? 'A fonte de leituras não respondeu. Tente novamente em instantes.'
+                        : 'Escolha outra data ou retorne ao dia de hoje para continuar sua oração.'}
+                    </p>
+                    {isLiturgyError && (
+                      <Button variant="secondary" className="rounded-premium-full mt-spacing-sm" onClick={() => { void refreshLiturgy(); }}>
+                        Tentar novamente
+                      </Button>
+                    )}
                     {!isToday && <Button variant="secondary" className="rounded-premium-full mt-spacing-sm" onClick={() => setSelectedDate(new Date())}>Voltar para hoje</Button>}
                   </div>
                 )}

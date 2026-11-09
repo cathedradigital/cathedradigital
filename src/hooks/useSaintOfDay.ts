@@ -37,7 +37,6 @@ async function fetchOfficial(): Promise<OfficialSaintPayload | null> {
       signal: controller.signal,
     } as any);
     if (error) {
-      window.dispatchEvent(new CustomEvent('supabase-unreachable'));
       return null;
     }
 

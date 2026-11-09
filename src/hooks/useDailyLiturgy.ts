@@ -1,17 +1,13 @@
 /**
  * useDailyLiturgy — hook único para as leituras do dia.
  *
- * Substitui a lógica inline anterior (`useQuery` embutido em LiturgiaPage).
  * Camadas:
  *   1. React Query (cache in-memory + dedupe)
- *   2. IndexedDB via getCachedLiturgy/cacheLiturgy (persistente + offline)
- *   3. LiturgyProvider (fonte oficial atual)
- *
- * Prefetch: ±3 dias adjacentes silenciosamente, respeitando o guard.
- * Métricas: registra hit/miss em localStorage sob 'cathedra_liturgy_stats'.
+ *   2. IndexedDB (resposta imediata em visitas seguintes/offline)
+ *   3. LiturgyProvider (fonte litúrgica)
  */
 
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   type DailyLiturgy,
@@ -24,6 +20,7 @@ import { isLiturgicalPrefetchDisabled } from '@/lib/litcalPrefetchGuard';
 const OFFLINE_FLAG_KEY = 'cathedra_offline_mode';
 const STATS_KEY = 'cathedra_liturgy_stats';
 const STALE_MS = 1000 * 60 * 60; // 1h
+const backgroundRefreshes = new Set<string>();
 
 export interface DailyLiturgyResult {
   liturgy: DailyLiturgy | null;
@@ -49,7 +46,7 @@ function bumpStats(kind: 'hit-memory' | 'hit-disk' | 'miss' | 'offline-hit' | 'e
     s[kind] = (s[kind] ?? 0) + 1;
     s.lastAt = Date.now();
     localStorage.setItem(STATS_KEY, JSON.stringify(s));
-  } catch { /* silent */ }
+  } catch { /* métricas são best-effort */ }
 }
 
 async function fetchDay(date: Date): Promise<{ data: DailyLiturgy; offline: boolean }> {
@@ -65,24 +62,22 @@ async function fetchDay(date: Date): Promise<{ data: DailyLiturgy; offline: bool
     throw new Error('Modo Somente-Cache ativo: Liturgia não disponível offline.');
   }
 
+  // Exibe dados já salvos sem esperar o provedor; o hook revalida em segundo plano.
+  if (cached) {
+    bumpStats('hit-disk');
+    return { data: cached, offline: true };
+  }
+
   try {
     const fresh = await getLiturgyProvider().getDayLiturgy(date);
     await cacheLiturgy(key, fresh);
     bumpStats('miss');
     return { data: fresh, offline: false };
   } catch (e) {
-    if (cached) {
-      bumpStats('hit-disk');
-      return { data: cached, offline: true };
-    }
     bumpStats('error');
-    
-    // Dispara evento global para UI reagir à falha de infra
-    window.dispatchEvent(new CustomEvent('supabase-unreachable'));
-    
+    // A falha do provedor litúrgico não significa que o banco Supabase inteiro caiu.
     throw e;
   }
-
 }
 
 function queryKey(date: Date): [string, string] {
@@ -91,30 +86,50 @@ function queryKey(date: Date): [string, string] {
 
 export function useDailyLiturgy(date: Date): DailyLiturgyResult {
   const qc = useQueryClient();
+  const dateKey = toIsoDateKey(date);
+  const key = useMemo(() => ['daily-liturgy', dateKey] as [string, string], [dateKey]);
   const query = useQuery({
-    queryKey: queryKey(date),
+    queryKey: key,
     queryFn: () => fetchDay(date),
     staleTime: STALE_MS,
     gcTime: 1000 * 60 * 60 * 24,
   });
+  const isCachedData = query.data?.offline ?? false;
 
-  // Prefetch dos ±3 dias adjacentes, silenciosamente.
+  // Revalida cache stale sem bloquear a leitura; deduplica entre consumidores do mesmo dia.
   useEffect(() => {
-    if (isLiturgicalPrefetchDisabled()) return;
-    if (isOfflineMode()) return;
-    const offsets = [-1, 1, -2, 2, -3, 3];
-    for (const off of offsets) {
-      const d = new Date(date);
-      d.setDate(d.getDate() + off);
-      const k = queryKey(d);
-      if (qc.getQueryData(k)) continue;
-      qc.prefetchQuery({
-        queryKey: k,
-        queryFn: () => fetchDay(d),
+    if (!isCachedData || isOfflineMode() || backgroundRefreshes.has(dateKey)) return;
+    backgroundRefreshes.add(dateKey);
+    void getLiturgyProvider().getDayLiturgy(date)
+      .then(async (fresh) => {
+        await cacheLiturgy(dateKey, fresh);
+        bumpStats('miss');
+        qc.setQueryData(key, { data: fresh, offline: false });
+      })
+      .catch(() => {
+        // Mantém a leitura em cache e não apresenta falha de um provedor como queda do banco.
+        bumpStats('error');
+      })
+      .finally(() => backgroundRefreshes.delete(dateKey));
+  }, [date, dateKey, isCachedData, key, qc]);
+
+  // Só prepara os dois dias adjacentes após a leitura selecionada estar pronta.
+  useEffect(() => {
+    if (isLiturgicalPrefetchDisabled() || isOfflineMode()) return;
+    if (query.isLoading || query.isError || !query.data || query.data.offline) return;
+
+    for (const offset of [-1, 1]) {
+      const adjacent = new Date(date);
+      adjacent.setDate(adjacent.getDate() + offset);
+      const adjacentKey = queryKey(adjacent);
+      if (qc.getQueryData(adjacentKey)) continue;
+      void qc.prefetchQuery({
+        queryKey: adjacentKey,
+        queryFn: () => fetchDay(adjacent),
         staleTime: STALE_MS,
-      }).catch(() => { /* silent */ });
+      }).catch(() => { /* prefetch silencioso */ });
     }
-  }, [date, qc]);
+  }, [date, qc, query.isLoading, query.isError, query.data]);
 
   return {
     liturgy: query.data?.data ?? null,

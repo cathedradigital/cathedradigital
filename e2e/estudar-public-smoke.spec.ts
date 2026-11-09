@@ -700,3 +700,46 @@ test('Segurança editorial: DOMPurify preserva estrutura e remove conteúdo ativ
   expect(bioSource).toContain('DOMPurify.sanitize(html)');
   expect(workSource).toContain("DOMPurify.sanitize(chapter.body_html ?? '')");
 });
+
+
+test('Liturgia: provider registrado, fallback para Railway e erro de função não vira queda do banco', async ({ page }) => {
+  let railwayRequests = 0;
+  await page.route('**/functions/v1/liturgical-calendar**', route =>
+    route.fulfill({
+      status: 404,
+      contentType: 'application/json',
+      body: JSON.stringify({ code: 'NOT_FOUND', message: 'Requested function was not found' }),
+    }),
+  );
+  await page.route('**/functions/v1/saint-of-the-day**', route =>
+    route.fulfill({
+      status: 404,
+      contentType: 'application/json',
+      body: JSON.stringify({ code: 'NOT_FOUND', message: 'Requested function was not found' }),
+    }),
+  );
+  await page.route('https://liturgia.up.railway.app/**', route => {
+    railwayRequests += 1;
+    return route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        data: '09/11/2026',
+        liturgia: 'Celebração de teste',
+        cor: 'branco',
+        dia: 'Segunda-feira',
+        primeiraLeitura: { referencia: 'Sb 1,1', titulo: 'Primeira Leitura', texto: 'Texto de teste da primeira leitura.' },
+        salmo: { referencia: 'Sl 1', refrao: 'Resposta de teste', texto: 'Texto de teste do salmo.' },
+        segundaLeitura: null,
+        evangelho: { referencia: 'Lc 10,1', titulo: 'Evangelho', texto: 'Texto de teste do Evangelho.' },
+      }),
+    });
+  });
+
+  const response = await page.goto('/liturgia?d=2026-11-09');
+  expect(response?.ok(), `/liturgia: HTTP ${response?.status()}`).toBeTruthy();
+  await expect(page.getByText('Celebração de teste').first()).toBeVisible({ timeout: 15_000 });
+  await expect(page.getByText('Texto de teste da primeira leitura.')).toBeVisible();
+  await expect(page.getByText('Banco de Dados Indisponível')).toHaveCount(0);
+  expect(railwayRequests).toBeGreaterThan(0);
+});

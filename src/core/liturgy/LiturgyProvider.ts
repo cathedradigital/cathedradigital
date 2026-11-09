@@ -69,7 +69,7 @@ export function registerLiturgyProvider(provider: LiturgyProvider): void {
 export function getLiturgyProvider(): LiturgyProvider {
   if (!current) {
     throw new Error(
-      '[LiturgyProvider] Nenhum provider registrado. Chame registerLiturgyProvider() em src/main.tsx.',
+      '[LiturgyProvider] Nenhum provider registrado. Registre-o no bootstrap da aplicação antes de carregar a Liturgia.',
     );
   }
   return current;

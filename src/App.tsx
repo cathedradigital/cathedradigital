@@ -19,6 +19,8 @@ import { AppRoute, Language } from './types';
 import { AuthProvider, useAuth } from './hooks/useAuth';
 import { LangContext, LangProvider } from './contexts/LangContext';
 import { DEFAULT_LOCALE, isSupportedLocale, resolveRouterBasename, withLocalePath } from '@/lib/i18n/locales';
+import { registerLiturgyProvider } from '@/core/liturgy/LiturgyProvider';
+import { RailwayInAdiutoriumProvider } from '@/core/liturgy/providers/RailwayInAdiutoriumProvider';
 
 /**
  * Prefixo de idioma da URL (`/en`, `/es`, `/it`, `/la`). Calculado uma única
@@ -27,6 +29,7 @@ import { DEFAULT_LOCALE, isSupportedLocale, resolveRouterBasename, withLocalePat
 const ROUTER_BASENAME = resolveRouterBasename();
 
 import { supabase } from '@/lib/db';
+registerLiturgyProvider(new RailwayInAdiutoriumProvider());
 const AuthGuard = lazy(() => import('./components/cathedra/AuthGuard'));
 const AdminGuard = lazy(() => import('./components/cathedra/AdminGuard'));
 const GlossaryAdminGuard = lazy(() => import('./components/cathedra/GlossaryAdminGuard'));
