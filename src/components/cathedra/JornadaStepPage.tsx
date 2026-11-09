@@ -46,6 +46,7 @@ import { ReaderContinuation } from '@/components/shared/ReaderContinuation';
 import { NexusPanel } from '@/components/nexus/NexusPanel';
 import { useJourneyNexus } from '@/hooks/useJourneyNexus';
 import { JourneyService } from '@/core/journey';
+import { StudyApplicationBlock } from '@/components/cathedra/primitives/study/StudyApplicationBlock';
 
 /**
  * Cache em memória para prefetch de etapas vizinhas (prev/next).
@@ -345,6 +346,8 @@ const JornadaStepPage: React.FC = () => {
     if (content[variantKey]) return content[variantKey];
     return content[key] || null;
   };
+
+  const guidedExerciseContent = getVariantContent('guided_exercise', content) || getVariantContent('exercise', content);
 
   const persistLocal = useCallback((patch: Record<string, any>) => {
     if (!storageKey) return;
@@ -755,6 +758,21 @@ const JornadaStepPage: React.FC = () => {
               );
             })}
           </div>
+
+          {guidedExerciseContent && (
+            <StudyApplicationBlock
+              content={{
+                what: `O Exercício Espiritual desta etapa é uma prática guiada para transformar a Palavra e a reflexão em uma resposta pessoal diante de Deus. Ele deve ser realizado com atenção, liberdade e honestidade.`,
+                why: 'A tradição dos exercícios espirituais une oração, discernimento e decisão. O objetivo não é apenas sentir algo, mas reconhecer o que a oração ilumina e permitir que isso oriente a vida.',
+                how: 'Leia a proposta até o fim, faça silêncio antes de começar e respeite o ritmo indicado. Depois registre o que percebeu, sem tentar produzir uma resposta bonita ou imediata.',
+                application: getVariantContent('final_question', content) || getVariantContent('journal_prompt', content) || 'Termine escolhendo um passo possível para viver hoje a luz recebida nesta etapa.',
+                references: `Etapa ${step?.step_order ?? ''} · ${step?.title ?? journeyTitle}. Relacione o exercício à Palavra e à reflexão desta mesma etapa antes de avançar.`,
+              }}
+              heading="Estudo e aplicação do Exercício Espiritual"
+              eyebrow={`${journeyTitle || 'Jornada'} · prática guiada`}
+              className="mt-10"
+            />
+          )}
 
           {/* Reflexão */}
           <motion.section

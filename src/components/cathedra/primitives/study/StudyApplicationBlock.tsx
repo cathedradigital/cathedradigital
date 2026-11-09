@@ -90,3 +90,19 @@ export function getPrayerStudyContent(input: {
     references: input.sourceRef ?? 'Consulte as referências bíblicas, do Catecismo e da tradição indicadas nesta página quando estiverem disponíveis.',
   };
 }
+
+export function getNovenaStudyContent(input: {
+  title: string;
+  patron: string;
+  category: string;
+  summary: string;
+  totalDays: number;
+}): StudyApplicationContent {
+  return {
+    what: `${input.title} é um percurso de oração perseverante de ${input.totalDays} dias, ligado à devoção de ${input.patron}. Cada dia une oração, meditação e uma intenção para formar um caminho, não apenas uma leitura avulsa.`,
+    why: `A tradição das novenas educa a perseverança e a expectativa confiante diante de Deus. Este percurso pertence ao âmbito devocional da Igreja: ele prepara o coração para uma graça, festa ou intenção sem substituir a liturgia.`,
+    how: `Reserve um horário possível e mantenha a ordem: oração inicial, meditação do dia, intenção, oração final e silêncio. Se precisar interromper, retome pelo dia salvo; a fidelidade ao caminho é mais importante que a pressa.`,
+    application: `Depois da oração, transforme a intenção do dia em um gesto concreto. Pergunte: o que esta meditação pede de mim hoje em casa, no trabalho, na comunidade ou diante de Deus?`,
+    references: `${input.category} · ${input.summary} Consulte as referências bíblicas e a tradição específica apresentadas em cada dia quando estiverem disponíveis.`,
+  };
+}

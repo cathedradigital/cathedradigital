@@ -11,6 +11,7 @@ import { getNovenaBySlug } from '@/data/novenas';
 import { loadProgress, saveProgress, type NovenaProgress } from '@/lib/novenas/progress';
 import { generateNovenaProgressPdf } from '@/lib/novenas/pdf';
 import { toast } from 'sonner';
+import { StudyApplicationBlock, getNovenaStudyContent } from '@/components/cathedra/primitives/study/StudyApplicationBlock';
 
 
 const NovenaDetailPage: React.FC = () => {
@@ -217,6 +218,19 @@ const NovenaDetailPage: React.FC = () => {
           })}
         </div>
       </div>
+
+      <StudyApplicationBlock
+        content={getNovenaStudyContent({
+          title: novena.title,
+          patron: novena.patron,
+          category: novena.category,
+          summary: novena.summary,
+          totalDays,
+        })}
+        heading="Estudo e aplicação desta Novena"
+        eyebrow={`${novena.category} · ${totalDays} dias`}
+        className="mx-auto mt-10 max-w-3xl"
+      />
 
       {/* Abertura */}
       <EditorialCard density="balanced" className="max-w-3xl mx-auto">

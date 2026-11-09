@@ -24,6 +24,7 @@ import {
   type ImportMode,
 } from '@/lib/novenas/progress';
 import { toast } from 'sonner';
+import { StudyApplicationBlock, getNovenaStudyContent } from '@/components/cathedra/primitives/study/StudyApplicationBlock';
 
 const FILTERS_STORAGE_KEY = 'cathedra:novenas:filters';
 
@@ -226,6 +227,19 @@ const NovenasPage: React.FC = () => {
           Nove dias de oração perseverante — no ritmo dos Apóstolos que esperavam com Maria o dom do Espírito.
         </EditorialHero.Subtitle>
       </EditorialHero>
+
+      <StudyApplicationBlock
+        content={getNovenaStudyContent({
+          title: 'Uma novena',
+          patron: 'a tradição de oração da Igreja',
+          category: 'Percurso devocional',
+          summary: 'Conheça a estrutura, a finalidade e o modo de acompanhar uma novena antes de escolher um percurso.',
+          totalDays: 9,
+        })}
+        heading="Como estudar e rezar uma Novena"
+        eyebrow="Orientação para o percurso"
+        className="mx-auto max-w-3xl"
+      />
 
       {/* Continuar */}
       {continueTarget && continueNovena && (
