@@ -56,11 +56,15 @@ export class RailwayInAdiutoriumProvider implements LiturgyProvider {
     });
     let raw: RawReadings;
     if (error) {
-      const status = (error as { context?: { status?: number } }).context?.status;
-      if (status !== 404) throw error;
+      const errorInfo = error as { name?: string; context?: { status?: number } };
+      const status = errorInfo.context?.status;
+      const isFetchOrRelayFailure =
+        errorInfo.name === 'FunctionsFetchError' ||
+        errorInfo.name === 'FunctionsRelayError';
+      if (status !== 404 && !isFetchOrRelayFailure) throw error;
 
-      // A Edge Function pode não estar implantada em alguns ambientes; use a
-      // mesma fonte pública que ela deveria encapsular, sem bloquear a leitura.
+      // Em browsers, o CORS da função ausente pode transformar o 404 em
+      // FunctionsFetchError. Fallback só em 404/rede/relay; nunca em 401/403.
       const url = new URL('https://liturgia.up.railway.app/');
       url.searchParams.set('dia', String(date.getDate()));
       url.searchParams.set('mes', String(date.getMonth() + 1));
