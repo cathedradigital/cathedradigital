@@ -54,8 +54,32 @@ export class RailwayInAdiutoriumProvider implements LiturgyProvider {
         year: date.getFullYear(),
       },
     });
-    if (error) throw error;
-    const raw = (data ?? {}) as RawReadings;
+    let raw: RawReadings;
+    if (error) {
+      const status = (error as { context?: { status?: number } }).context?.status;
+      if (status !== 404) throw error;
+
+      // A Edge Function pode não estar implantada em alguns ambientes; use a
+      // mesma fonte pública que ela deveria encapsular, sem bloquear a leitura.
+      const url = new URL('https://liturgia.up.railway.app/');
+      url.searchParams.set('dia', String(date.getDate()));
+      url.searchParams.set('mes', String(date.getMonth() + 1));
+      url.searchParams.set('ano', String(date.getFullYear()));
+      const response = await fetch(url, {
+        headers: { Accept: 'application/json' },
+        signal: AbortSignal.timeout(15_000),
+      });
+      if (!response.ok) {
+        throw new Error(`A fonte litúrgica respondeu HTTP ${response.status}.`);
+      }
+      raw = (await response.json()) as RawReadings;
+    } else {
+      raw = (data ?? {}) as RawReadings;
+    }
+
+    if (!raw || typeof raw !== 'object' || Array.isArray(raw)) {
+      throw new Error('A fonte litúrgica retornou uma resposta inválida.');
+    }
 
     return {
       isoDate: toIsoDateKey(date),
