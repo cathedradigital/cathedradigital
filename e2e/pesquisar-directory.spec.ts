@@ -28,7 +28,8 @@ test("Pesquisar apresenta os módulos e acervos com rotas canônicas", async ({ 
   ).toBeVisible();
 
   const routes = await page
-    .locator("a.group[href]")
+    .locator('a.group[href]')
+    .filter({ has: page.locator('h3') })
     .evaluateAll((links) =>
       links.map((link) => new URL((link as HTMLAnchorElement).href).pathname),
     );

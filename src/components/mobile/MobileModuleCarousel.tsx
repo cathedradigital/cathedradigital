@@ -92,8 +92,15 @@ export function MobileModuleCarousel() {
       return;
     }
     const groupKey = destination.key as ModuleEnvironment;
-    setExpandedGroupKey((current) => current === groupKey ? null : groupKey);
-  }, [destinations, navigate, pathname]);
+    const isSameGroup = expandedGroupKey === groupKey;
+    if (!isSameGroup && pathname !== destination.path && !pathname.startsWith(destination.path + '/')) {
+      // Change the environment immediately while keeping the submenu open.
+      // Previously the first tap only opened the submenu, which felt like a
+      // stalled navigation on mobile and required a second tap to advance.
+      navigate(destination.path);
+    }
+    setExpandedGroupKey(isSameGroup ? null : groupKey);
+  }, [destinations, expandedGroupKey, navigate, pathname]);
 
   const navigateToItem = useCallback((path: string) => {
     setExpandedGroupKey(null);
