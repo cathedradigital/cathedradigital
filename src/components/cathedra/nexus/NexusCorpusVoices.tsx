@@ -41,7 +41,7 @@ export default function NexusCorpusVoices() {
         .from('corpus_people')
         .select('id,slug,display_name,person_kind,papal_number,papal_name,canonical_url')
         .eq('status', 'published')
-        .in('person_kind', ['father', 'doctor', 'saint', 'pope'])
+        .in('person_kind', ['father', 'doctor', 'saint'])
         .order('person_kind', { ascending: true })
         .order('display_name', { ascending: true })
         .limit(24);

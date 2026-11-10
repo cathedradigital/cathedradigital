@@ -78,6 +78,7 @@ export const MODULE_NAVIGATION: ModuleNavGroup[] = [
     items: [
       { id: 'journeys', label: 'Jornadas', labelKey: 'nav.jornadas', path: '/jornadas', description: 'Percursos guiados com progresso.' },
       { id: 'themes', label: 'Temas', labelKey: 'nav.temas', path: '/temas', description: 'Estudos compostos por tema.' },
+      { id: 'quiz', label: 'Quiz da Fé', labelKey: 'nav.quiz', path: '/quiz', description: 'Revise o que aprendeu com perguntas comentadas.' },
     ],
   },
   {

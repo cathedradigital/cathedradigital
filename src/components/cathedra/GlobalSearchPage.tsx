@@ -211,7 +211,7 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
               </p>
               <p className="mt-spacing-xs text-premium-sm text-muted-foreground/80">
                 {hasQuery
-                  ? <>Mostrando resultados de <span className="text-secondary">"{query.trim()}"</span> restritos à passagem selecionada.</>
+                  ? <>A passagem <span className="text-secondary">{bibleLivro.toUpperCase()} {bibleCapitulo}</span> fica como contexto enquanto você pesquisa nos acervos conectados.</>
                   : 'Escolha uma pergunta ou abra o capítulo para leitura contemplativa.'}
               </p>
               <div className="mt-spacing-md flex flex-wrap items-center gap-spacing-xs">
@@ -267,7 +267,7 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
               A busca não pôde ser concluída.
             </p>
             <p className="text-premium-sm text-muted-foreground/70 max-w-[42ch] mx-auto">
-              {errors[0]?.message?.slice(0, 160) || 'Ocorreu um erro ao consultar a sabedoria. Tente novamente em instantes.'}
+              Ocorreu uma falha temporária ao consultar os acervos. Tente novamente em instantes.
             </p>
             <div className="flex items-center justify-center gap-spacing-sm flex-wrap pt-spacing-xs">
               <Button onClick={retryAll} variant="default" className="min-h-11">
@@ -349,7 +349,7 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                   subtitle={g.definition}
                   score={(g as any).similarityScore}
                   icon={<Icons.BookOpen className="w-spacing-md h-spacing-md" />}
-                  onClick={() => navigate(AppRoute.GLOSSARY)}
+                  onClick={() => navigate(`/glossario/${encodeURIComponent(g.slug)}`)}
                   index={i}
                   actions={
                     <PassageActions
@@ -375,7 +375,7 @@ const GlobalSearchPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                   subtitle={p.content}
                   score={(p as any).similarityScore}
                   icon={<Icons.MessageCircle className="w-spacing-md h-spacing-md" />}
-                  onClick={() => navigate(AppRoute.COMMUNITY)}
+                  onClick={() => navigate(`/community/post/${encodeURIComponent(p.id)}`)}
                   index={i}
                   actions={
                     <PassageActions

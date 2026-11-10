@@ -483,6 +483,7 @@ const AtriumJornadasPage: React.FC = () => {
               <div className="flex shrink-0 flex-wrap gap-2 md:justify-end">
                 <Link to="/nexus" className="inline-flex min-h-11 items-center gap-2 rounded-full border border-stitch-secondary/45 px-4 py-2 font-stitch-body text-[11px] font-bold uppercase tracking-[0.12em] text-stitch-secondary transition-colors hover:bg-stitch-secondary/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stitch-secondary">Abrir Nexus <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" /></Link>
                 <Link to="/temas" className="inline-flex min-h-11 items-center rounded-full border border-stitch-outline-variant/40 px-4 py-2 font-stitch-body text-[11px] font-bold uppercase tracking-[0.12em] text-stitch-on-surface-variant transition-colors hover:border-stitch-secondary hover:text-stitch-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stitch-secondary">Ver temas</Link>
+                <Link to="/quiz" className="inline-flex min-h-11 items-center gap-2 rounded-full border border-stitch-outline-variant/40 px-4 py-2 font-stitch-body text-[11px] font-bold uppercase tracking-[0.12em] text-stitch-on-surface-variant transition-colors hover:border-stitch-secondary hover:text-stitch-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stitch-secondary">Testar conhecimentos <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" /></Link>
               </div>
             </div>
           </section>

@@ -35,17 +35,19 @@ import {
   ShieldCheck,
 } from 'lucide-react';
 import { supabase } from '@/lib/db';
+import { resolveNexusHref } from '@/lib/nexusHref';
 import {
   NEXUS_HEADER,
   NEXUS_EMPTY,
   NEXUS_KIND_PRESETS,
-  type NexusKind,
+  type NexusKind as NexusChannel,
 } from '@/components/cathedra/nexus/nexusPresets';
+import type { NexusKind as EntityNexusKind } from '@/types/nexus';
 import NexusCorpusVoices from '@/components/cathedra/nexus/NexusCorpusVoices';
 import NexusCorpusRelations from '@/components/cathedra/nexus/NexusCorpusRelations';
 
 // ─── Ícones canônicos por Kind ───────────────────────────────────────────────
-const KIND_ICON: Record<NexusKind, React.ComponentType<{ className?: string }>> = {
+const KIND_ICON: Record<NexusChannel, React.ComponentType<{ className?: string }>> = {
   bible: BookOpen,
   catechism: BookMarked,
   magisterium: Landmark,
@@ -56,7 +58,7 @@ const KIND_ICON: Record<NexusKind, React.ComponentType<{ className?: string }>> 
 };
 
 // Rota canônica de destino ao clicar num Kind (leva à busca filtrada).
-const KIND_HREF: Record<NexusKind, string> = {
+const KIND_HREF: Record<NexusChannel, string> = {
   bible: '/bible',
   catechism: '/catechism',
   magisterium: '/magisterium',
@@ -105,6 +107,41 @@ const refLabel = (kind: string, ref: any): string => {
   }
   if (kind === 'catechism') return `CIC §${r.paragraph ?? r.p ?? '?'}`;
   return r.title ?? r.slug ?? r.id ?? '—';
+};
+
+const relationHref = (kind: string, ref: any): string | null => {
+  if (!ref) return null;
+  const r = typeof ref === 'object' ? ref as Record<string, any> : { id: ref };
+  if (kind === 'bible') {
+    const book = r.book_abbr ?? r.book;
+    const chapter = r.chapter;
+    const verse = r.verse ?? r.verse_start;
+    return book && chapter ? resolveNexusHref('bible_verse', { id: `${book} ${chapter}${verse ? `:${verse}` : ''}` }) : null;
+  }
+  if (kind === 'catechism') {
+    const paragraph = r.paragraph ?? r.p ?? r.id;
+    return paragraph ? resolveNexusHref('catechism_paragraph', { id: String(paragraph) }) : null;
+  }
+  const canonicalKind: Record<string, EntityNexusKind> = {
+    magisterium: 'magisterium_doc',
+    father: 'patristic',
+    saint: 'saint',
+    journey: 'journey',
+  };
+  const targetKind = canonicalKind[kind];
+  return targetKind ? resolveNexusHref(targetKind, r) : null;
+};
+
+const RelationRef: React.FC<{ kind: string; refValue: any }> = ({ kind, refValue }) => {
+  const href = relationHref(kind, refValue);
+  const label = refLabel(kind, refValue);
+  return href ? (
+    <Link to={href} className="underline decoration-stitch-secondary/30 underline-offset-4 transition-colors hover:text-stitch-secondary">
+      {label}
+    </Link>
+  ) : (
+    <span>{label}</span>
+  );
 };
 
 const AtriumNexusPage: React.FC = () => {
@@ -163,7 +200,7 @@ const AtriumNexusPage: React.FC = () => {
     navigate(`/buscar?q=${encodeURIComponent(v)}`);
   };
 
-  const kinds = (Object.keys(NEXUS_KIND_PRESETS) as NexusKind[]).sort(
+  const kinds = (Object.keys(NEXUS_KIND_PRESETS) as NexusChannel[]).sort(
     (a, b) => NEXUS_KIND_PRESETS[a].order - NEXUS_KIND_PRESETS[b].order,
   );
 
@@ -388,9 +425,9 @@ const AtriumNexusPage: React.FC = () => {
                     {r.relation_type}
                   </div>
                   <div className="flex flex-wrap items-center gap-2 font-stitch-display text-[18px] italic text-stitch-primary">
-                    <span>{refLabel(r.source_kind, r.source_ref)}</span>
+                    <RelationRef kind={r.source_kind} refValue={r.source_ref} />
                     <ArrowForward className="h-4 w-4 text-stitch-on-surface-variant" />
-                    <span>{refLabel(r.target_kind, r.target_ref)}</span>
+                    <RelationRef kind={r.target_kind} refValue={r.target_ref} />
                   </div>
                   {r.note && (
                     <p className="font-stitch-body text-[14px] leading-[22px] text-stitch-on-surface-variant">
