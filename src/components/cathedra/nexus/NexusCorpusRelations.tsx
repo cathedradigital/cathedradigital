@@ -81,7 +81,7 @@ const NexusCorpusRelations: React.FC = () => {
           const target = row.target_document
             ? { label: row.target_document.title, href: row.target_document.canonical_url, external: true }
             : row.target_person
-              ? { label: row.target_person.display_name, href: `/santos/${encodeURIComponent(row.target_person.slug)}`, external: false }
+              ? { label: row.target_person.display_name, href: `/biblioteca/padres/${encodeURIComponent(row.target_person.slug)}`, external: false }
               : null;
           if (!row.source_document || !target) return null;
 
