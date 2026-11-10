@@ -15,11 +15,19 @@ import {
   Search as SearchIcon,
   BookOpen,
   BookMarked,
-    Users,
+  Users,
   MessageCircle,
   Tag as TagIcon,
   ArrowRight,
   BookMarked as BookFilterIcon,
+  Network,
+  LibraryBig,
+  Landmark,
+  MapPinned,
+  GraduationCap,
+  ShieldCheck,
+  Crown,
+  Church,
 } from 'lucide-react';
 import { AppRoute } from '@/types';
 import { MobileTopBar } from '@/components/mobile/MobileTopBar';
@@ -53,9 +61,16 @@ const TERRITORIES: Territory[] = [
     Icon: BookMarked,
   },
   {
-    title: 'Santos & Padres',
-    meta: 'Vida e Escritos',
-    description: 'Encontre testemunhos, festas e obras.',
+    title: 'Magistério',
+    meta: 'Documentos da Igreja',
+    description: 'Consulte encíclicas, concílios e outros documentos por fonte e tema.',
+    to: AppRoute.MAGISTERIUM,
+    Icon: Landmark,
+  },
+  {
+    title: 'Santos',
+    meta: 'Vidas e testemunhos',
+    description: 'Encontre santos, festas e testemunhos da tradição cristã.',
     to: AppRoute.SAINTS,
     Icon: Users,
   },
@@ -63,8 +78,57 @@ const TERRITORIES: Territory[] = [
     title: 'Glossário',
     meta: 'Termos Teológicos',
     description: 'Definições curadas com Nexus contextual.',
-    to: AppRoute.GLOSSARY,
+    to: '/glossario',
     Icon: BookOpen,
+  },
+  {
+    title: 'Nexus',
+    meta: 'Fontes conectadas',
+    description: 'Percorra relações entre Escritura, Catecismo, Magistério, santos e temas.',
+    to: '/nexus',
+    Icon: Network,
+  },
+  {
+    title: 'Biblioteca',
+    meta: 'Acervos para explorar',
+    description: 'Descubra coleções, escritos e caminhos para retomar suas leituras.',
+    to: AppRoute.BIBLIOTECA,
+    Icon: LibraryBig,
+  },
+  {
+    title: 'Atlas',
+    meta: 'Geografia e história',
+    description: 'Explore lugares e contextos ligados à história da Igreja.',
+    to: '/atlas',
+    Icon: MapPinned,
+  },
+  {
+    title: 'Aquino',
+    meta: 'Tomás de Aquino',
+    description: 'Acesse obras e temas do pensamento do Doutor Angélico.',
+    to: AppRoute.AQUINAS_OPERA,
+    Icon: GraduationCap,
+  },
+  {
+    title: 'Dogmas',
+    meta: 'Doutrina católica',
+    description: 'Consulte definições dogmáticas com referências e contexto.',
+    to: AppRoute.DOGMAS,
+    Icon: ShieldCheck,
+  },
+  {
+    title: 'Papas',
+    meta: 'Sucessão pontifícia',
+    description: 'Explore a sucessão e as biografias dos pontífices.',
+    to: AppRoute.POPES,
+    Icon: Crown,
+  },
+  {
+    title: 'Aparições marianas',
+    meta: 'Relatos e avaliação eclesial',
+    description: 'Consulte relatos, devoções, fontes e a avaliação eclesial apresentada para cada caso.',
+    to: AppRoute.APARICOES,
+    Icon: Church,
   },
   {
     title: 'Temas',
@@ -130,9 +194,13 @@ const AtriumBuscarPage: React.FC = () => {
         <title>Cathedra Digital — Pesquisa</title>
         <meta
           name="description"
-          content="Pesquise a sabedoria da Igreja: Escritura, Catecismo, Magistério, Santos, temas e discussões — tudo interconectado pelo Nexus."
+          content="Pesquise santos, verbetes, temas, jornadas e discussões; explore também os acervos da Escritura, Catecismo e Magistério e suas conexões pelo Nexus."
         />
         <meta property="og:title" content="Cathedra Digital — Pesquisa" />
+        <meta
+          property="og:description"
+          content="Pesquise santos, verbetes, temas, jornadas e discussões; explore também Escritura, Catecismo, Magistério e conexões pelo Nexus."
+        />
       </Helmet>
 
       <MobileTopBar kicker="Cathedra Digital" title="Pesquisa" transparent />
@@ -147,10 +215,11 @@ const AtriumBuscarPage: React.FC = () => {
             <h1 className="font-stitch-display text-[32px] italic leading-[40px] text-stitch-primary md:text-[56px] md:leading-[64px] md:tracking-[-0.02em]">
               Pesquise a sabedoria da Igreja.
             </h1>
-            <p className="mt-4 font-stitch-body text-[20px] leading-[32px] text-stitch-on-surface-variant">
-              Uma única busca atravessa Escritura, Catecismo, Magistério,
-              Santos, temas e discussões da comunidade. Comece por uma palavra
-              — o Nexus fará o resto.
+          <p className="mt-4 font-stitch-body text-[20px] leading-[32px] text-stitch-on-surface-variant">
+              A busca transversal reúne santos, verbetes do Glossário, temas,
+              jornadas e discussões da comunidade. Para Escritura, Catecismo e
+              Magistério, abra as fontes; pelo Nexus, explore as conexões entre
+              elas.
             </p>
           </div>
 
@@ -251,7 +320,7 @@ const AtriumBuscarPage: React.FC = () => {
               </h2>
               <div className="hidden h-px flex-1 bg-stitch-secondary/20 md:mx-8 md:block" />
               <span className="hidden font-stitch-body text-[12px] font-bold uppercase tracking-[0.15em] text-stitch-on-surface-variant md:inline">
-                06 Acervos
+                {TERRITORIES.length} caminhos
               </span>
             </div>
 
