@@ -46,6 +46,7 @@ export interface ChurchHistoryBlock {
 }
 
 export type MeditationFailureCode =
+  | 'backend_unavailable'
   | 'ai_credits_exhausted'
   | 'ai_rate_limited'
   | 'ai_unavailable';
@@ -84,6 +85,9 @@ type LiturgyMeditationResponse = {
 const DEFAULT_AI_FALLBACK_MESSAGE =
   'A meditação editorial automática está temporariamente indisponível. As leituras permanecem disponíveis para oração.';
 
+const BACKEND_UNAVAILABLE_MESSAGE =
+  'O serviço editorial da Liturgia não está respondendo. As leituras permanecem disponíveis para oração; tente novamente mais tarde.';
+
 const AI_CREDITS_EXHAUSTED_MESSAGE =
   'Os créditos de IA da plataforma se esgotaram. A meditação editorial voltará assim que forem recarregados.';
 
@@ -92,6 +96,7 @@ const AI_RATE_LIMIT_MESSAGE =
 
 /** Janela estimada até nova tentativa automática, em minutos, por código. */
 const RETRY_WINDOW_MINUTES: Record<MeditationFailureCode, number> = {
+  backend_unavailable: 5,
   ai_credits_exhausted: 60,
   ai_rate_limited: 2,
   ai_unavailable: 10,
@@ -238,6 +243,8 @@ function readMostRecentLocal(beforeIso: string): LiturgyMeditationRow | null {
 
 function messageForCode(code: MeditationFailureCode | string | undefined): string {
   switch (code) {
+    case 'backend_unavailable':
+      return BACKEND_UNAVAILABLE_MESSAGE;
     case 'ai_credits_exhausted':
       return AI_CREDITS_EXHAUSTED_MESSAGE;
     case 'ai_rate_limited':
@@ -266,26 +273,37 @@ async function fetchExisting(isoDate: string): Promise<LiturgyMeditationRow | nu
 }
 
 async function readInvokeFailure(error: unknown): Promise<{ code: MeditationFailureCode; message: string }> {
+  const errorInfo = error as { name?: string; message?: string; context?: unknown };
   const context = (error as { context?: unknown })?.context;
   if (context instanceof Response) {
     try {
       const payload = await context.clone().json() as { code?: string; message?: string; detail?: string };
-      const code = (payload.code as MeditationFailureCode) ?? inferCode(context.status, payload.message ?? payload.detail);
+      const code = inferCode(context.status, payload.message ?? payload.detail, payload.code, errorInfo.name);
       return {
         code,
-        message: payload.message ?? messageForCode(code),
+        message: code === 'backend_unavailable' ? messageForCode(code) : payload.message ?? messageForCode(code),
       };
     } catch {
-      const code = inferCode(context.status);
+      const code = inferCode(context.status, undefined, undefined, errorInfo.name);
       return { code, message: messageForCode(code) };
     }
   }
-  const msg = (error as { message?: string })?.message;
-  const code = inferCode(undefined, msg);
+  const msg = errorInfo.message;
+  const code = inferCode(undefined, msg, undefined, errorInfo.name);
   return { code, message: messageForCode(code) };
 }
 
-function inferCode(status?: number, message?: string): MeditationFailureCode {
+function inferCode(status?: number, message?: string, serverCode?: string, errorName?: string): MeditationFailureCode {
+  if (
+    status === 404 ||
+    serverCode === 'PGRST205' ||
+    serverCode === 'NOT_FOUND' ||
+    /requested function was not found|could not find (?:the )?table|function .*not found/i.test(message ?? '') ||
+    errorName === 'FunctionsFetchError' ||
+    errorName === 'FunctionsRelayError'
+  ) {
+    return 'backend_unavailable';
+  }
   if (status === 402 || /402|payment required|credit|insufficient|quota/i.test(message ?? '')) {
     return 'ai_credits_exhausted';
   }
@@ -490,6 +508,7 @@ export const __testables__ = {
   writeLocalMeditation,
   readMostRecentLocal,
   persistFallbackEvent,
+  readInvokeFailure,
   RETRY_WINDOW_MINUTES,
   CACHE_KEY_PREFIX,
   FALLBACK_EVENTS_KEY,
