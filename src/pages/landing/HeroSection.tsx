@@ -1,8 +1,8 @@
 import { useRef } from "react";
 import { useScroll, useTransform } from "framer-motion";
 import { lazy, Suspense } from "react";
-const HeroBackground = lazy(() => import("./hero/HeroBackground"));
-const HeroContent = lazy(() => import("./hero/HeroContent"));
+import HeroBackground from "./hero/HeroBackground";
+import HeroContent from "./hero/HeroContent";
 const HeroParticles = lazy(() => import("./hero/HeroParticles"));
 const HeroScrollIndicator = lazy(() => import("./hero/HeroScrollIndicator"));
 
@@ -27,20 +27,16 @@ const HeroSection = ({ onStart }: HeroSectionProps) => {
       aria-label="Cathedra Digital - Introdução"
     >
       <h1 className="sr-only">Cathedra Digital — plataforma católica de oração, estudo e formação espiritual</h1>
-      <Suspense fallback={<div className="absolute inset-0 bg-background" />}>
-        <HeroBackground bgY={heroY} />
-      </Suspense>
+      <HeroBackground bgY={heroY} />
       <Suspense fallback={null}>
         <HeroParticles />
       </Suspense>
-      <Suspense fallback={<div className="relative z-10 w-full h-full flex items-center justify-center" />}>
-        <HeroContent 
-          heroOpacity={heroOpacity} 
-          heroScale={1} 
-          heroY={heroY} 
-          onStart={onStart} 
-        />
-      </Suspense>
+      <HeroContent
+        heroOpacity={heroOpacity}
+        heroScale={1}
+        heroY={heroY}
+        onStart={onStart}
+      />
       <div className="sr-only">Rolar para baixo para explorar o santuário digital</div>
       <Suspense fallback={null}>
         <HeroScrollIndicator />

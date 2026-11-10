@@ -20,8 +20,9 @@ const HeroBackground = ({ bgY }: HeroBackgroundProps) => {
         initial={{ opacity: 0, scale: shouldReduceMotion ? 1 : 1.1 }}
         animate={{ opacity: 0.12, scale: 1 }}
         transition={{ duration: shouldReduceMotion ? 2 : 8, ease: "easeOut" }}
-        className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1481627834876-b7833e8f5570?auto=format&fit=crop&q=80&auto=compress&cs=tinysrgb')] bg-cover bg-center grayscale mix-blend-luminosity" 
-        style={{ contentVisibility: 'auto' }}
+        className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1481627834876-b7833e8f5570?auto=format&fit=crop&w=1600&q=45&fm=avif')] bg-cover bg-center grayscale mix-blend-luminosity"
+        style={{ contentVisibility: 'auto', containIntrinsicSize: '1600px 900px' }}
+        aria-hidden="true"
       />
 
       {/* Sacred Geometry Texture - Extremely subtle parchment pattern */}

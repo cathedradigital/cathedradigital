@@ -221,6 +221,7 @@ const PrayerPortal: React.FC<Props> = ({
       data-portal-theme={theme}
     >
       {/* 1 — Hero limpo */}
+      <div className="min-h-[190px]">
       <EditorialHero align="center" as="header">
         <EditorialHero.Eyebrow>{kicker}</EditorialHero.Eyebrow>
         <EditorialHero.Title>
@@ -248,12 +249,13 @@ const PrayerPortal: React.FC<Props> = ({
           )}
         </EditorialHero.Meta>
       </EditorialHero>
+      </div>
 
       {/* 2 — Destaque do dia */}
       {resolvedHighlight && (
         <section
           aria-labelledby="portal-highlight"
-          className="mt-14 rounded-2xl border border-stitch-outline-variant/40 bg-stitch-surface-container-lowest/60 px-6 py-7 md:px-8 md:py-8"
+          className="mt-14 min-h-[190px] rounded-2xl border border-stitch-outline-variant/40 bg-stitch-surface-container-lowest/60 px-6 py-7 md:px-8 md:py-8"
           data-testid="portal-highlight"
         >
           <div className="flex items-center gap-2">

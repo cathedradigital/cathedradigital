@@ -161,15 +161,21 @@ const LiturgiaPage: React.FC = () => {
     readings?.evangelho,
   ].filter(Boolean).length;
 
-  const liturgyHero = readings ? (
-    <EditorialHero
-      kicker="Liturgia"
-      title={celebrationTitle}
-      subtitle={`${formattedDate}${isToday ? ' · hoje' : ''}`}
-      align="center"
-      size="md"
-    />
-  ) : null;
+  const liturgyHero = (
+    <div className="flex min-h-[180px] items-center justify-center">
+      {readings ? (
+        <EditorialHero
+          kicker="Liturgia"
+          title={celebrationTitle}
+          subtitle={`${formattedDate}${isToday ? ' · hoje' : ''}`}
+          align="center"
+          size="md"
+        />
+      ) : (
+        <div className="h-24 w-full" aria-hidden="true" />
+      )}
+    </div>
+  );
 
   return (
     <div className="flex flex-col md:flex-row w-full min-h-screen bg-background">

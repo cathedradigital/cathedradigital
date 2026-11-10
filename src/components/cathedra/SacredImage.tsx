@@ -118,6 +118,9 @@ const SacredImage = React.forwardRef<HTMLDivElement, SacredImageProps>(({ src, a
         <img
           src={mainSrc}
           alt={alt}
+          width={640}
+          height={480}
+          sizes={priority ? '(min-width: 768px) 35vw, 100vw' : '(min-width: 768px) 20rem, 100vw'}
           loading={priority ? "eager" : "lazy"}
           fetchPriority={priority ? "high" : "auto"}
           decoding="async"
