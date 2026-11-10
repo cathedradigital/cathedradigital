@@ -27,6 +27,18 @@ interface RawReadings {
   evangelho?: Reading | null;
 }
 
+interface StoredReading {
+  iso_date: string;
+  celebration_title?: string | null;
+  liturgical_color?: string | null;
+  day_description?: string | null;
+  season?: string | null;
+  first_reading?: Reading | null;
+  psalm?: { referencia: string; refrao: string; texto: string } | null;
+  second_reading?: Reading | string | null;
+  gospel?: Reading | null;
+}
+
 function normalizeSecond(raw: RawReadings['segundaLeitura']): Reading | null {
   if (!raw) return null;
   if (typeof raw === 'string') {
@@ -41,11 +53,28 @@ function normalizeSecond(raw: RawReadings['segundaLeitura']): Reading | null {
   return raw;
 }
 
+function fromStoredReading(row: StoredReading, date: Date): DailyLiturgy {
+  return {
+    isoDate: toIsoDateKey(date),
+    data: date.toLocaleDateString('pt-BR'),
+    liturgia: row.celebration_title ?? '',
+    cor: row.liturgical_color ?? 'verde',
+    colorToken: normalizeColorToken(row.liturgical_color),
+    dia: row.day_description ?? '',
+    season: row.season ?? inferSeason(row.celebration_title ?? row.day_description ?? ''),
+    primeiraLeitura: row.first_reading ?? null,
+    salmo: row.psalm ?? null,
+    segundaLeitura: normalizeSecond(row.second_reading),
+    evangelho: row.gospel ?? null,
+  };
+}
+
 export class RailwayInAdiutoriumProvider implements LiturgyProvider {
   readonly id = 'railway-in-adiutorium';
   readonly label = 'In Adiutorium (railway)';
 
   async getDayLiturgy(date: Date): Promise<DailyLiturgy> {
+    const requestedDate = toIsoDateKey(date);
     const { data, error } = await supabase.functions.invoke('liturgical-calendar', {
       body: {
         action: 'readings',
@@ -56,6 +85,13 @@ export class RailwayInAdiutoriumProvider implements LiturgyProvider {
     });
     let raw: RawReadings;
     if (error) {
+      const { data: stored, error: storedError } = await supabase
+        .from('liturgy_readings' as any)
+        .select('*')
+        .eq('iso_date', requestedDate)
+        .maybeSingle();
+      if (!storedError && stored) return fromStoredReading(stored as StoredReading, date);
+
       const errorInfo = error as { name?: string; context?: { status?: number } };
       const status = errorInfo.context?.status;
       const isFetchOrRelayFailure =

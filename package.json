@@ -19,6 +19,7 @@
     "validate:modules": "node scripts/validate-module-contracts.mjs",
     "validate:links": "node scripts/validate-internal-routes.mjs",
     "validate:security": "node scripts/validate-security-boundaries.mjs && node scripts/validate-e2e-security.mjs",
+    "populate:liturgy": "node scripts/populate-liturgy-weeks.mjs",
     "deploy:cloudflare": "npm run build && npx wrangler deploy",
     "cf-typegen": "wrangler types",
     "deploy": "npm run build && npx wrangler deploy"
