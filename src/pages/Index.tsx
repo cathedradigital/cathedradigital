@@ -384,7 +384,7 @@ const Index = () => {
         </ContemplativeLayout>
       )}
       <Suspense fallback={null}>
-        <CookieConsent />
+        {!authenticated && <CookieConsent />}
       </Suspense>
     </div>
   );
