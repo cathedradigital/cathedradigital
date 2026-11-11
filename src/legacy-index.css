@@ -134,7 +134,7 @@
     --rule-gold-soft: hsl(var(--rule-gold) / 0.2);
     --rule-gold-hair: hsl(var(--rule-gold) / 0.12);
     --font-display: 'Cormorant Garamond', ui-serif, Georgia, serif;
-    --font-body: 'Karla', ui-sans-serif, system-ui, sans-serif;
+    --font-body: var(--font-brand);
 
     /* ==================================================================
      * STITCH TOKENS (Sprint R0 — Reskin foundation)
@@ -208,9 +208,9 @@
     --stitch-mobile-blur: saturate(180%) blur(14px);
 
     /* Stitch tipografia (mapeada às fontes já carregadas do projeto) */
-    --font-stitch-display: 'EB Garamond', 'Cormorant Garamond', ui-serif, Georgia, serif;
-    --font-stitch-body: 'EB Garamond', ui-serif, Georgia, serif;
-    --font-stitch-label: 'Karla', ui-sans-serif, system-ui, sans-serif;
+    --font-stitch-display: var(--font-brand);
+    --font-stitch-body: var(--font-brand);
+    --font-stitch-label: var(--font-brand);
   }
 
   /* Dark mode Stitch — pares oficiais M3 (invertidos). Ativa dentro de .dark. */
@@ -337,10 +337,13 @@
 
 
   /* Typography System */
-  .font-display { font-family: 'Cinzel', serif; font-weight: 400; }
-  .font-serif { font-family: 'Playfair Display', serif; font-weight: 400; }
-  .font-reader { font-family: 'Lora', serif; font-weight: 400; }
-  .font-ui { font-family: 'Inter', sans-serif; }
+  .font-display,
+  .font-serif,
+  .font-reader,
+  .font-ui,
+  .font-stitch-display,
+  .font-stitch-body,
+  .font-stitch-label { font-family: var(--font-brand); font-weight: 400; }
 
   /* =====================================================================
    * Cathedra Noir & Gold — escopo local da Home unificada.
@@ -358,8 +361,8 @@
     --noir-line-strong: rgba(255, 255, 255, 0.12);
     --gold: #c9a84c;
     --gold-light: #dfc17a;
-    --font-display: 'Cormorant Garamond', 'Playfair Display', serif;
-    --font-body: 'Karla', 'Inter', sans-serif;
+    --font-display: var(--font-brand);
+    --font-body: var(--font-brand);
     
     background-color: var(--noir-bg);
     color: var(--noir-text);
@@ -455,7 +458,7 @@
 
   html, body {
     @apply h-full overflow-x-hidden bg-background text-foreground selection:bg-secondary/20;
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-brand);
     text-rendering: optimizeLegibility;
     line-height: 1.6;
     scroll-behavior: smooth;
@@ -634,7 +637,7 @@
   }
 
   /* Atmosphere & Theme Depth - Variable Surface Levels */
-  .reading-theme-paper { background-color: #FDF8F3 !important; color: #1a1a1a !important; font-family: 'Playfair Display', serif; }
+  .reading-theme-paper { background-color: #FDF8F3 !important; color: #1a1a1a !important; font-family: var(--font-brand); }
   .reading-theme-sepia { background-color: #E8E2D2 !important; color: #2b2621 !important; }
   .reading-theme-dark { background-color: #1A1C1E !important; color: #e0e0e0 !important; }
   .reading-theme-night { background-color: #0D0E10 !important; color: #b0b0b0 !important; }
@@ -1401,5 +1404,3 @@ header:hover {
   [data-portal-oracao]::after { display: none; }
   [data-portal-threshold] { animation: none !important; opacity: 0; display: none; }
 }
-
-

@@ -1053,7 +1053,7 @@ const Catechism: React.FC = memo(() => {
             <span className="h-px w-10 md:w-16" style={{ backgroundColor: '#c9a84c' }} />
             <span
               className="text-[9px] md:text-[10px] uppercase"
-              style={{ color: 'var(--gold-text)', fontFamily: 'Inter, sans-serif', letterSpacing: '0.32em' }}
+              style={{ color: 'var(--gold-text)', fontFamily: 'var(--font-brand)', letterSpacing: '0.32em' }}
             >
               Sacra Doctrina
             </span>
@@ -1062,7 +1062,7 @@ const Catechism: React.FC = memo(() => {
           <h1
             className="leading-none"
             style={{
-              fontFamily: "'Playfair Display', serif",
+              fontFamily: "var(--font-brand)",
               fontWeight: 500,
               fontSize: 'clamp(2.25rem, 6vw, 4rem)',
               letterSpacing: '0.01em',
@@ -1073,7 +1073,7 @@ const Catechism: React.FC = memo(() => {
           <p
             className="mx-auto"
             style={{
-              fontFamily: "'Playfair Display', serif",
+              fontFamily: "var(--font-brand)",
               fontStyle: 'italic',
               fontSize: 'clamp(0.95rem, 1.5vw, 1.1rem)',
               color: 'hsl(var(--muted-foreground))',
@@ -1100,7 +1100,7 @@ const Catechism: React.FC = memo(() => {
               style={{
                 borderBottomColor: '#c9a84c',
                 borderBottomWidth: 1,
-                fontFamily: "'Playfair Display', serif",
+                fontFamily: "var(--font-brand)",
                 fontStyle: 'italic',
                 fontSize: '1rem',
                 color: 'hsl(var(--foreground))',
@@ -1132,7 +1132,7 @@ const Catechism: React.FC = memo(() => {
                 <div className="flex items-center gap-3">
                   <span
                     className="text-[10px] uppercase shrink-0"
-                    style={{ color: 'var(--gold-text)', fontFamily: 'Inter, sans-serif', letterSpacing: '0.32em' }}
+                    style={{ color: 'var(--gold-text)', fontFamily: 'var(--font-brand)', letterSpacing: '0.32em' }}
                   >
                     {part.part}
                   </span>
@@ -1141,7 +1141,7 @@ const Catechism: React.FC = memo(() => {
                 <h2
                   className="leading-tight break-words"
                   style={{
-                    fontFamily: "'Playfair Display', serif",
+                    fontFamily: "var(--font-brand)",
                     fontWeight: 400,
                     fontSize: 'clamp(1.35rem, 2.4vw, 1.75rem)',
                     color: 'hsl(var(--foreground))',
@@ -1153,7 +1153,7 @@ const Catechism: React.FC = memo(() => {
               <div className="flex items-center justify-between pt-6">
                 <p
                   className="text-[10px] uppercase"
-                  style={{ color: 'hsl(var(--muted-foreground))', fontFamily: 'Inter, sans-serif', letterSpacing: '0.28em' }}
+                  style={{ color: 'hsl(var(--muted-foreground))', fontFamily: 'var(--font-brand)', letterSpacing: '0.28em' }}
                 >
                   {part.sections.length} seções
                 </p>

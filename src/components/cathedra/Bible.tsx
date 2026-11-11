@@ -1493,10 +1493,6 @@ const fetchReferenceVerse = useCallback(async (connection: { type: string; id: s
       </AnimatePresence>
 
 
-      <Helmet>
-        <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lora:ital,wght@0,400;0,700;1,400&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
-      </Helmet>
-
       <AnimatePresence mode="wait">
         {viewMode === 'home' && (
           <motion.div 

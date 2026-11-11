@@ -163,14 +163,14 @@ export default {
         'xs': '420px',
       },
       fontFamily: {
-        display: ['Cinzel', 'serif'],
-        serif: ['Playfair Display', 'serif'],
-        reader: ['Merriweather', 'serif'],
-        ui: ['Inter', 'sans-serif'],
+        display: ['var(--font-brand)'],
+        serif: ['var(--font-brand)'],
+        reader: ['var(--font-brand)'],
+        ui: ['var(--font-brand)'],
         /* Stitch (R0) */
-        'stitch-display': ['EB Garamond', 'Cormorant Garamond', 'ui-serif', 'Georgia', 'serif'],
-        'stitch-body': ['EB Garamond', 'ui-serif', 'Georgia', 'serif'],
-        'stitch-label': ['Karla', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        'stitch-display': ['var(--font-brand)'],
+        'stitch-body': ['var(--font-brand)'],
+        'stitch-label': ['var(--font-brand)'],
       },
       fontWeight: {
         'light': 'var(--font-weight-light)',

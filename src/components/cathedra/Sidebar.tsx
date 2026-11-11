@@ -304,7 +304,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                 <div className="flex min-w-0 flex-col gap-0.5 leading-none">
                   <span
                     style={{
-                      fontFamily: "'Playfair Display', serif",
+                      fontFamily: "var(--font-brand)",
                       fontWeight: 600,
                       fontSize: 'clamp(1rem, 4.6vw, 1.2rem)',
                       letterSpacing: '0.055em',
@@ -316,7 +316,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                   </span>
                   <span
                     style={{
-                      fontFamily: 'Inter, sans-serif',
+                      fontFamily: 'var(--font-brand)',
                       fontSize: '0.6rem',
                       fontWeight: 700,
                       letterSpacing: '0.24em',
@@ -329,7 +329,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                   </span>
                   <span
                     style={{
-                      fontFamily: 'Inter, sans-serif',
+                      fontFamily: 'var(--font-brand)',
                       fontSize: '0.58rem',
                       fontWeight: 500,
                       letterSpacing: '0.035em',

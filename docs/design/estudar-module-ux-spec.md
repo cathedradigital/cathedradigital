@@ -9,7 +9,7 @@ Todos os módulos devem obedecer ao mesmo esqueleto:
 2. Navegação local — tópicos do ambiente visíveis no cabeçalho contextual.
 3. Conteúdo — coluna confortável, hierarquia tipográfica consistente.
 4. Referências/Nexus — conexões aparecem depois ou ao lado do conteúdo, sem interromper a leitura.
-5. Continuidade — próximo passo claro dentro da Cátedra.
+5. Continuidade — próximo passo claro dentro da Cathedra Digital.
 6. Estados — loading, vazio, erro recuperável e sucesso.
 7. Mobile — prioridade à leitura, controles acessíveis e alvos de toque >= 44px.
 
@@ -40,7 +40,7 @@ Todos os módulos devem obedecer ao mesmo esqueleto:
 - Cada módulo interno pode ter uma assinatura editorial própria, mas não substitui a identidade do ambiente.
 
 ## Critério de aceite
-Um módulo só sai desta revisão quando desktop e mobile forem coerentes, os estados principais forem tratados, a leitura tiver medida confortável, os links forem internos quando houver destino Cátedra, e o Nexus não interromper o fluxo principal.
+Um módulo só sai desta revisão quando desktop e mobile forem coerentes, os estados principais forem tratados, a leitura tiver medida confortável, os links forem internos quando houver destino Cathedra Digital, e o Nexus não interromper o fluxo principal.
 
 ## Ordem de execução
 1. Fundação Estudar.

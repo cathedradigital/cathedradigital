@@ -13,7 +13,7 @@
 
 ## Identidade do projeto
 
-Cathedra / Digital Cathedral é um produto digital de formação católica. O objetivo é ajudar o usuário a rezar, estudar, aprofundar a fé e manter uma prática diária consistente.
+Cathedra Digital é um produto digital de formação católica. O objetivo é ajudar o usuário a rezar, estudar, aprofundar a fé e manter uma prática diária consistente.
 
 ## Regras de produto
 

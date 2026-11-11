@@ -133,8 +133,8 @@ const GOLD = '#c9a84c';
 const GOLD_TEXT = '#8a7020';
 const GOLD_SOFT = 'rgba(201,168,76,0.35)';
 const GOLD_HAIR = 'rgba(201,168,76,0.18)';
-const FONT_DISPLAY = "'Playfair Display', ui-serif, Georgia, serif";
-const FONT_BODY = "'Inter', ui-sans-serif, system-ui, sans-serif";
+const FONT_DISPLAY = 'var(--font-brand)';
+const FONT_BODY = 'var(--font-brand)';
 
 const EYEBROW_STYLE: React.CSSProperties = {
   color: GOLD_TEXT,

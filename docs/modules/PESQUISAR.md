@@ -3,7 +3,7 @@
 **Versão:** 1.0.0 · **Estado:** especificado; aceite não verificado.
 
 ## Propósito
-Encontrar conteúdo confiável no acervo da Cátedra com resultados compreensíveis, filtros úteis e proveniência clara.
+Encontrar conteúdo confiável no acervo da Cathedra Digital com resultados compreensíveis, filtros úteis e proveniência clara.
 
 ## Contrato de busca
 - Tratar consultas previsivelmente; nunca executar entrada como código.

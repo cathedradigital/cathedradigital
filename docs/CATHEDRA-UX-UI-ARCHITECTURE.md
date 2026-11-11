@@ -1,7 +1,7 @@
 # Cathedra — Arquitetura UX/UI 2.0
 
 ## Objetivo
-A interface pública da Cátedra deve parecer uma única plataforma, não uma coleção de aplicações antigas.
+A interface pública da Cathedra Digital deve parecer uma única plataforma, não uma coleção de aplicações antigas.
 
 ## Hierarquia canônica
 1. **Estudar** — Bíblia, Catecismo, Magistério, Biblioteca, Santos, Nexus, Igreja Viva

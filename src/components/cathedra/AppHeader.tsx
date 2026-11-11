@@ -97,17 +97,17 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
                 <span
                   className="text-primary/90 group-hover:text-primary transition-colors"
                   style={{
-                    fontFamily: "'Playfair Display', serif",
+                    fontFamily: 'var(--font-brand)',
                     fontWeight: 600,
                     fontSize: 'clamp(1.45rem, 2.7vw, 1.95rem)',
                     letterSpacing: '0.06em',
                     fontVariantLigatures: 'common-ligatures',
                   }}
                 >
-                  CATHEDRA
+                  Cathedra
                 </span>
                 <span className="hidden md:block text-[7px] text-gold uppercase tracking-[0.32em] font-bold">
-                  DIGITAL
+                  Digital
                 </span>
                 <span className="hidden xl:block mt-1 text-[6px] uppercase tracking-[0.22em] text-primary/45">
                   Studium · Oratio · Formatio
@@ -225,7 +225,7 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
                       onClick={(e) => isLegitimateClick(e) && navigate(AppRoute.LOGIN)} 
                       variant="ghost"
                       className="h-[44px] md:h-spacing-2xl px-spacing-md md:px-spacing-xl rounded-none border text-[9px] md:text-[10px] uppercase tracking-[0.28em] md:tracking-[0.32em] transition-all bg-transparent hover:bg-[#c9a84c] hover:text-[#0a0a0a]"
-                      style={{ borderColor: '#c9a84c', color: 'var(--gold-text)', fontFamily: 'Inter, sans-serif' }}
+                      style={{ borderColor: '#c9a84c', color: 'var(--gold-text)', fontFamily: 'var(--font-brand)' }}
                     >
                       {t('enter')}
                     </Button>

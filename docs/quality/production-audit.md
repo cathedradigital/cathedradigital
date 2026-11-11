@@ -1,4 +1,4 @@
-# Production Audit — Digital Cathedral
+# Production Audit — Cathedra Digital
 
 > **Historical report — superseded on 5 November 2026.** The findings below describe an earlier revision and must not be treated as current release blockers. The repository now installs with Bun 1.3.0 and `bun.lock`, and includes public and authenticated Playwright suites. On PR #302, commit `2d354d3395d25112ffacf56810d8f9613a3d2d5a`, GitHub Actions confirmed installation, typecheck, lint and build ([CI](https://github.com/cathedradigital/cathedradigital/actions/runs/42060128312)), public desktop/mobile tests ([Estudar E2E](https://github.com/cathedradigital/cathedradigital/actions/runs/42060128487)), security boundaries and dependency audit. The authenticated job was skipped on the PR by design; the complete main-branch gates and production checks remain required for publication. These results do not establish the status of the live database, authentication providers or deployed version.
 

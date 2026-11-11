@@ -1,6 +1,6 @@
 # Orçamento técnico do MVP — GitHub, Cloudflare Workers e Supabase
 
-A Cátedra deve permanecer pequena no deploy e grande no acervo. Princípio: código e UI no GitHub/Cloudflare Workers; corpus documental no Supabase; arquivos grandes nunca entram no bundle do deploy.
+A Cathedra Digital deve permanecer pequena no deploy e grande no acervo. Princípio: código e UI no GitHub/Cloudflare Workers; corpus documental no Supabase; arquivos grandes nunca entram no bundle do deploy.
 
 ## GitHub Free
 - O repositório deve conter código, migrations, documentação e metadados.

@@ -71,7 +71,7 @@ export const runDesignSystemAudit = async (pageName: string): Promise<AuditResul
 
   // 1. Check Typography Tokens
   const elements = document.querySelectorAll('h1, h2, h3, h4, p, span, button');
-  const allowedFonts = ['Inter', 'Playfair Display', 'Cinzel', 'Merriweather', 'system-ui', 'serif', 'sans-serif', 'monospace', 'Courier'];
+  const allowedFonts = ['Cormorant Garamond', 'system-ui', 'serif', 'monospace', 'Courier'];
   const allowedWeights = ['400', '500', '600', '700', '800', '900'];
 
   elements.forEach((el) => {
@@ -265,7 +265,7 @@ export const exportAuditReport = (result: AuditResult, format: 'json' | 'pdf' = 
     const recommendations = [];
     if (result.wcagScore < 100) {
       recommendations.push(['Contraste', 'Substituir cores de texto por variantes mais escuras (no modo claro) ou mais claras (no modo escuro) do Design System.']);
-      recommendations.push(['Tipografia', 'Garantir que todos os componentes utilizam a fonte Cinzel para títulos e Inter para corpo de texto.']);
+      recommendations.push(['Tipografia', 'Garantir que todos os componentes utilizam Cormorant Garamond através dos tokens tipográficos do Cathedra Digital.']);
       recommendations.push(['Tokens', 'Evitar o uso de estilos inline e cores hexadecimais manuais fora do sacredPalette.ts.']);
     } else {
       recommendations.push(['Excelente', 'O sistema mantém conformidade total com os padrões estabelecidos. Continue utilizando os tokens globais.']);

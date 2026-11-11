@@ -132,8 +132,12 @@
     --rule-gold-ink: 43 62% 30%;
     --rule-gold-soft: hsl(var(--rule-gold) / 0.2);
     --rule-gold-hair: hsl(var(--rule-gold) / 0.12);
-    --font-display: 'Cormorant Garamond', ui-serif, Georgia, serif;
-    --font-body: 'Karla', ui-sans-serif, system-ui, sans-serif;
+    --font-brand: 'Cormorant Garamond', ui-serif, Georgia, serif;
+    --font-display: var(--font-brand);
+    --font-body: var(--font-brand);
+    --font-serif: var(--font-brand);
+    --font-reader: var(--font-brand);
+    --font-ui: var(--font-brand);
 
     /* ==================================================================
      * STITCH TOKENS (Sprint R0 — Reskin foundation)
@@ -207,9 +211,9 @@
     --stitch-mobile-blur: saturate(180%) blur(14px);
 
     /* Stitch tipografia (mapeada às fontes já carregadas do projeto) */
-    --font-stitch-display: 'EB Garamond', 'Cormorant Garamond', ui-serif, Georgia, serif;
-    --font-stitch-body: 'EB Garamond', ui-serif, Georgia, serif;
-    --font-stitch-label: 'Karla', ui-sans-serif, system-ui, sans-serif;
+    --font-stitch-display: var(--font-brand);
+    --font-stitch-body: var(--font-brand);
+    --font-stitch-label: var(--font-brand);
   }
 
   /* Dark mode Stitch — pares oficiais M3 (invertidos). Ativa dentro de .dark. */

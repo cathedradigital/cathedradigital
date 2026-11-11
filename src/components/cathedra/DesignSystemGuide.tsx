@@ -18,10 +18,10 @@ const DesignSystemGuide: React.FC = () => {
       { name: 'Border', variable: '--border', desc: 'Divisores e limites de contenção' },
     ],
     typography: [
-      { name: 'Display (Cinzel)', class: 'font-display', desc: 'Títulos majestosos e sagrados' },
-      { name: 'Serif (Playfair Display)', class: 'font-serif', desc: 'Subtítulos e citações clássicas' },
-      { name: 'Reader (Merriweather)', class: 'font-reader', desc: 'Texto de leitura prolongada (Kindle-like)' },
-      { name: 'UI (Inter)', class: 'font-ui', desc: 'Interface, navegação e metadados' },
+      { name: 'Cathedra (Cormorant Garamond)', class: 'font-display', desc: 'Família única para títulos, leitura e interface' },
+      { name: 'Cathedra (Cormorant Garamond)', class: 'font-serif', desc: 'Subtítulos e citações clássicas' },
+      { name: 'Cathedra (Cormorant Garamond)', class: 'font-reader', desc: 'Texto de leitura prolongada' },
+      { name: 'Cathedra (Cormorant Garamond)', class: 'font-ui', desc: 'Interface, navegação e metadados' },
     ],
     spacing: [
       { name: 'XS', class: 'w-spacing-xs h-spacing-xs', value: '0.5rem (8px)' },

@@ -21,7 +21,7 @@ Auditoria transversal do ambiente **Estudar**, cobrindo arquitetura visual, UI/U
 ## Pontos de arquitetura preservados
 - A arquitetura Nexus existente permanece intacta; a auditoria corrige apresentação e integração sem substituir o motor.
 - Preferências pessoais de leitura continuam possíveis; elas não criam novas famílias de marca.
-- Links externos de fonte original continuam identificados como fonte original quando o dado canônico ainda reside fora da Cátedra.
+- Links externos de fonte original continuam identificados como fonte original quando o dado canônico ainda reside fora da Cathedra Digital.
 
 ## Critérios de fechamento
 - Uma única identidade tipográfica de marca.

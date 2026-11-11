@@ -1,4 +1,4 @@
-# Cátedra — Design System
+# Cathedra Digital — Design System
 
 ## Objetivo
 
@@ -37,4 +37,4 @@ A cor identifica contexto; ela não substitui texto, ícones, foco ou estado sem
 
 ## Nexus como camada transversal
 
-Referências verificadas devem preferir um destino interno quando a Cátedra possui uma rota canônica correspondente. A fonte original permanece disponível como referência externa quando aplicável. Assim, o Nexus conecta módulos sem duplicar conteúdo e sem transformar uma fonte externa em conteúdo da própria Cátedra.
+Referências verificadas devem preferir um destino interno quando a Cathedra Digital possui uma rota canônica correspondente. A fonte original permanece disponível como referência externa quando aplicável. Assim, o Nexus conecta módulos sem duplicar conteúdo e sem transformar uma fonte externa em conteúdo da própria Cathedra Digital.

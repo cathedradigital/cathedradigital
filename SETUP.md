@@ -1,4 +1,4 @@
-# Digital Cathedral - Setup Guide
+# Cathedra Digital - Setup Guide
 
 ## Infrastructure Configuration
 
@@ -118,7 +118,7 @@ docker-compose -f supabase/docker-compose.yml exec db psql -U postgres -d postgr
 ```
 
 #### Current Schema
-- 159 tables (from original Digital Cathedral)
+- 159 tables (from original Cathedra Digital)
 - Row Level Security (RLS) enabled on all public tables
 - Service role policies for backend operations
 - User-scoped data isolation
