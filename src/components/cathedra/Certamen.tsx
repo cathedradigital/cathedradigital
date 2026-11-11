@@ -136,7 +136,7 @@ const Certamen: React.FC = () => {
     return (
       <div className="w-full space-y-spacing-xl p-spacing-md">
         <div className="bg-card border border-border rounded-premium p-spacing-xl text-center space-y-spacing-lg shadow-premium-hover">
-          <div className="w-spacing-3xl h-spacing-3xl rounded-premium bg-primary/10 flex items-center justify-center mx-auto text-primary">
+          <div className="w-spacing-3xl h-spacing-3xl rounded-premium bg-secondary/20 flex items-center justify-center mx-auto text-secondary">
             {pct >= 80 ? <Icons.Trophy className="w-spacing-xl h-spacing-xl" /> : pct >= 50 ? <Icons.BookOpen className="w-spacing-xl h-spacing-xl" /> : <Icons.Heart className="w-spacing-xl h-spacing-xl" />}
           </div>
           <h2 className="text-premium-3xl font-serif font-bold text-foreground">Resultado do Aprendizado</h2>
@@ -179,7 +179,7 @@ const Certamen: React.FC = () => {
       <div className="flex flex-wrap gap-spacing-xs justify-center">
         {CATEGORIES.map(cat => (
           <Button key={cat} onClick={() => { setCategory(cat); restart(); }}
-            className={`px-spacing-md py-spacing-xs rounded-premium-full text-premium-xs font-bold transition-all ${cat === category ? 'bg-foreground text-background shadow-premium scale-105' : 'bg-card border border-border text-foreground hover:bg-primary/5'}`}>
+            className={`px-spacing-md py-spacing-xs rounded-premium-full text-premium-xs font-bold transition-all ${cat === category ? 'bg-secondary text-secondary-foreground shadow-premium scale-105' : 'bg-secondary/15 border border-secondary/35 text-foreground hover:border-secondary/55 hover:bg-secondary/25'}`}>
             {cat}
           </Button>
         ))}
@@ -198,21 +198,29 @@ const Certamen: React.FC = () => {
       </div>
 
       <div className="bg-card border border-border rounded-premium p-spacing-xl space-y-spacing-lg shadow-premium-md">
-        <span className="text-premium-xs font-black uppercase tracking-widest text-primary bg-primary/10 px-spacing-xs py-spacing-2xs rounded">{question.category}</span>
+        <span className="text-premium-xs font-black uppercase tracking-widest text-secondary bg-secondary/20 border border-secondary/35 px-spacing-xs py-spacing-2xs rounded">{question.category}</span>
         <h2 className="text-premium-xl md:text-premium-2xl font-serif font-bold text-foreground leading-tight">{question.question}</h2>
 
         <div className="space-y-spacing-sm">
           {question.options.map((opt, idx) => {
-            let cls = 'bg-muted border-border hover:border-primary/50 hover:bg-primary/5';
+            let cls = 'bg-secondary/20 border-secondary/45 text-foreground hover:border-secondary/60 hover:bg-secondary/30';
+            let markerCls = 'bg-secondary/20 text-secondary border border-secondary/55';
             if (selected !== null) {
-              if (idx === question.correct) cls = 'bg-emerald-500/10 border-emerald-500/50 text-emerald-700 font-bold';
-              else if (idx === selected) cls = 'bg-destructive/10 border-destructive/50 text-destructive font-bold';
-              else cls = 'opacity-50 bg-muted border-border';
+              if (idx === question.correct) {
+                cls = 'bg-emerald-500/20 border-emerald-600/50 text-emerald-800 dark:bg-emerald-400/20 dark:border-emerald-400/50 dark:text-emerald-200 font-bold';
+                markerCls = 'bg-emerald-600/15 text-emerald-800 border border-emerald-700/50 dark:bg-emerald-400/20 dark:border-emerald-300/50 dark:text-emerald-200';
+              } else if (idx === selected) {
+                cls = 'bg-destructive/15 border-destructive/50 text-destructive font-bold';
+                markerCls = 'bg-destructive/15 text-destructive border border-destructive/50';
+              } else {
+                cls = 'opacity-80 bg-muted/70 border-border text-muted-foreground';
+                markerCls = 'bg-muted text-muted-foreground border border-border';
+              }
             }
             return (
               <Button key={idx} onClick={() => handleAnswer(idx)}
                 className={`w-full text-left p-spacing-md rounded-premium-full border font-bold text-premium-sm transition-all flex items-center gap-spacing-md ${cls}`}>
-                <span className="w-spacing-xl h-spacing-xl rounded-premium-full bg-background flex items-center justify-center text-muted-foreground text-premium-xs">{String.fromCharCode(65 + idx)}</span>
+                <span className={`w-spacing-xl h-spacing-xl rounded-premium-full flex items-center justify-center text-premium-xs ${markerCls}`}>{String.fromCharCode(65 + idx)}</span>
                 <span className="flex-1">{opt}</span>
               </Button>
             );
