@@ -123,6 +123,7 @@ const EditorialCardBase = React.forwardRef<HTMLElement, EditorialCardProps>(
 
     const Tag = (as ?? (href ? 'a' : 'article')) as React.ElementType;
     const isInteractive = interactive ?? Boolean(href);
+    const isExternal = typeof href === 'string' && /^https?:\/\//i.test(href);
 
     return (
       <Tag
@@ -139,6 +140,13 @@ const EditorialCardBase = React.forwardRef<HTMLElement, EditorialCardProps>(
           className,
         )}
         {...rest}
+        {...(isExternal
+          ? {
+              target: '_blank',
+              rel: 'noopener noreferrer',
+              title: 'Abrir conteúdo externo em nova aba',
+            }
+          : {})}
       >
         {slots.media && (
           <div className="-mx-[var(--sp-l)] -mt-[var(--sp-l)] mb-[var(--sp-m)] overflow-hidden bg-muted/40">
