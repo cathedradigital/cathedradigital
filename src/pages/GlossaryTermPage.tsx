@@ -160,8 +160,22 @@ function CompletenessBadge({
   value: GlossaryTerm['editorial_completeness'];
   className?: string;
 }) {
-  const key = value ?? 'expanding';
-  const meta = COMPLETENESS_META[key];
+  if (!value) {
+    return (
+      <span
+        className={cn(
+          'inline-flex items-center px-3 py-1 rounded-full border border-dashed border-stitch-outline-variant/60',
+          'font-stitch-label text-stitch-label-sm uppercase tracking-[0.18em] text-stitch-on-surface-variant',
+          className,
+        )}
+        title="Grau editorial não informado"
+        aria-label="Grau editorial do verbete não informado"
+      >
+        Não informado
+      </span>
+    );
+  }
+  const meta = COMPLETENESS_META[value];
   if (!meta) return null;
   return (
     <span
@@ -539,9 +553,9 @@ function BibliographyBlock({ items }: { items: BibliographyItem[] | null | undef
   if (!items || items.length === 0) {
     return (
       <EditorialEmptyState
-        kicker="Em preparação"
-        title="Bibliografia ainda não indicada."
-        description="Fontes serão publicadas em breve."
+        kicker="Bibliografia"
+        title="Este verbete não informa bibliografia."
+        description="Nenhuma referência bibliográfica foi cadastrada para esta entrada."
       />
     );
   }
@@ -1208,7 +1222,9 @@ const GlossaryTermPage: React.FC = () => {
                 </div>
                 <div>
                   <dt className="text-stitch-secondary/80">Versão</dt>
-                  <dd className="mt-1 text-stitch-on-background">v{term.version ?? 1}</dd>
+                  <dd className="mt-1 text-stitch-on-background">
+                    {term.version != null ? `v${term.version}` : 'Não informada'}
+                  </dd>
                 </div>
                 <div>
                   <dt className="text-stitch-secondary/80">Status</dt>
@@ -1217,7 +1233,9 @@ const GlossaryTermPage: React.FC = () => {
                       ? 'Publicado'
                       : term.status === 'review'
                       ? 'Em revisão'
-                      : 'Rascunho'}
+                      : term.status === 'draft'
+                      ? 'Rascunho'
+                      : 'Não informado'}
                   </dd>
                 </div>
                 <div>
@@ -1242,4 +1260,3 @@ const GlossaryTermPage: React.FC = () => {
 };
 
 export default GlossaryTermPage;
-

@@ -15,7 +15,6 @@ import {
   BookMarked,
   BookOpen,
   Gavel,
-  Network,
   Flame,
   ArrowRight,
 } from 'lucide-react';
@@ -99,19 +98,32 @@ const AtriumBibliotecaPage: React.FC = () => {
 
 
 
-        {/* ─── Continue Reading ───────────────────────────────────────── */}
+        {/* ─── Itens abertos recentemente ──────────────────────────────── */}
         {recents.length > 0 && (
-          <section className="pt-12">
-            <div className="mb-6 flex items-center justify-between">
-              <h2 className="font-stitch-display text-[24px] font-semibold leading-[32px] text-stitch-primary">
-                Continuar Leitura
-              </h2>
-              <Link
-                to="/biblioteca-legacy"
-                className="border-b border-stitch-secondary/30 pb-0.5 font-stitch-body text-[12px] font-bold uppercase tracking-[0.15em] text-stitch-secondary transition-colors hover:border-stitch-secondary"
-              >
-                Histórico
-              </Link>
+          <section className="pt-12" aria-labelledby="recent-library-heading">
+            <div className="mb-6 flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <h2 id="recent-library-heading" className="font-stitch-display text-[24px] font-semibold leading-[32px] text-stitch-primary">
+                  Acessados recentemente
+                </h2>
+                <p className="mt-1 font-stitch-body text-sm text-stitch-on-surface-variant">
+                  Histórico local deste navegador; não indica posição de leitura.
+                </p>
+              </div>
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+                <Link
+                  to="/acervo"
+                  className="border-b border-stitch-secondary/30 pb-0.5 font-stitch-body text-[12px] font-bold uppercase tracking-[0.15em] text-stitch-secondary transition-colors hover:border-stitch-secondary"
+                >
+                  Minha leitura
+                </Link>
+                <Link
+                  to="/biblioteca-legacy"
+                  className="border-b border-stitch-secondary/30 pb-0.5 font-stitch-body text-[12px] font-bold uppercase tracking-[0.15em] text-stitch-secondary transition-colors hover:border-stitch-secondary"
+                >
+                  Histórico
+                </Link>
+              </div>
             </div>
 
             <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
@@ -134,14 +146,12 @@ const AtriumBibliotecaPage: React.FC = () => {
                         {r.title}
                       </h3>
                       <p className="mt-2 line-clamp-2 font-stitch-body text-[15px] text-stitch-on-surface-variant">
-                        Retome de onde parou.
+                        Reabra este item acessado recentemente.
                       </p>
                     </div>
-                    <div className="mt-4 flex items-center gap-2">
-                      <div className="h-1 flex-1 overflow-hidden rounded-full bg-stitch-surface-container-highest">
-                        <div className="h-full w-1/3 bg-stitch-secondary" />
-                      </div>
-                      <ArrowRight className="h-4 w-4 text-stitch-secondary transition-transform group-hover:translate-x-1" />
+                    <div className="mt-4 inline-flex items-center gap-2 font-stitch-label text-stitch-label-sm uppercase tracking-[0.18em] text-stitch-secondary">
+                      Abrir novamente
+                      <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />
                     </div>
                   </div>
                 </Link>
@@ -158,7 +168,7 @@ const AtriumBibliotecaPage: React.FC = () => {
             </h2>
             <div className="hidden h-px flex-1 bg-stitch-secondary/20 md:mx-8 md:block" />
             <span className="hidden font-stitch-body text-[12px] font-bold uppercase tracking-[0.15em] text-stitch-on-surface-variant md:inline">
-              04 Acervos
+              {String(COLLECTIONS.length).padStart(2, '0')} Acervos
             </span>
           </div>
 
@@ -204,16 +214,16 @@ const AtriumBibliotecaPage: React.FC = () => {
           </div>
         </section>
 
-        {/* ─── Weekly Discoveries — bento assimétrico ─────────────── */}
+        {/* ─── Caminhos para fontes e autores ──────────────────────────── */}
         <section className="pt-16">
           <h2 className="mb-10 font-stitch-display text-[24px] font-semibold leading-[32px] text-stitch-primary">
-            Descobertas da Semana
+            Explorar fontes e autores
           </h2>
           <div className="grid grid-cols-1 gap-8 md:grid-cols-12">
-            {/* Featured */}
             <Link
-              to={AppRoute.BUSCAR}
-              className="group relative flex h-[400px] items-end overflow-hidden bg-stitch-primary p-10 md:col-span-8"
+              to="/acervo/lista"
+              aria-label="Abrir catálogo de obras filtrável"
+              className="group relative flex h-[320px] items-end overflow-hidden bg-stitch-primary p-8 md:col-span-8 md:p-10"
             >
               <div
                 className="pointer-events-none absolute inset-0 opacity-[0.05]"
@@ -225,22 +235,20 @@ const AtriumBibliotecaPage: React.FC = () => {
               <div className="absolute inset-0 bg-gradient-to-t from-stitch-primary via-stitch-primary/40 to-transparent" />
               <div className="relative z-10 max-w-xl text-stitch-primary-foreground">
                 <span className="font-stitch-body text-[12px] font-bold uppercase tracking-[0.2em] text-stitch-secondary-fixed">
-                  Tema em Destaque
+                  Catálogo pesquisável
                 </span>
                 <h3 className="mt-2 font-stitch-display text-[32px] italic leading-tight text-stitch-primary-foreground md:text-[48px] md:leading-[56px] md:tracking-[-0.02em]">
-                  A Arquitetura do Silêncio
+                  Obras e coleções
                 </h3>
                 <p className="mt-4 font-stitch-body text-[18px] leading-[28px] text-stitch-primary-foreground/80">
-                  Como os espaços monásticos espelham a paisagem interior da
-                  oração contemplativa.
+                  Encontre obras disponíveis e refine por tipo, acesso e completude editorial.
                 </p>
                 <span className="mt-8 inline-block border border-stitch-secondary-fixed px-6 py-2 font-stitch-body text-[14px] font-medium uppercase tracking-[0.1em] text-stitch-secondary-fixed transition-all group-hover:bg-stitch-secondary-fixed group-hover:text-stitch-primary">
-                  Explorar Série
+                  Abrir catálogo
                 </span>
               </div>
             </Link>
 
-            {/* Secondary column */}
             <div className="flex flex-col gap-8 md:col-span-4">
               <Link
                 to={AppRoute.SAINTS}
@@ -248,17 +256,17 @@ const AtriumBibliotecaPage: React.FC = () => {
               >
                 <div>
                   <span className="font-stitch-body text-[12px] font-bold uppercase tracking-[0.15em] text-stitch-secondary">
-                    Autor em Foco
+                    Pessoas e tradição
                   </span>
                   <h4 className="mt-2 font-stitch-display text-[20px] leading-tight text-stitch-primary">
-                    Santa Teresa d'Ávila
+                    Santos & Padres
                   </h4>
                 </div>
                 <p className="font-stitch-body text-[14px] italic text-stitch-on-surface-variant">
-                  "Nada te turbe, nada te espante..."
+                  Explore perfis e conteúdos disponíveis no acervo.
                 </p>
                 <div className="mt-4 flex items-center justify-end text-stitch-secondary">
-                  <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
+                  <Flame className="h-5 w-5 transition-transform group-hover:translate-x-1" aria-hidden="true" />
                 </div>
               </Link>
 
@@ -268,17 +276,17 @@ const AtriumBibliotecaPage: React.FC = () => {
               >
                 <div className="relative z-10">
                   <span className="font-stitch-body text-[12px] font-bold uppercase tracking-[0.15em] text-stitch-secondary-fixed">
-                    Arquivo Visual
+                    Documentos e fontes
                   </span>
                   <h4 className="mt-2 font-stitch-display text-[20px] leading-tight text-stitch-secondary-fixed">
-                    Iluminuras Sacras
+                    Magistério da Igreja
                   </h4>
                 </div>
                 <p className="relative z-10 font-stitch-body text-[14px] text-white/70">
-                  Manuscritos litúrgicos do século XIV digitalizados.
+                  Consulte documentos oficiais e os dados editoriais disponíveis.
                 </p>
                 <div className="relative z-10 mt-4 flex items-center justify-end text-stitch-secondary-fixed">
-                  <Network className="h-5 w-5 transition-transform group-hover:translate-x-1" />
+                  <Gavel className="h-5 w-5 transition-transform group-hover:translate-x-1" aria-hidden="true" />
                 </div>
               </Link>
             </div>
@@ -290,7 +298,7 @@ const AtriumBibliotecaPage: React.FC = () => {
           links={[
             { label: 'Átrio', to: '/', hint: 'Voltar à entrada do Mosteiro' },
             { label: 'Rezar', to: '/oracao', hint: 'Levar a leitura à oração' },
-            { label: 'Acervo completo', to: '/acervo', hint: 'Todas as estantes' },
+            { label: 'Catálogo de obras', to: '/acervo/lista', hint: 'Consultar obras com filtros' },
           ]}
         />
       </SpaceLayout>

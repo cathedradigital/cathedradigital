@@ -15,13 +15,13 @@ A cadeia oficial é:
 GitHub
   └─ main / SHA candidato
        ↓
-GitHub Actions — workflow Cloudflare
+GitHub Actions — CI, Estudar E2E, Security Audit, Estudar final audit
        ↓
-Node.js 22 + npm install
+Cloudflare workflow_run — gate dos quatro workflows no mesmo SHA
        ↓
-typecheck → lint → validate:links → build
+Node.js 22 + Bun 1.3 + dependências do lockfile
        ↓
-Wrangler / Cloudflare Workers
+typecheck → lint → validate:links → build → deploy após gates
        ↓
 Worker cathedradigital
        ↓
@@ -33,18 +33,15 @@ Vercel e Lovable não são alvos oficiais de produção. Não criar uma segunda 
 ## 2. Comportamento atualmente versionado
 
 O arquivo `.github/workflows/cloudflare-deploy.yml` em `main` declara:
-- disparo por push em `main` e execução manual (`workflow_dispatch`);
-- validação da presença das credenciais Cloudflare;
-- instalação com `npm install`;
-- validação de autorização com Wrangler;
-- consulta DNS;
-- typecheck, lint, validação de rotas e build;
-- deploy do Worker;
-- checagem dos três endpoints.
 
-**Limite importante:** o workflow atualmente versionado não executa, por si só, auditoria completa de dependências nem Playwright autenticado desktop/mobile antes do deploy. A PR #213 propõe um fluxo manual com gates adicionais, mas uma proposta em PR não é comportamento ativo de `main`. Verificar o estado e os checks reais antes de qualquer liberação.
+- disparo após a conclusão dos workflows `CI`, `Estudar E2E`, `Security Audit` e `Estudar final audit` em `main` (`workflow_run`);
+- verificação de que os quatro resultados são sucesso no SHA exato que iniciou o gate; falha, execução ausente ou espera superior a 45 minutos bloqueia o deploy;
+- checkout do SHA validado, credenciais Cloudflare, instalação congelada com `bun ci`, autorização Wrangler, consulta DNS, typecheck, lint, validação de rotas e build;
+- publicação do Worker e verificações de saúde, endpoints personalizados, `robots.txt` e `sitemap.xml`.
 
-Até a adoção e validação de um gate completo, não tratar o workflow atual como certificação integral de release. A política operacional da Cathedra exige CI, auditoria e Playwright aprovados no mesmo SHA, além da autorização de publicação.
+`Estudar E2E` executa a suíte pública desktop/mobile e, em `main`, a suíte autenticada com secrets. `Security Audit` audita o grafo de dependências travado; `Estudar final audit` valida as fronteiras de segurança. O push normal inicia esses gates, mas não publica diretamente: `workflow_run` aguarda todos no mesmo SHA.
+
+O `workflow_dispatch` do deploy exige `fast_track=true` e ignora intencionalmente o gate de E2E autenticado. É um caminho de exceção, não o fluxo normal; não usar sem pedido explícito que autorize esse bypass. A aprovação genérica de um deploy não autoriza `fast_track`.
 
 ## 3. Comandos locais
 
@@ -70,6 +67,7 @@ O comando `npm run deploy:cloudflare` executa build seguido de `wrangler deploy`
 ## 4. Configuração do Worker
 
 O `wrangler.jsonc` define:
+
 - nome `cathedradigital`;
 - compatibility date e `nodejs_compat`;
 - entrypoint `src/server.ts`;
@@ -88,11 +86,13 @@ As variáveis de build/runtime devem ser configuradas no ambiente correto, sem c
 ## 6. Endpoints de produção
 
 Após publicação autorizada, verificar:
+
 - `https://cathedradigital.com.br/`
 - `https://www.cathedradigital.com.br/`
 - `https://cathedradigital.cathedradigital.workers.dev/`
 
 Verificar também:
+
 - `/robots.txt`;
 - `/sitemap.xml`;
 - rotas e deep links críticos;
@@ -105,9 +105,9 @@ Uma resposta HTTP 200 não prova, isoladamente, que a versão correta e os fluxo
 ## 7. Critérios antes de liberar
 
 - [ ] SHA final identificado.
-- [ ] CI aprovado nesse SHA.
+- [ ] `CI`, `Estudar E2E`, `Security Audit` e `Estudar final audit` aprovados no SHA exato.
 - [ ] Auditoria de dependências aprovada nesse SHA, sem vulnerabilidades bloqueadoras não tratadas.
-- [ ] Playwright crítico desktop e mobile aprovado nesse SHA.
+- [ ] Playwright público desktop/mobile e Playwright autenticado aprovados nesse SHA.
 - [ ] Artefatos sanitizados e logs preservados.
 - [ ] Fluxos de autenticação e deep links verificados.
 - [ ] Nenhum bloqueador de segurança aberto.

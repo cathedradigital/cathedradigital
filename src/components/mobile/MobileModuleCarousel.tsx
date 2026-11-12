@@ -43,16 +43,50 @@ function getActiveIndex(pathname: string, destinations: Destination[]) {
   return -1;
 }
 
+const EXPANDED_GROUP_STATE_KEY = 'cathedraMobileExpandedGroupKey';
+
+function isPlainRouteState(state: unknown): state is Record<string, unknown> {
+  if (!state || typeof state !== 'object' || Array.isArray(state)) return false;
+  const prototype = Object.getPrototypeOf(state);
+  return prototype === Object.prototype || prototype === null;
+}
+
+function getExpandedGroupFromState(state: unknown): ModuleEnvironment | null {
+  if (!isPlainRouteState(state)) return null;
+  const candidate = state[EXPANDED_GROUP_STATE_KEY];
+  return MODULE_NAVIGATION.some((group) => group.key === candidate)
+    ? candidate as ModuleEnvironment
+    : null;
+}
+
+function withExpandedGroupInState(state: unknown, groupKey: ModuleEnvironment) {
+  if (state === null || state === undefined) return { [EXPANDED_GROUP_STATE_KEY]: groupKey };
+  // Keep application-owned non-object route state unchanged.
+  if (!isPlainRouteState(state)) return state;
+  return { ...state, [EXPANDED_GROUP_STATE_KEY]: groupKey };
+}
+
+function withoutExpandedGroupInState(state: unknown) {
+  if (!isPlainRouteState(state)) return state;
+  const remaining = { ...state };
+  delete remaining[EXPANDED_GROUP_STATE_KEY];
+  return Object.keys(remaining).length > 0 ? remaining : undefined;
+}
+
 /**
  * Mobile module carousel: a compact, swipeable switcher for the Atrium and
  * the five canonical environments. It changes routes rather than local tabs,
  * so browser history, deep links and each module's state remain authoritative.
  */
 export function MobileModuleCarousel() {
-  const { pathname } = useLocation();
+  const location = useLocation();
+  const { pathname, search, hash, state: routeState, key: locationKey } = location;
   const navigate = useNavigate();
   const { t } = useLang();
-  const [expandedGroupKey, setExpandedGroupKey] = useState<ModuleEnvironment | null>(null);
+  const restoredExpandedGroupKey = getExpandedGroupFromState(routeState);
+  const [expandedGroupKey, setExpandedGroupKey] = useState<ModuleEnvironment | null>(
+    restoredExpandedGroupKey,
+  );
   const activeRef = useRef<HTMLButtonElement | null>(null);
   const touchStartX = useRef<number | null>(null);
   const touchStartY = useRef<number | null>(null);
@@ -76,6 +110,10 @@ export function MobileModuleCarousel() {
     pathname.startsWith('/prototype-2.0') || pathname.startsWith('/dev/');
 
   useEffect(() => {
+    setExpandedGroupKey(restoredExpandedGroupKey);
+  }, [locationKey, restoredExpandedGroupKey]);
+
+  useEffect(() => {
     activeRef.current?.scrollIntoView({ block: 'nearest', inline: 'center', behavior: 'smooth' });
   }, [activeIndex]);
 
@@ -83,23 +121,48 @@ export function MobileModuleCarousel() {
     if (swipeResetTimer.current !== null) window.clearTimeout(swipeResetTimer.current);
   }, []);
 
+  const clearExpandedGroup = useCallback(() => {
+    setExpandedGroupKey(null);
+    if (getExpandedGroupFromState(routeState) === null) return;
+    navigate(`${pathname}${search}${hash}`, {
+      replace: true,
+      state: withoutExpandedGroupInState(routeState),
+    });
+  }, [hash, navigate, pathname, routeState, search]);
+
   const openIndex = useCallback((index: number) => {
     const destination = destinations[index];
     if (!destination) return;
     if (destination.key === 'atrium') {
-      setExpandedGroupKey(null);
-      if (pathname !== '/') navigate('/');
+      if (pathname !== '/') {
+        setExpandedGroupKey(null);
+        navigate('/', { state: withoutExpandedGroupInState(routeState) });
+      } else {
+        clearExpandedGroup();
+      }
       return;
     }
     const groupKey = destination.key as ModuleEnvironment;
     const isSameGroup = expandedGroupKey === groupKey;
-    setExpandedGroupKey(isSameGroup ? null : groupKey);
-  }, [destinations, expandedGroupKey, navigate, pathname]);
+    if (isSameGroup) {
+      clearExpandedGroup();
+      return;
+    }
+    if (getExpandedGroupFromState(routeState) !== groupKey) {
+      // Persist only the transient open group in the current history entry;
+      // selecting a module item remains the action that changes the route.
+      navigate(`${pathname}${search}${hash}`, {
+        replace: true,
+        state: withExpandedGroupInState(routeState, groupKey),
+      });
+    }
+    setExpandedGroupKey(groupKey);
+  }, [clearExpandedGroup, destinations, expandedGroupKey, hash, navigate, pathname, routeState, search]);
 
   const navigateToItem = useCallback((path: string) => {
     setExpandedGroupKey(null);
-    navigate(path);
-  }, [navigate]);
+    navigate(path, { state: withoutExpandedGroupInState(routeState) });
+  }, [navigate, routeState]);
 
   const expandedGroup = expandedGroupKey
     ? MODULE_NAVIGATION.find((group) => group.key === expandedGroupKey)
@@ -127,7 +190,10 @@ export function MobileModuleCarousel() {
       swipeResetTimer.current = null;
     }, 700);
     const next = destinations[Math.max(0, Math.min(destinations.length - 1, activeIndex + (deltaX < 0 ? 1 : -1)))];
-    if (next) navigate(next.path);
+    if (next) {
+      setExpandedGroupKey(null);
+      navigate(next.path, { state: withoutExpandedGroupInState(routeState) });
+    }
   };
 
   if (isExcludedRoute || activeIndex < 0) return null;
@@ -165,7 +231,7 @@ export function MobileModuleCarousel() {
             <button
               type="button"
               aria-label={t('close_menu')}
-              onClick={() => setExpandedGroupKey(null)}
+              onClick={clearExpandedGroup}
               className="flex min-h-11 min-w-11 shrink-0 items-center justify-center rounded-full bg-muted text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             >
               <X className="h-4 w-4" aria-hidden="true" />

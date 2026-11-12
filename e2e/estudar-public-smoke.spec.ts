@@ -367,13 +367,31 @@ test('Mobile: carrossel abre os submódulos e preserva a navegação canônica',
   await expect(carousel).toHaveCSS('position', 'fixed');
   await expect(carousel).toHaveCSS('bottom', '0px');
 
-  await carousel.getByRole('button', { name: 'Menu de navegação: Estudar' }).click();
-  await expect(carousel.getByRole('heading', { name: 'Estudar' })).toBeVisible();
+  const studyingButton = carousel.getByRole('button', { name: 'Menu de navegação: Estudar' });
+  const studyingHeading = carousel.getByRole('heading', { name: 'Estudar' });
+  await studyingButton.click();
+  await expect(studyingHeading).toBeVisible();
+  await studyingButton.click();
+  await expect(studyingHeading).toHaveCount(0);
+  await page.reload();
+  await expect(carousel).toBeVisible();
+  await expect(studyingHeading).toHaveCount(0);
+  await studyingButton.click();
+  await expect(studyingHeading).toBeVisible();
   await carousel.getByRole('button', { name: /Bíblia/ }).click();
   await expect(page).toHaveURL(/\/bible$/);
 
-  await carousel.getByRole('button', { name: 'Menu de navegação: Rezar' }).click();
-  await expect(carousel.getByRole('heading', { name: 'Rezar' })).toBeVisible();
+  const prayButton = carousel.getByRole('button', { name: 'Menu de navegação: Rezar' });
+  const prayHeading = carousel.getByRole('heading', { name: 'Rezar' });
+  await prayButton.click();
+  await expect(prayHeading).toBeVisible();
+  await carousel.locator('#mobile-module-submenu').getByRole('button', { name: 'Fechar menu' }).click();
+  await expect(prayHeading).toHaveCount(0);
+  await page.reload();
+  await expect(carousel).toBeVisible();
+  await expect(prayHeading).toHaveCount(0);
+  await prayButton.click();
+  await expect(prayHeading).toBeVisible();
   await expect(carousel.getByRole('button', { name: /Orações/ })).toBeVisible();
   await expect(carousel.getByRole('button', { name: /Liturgia das Horas/ })).toBeVisible();
   await carousel.getByRole('button', { name: /Liturgia das Horas/ }).click();

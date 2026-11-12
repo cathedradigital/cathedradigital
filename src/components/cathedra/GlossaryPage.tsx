@@ -64,6 +64,19 @@ const COMPLETENESS_DOT: Record<string, { color: string; label: string }> = {
   reviewed_theologically: { color: 'bg-sky-500', label: 'Revisado teologicamente' },
 };
 
+type CompletenessValue = Exclude<GlossaryTerm['editorial_completeness'], null>;
+type CompletenessFilter = 'all' | CompletenessValue;
+
+const COMPLETENESS_OPTIONS: Array<{ value: CompletenessValue; label: string }> = [
+  { value: 'complete', label: 'Completo' },
+  { value: 'expanding', label: 'Em expansão' },
+  { value: 'reviewed_theologically', label: 'Revisado teologicamente' },
+];
+
+function isCompletenessValue(value: string | null): value is CompletenessValue {
+  return value === 'complete' || value === 'expanding' || value === 'reviewed_theologically';
+}
+
 const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 
 function firstLetter(term: string): string {
@@ -80,10 +93,22 @@ const GlossaryPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState(false);
   const [reloadKey, setReloadKey] = useState(0);
-  const [category, setCategory] = useState(() => searchParams.get('category') || 'Todos');
-  const [searchQuery, setSearchQuery] = useState(() => searchParams.get('q') || '');
+  const category = searchParams.get('category') || 'Todos';
+  const searchQuery = searchParams.get('q') ?? '';
+  const rawCompletenessFilter = searchParams.get('completeness');
+  const completenessFilter: CompletenessFilter = isCompletenessValue(rawCompletenessFilter)
+    ? rawCompletenessFilter
+    : 'all';
   const [rosaryReturn, setRosaryReturn] = useState<RosaryReturnContext | null>(null);
   const listRef = useRef<HTMLDivElement | null>(null);
+
+  const updateSearchParam = (key: string, value: string) => {
+    const next = new URLSearchParams(searchParams);
+    const trimmed = value.trim();
+    if (trimmed) next.set(key, trimmed);
+    else next.delete(key);
+    setSearchParams(next, { replace: true });
+  };
 
   // Se a rota veio como /glossario/:slug (legado), redireciona para a página definitiva.
   useEffect(() => {
@@ -100,7 +125,12 @@ const GlossaryPage: React.FC = () => {
     navigate('/rosary#preparation');
   };
 
-  const { results: searchResults, isPending: isSearchPending } = useFuzzySearch<GlossaryTerm>({
+  const {
+    results: searchResults,
+    isPending: isSearchPending,
+    error: searchError,
+    refetch: refetchSearch,
+  } = useFuzzySearch<GlossaryTerm>({
     rpc: 'search_glossary_fuzzy',
     query: searchQuery,
     primaryField: 'term',
@@ -143,10 +173,19 @@ const GlossaryPage: React.FC = () => {
     return ['Todos', ...Array.from(cats).sort((a, b) => a.localeCompare(b, 'pt'))];
   }, [terms]);
 
+  const isSearching = searchQuery.trim().length >= 2;
+
   const filtered = useMemo(() => {
-    const base = searchQuery.trim().length >= 2 && searchResults ? searchResults : terms;
-    return category === 'Todos' ? base : base.filter((t) => t.category === category);
-  }, [terms, searchResults, searchQuery, category]);
+    const base = isSearching
+      ? isSearchPending || !searchResults
+        ? []
+        : searchResults
+      : terms;
+    return base.filter((term) =>
+      (category === 'Todos' || term.category === category) &&
+      (completenessFilter === 'all' || term.editorial_completeness === completenessFilter),
+    );
+  }, [terms, searchResults, isSearching, isSearchPending, category, completenessFilter]);
 
   // Agrupamento A–Z (só quando não há busca ativa)
   const grouped = useMemo(() => {
@@ -161,21 +200,6 @@ const GlossaryPage: React.FC = () => {
   }, [filtered]);
 
   const availableLetters = useMemo(() => new Set(grouped.map(([l]) => l)), [grouped]);
-
-  // Sincroniza URL
-  useEffect(() => {
-    const next = new URLSearchParams(searchParams);
-    if (searchQuery.trim()) next.set('q', searchQuery.trim());
-    else next.delete('q');
-    if (category !== 'Todos') next.set('category', category);
-    else next.delete('category');
-    if (next.toString() !== searchParams.toString()) {
-      setSearchParams(next, { replace: true });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchQuery, category]);
-
-  const isSearching = searchQuery.trim().length >= 2;
 
   return (
     <>
@@ -239,7 +263,7 @@ const GlossaryPage: React.FC = () => {
               id="glossary-search"
               type="search"
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={(e) => updateSearchParam('q', e.target.value)}
               placeholder="Digite uma palavra ou conceito…"
               className={cn(
                 'w-full pl-12 pr-12 py-4 rounded-full',
@@ -255,6 +279,19 @@ const GlossaryPage: React.FC = () => {
               </span>
             )}
           </div>
+          {isSearching && !isSearchPending && searchError && (
+            <div
+              data-testid="glossary-search-fallback"
+              role="status"
+              aria-live="polite"
+              className="mt-3 flex flex-col gap-3 rounded-lg border border-stitch-secondary/30 bg-stitch-surface-container-lowest p-3 text-sm text-stitch-on-surface-variant sm:flex-row sm:items-center sm:justify-between"
+            >
+              <p>Busca por aproximação indisponível. Exibindo correspondências locais simplificadas.</p>
+              <Button type="button" variant="outline" size="sm" onClick={refetchSearch}>
+                Tentar busca novamente
+              </Button>
+            </div>
+          )}
         </div>
 
         {/* Categorias editoriais */}
@@ -267,7 +304,7 @@ const GlossaryPage: React.FC = () => {
                   <button
                     key={cat}
                     type="button"
-                    onClick={() => setCategory(cat)}
+                    onClick={() => updateSearchParam('category', cat === 'Todos' ? '' : cat)}
                     aria-pressed={active}
                     className={cn(
                       'px-4 py-2 rounded-full border font-stitch-label text-stitch-label-sm uppercase tracking-[0.22em] transition-colors',
@@ -281,6 +318,51 @@ const GlossaryPage: React.FC = () => {
                 );
               })}
             </div>
+          </div>
+        )}
+
+        {!loading && terms.some((term) => term.editorial_completeness) && (
+          <div className="max-w-5xl mx-auto px-4 mb-8">
+            <p className="mb-2 text-center type-rubrica text-[color:var(--gold-text)]">Grau editorial</p>
+            <div role="group" aria-label="Filtrar por grau editorial" className="flex flex-wrap justify-center gap-2">
+              <button
+                type="button"
+                onClick={() => updateSearchParam('completeness', '')}
+                aria-pressed={completenessFilter === 'all'}
+                className={cn(
+                  'px-4 py-2 rounded-full border font-stitch-label text-stitch-label-sm uppercase tracking-[0.18em] transition-colors',
+                  completenessFilter === 'all'
+                    ? 'border-stitch-secondary bg-stitch-secondary text-stitch-secondary-foreground font-semibold'
+                    : 'border-stitch-outline-variant/50 text-stitch-on-surface-variant hover:border-stitch-secondary hover:text-[color:var(--gold-text-strong)]',
+                )}
+              >
+                Todos os graus
+              </button>
+              {COMPLETENESS_OPTIONS.filter((option) =>
+                terms.some((term) => term.editorial_completeness === option.value),
+              ).map((option) => {
+                const active = completenessFilter === option.value;
+                return (
+                  <button
+                    key={option.value}
+                    type="button"
+                    onClick={() => updateSearchParam('completeness', option.value)}
+                    aria-pressed={active}
+                    className={cn(
+                      'px-4 py-2 rounded-full border font-stitch-label text-stitch-label-sm uppercase tracking-[0.18em] transition-colors',
+                      active
+                        ? 'border-stitch-secondary bg-stitch-secondary text-stitch-secondary-foreground font-semibold'
+                        : 'border-stitch-outline-variant/50 text-stitch-on-surface-variant hover:border-stitch-secondary hover:text-[color:var(--gold-text-strong)]',
+                    )}
+                  >
+                    {option.label}
+                  </button>
+                );
+              })}
+            </div>
+            <p className="mt-2 text-center text-xs text-stitch-on-surface-variant">
+              O grau editorial descreve o estado do verbete; não substitui as fontes indicadas.
+            </p>
           </div>
         )}
 
@@ -355,6 +437,10 @@ const GlossaryPage: React.FC = () => {
             <div role="alert" className="py-12 text-center">
               <p className="mb-4 text-muted-foreground">Não foi possível carregar o glossário.</p>
               <Button variant="outline" onClick={() => setReloadKey((value) => value + 1)}>Tentar novamente</Button>
+            </div>
+          ) : isSearching && isSearchPending ? (
+            <div role="status" aria-live="polite" className="py-12 text-center text-muted-foreground">
+              Buscando verbetes para “{searchQuery}”…
             </div>
           ) : filtered.length === 0 ? (
             <EditorialEmptyState
