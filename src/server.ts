@@ -85,6 +85,45 @@ function withAssetCache(request: Request, response: Response): Response {
   });
 }
 
+const privateDocumentPrefixes = [
+  "/admin",
+  "/auth",
+  "/login",
+  "/conta",
+  "/profile",
+  "/settings",
+  "/diario",
+  "/community",
+  "/favorites",
+  "/achievements",
+  "/onboarding",
+  "/spiritual-profile",
+];
+
+function withPublicDocumentCache(request: Request, response: Response): Response {
+  const url = new URL(request.url);
+  const contentType = response.headers.get("content-type") ?? "";
+  const isPublicAnonymousDocument =
+    (request.method === "GET" || request.method === "HEAD") &&
+    response.status === 200 &&
+    contentType.includes("text/html") &&
+    !request.headers.has("authorization") &&
+    !request.headers.has("cookie") &&
+    !privateDocumentPrefixes.some((prefix) => url.pathname === prefix || url.pathname.startsWith(`${prefix}/`));
+
+  if (!isPublicAnonymousDocument) return response;
+
+  const headers = new Headers(response.headers);
+  headers.set("Cache-Control", "public, max-age=0, s-maxage=60, stale-while-revalidate=300");
+  headers.set("Vary", "Accept-Encoding, Cookie, Authorization");
+
+  return new Response(response.body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers,
+  });
+}
+
 export default {
   async fetch(request: Request, env: unknown, ctx: unknown) {
     try {
@@ -94,7 +133,7 @@ export default {
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);
       const normalizedResponse = await normalizeCatastrophicSsrResponse(response);
-      return withAssetCache(request, normalizedResponse);
+      return withPublicDocumentCache(request, withAssetCache(request, normalizedResponse));
     } catch (error) {
       console.error(error);
       return new Response(renderErrorPage(), {

@@ -93,12 +93,6 @@ export function MobileModuleCarousel() {
     }
     const groupKey = destination.key as ModuleEnvironment;
     const isSameGroup = expandedGroupKey === groupKey;
-    if (!isSameGroup && pathname !== destination.path && !pathname.startsWith(destination.path + '/')) {
-      // Change the environment immediately while keeping the submenu open.
-      // Previously the first tap only opened the submenu, which felt like a
-      // stalled navigation on mobile and required a second tap to advance.
-      navigate(destination.path);
-    }
     setExpandedGroupKey(isSameGroup ? null : groupKey);
   }, [destinations, expandedGroupKey, navigate, pathname]);
 
