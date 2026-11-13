@@ -439,6 +439,18 @@ test('Mobile: conteúdo reserva espaço para a navegação inferior', async ({ p
 });
 
 
+test('Dogmas e aparições: a busca inclui anos e detalhes documentais', async ({ page }) => {
+  await page.goto('/dogmas');
+  await page.getByLabel('Buscar nos dogmas').fill('431');
+  await expect(page.getByRole('heading', { name: 'Encarnação do Verbo', exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Existência de Deus', exact: true })).toHaveCount(0);
+
+  await page.goto('/aparicoes');
+  await page.getByLabel('Buscar nas aparições e devoções').fill('investigação eclesiástica');
+  await expect(page.getByText('Nossa Senhora de Lourdes', { exact: true })).toBeVisible();
+  await expect(page.getByText('Nossa Senhora de Fátima', { exact: true })).toHaveCount(0);
+});
+
 test('Aparições e devoções marianas: avaliação e fonte são específicas por registro', async ({ page }) => {
   const errors: string[] = [];
   const failedResponses: string[] = [];

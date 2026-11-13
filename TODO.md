@@ -31,6 +31,11 @@
 - [ ] Após enviar o SHA candidato a `main`, aguardar CI, Estudar E2E (público e autenticado), Security Audit e Estudar final audit aprovados nesse mesmo SHA; o gate normal do workflow Cloudflare deve então publicar e validar endpoints e SEO.
 - [ ] Publicação só é considerada concluída após todos os gates exigidos e a confirmação da versão servida no domínio de produção.
 
+## Busca de dogmas e aparições
+- [x] A busca de dogmas inclui o ano de definição (ou “Tradição”) além de título, definição, categoria, fonte e referências.
+- [x] A busca de aparições inclui relatos, datas, festa litúrgica e todos os campos de avaliação e documentação já cadastrados.
+- [x] O audit de dependências volta a passar com overrides mínimos para `@hono/node-server` 2.1.6 e `hono` 4.13.16; sem atualização ampla da árvore.
+
 ## Refinamento do módulo Pesquisar — Dogmas
 - [x] A busca de Dogmas deve aceitar título, definição, categoria e referências, ignorando diferenças de acentuação.
 - [x] A consulta e a categoria selecionada devem permanecer coerentes com a URL para deep links e navegação.

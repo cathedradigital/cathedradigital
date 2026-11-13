@@ -293,7 +293,7 @@ const DogmasPage: React.FC = () => {
     const q = normalizeSearch(searchQuery);
     if (q) {
       list = list.filter(d =>
-        [d.title, d.definition, d.source, d.category, ...d.refs.flatMap(ref => [ref.label, ref.target])]
+        [d.title, d.definition, d.source, d.category, formatDogmaYear(d.year), ...d.refs.flatMap(ref => [ref.label, ref.target])]
           .some(value => normalizeSearch(value).includes(q))
       );
     }
@@ -352,7 +352,7 @@ const DogmasPage: React.FC = () => {
           aria-describedby="dogmas-search-help"
           className="w-full pl-spacing-xl pr-spacing-md py-spacing-sm rounded-premium-full border border-border bg-card text-foreground text-premium-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
         />
-        <p id="dogmas-search-help" className="sr-only">A busca considera títulos, definições, categorias e referências.</p>
+        <p id="dogmas-search-help" className="sr-only">A busca considera títulos, definições, categorias, anos, fontes e referências.</p>
       </div>
 
       {/* Category tabs */}
