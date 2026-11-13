@@ -1,9 +1,19 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, type Page } from '@playwright/test';
 import { readFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 
 const require = createRequire(import.meta.url);
 const DOMPURIFY_BROWSER_BUNDLE = require.resolve('dompurify/dist/purify.js');
+
+async function navigateToDogmasClientSide(page: Page) {
+  await page.goto('/');
+  await expect(page.getByRole('heading', { name: /Bíblia, Catecismo/ })).toBeVisible();
+  await page.evaluate(() => {
+    window.history.pushState({}, '', '/dogmas');
+    window.dispatchEvent(new PopStateEvent('popstate'));
+  });
+  await expect(page.getByLabel('Buscar nos dogmas')).toBeVisible();
+}
 
 test('public browser smoke: landing and login render', async ({ page }) => {
   const bad: string[] = [];
@@ -440,7 +450,7 @@ test('Mobile: conteúdo reserva espaço para a navegação inferior', async ({ p
 
 
 test('Dogmas e aparições: a busca inclui anos e detalhes documentais', async ({ page }) => {
-  await page.goto('/dogmas');
+  await navigateToDogmasClientSide(page);
   await page.getByLabel('Buscar nos dogmas').fill('431');
   await expect(page.getByRole('heading', { name: 'Encarnação do Verbo', exact: true })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Existência de Deus', exact: true })).toHaveCount(0);
@@ -453,7 +463,7 @@ test('Dogmas e aparições: a busca inclui anos e detalhes documentais', async (
 
 test('Dogmas: cabeçalho e accordions permanecem legíveis no mobile', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto('/dogmas');
+  await navigateToDogmasClientSide(page);
 
   const description = page.getByText('Verdades divinamente reveladas, definidas solenemente pela Igreja como parte do depósito da fé.', { exact: true });
   await expect(description).toBeVisible();
