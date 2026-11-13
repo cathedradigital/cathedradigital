@@ -34,7 +34,25 @@ const AparicoesPage: React.FC = () => {
     return APPARITIONS.filter(apparition => {
       const matchesKind = kindFilter === 'Todos' || (kindFilter === 'Aparições' && apparition.kind === 'apparition') || (kindFilter === 'Devoções' && apparition.kind === 'image-devotion');
       const matchesCountry = countryFilter === 'Todos' || apparition.country === countryFilter;
-      const matchesQuery = !query || [apparition.title, apparition.location, apparition.country, apparition.year.toString(), apparition.seer, apparition.summary, apparition.message, apparition.ecclesialAssessment.label].some(value => normalizeSearch(value).includes(query));
+      const searchableFields = [
+        apparition.title,
+        apparition.location,
+        apparition.country,
+        apparition.year.toString(),
+        apparition.date,
+        apparition.seer,
+        apparition.seerStory,
+        apparition.summary,
+        apparition.fullStory,
+        apparition.message,
+        apparition.liturgicalFeast,
+        apparition.ecclesialAssessment.label,
+        apparition.ecclesialAssessment.detail,
+        apparition.ecclesialAssessment.authority,
+        apparition.ecclesialAssessment.date,
+        apparition.ecclesialAssessment.sourceLabel,
+      ];
+      const matchesQuery = !query || searchableFields.some(value => normalizeSearch(value).includes(query));
       return matchesKind && matchesCountry && matchesQuery;
     });
   }, [countryFilter, kindFilter, searchQuery]);
@@ -234,7 +252,7 @@ const AparicoesPage: React.FC = () => {
               aria-describedby="apparitions-search-help"
               className="w-full pl-spacing-xl pr-spacing-md py-spacing-sm rounded-premium-full border border-border bg-card text-foreground text-premium-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
             />
-            <p id="apparitions-search-help" className="sr-only">A busca considera nome, lugar, país, ano, vidente, mensagem e avaliação eclesial.</p>
+            <p id="apparitions-search-help" className="sr-only">A busca considera nome, lugar, país, datas, vidente, relatos, mensagem e documentação da avaliação eclesial.</p>
           </div>
           <div className="flex items-center justify-center gap-spacing-xs flex-wrap">
             {['Todos', 'Aparições', 'Devoções'].map(option => (

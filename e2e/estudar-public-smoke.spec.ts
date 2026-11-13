@@ -1,9 +1,19 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, type Page } from '@playwright/test';
 import { readFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 
 const require = createRequire(import.meta.url);
 const DOMPURIFY_BROWSER_BUNDLE = require.resolve('dompurify/dist/purify.js');
+
+async function navigateToDogmasClientSide(page: Page) {
+  await page.goto('/');
+  await expect(page.getByRole('heading', { name: /Bíblia, Catecismo/ })).toBeVisible();
+  await page.evaluate(() => {
+    window.history.pushState({}, '', '/dogmas');
+    window.dispatchEvent(new PopStateEvent('popstate'));
+  });
+  await expect(page.getByLabel('Buscar nos dogmas')).toBeVisible();
+}
 
 test('public browser smoke: landing and login render', async ({ page }) => {
   const bad: string[] = [];
@@ -438,6 +448,49 @@ test('Mobile: conteúdo reserva espaço para a navegação inferior', async ({ p
   expect(Number.parseFloat(paddingBottom)).toBeGreaterThan(0);
 });
 
+
+test('Dogmas e aparições: a busca inclui anos e detalhes documentais', async ({ page }) => {
+  await navigateToDogmasClientSide(page);
+  await page.getByLabel('Buscar nos dogmas').fill('431');
+  await expect(page.getByRole('heading', { name: 'Encarnação do Verbo', exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Existência de Deus', exact: true })).toHaveCount(0);
+
+  await page.goto('/aparicoes');
+  await page.getByLabel('Buscar nas aparições e devoções').fill('investigação eclesiástica');
+  await expect(page.getByText('Nossa Senhora de Lourdes', { exact: true })).toBeVisible();
+  await expect(page.getByText('Nossa Senhora de Fátima', { exact: true })).toHaveCount(0);
+});
+
+test('Dogmas: cabeçalho e accordions permanecem legíveis no mobile', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await navigateToDogmasClientSide(page);
+
+  const description = page.getByText('Verdades divinamente reveladas, definidas solenemente pela Igreja como parte do depósito da fé.', { exact: true });
+  await expect(description).toBeVisible();
+  expect(await description.evaluate(element => element.getBoundingClientRect().width)).toBeGreaterThan(280);
+  await expect(page.getByRole('heading', { name: 'Dogmas da Fé Católica', exact: true })).toHaveCount(1);
+
+  const firstDogma = page.getByRole('button', { name: /Existência de Deus/ });
+  const title = firstDogma.getByRole('heading', { name: 'Existência de Deus', exact: true });
+  await expect(title).toBeVisible();
+  const contrast = await firstDogma.evaluate(button => {
+    const heading = button.querySelector('h3');
+    if (!heading) return 0;
+    const luminance = (color: string) => {
+      const channels = color.match(/[\d.]+/g)?.slice(0, 3).map(Number);
+      if (!channels || channels.length !== 3) return 0;
+      const [red, green, blue] = channels.map(channel => {
+        const normalized = channel / 255;
+        return normalized <= 0.04045 ? normalized / 12.92 : ((normalized + 0.055) / 1.055) ** 2.4;
+      });
+      return 0.2126 * red + 0.7152 * green + 0.0722 * blue;
+    };
+    const foreground = luminance(getComputedStyle(heading).color);
+    const background = luminance(getComputedStyle(button).backgroundColor);
+    return (Math.max(foreground, background) + 0.05) / (Math.min(foreground, background) + 0.05);
+  });
+  expect(contrast).toBeGreaterThanOrEqual(4.5);
+});
 
 test('Aparições e devoções marianas: avaliação e fonte são específicas por registro', async ({ page }) => {
   const errors: string[] = [];
