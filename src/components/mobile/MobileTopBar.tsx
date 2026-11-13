@@ -3,6 +3,7 @@ import { useNavigate, Link } from '@/lib/rr-compat';
 import { cn } from "@/lib/utils";
 import cathedraLogo from "@/assets/cathedra-logo.webp";
 import { useLang } from "@/hooks/useLang";
+import { LanguageSwitcher } from "@/components/i18n/LanguageSwitcher";
 import type { ReactNode } from "react";
 
 interface MobileTopBarProps {
@@ -104,6 +105,7 @@ export function MobileTopBar({
       </div>
 
       <div className="flex shrink-0 items-center gap-1">
+        <LanguageSwitcher className="w-11 px-0 sm:w-auto sm:px-3" />
         <Link
           to="/buscar"
           aria-label={t('search')}

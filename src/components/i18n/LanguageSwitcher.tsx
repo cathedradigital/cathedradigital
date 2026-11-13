@@ -34,7 +34,7 @@ export function LanguageSwitcher({ className, variant = 'compact' }: LanguageSwi
           aria-label={`${t('language')}: ${current.nativeName}. ${t('change_language')}`}
         >
           <Globe className="h-4 w-4" aria-hidden="true" />
-          <span className="text-xs font-medium uppercase tracking-wide">
+          <span className={cn('text-xs font-medium uppercase tracking-wide', variant === 'compact' && 'hidden sm:inline')}>
             {variant === 'full' ? current.nativeName : current.code}
           </span>
         </Button>

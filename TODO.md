@@ -32,14 +32,22 @@
 - [ ] Publicação só é considerada concluída após todos os gates exigidos e a confirmação da versão servida no domínio de produção.
 
 ## Busca de dogmas e aparições
+
 - [x] A busca de dogmas inclui o ano de definição (ou “Tradição”) além de título, definição, categoria, fonte e referências.
 - [x] A busca de aparições inclui relatos, datas, festa litúrgica e todos os campos de avaliação e documentação já cadastrados.
 - [x] Dogmas: remover introdução duplicada com largura de 32px; apresentar accordions com superfície e contraste de texto acessíveis em telas estreitas.
 - [x] O audit de dependências volta a passar com overrides mínimos para `@hono/node-server` 2.1.6 e `hono` 4.13.16; sem atualização ampla da árvore.
 
 ## Refinamento do módulo Pesquisar — Dogmas
+
 - [x] A busca de Dogmas deve aceitar título, definição, categoria e referências, ignorando diferenças de acentuação.
 - [x] A consulta e a categoria selecionada devem permanecer coerentes com a URL para deep links e navegação.
 - [x] A página deve distinguir lista com resultados de zero resultados e oferecer limpeza dos filtros.
 - [x] Busca, filtros e itens expansíveis devem ter rótulos e estados ARIA explícitos, com layout utilizável em telas estreitas.
 - [x] Typecheck, lint, build, validadores e o teste focado de Dogmas passaram em desktop e mobile; o teste público do diretório Pesquisar passou em desktop e mantém uma falha preexistente no mobile porque exige visibilidade de “14 caminhos” em um elemento `md:inline` oculto nesse breakpoint.
+
+# Seletor de idioma do cabeçalho
+
+- [x] Exibir o seletor no cabeçalho também em telas estreitas como botão compacto, com alvo de toque mínimo de 44 px e nome acessível contendo o idioma atual; ao abrir, apresentar os locales configurados por nomes nativos e manter a troca de idioma no caminho localizado atual, preservando query e hash.
+- [x] Adicionar cobertura E2E responsiva; no main atualizado (`ee6dc10`), `bun ci`, typecheck/build, lint, validadores de links/módulos/segurança, isolamento Lovable, `bun audit` e suíte pública desktop/mobile passaram (82/82).
+- [x] Usuário autorizou commit/push e publicação Cloudflare deste escopo; seguir o gate normal e não usar bypass manual.

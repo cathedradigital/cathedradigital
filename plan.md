@@ -54,3 +54,10 @@ Reutilizar a direção editorial monástica contemporânea e tokens `stitch-*` e
 ### Fora do escopo
 
 Não alterar schema, popular fontes, atribuir autoridade doutrinal a um grau editorial, sincronizar `localStorage` com a conta, inventar percentuais/posições de leitura ou expandir o conteúdo doutrinal sem fonte identificável.
+
+## Seletor de idioma no cabeçalho
+
+- Integrar o seletor ao `MobileTopBar`, a barra utilizada nas páginas de módulos em mobile; manter o `AppHeader` desktop e não estender este escopo à `HomeUnified`.
+- Em telas estreitas, exibir só o globo em botão de 44 px; em viewports maiores, manter o código abreviado. Preservar o nome acessível com o idioma atual e os nomes nativos no menu.
+- Preservar a troca de locale existente (prefixo de URL, caminho, query e hash), sem acrescentar idiomas nem assumir que o conteúdo todo já está traduzido.
+- Cobrir visibilidade, opções e troca localizada com E2E em viewport mobile; executar os gates locais pertinentes antes de solicitar publicação.
