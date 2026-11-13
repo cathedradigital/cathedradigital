@@ -6,6 +6,13 @@ import { renderErrorPage } from "./lib/error-page";
 type ServerEntry = {
   fetch: (request: Request, env: unknown, ctx: unknown) => Promise<Response> | Response;
 };
+type EdgeCache = {
+  match: (request: Request) => Promise<Response | undefined>;
+  put: (request: Request, response: Response) => Promise<void>;
+};
+type WorkerExecutionContext = {
+  waitUntil?: (promise: Promise<unknown>) => void;
+};
 
 let serverEntryPromise: Promise<ServerEntry> | undefined;
 
@@ -124,16 +131,71 @@ function withPublicDocumentCache(request: Request, response: Response): Response
   });
 }
 
+function dogmasCacheKey(request: Request): Request | null {
+  const url = new URL(request.url);
+  const isAnonymousDogmasRequest =
+    (request.method === "GET" || request.method === "HEAD") &&
+    url.pathname === "/dogmas" &&
+    !request.headers.has("authorization") &&
+    !request.headers.has("cookie");
+  if (!isAnonymousDogmasRequest) return null;
+
+  // q and categoria are client-side filters; the SSR document is identical.
+  return new Request(`${url.origin}/dogmas`, { method: "GET" });
+}
+
+function getEdgeCache(): EdgeCache | null {
+  const runtime = globalThis as typeof globalThis & {
+    caches?: { default?: EdgeCache };
+  };
+  return runtime.caches?.default ?? null;
+}
+
+function withDogmasDocumentCache(request: Request, response: Response): Response {
+  if (!dogmasCacheKey(request) || response.status !== 200) return response;
+  const contentType = response.headers.get("content-type") ?? "";
+  if (!contentType.includes("text/html")) return response;
+
+  const headers = new Headers(response.headers);
+  headers.set("Cache-Control", "public, max-age=60, s-maxage=3600, stale-while-revalidate=86400");
+  headers.set("Vary", "Accept-Encoding");
+  return new Response(response.body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers,
+  });
+}
+
 export default {
   async fetch(request: Request, env: unknown, ctx: unknown) {
     try {
       const health = healthResponse(request);
       if (health) return health;
 
+      const cacheKey = dogmasCacheKey(request);
+      const edgeCache = cacheKey ? getEdgeCache() : null;
+      if (cacheKey && edgeCache) {
+        const cached = await edgeCache.match(cacheKey);
+        if (cached) {
+          if (request.method === "HEAD") return new Response(null, cached);
+          return cached;
+        }
+      }
+
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);
       const normalizedResponse = await normalizeCatastrophicSsrResponse(response);
-      return withPublicDocumentCache(request, withAssetCache(request, normalizedResponse));
+      const publicResponse = withPublicDocumentCache(request, withAssetCache(request, normalizedResponse));
+      const dogmasResponse = withDogmasDocumentCache(request, publicResponse);
+      if (cacheKey && edgeCache && dogmasResponse.status === 200) {
+        const waitUntil = (ctx as WorkerExecutionContext).waitUntil;
+        const cacheWrite = edgeCache.put(cacheKey, dogmasResponse.clone()).catch((error) => {
+          console.error("Dogmas edge cache write failed", error);
+        });
+        if (waitUntil) waitUntil(cacheWrite);
+        else await cacheWrite;
+      }
+      return dogmasResponse;
     } catch (error) {
       console.error(error);
       return new Response(renderErrorPage(), {
