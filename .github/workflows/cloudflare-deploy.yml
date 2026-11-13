@@ -195,7 +195,12 @@ jobs:
               awk 'BEGIN { IGNORECASE=1 } /^HTTP\// || /^(server|cf-ray|cf-mitigated|cf-cache-status|content-type|location|cf-access-denied|www-authenticate):/ { print }' "$headers_file"
               rm -f "$body_file" "$headers_file"
               if [[ "$url" == https://cathedradigital.com.br/__health || "$url" == https://www.cathedradigital.com.br/__health ]]; then
-                echo "::warning::Cloudflare challenge intercepted $url from the GitHub runner. The direct Worker health check remains authoritative; custom-domain health is protected by WAF."
+                echo "::warning::Custom-domain health NOT VERIFIED: Cloudflare Bot Fight Mode challenged the GitHub runner at $url. The direct Worker health check remains authoritative; this warning is not evidence that the custom-domain route passed."
+                {
+                  echo "### Custom-domain health check not verified"
+                  echo
+                  echo "Cloudflare Bot Fight Mode challenged the GitHub runner at $url. The direct Worker health check is authoritative; the custom-domain route was not validated. Bot Fight Mode remains enabled."
+                } >> "$GITHUB_STEP_SUMMARY"
                 return 0
               fi
               echo "::error::Cloudflare challenge intercepted $url. Worker accessibility is unverified; release validation must fail."
@@ -230,4 +235,4 @@ jobs:
           grep -Eiq '<(urlset|sitemapindex)([ >])' <<< "$sitemap"
           echo "OK robots.txt directives and sitemap XML structure on Worker"
 
-          echo "Worker health, SEO resources, and custom-domain health checks completed; WAF challenges on custom domains are warnings only."
+          echo "Worker health and SEO resources validated. Custom-domain health checks challenged by Bot Fight Mode are explicitly reported as NOT VERIFIED; the workflow does not claim those routes passed."
