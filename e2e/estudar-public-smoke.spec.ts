@@ -451,6 +451,37 @@ test('Dogmas e aparições: a busca inclui anos e detalhes documentais', async (
   await expect(page.getByText('Nossa Senhora de Fátima', { exact: true })).toHaveCount(0);
 });
 
+test('Dogmas: cabeçalho e accordions permanecem legíveis no mobile', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/dogmas');
+
+  const description = page.getByText('Verdades divinamente reveladas, definidas solenemente pela Igreja como parte do depósito da fé.', { exact: true });
+  await expect(description).toBeVisible();
+  expect(await description.evaluate(element => element.getBoundingClientRect().width)).toBeGreaterThan(280);
+  await expect(page.getByRole('heading', { name: 'Dogmas da Fé Católica', exact: true })).toHaveCount(1);
+
+  const firstDogma = page.getByRole('button', { name: /Existência de Deus/ });
+  const title = firstDogma.getByRole('heading', { name: 'Existência de Deus', exact: true });
+  await expect(title).toBeVisible();
+  const contrast = await firstDogma.evaluate(button => {
+    const heading = button.querySelector('h3');
+    if (!heading) return 0;
+    const luminance = (color: string) => {
+      const channels = color.match(/[\d.]+/g)?.slice(0, 3).map(Number);
+      if (!channels || channels.length !== 3) return 0;
+      const [red, green, blue] = channels.map(channel => {
+        const normalized = channel / 255;
+        return normalized <= 0.04045 ? normalized / 12.92 : ((normalized + 0.055) / 1.055) ** 2.4;
+      });
+      return 0.2126 * red + 0.7152 * green + 0.0722 * blue;
+    };
+    const foreground = luminance(getComputedStyle(heading).color);
+    const background = luminance(getComputedStyle(button).backgroundColor);
+    return (Math.max(foreground, background) + 0.05) / (Math.min(foreground, background) + 0.05);
+  });
+  expect(contrast).toBeGreaterThanOrEqual(4.5);
+});
+
 test('Aparições e devoções marianas: avaliação e fonte são específicas por registro', async ({ page }) => {
   const errors: string[] = [];
   const failedResponses: string[] = [];

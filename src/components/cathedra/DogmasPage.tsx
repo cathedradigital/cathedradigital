@@ -329,17 +329,6 @@ const DogmasPage: React.FC = () => {
       }
     >
     <div className="space-y-spacing-xl">
-      <div className="text-center space-y-spacing-sm">
-        <div className="inline-flex items-center gap-spacing-xs px-spacing-sm py-spacing-2xs bg-primary/10 rounded-premium">
-          <Icons.Star className="w-spacing-md h-spacing-md text-primary" />
-          <span className="text-premium-xs font-black uppercase tracking-[0.2em] text-primary">Depositum Fidei</span>
-        </div>
-        <h1 className="text-premium-3xl md:text-premium-5xl font-serif font-bold text-foreground">Dogmas da Fé Católica</h1>
-        <p className="text-muted-foreground font-serif italic max-w-spacing-xl mx-auto">
-          Verdades divinamente reveladas, definidas solenemente pela Igreja como parte do depósito da fé.
-        </p>
-      </div>
-
       {/* Search */}
       <div className="max-w-spacing-md mx-auto relative">
         <Icons.Search className="absolute left-spacing-md top-spacing-2xs/2 -translate-y-1/2 w-spacing-md h-spacing-md text-muted-foreground" />
@@ -389,14 +378,15 @@ const DogmasPage: React.FC = () => {
       <div className="space-y-spacing-sm">
         {filtered.map(dogma => (
           <div key={dogma.id}
-            className="bg-card border border-border rounded-premium-full overflow-hidden transition-all hover:border-primary/30">
+            className="bg-card border border-border rounded-2xl overflow-hidden transition-all hover:border-primary/30">
             <Button
               type="button"
+              variant="ghost"
               id={`dogma-trigger-${dogma.id}`}
               aria-expanded={expandedId === dogma.id}
               aria-controls={`dogma-panel-${dogma.id}`}
               onClick={() => setExpandedId(expandedId === dogma.id ? null : dogma.id)}
-              className="w-full text-left p-spacing-lg flex items-start gap-spacing-md"
+              className="w-full h-auto min-h-[60px] justify-start whitespace-normal rounded-none bg-card text-foreground p-spacing-lg flex items-start gap-spacing-md normal-case tracking-normal shadow-none hover:bg-muted/60 hover:text-foreground hover:translate-y-0 active:scale-100"
             >
               <span className="text-premium-2xl font-serif font-bold text-primary/60 shrink-0 w-spacing-xl">{dogma.id}</span>
               <div className="flex-1 min-w-spacing-0">

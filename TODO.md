@@ -34,6 +34,7 @@
 ## Busca de dogmas e aparições
 - [x] A busca de dogmas inclui o ano de definição (ou “Tradição”) além de título, definição, categoria, fonte e referências.
 - [x] A busca de aparições inclui relatos, datas, festa litúrgica e todos os campos de avaliação e documentação já cadastrados.
+- [x] Dogmas: remover introdução duplicada com largura de 32px; apresentar accordions com superfície e contraste de texto acessíveis em telas estreitas.
 - [x] O audit de dependências volta a passar com overrides mínimos para `@hono/node-server` 2.1.6 e `hono` 4.13.16; sem atualização ampla da árvore.
 
 ## Refinamento do módulo Pesquisar — Dogmas
