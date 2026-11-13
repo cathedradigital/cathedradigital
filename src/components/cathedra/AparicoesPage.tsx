@@ -1,8 +1,9 @@
 import { Button } from '@/components/ui/button';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Icons } from '../../constants';
 import { APPARITIONS, Apparition } from '@/data/apparitions';
 import { useFavorites } from '@/hooks/useFavorites';
+import { useSearchParams } from '@/lib/rr-compat';
 import DeepContentSection from './DeepContentSection';
 import { parseTheologicalReferences } from '@/lib/theologicalRefParser';
 import BibleVersePopover from './BibleVersePopover';
@@ -15,6 +16,28 @@ import { cn } from '@/lib/utils';
 const AparicoesPage: React.FC = () => {
   const [selectedApparition, setSelectedApparition] = useState<Apparition | null>(null);
   const { isFavorite, toggleFavorite } = useFavorites();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const searchQuery = searchParams.get('q') || '';
+  const kindFilter = searchParams.get('tipo') || 'Todos';
+  const countryFilter = searchParams.get('pais') || 'Todos';
+  const normalizeSearch = (value: string) => value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLocaleLowerCase('pt-BR');
+  const updateFilter = (key: 'q' | 'tipo' | 'pais', value: string) => {
+    const next = new URLSearchParams(searchParams);
+    const trimmed = value.trim();
+    if (trimmed && !((key === 'tipo' || key === 'pais') && trimmed === 'Todos')) next.set(key, trimmed);
+    else next.delete(key);
+    setSearchParams(next, { replace: true });
+  };
+  const clearFilters = () => setSearchParams({}, { replace: true });
+  const filteredApparitions = useMemo(() => {
+    const query = normalizeSearch(searchQuery);
+    return APPARITIONS.filter(apparition => {
+      const matchesKind = kindFilter === 'Todos' || (kindFilter === 'Aparições' && apparition.kind === 'apparition') || (kindFilter === 'Devoções' && apparition.kind === 'image-devotion');
+      const matchesCountry = countryFilter === 'Todos' || apparition.country === countryFilter;
+      const matchesQuery = !query || [apparition.title, apparition.location, apparition.country, apparition.year.toString(), apparition.seer, apparition.summary, apparition.message, apparition.ecclesialAssessment.label].some(value => normalizeSearch(value).includes(query));
+      return matchesKind && matchesCountry && matchesQuery;
+    });
+  }, [countryFilter, kindFilter, searchQuery]);
 
   const handleToggleFavorite = (apparition: Apparition, e?: React.MouseEvent) => {
     e?.stopPropagation();
@@ -197,9 +220,40 @@ const AparicoesPage: React.FC = () => {
           ))}
         </div>
 
+        {/* Search and filters */}
+        <div className="space-y-spacing-sm" aria-label="Filtros de aparições e devoções">
+          <div className="max-w-spacing-md mx-auto relative">
+            <Icons.Search className="absolute left-spacing-md top-1/2 -translate-y-1/2 w-spacing-md h-spacing-md text-muted-foreground" aria-hidden="true" />
+            <label htmlFor="apparitions-search" className="sr-only">Buscar nas aparições e devoções</label>
+            <input
+              id="apparitions-search"
+              type="search"
+              value={searchQuery}
+              onChange={event => updateFilter('q', event.target.value)}
+              placeholder="Buscar por nome, lugar, vidente ou mensagem..."
+              aria-describedby="apparitions-search-help"
+              className="w-full pl-spacing-xl pr-spacing-md py-spacing-sm rounded-premium-full border border-border bg-card text-foreground text-premium-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+            />
+            <p id="apparitions-search-help" className="sr-only">A busca considera nome, lugar, país, ano, vidente, mensagem e avaliação eclesial.</p>
+          </div>
+          <div className="flex items-center justify-center gap-spacing-xs flex-wrap">
+            {['Todos', 'Aparições', 'Devoções'].map(option => (
+              <Button key={option} type="button" variant={kindFilter === option ? 'default' : 'outline'} aria-pressed={kindFilter === option} onClick={() => updateFilter('tipo', option)} className="rounded-premium-full text-premium-xs">
+                {option}
+              </Button>
+            ))}
+            <label className="sr-only" htmlFor="apparitions-country">Filtrar por país</label>
+            <select id="apparitions-country" value={countryFilter} onChange={event => updateFilter('pais', event.target.value)} className="rounded-premium-full border border-border bg-card px-spacing-sm py-spacing-xs text-premium-xs text-foreground">
+              {['Todos', ...Array.from(new Set(APPARITIONS.map(apparition => apparition.country)))].map(country => <option key={country}>{country}</option>)}
+            </select>
+            {(searchQuery || kindFilter !== 'Todos' || countryFilter !== 'Todos') && <Button type="button" variant="ghost" size="sm" onClick={clearFilters}>Limpar filtros</Button>}
+          </div>
+          <p className="text-center text-premium-xs uppercase tracking-widest text-muted-foreground" aria-live="polite">{filteredApparitions.length} {filteredApparitions.length === 1 ? 'registro' : 'registros'}</p>
+        </div>
+
         {/* Grid de Card */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-spacing-lg">
-          {APPARITIONS.map((apparition) => {
+          {filteredApparitions.map((apparition) => {
             const isFav = isFavorite('aparicao', apparition.title);
             return (
               <div
@@ -236,6 +290,14 @@ const AparicoesPage: React.FC = () => {
             );
           })}
         </div>
+        {filteredApparitions.length === 0 && (
+          <div role="status" className="rounded-premium border border-dashed border-border bg-card px-spacing-lg py-spacing-xl text-center">
+            <Icons.Search className="mx-auto mb-spacing-sm h-spacing-lg w-spacing-lg text-muted-foreground" aria-hidden="true" />
+            <h2 className="text-premium-lg font-serif font-bold text-foreground">Nenhum registro encontrado</h2>
+            <p className="mt-spacing-xs text-premium-sm text-muted-foreground">Tente outro termo ou remova os filtros para ver o acervo completo.</p>
+            <Button type="button" variant="outline" size="sm" className="mt-spacing-md" onClick={clearFilters}>Limpar filtros</Button>
+          </div>
+        )}
 
         {/* Fundamentação Doutrinária */}
         <div className="mt-spacing-2xl p-spacing-xl bg-card border border-border rounded-premium space-y-4 text-center">
