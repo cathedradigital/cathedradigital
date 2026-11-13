@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 import React, { useState, useMemo } from 'react';
-import { useNavigate } from '@/lib/rr-compat';
+import { useNavigate, useSearchParams } from '@/lib/rr-compat';
 import SEOHead from '@/components/SEOHead';
 import { Icons } from '../../constants';
 import { AppRoute, DeepContent } from '@/types';
@@ -262,21 +262,39 @@ const REF_STYLES: Record<string, { icon: React.ReactNode; color: string }> = {
   magisterium: { icon: <Icons.Globe className="w-spacing-sm h-spacing-sm" />, color: 'bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800 dark:hover:bg-emerald-900/50' },
 };
 
+const normalizeSearch = (value: string) => value
+  .normalize('NFD')
+  .replace(/[\u0300-\u036f]/g, '')
+  .toLocaleLowerCase('pt-BR')
+  .trim();
+
+const formatDogmaYear = (year: number) => year > 0 ? String(year) : 'Tradição';
+
 const DogmasPage: React.FC = () => {
-  const [category, setCategory] = useState('Todos');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const categoryParam = searchParams.get('categoria');
+  const category = CATEGORIES.includes(categoryParam || '') ? categoryParam! : 'Todos';
+  const searchQuery = searchParams.get('q') || '';
   const [expandedId, setExpandedId] = useState<number | null>(null);
   const navigate = useNavigate();
+
+  const updateSearch = (key: 'q' | 'categoria', value: string) => {
+    const next = new URLSearchParams(searchParams);
+    const trimmed = value.trim();
+    if (trimmed && !(key === 'categoria' && trimmed === 'Todos')) next.set(key, trimmed);
+    else next.delete(key);
+    setSearchParams(next, { replace: true });
+  };
+  const clearFilters = () => setSearchParams({}, { replace: true });
 
   const filtered = useMemo(() => {
     let list = DOGMAS;
     if (category !== 'Todos') list = list.filter(d => d.category === category);
-    if (searchQuery) {
-      const q = searchQuery.toLowerCase();
+    const q = normalizeSearch(searchQuery);
+    if (q) {
       list = list.filter(d =>
-        d.title.toLowerCase().includes(q) ||
-        d.definition.toLowerCase().includes(q) ||
-        d.source.toLowerCase().includes(q)
+        [d.title, d.definition, d.source, d.category, ...d.refs.flatMap(ref => [ref.label, ref.target])]
+          .some(value => normalizeSearch(value).includes(q))
       );
     }
     return list;
@@ -325,17 +343,22 @@ const DogmasPage: React.FC = () => {
       {/* Search */}
       <div className="max-w-spacing-md mx-auto relative">
         <Icons.Search className="absolute left-spacing-md top-spacing-2xs/2 -translate-y-1/2 w-spacing-md h-spacing-md text-muted-foreground" />
+        <label htmlFor="dogmas-search" className="sr-only">Buscar nos dogmas</label>
         <input
-          value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
+          id="dogmas-search"
+          type="search"
+          value={searchQuery} onChange={e => updateSearch('q', e.target.value)}
           placeholder="Buscar dogma, definição ou concílio..."
+          aria-describedby="dogmas-search-help"
           className="w-full pl-spacing-xl pr-spacing-md py-spacing-sm rounded-premium-full border border-border bg-card text-foreground text-premium-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
         />
+        <p id="dogmas-search-help" className="sr-only">A busca considera títulos, definições, categorias e referências.</p>
       </div>
 
       {/* Category tabs */}
       <div className="flex gap-spacing-xs justify-center flex-wrap">
         {CATEGORIES.map(cat => (
-          <Button key={cat} onClick={() => setCategory(cat)}
+          <Button key={cat} type="button" aria-pressed={category === cat} onClick={() => updateSearch('categoria', cat)}
             className={`px-spacing-md py-spacing-xs rounded-premium-full text-premium-xs font-black uppercase tracking-widest transition-all ${
               category === cat ? 'bg-foreground text-background shadow-premium' : 'bg-card border border-border text-muted-foreground hover:text-foreground'
             }`}>
@@ -344,11 +367,17 @@ const DogmasPage: React.FC = () => {
         ))}
       </div>
 
+      {(searchQuery || category !== 'Todos') && (
+        <div className="flex justify-center">
+          <Button type="button" variant="ghost" size="sm" onClick={clearFilters}>Limpar filtros</Button>
+        </div>
+      )}
+
       {/* Stats */}
-      <div className="flex justify-center gap-spacing-lg text-center">
+      <div className="flex justify-center gap-spacing-lg text-center" aria-live="polite">
         <div>
           <p className="text-premium-2xl font-serif font-bold text-foreground">{filtered.length}</p>
-          <p className="text-premium-xs uppercase tracking-widest text-muted-foreground">Dogmas</p>
+          <p className="text-premium-xs uppercase tracking-widest text-muted-foreground">{filtered.length === 1 ? 'Dogma' : 'Dogmas'}</p>
         </div>
         <div>
           <p className="text-premium-2xl font-serif font-bold text-foreground">{new Set(filtered.map(d => d.category)).size}</p>
@@ -362,6 +391,10 @@ const DogmasPage: React.FC = () => {
           <div key={dogma.id}
             className="bg-card border border-border rounded-premium-full overflow-hidden transition-all hover:border-primary/30">
             <Button
+              type="button"
+              id={`dogma-trigger-${dogma.id}`}
+              aria-expanded={expandedId === dogma.id}
+              aria-controls={`dogma-panel-${dogma.id}`}
               onClick={() => setExpandedId(expandedId === dogma.id ? null : dogma.id)}
               className="w-full text-left p-spacing-lg flex items-start gap-spacing-md"
             >
@@ -371,7 +404,7 @@ const DogmasPage: React.FC = () => {
                   <span className={`px-spacing-xs py-spacing-3xs rounded-premium-full text-premium-xs font-black uppercase tracking-widest ${CATEGORY_COLORS[dogma.category] || 'bg-muted text-muted-foreground'}`}>
                     {dogma.category}
                   </span>
-                  <span className="text-premium-xs text-muted-foreground">{dogma.year}</span>
+                  <span className="text-premium-xs text-muted-foreground">{formatDogmaYear(dogma.year)}</span>
                   {dogma.refs.length > 0 && (
                     <Badge variant="outline" className="text-premium-xs gap-spacing-2xs px-spacing-2xs py-spacing-0">
                       <Icons.ExternalLink className="w-spacing-xs h-spacing-xs" /> {dogma.refs.length} fontes
@@ -386,11 +419,11 @@ const DogmasPage: React.FC = () => {
               <Icons.ArrowDown className={`w-spacing-md h-spacing-md text-muted-foreground shrink-0 transition-transform ${expandedId === dogma.id ? 'rotate-180' : ''}`} />
             </Button>
             {expandedId === dogma.id && (
-              <div className="px-spacing-lg pb-spacing-lg pl-[4.5rem] space-y-spacing-md border-t border-border pt-spacing-md">
+              <div id={`dogma-panel-${dogma.id}`} role="region" aria-labelledby={`dogma-trigger-${dogma.id}`} className="px-spacing-lg pb-spacing-lg pl-[4.5rem] space-y-spacing-md border-t border-border pt-spacing-md">
                 <p className="text-foreground/90 leading-relaxed font-serif">{dogma.definition}</p>
                 <div className="flex items-center gap-spacing-xs">
                   <span className="text-premium-xs font-black uppercase tracking-widest text-primary">Fonte:</span>
-                  <span className="text-premium-sm text-muted-foreground">{dogma.source} ({dogma.year})</span>
+                  <span className="text-premium-sm text-muted-foreground">{dogma.source} ({formatDogmaYear(dogma.year)})</span>
                 </div>
 
                 {/* Deep Content Section for Dogmas */}
@@ -458,6 +491,14 @@ const DogmasPage: React.FC = () => {
             )}
           </div>
         ))}
+        {filtered.length === 0 && (
+          <div role="status" className="rounded-premium-full border border-dashed border-border bg-card px-spacing-lg py-spacing-xl text-center">
+            <Icons.Search className="mx-auto mb-spacing-sm h-spacing-lg w-spacing-lg text-muted-foreground" aria-hidden="true" />
+            <h2 className="text-premium-lg font-serif font-bold text-foreground">Nenhum dogma encontrado</h2>
+            <p className="mt-spacing-xs text-premium-sm text-muted-foreground">Tente outro termo ou remova o filtro de categoria.</p>
+            <Button type="button" variant="outline" size="sm" className="mt-spacing-md" onClick={clearFilters}>Limpar busca</Button>
+          </div>
+        )}
       </div>
     </div>
     </ReaderShell>
