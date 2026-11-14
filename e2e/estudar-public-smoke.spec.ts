@@ -461,6 +461,14 @@ test('Dogmas e aparições: a busca inclui anos e detalhes documentais', async (
   await expect(page.getByText('Nossa Senhora de Fátima', { exact: true })).toHaveCount(0);
 });
 
+test('Dogmas: acesso direto renderiza a página sem erro nem conteúdo duplicado', async ({ page }) => {
+  const response = await page.goto('/dogmas');
+  expect(response?.status(), 'GET /dogmas deve responder HTTP 200').toBe(200);
+  await expect(page.getByRole('heading', { name: 'Dogmas da Fé Católica', exact: true })).toHaveCount(1);
+  await expect(page.getByText('Verdades divinamente reveladas, definidas solenemente pela Igreja como parte do depósito da fé.', { exact: true })).toHaveCount(1);
+  await expect(page.getByLabel('Buscar nos dogmas')).toBeVisible();
+});
+
 test('Dogmas: cabeçalho e accordions permanecem legíveis no mobile', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await navigateToDogmasClientSide(page);
@@ -508,11 +516,11 @@ test('Aparições e devoções marianas: avaliação e fonte são específicas p
 
   await page.getByText('Nossa Senhora Aparecida', { exact: true }).first().click();
   await expect(page.getByText('Devoção mariana ligada à descoberta de uma imagem')).toBeVisible();
-  await expect(page.locator('body')).toContainText('não em um relato de aparição ou visão');
-  const aparecidaSource = page.getByRole('link', { name: 'Consultar publicação do Estado da Cidade do Vaticano' });
-  await expect(aparecidaSource).toHaveAttribute('href', /vaticanstate\.va/);
+  await expect(page.locator('body')).toContainText('Aparecida é apresentada aqui como devoção mariana, não como aparição.');
+  const aparecidaSource = page.getByRole('link', { name: 'Ler a mensagem do Papa Francisco no Vaticano' });
+  await expect(aparecidaSource).toHaveAttribute('href', /vatican\.va\/content\/francesco/);
 
-  await page.getByLabel('Aparição — Nossa Senhora').getByRole('button', { name: 'Voltar', exact: true }).click();
+  await page.getByRole('button', { name: 'Voltar', exact: true }).last().click();
   await page.getByText('Nossa Senhora de Lourdes', { exact: true }).first().click();
   await expect(page.getByText('Decreto episcopal de reconhecimento (1862)')).toBeVisible();
   await expect(page.getByRole('link', { name: 'Ler o decreto no Santuário de Lourdes' })).toHaveAttribute('href', /lourdes-france\.org/);
