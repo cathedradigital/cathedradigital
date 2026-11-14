@@ -131,17 +131,25 @@ function withPublicDocumentCache(request: Request, response: Response): Response
   });
 }
 
-function dogmasCacheKey(request: Request): Request | null {
+function edgeCacheKey(request: Request): Request | null {
   const url = new URL(request.url);
-  const isAnonymousDogmasRequest =
+  const isAnonymousRequest =
     (request.method === "GET" || request.method === "HEAD") &&
-    url.pathname === "/dogmas" &&
     !request.headers.has("authorization") &&
     !request.headers.has("cookie");
-  if (!isAnonymousDogmasRequest) return null;
+  if (!isAnonymousRequest) return null;
 
-  // q and categoria are client-side filters; the SSR document is identical.
-  return new Request(`${url.origin}/dogmas`, { method: "GET" });
+  const isAllowlisted =
+    url.pathname === "/dogmas" ||
+    url.pathname === "/aparicoes" ||
+    url.pathname === "/about" ||
+    url.pathname === "/docs" ||
+    url.pathname.startsWith("/docs/");
+  if (!isAllowlisted) return null;
+
+  // Os filtros de Dogmas/Aparições e a busca/idioma de Docs são client-side;
+  // a versão SSR é igual, portanto os parâmetros não precisam fragmentar o cache.
+  return new Request(`${url.origin}${url.pathname}`, { method: "GET" });
 }
 
 function getEdgeCache(): EdgeCache | null {
@@ -151,8 +159,8 @@ function getEdgeCache(): EdgeCache | null {
   return runtime.caches?.default ?? null;
 }
 
-function withDogmasDocumentCache(request: Request, response: Response): Response {
-  if (!dogmasCacheKey(request) || response.status !== 200) return response;
+function withAllowlistedDocumentCache(request: Request, response: Response): Response {
+  if (!edgeCacheKey(request) || response.status !== 200) return response;
   const contentType = response.headers.get("content-type") ?? "";
   if (!contentType.includes("text/html")) return response;
 
@@ -172,7 +180,7 @@ export default {
       const health = healthResponse(request);
       if (health) return health;
 
-      const cacheKey = dogmasCacheKey(request);
+      const cacheKey = edgeCacheKey(request);
       const edgeCache = cacheKey ? getEdgeCache() : null;
       if (cacheKey && edgeCache) {
         const cached = await edgeCache.match(cacheKey);
@@ -186,16 +194,16 @@ export default {
       const response = await handler.fetch(request, env, ctx);
       const normalizedResponse = await normalizeCatastrophicSsrResponse(response);
       const publicResponse = withPublicDocumentCache(request, withAssetCache(request, normalizedResponse));
-      const dogmasResponse = withDogmasDocumentCache(request, publicResponse);
-      if (cacheKey && edgeCache && dogmasResponse.status === 200) {
+      const allowlistedResponse = withAllowlistedDocumentCache(request, publicResponse);
+      if (cacheKey && edgeCache && allowlistedResponse.status === 200) {
         const executionContext = ctx as WorkerExecutionContext;
-        const cacheWrite = edgeCache.put(cacheKey, dogmasResponse.clone()).catch((error) => {
-          console.error("Dogmas edge cache write failed", error);
+        const cacheWrite = edgeCache.put(cacheKey, allowlistedResponse.clone()).catch((error) => {
+          console.error("Allowlisted edge cache write failed", error);
         });
         if (executionContext.waitUntil) executionContext.waitUntil(cacheWrite);
         else await cacheWrite;
       }
-      return dogmasResponse;
+      return allowlistedResponse;
     } catch (error) {
       console.error(error);
       return new Response(renderErrorPage(), {
