@@ -17,6 +17,9 @@ type WorkerExecutionContext = {
 // Incrementar a versão após uma publicação editorial do Glossário.
 // Isso cria um namespace novo sem depender de purge global do Cloudflare.
 const GLOSSARY_CACHE_NAMESPACE = "v1";
+// Incrementar após mudanças de HTML/assets nas páginas públicas do catálogo.
+// Evita servir HTML persistido que referencia bundles removidos após deploy.
+const PUBLIC_CATALOG_CACHE_NAMESPACE = "v1";
 
 let serverEntryPromise: Promise<ServerEntry> | undefined;
 
@@ -146,9 +149,11 @@ function edgeCacheKey(request: Request): Request | null {
   const isGlossaryRoute =
     url.pathname === "/glossario" ||
     url.pathname.startsWith("/glossario/");
-  const isAllowlisted =
+  const isPublicCatalogRoute =
     url.pathname === "/dogmas" ||
-    url.pathname === "/aparicoes" ||
+    url.pathname === "/aparicoes";
+  const isAllowlisted =
+    isPublicCatalogRoute ||
     url.pathname === "/about" ||
     url.pathname === "/docs" ||
     url.pathname.startsWith("/docs/") ||
@@ -159,6 +164,8 @@ function edgeCacheKey(request: Request): Request | null {
   // listagem do Glossário são client-side; não devem fragmentar o documento SSR.
   const cachePath = isGlossaryRoute
     ? `/__cache/glossary/${GLOSSARY_CACHE_NAMESPACE}${url.pathname}`
+    : isPublicCatalogRoute
+      ? `/__cache/catalog/${PUBLIC_CATALOG_CACHE_NAMESPACE}${url.pathname}`
     : url.pathname;
   return new Request(`${url.origin}${cachePath}`, { method: "GET" });
 }
