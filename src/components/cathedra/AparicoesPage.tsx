@@ -71,7 +71,7 @@ const AparicoesPage: React.FC = () => {
     
     return (
       <ReaderShell
-        ariaLabel={`Aparição — ${selectedApparition.title}`}
+        ariaLabel={`Registro mariano — ${selectedApparition.title}`}
         hero={
           <EditorialHero
             kicker={`${selectedApparition.country} · ${selectedApparition.year}`}
@@ -186,6 +186,30 @@ const AparicoesPage: React.FC = () => {
             </a>
           </section>
 
+
+          {/* Aprofundamento documental */}
+          <section className="rounded-premium border border-border bg-card p-spacing-lg space-y-4">
+            <div>
+              <h3 className="font-serif text-lg font-bold text-foreground">Aprofundamento</h3>
+              <p className="text-sm leading-relaxed text-muted-foreground mt-1">Fontes selecionadas para continuar a leitura deste registro.</p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              {selectedApparition.recommendedSources.map((source) => (
+                <a
+                  key={source.url}
+                  href={source.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group rounded-premium border border-border/70 p-4 hover:border-primary/50 hover:bg-primary/5 transition-colors"
+                >
+                  <span className="text-[10px] font-black uppercase tracking-[0.16em] text-primary">{source.sourceType || 'Fonte'}</span>
+                  <span className="mt-1 block font-serif font-bold text-foreground group-hover:text-primary">{source.label}</span>
+                  <span className="mt-1 block text-xs leading-relaxed text-muted-foreground">{source.why}</span>
+                </a>
+              ))}
+            </div>
+          </section>
+
           {/* Seção 4: Profundidade Teológica */}
           {selectedApparition.textoBase && (
             <section className="pt-spacing-lg border-t border-border">
@@ -216,7 +240,7 @@ const AparicoesPage: React.FC = () => {
         <EditorialHero
           kicker="Patrimônio da Fé"
           title="Aparições e devoções marianas"
-          subtitle="Relatos de aparições e devoções marianas. A avaliação eclesial e suas fontes são apresentadas individualmente."
+          subtitle="Relatos de aparições, devoções a imagens e fenômenos associados, com avaliação eclesial e fontes apresentadas individualmente."
           rule
         />
       }
@@ -286,7 +310,7 @@ const AparicoesPage: React.FC = () => {
                   <img src={apparition.imageSrc} alt={apparition.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-60" />
                   <div className="absolute bottom-4 left-4 right-4">
-                     <span className="text-[10px] font-black text-white/90 uppercase tracking-[0.2em]">{apparition.country} · {apparition.year} · {apparition.kind === "image-devotion" ? "Devoção mariana" : "Aparição"}</span>
+                     <span className="text-[10px] font-black text-white/90 uppercase tracking-[0.2em]">{apparition.country} · {apparition.year} · {apparition.kind === "image-devotion" ? "Devoção à imagem" : apparition.kind === "associated-phenomenon" ? "Fenômeno associado" : "Aparição"}</span>
                      <h3 className="text-xl font-serif font-bold text-white mt-1 leading-tight">{apparition.title}</h3>
                   </div>
                 </div>
