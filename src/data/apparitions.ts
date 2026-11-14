@@ -110,9 +110,12 @@ const APPARITION_EDITORIAL: Record<string, Partial<DeepContent>> = {
 
 const RECOMMENDED_SOURCES: Record<string, Apparition['recommendedSources']> = {
   guadalupe: [
-    { label: 'Catequese sobre Juan Diego', url: 'https://www.vatican.va/content/francesco/pt/audiences/2023/documents/20230823-udienza-generale.html', why: 'Síntese pontifícia da tradição guadalupana e de Juan Diego.', sourceType: 'Santa Sé' },
-    { label: 'Síntese das aparições', url: 'https://virgendeguadalupe.org.mx/sintesis-de-las-apariciones/', why: 'Cronologia narrativa do relato tradicional.', sourceType: 'Santuário' },
-    { label: 'Documentos históricos', url: 'https://virgendeguadalupe.org.mx/documentos-historicos/', why: 'Reúne materiais para aprofundar a transmissão documental.', sourceType: 'Arquivo histórico' },
+    { label: 'Catequese sobre São Juan Diego', url: 'https://www.vatican.va/content/francesco/pt/audiences/2023/documents/20230823-udienza-generale.html', why: 'Síntese pontifícia da tradição guadalupana, da mensagem materna e do papel de Juan Diego na evangelização do México.', sourceType: 'Santa Sé' },
+    { label: 'Biografia de São Juan Diego', url: 'https://www.vatican.va/news_services/liturgy/saints/ns_lit_doc_20020731_juan-diego_en.html', why: 'Apresenta dados biográficos, a tradição dos encontros no Tepeyac e a beatificação e canonização de Juan Diego.', sourceType: 'Santa Sé' },
+    { label: 'Síntese das aparições', url: 'https://virgendeguadalupe.org.mx/sintesis-de-las-apariciones/', why: 'Cronologia narrativa institucional dos encontros de 9 a 12 de dezembro de 1531, incluindo Zumárraga, Juan Bernardino, as flores e a tilma.', sourceType: 'Santuário' },
+    { label: 'Documentos históricos guadalupanos', url: 'https://virgendeguadalupe.org.mx/documentos-historicos/', why: 'Reúne materiais indígenas, mestiços e espanhóis para aprofundar a transmissão documental do relato.', sourceType: 'Arquivo histórico' },
+    { label: 'Homilia da canonização de São Juan Diego', url: 'https://www.vatican.va/holy_father/john_paul_ii/homilies/2002/documents/hf_jp-ii_hom_20020731_canonization-mexico_en.html', why: 'Relaciona Guadalupe à evangelização inculturada, à dignidade dos povos indígenas e à canonização de Juan Diego.', sourceType: 'Santa Sé' },
+    { label: 'A Virgem de Guadalupe', url: 'https://www.inah.gob.mx/foto-del-dia/la-virgen-de-guadalupe', why: 'Contextualização histórica e cultural do Nican Mopohua, da imagem e da importância de Guadalupe no México.', sourceType: 'Instituto histórico' },
   ],
   'la-salette': [
     { label: 'History of La Salette', url: 'https://www.lasalette.cef.fr/en/history/', why: 'História do relato e do santuário.', sourceType: 'Santuário' },
