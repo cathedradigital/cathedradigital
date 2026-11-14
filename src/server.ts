@@ -188,11 +188,11 @@ export default {
       const publicResponse = withPublicDocumentCache(request, withAssetCache(request, normalizedResponse));
       const dogmasResponse = withDogmasDocumentCache(request, publicResponse);
       if (cacheKey && edgeCache && dogmasResponse.status === 200) {
-        const waitUntil = (ctx as WorkerExecutionContext).waitUntil;
+        const executionContext = ctx as WorkerExecutionContext;
         const cacheWrite = edgeCache.put(cacheKey, dogmasResponse.clone()).catch((error) => {
           console.error("Dogmas edge cache write failed", error);
         });
-        if (waitUntil) waitUntil(cacheWrite);
+        if (executionContext.waitUntil) executionContext.waitUntil(cacheWrite);
         else await cacheWrite;
       }
       return dogmasResponse;
