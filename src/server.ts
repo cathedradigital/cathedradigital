@@ -14,6 +14,10 @@ type WorkerExecutionContext = {
   waitUntil?: (promise: Promise<unknown>) => void;
 };
 
+// Incrementar a versão após uma publicação editorial do Glossário.
+// Isso cria um namespace novo sem depender de purge global do Cloudflare.
+const GLOSSARY_CACHE_NAMESPACE = "v1";
+
 let serverEntryPromise: Promise<ServerEntry> | undefined;
 
 async function getServerEntry(): Promise<ServerEntry> {
@@ -139,17 +143,24 @@ function edgeCacheKey(request: Request): Request | null {
     !request.headers.has("cookie");
   if (!isAnonymousRequest) return null;
 
+  const isGlossaryRoute =
+    url.pathname === "/glossario" ||
+    url.pathname.startsWith("/glossario/");
   const isAllowlisted =
     url.pathname === "/dogmas" ||
     url.pathname === "/aparicoes" ||
     url.pathname === "/about" ||
     url.pathname === "/docs" ||
-    url.pathname.startsWith("/docs/");
+    url.pathname.startsWith("/docs/") ||
+    isGlossaryRoute;
   if (!isAllowlisted) return null;
 
-  // Os filtros de Dogmas/Aparições e a busca/idioma de Docs são client-side;
-  // a versão SSR é igual, portanto os parâmetros não precisam fragmentar o cache.
-  return new Request(`${url.origin}${url.pathname}`, { method: "GET" });
+  // Os filtros de Dogmas/Aparições, a busca/idioma de Docs e os filtros da
+  // listagem do Glossário são client-side; não devem fragmentar o documento SSR.
+  const cachePath = isGlossaryRoute
+    ? `/__cache/glossary/${GLOSSARY_CACHE_NAMESPACE}${url.pathname}`
+    : url.pathname;
+  return new Request(`${url.origin}${cachePath}`, { method: "GET" });
 }
 
 function getEdgeCache(): EdgeCache | null {
@@ -167,6 +178,9 @@ function withAllowlistedDocumentCache(request: Request, response: Response): Res
   const headers = new Headers(response.headers);
   headers.set("Cache-Control", "public, max-age=60, s-maxage=3600, stale-while-revalidate=86400");
   headers.set("Vary", "Accept-Encoding");
+  if (new URL(request.url).pathname === "/glossario" || new URL(request.url).pathname.startsWith("/glossario/")) {
+    headers.set("X-Cathedra-Cache-Namespace", `glossary:${GLOSSARY_CACHE_NAMESPACE}`);
+  }
   return new Response(response.body, {
     status: response.status,
     statusText: response.statusText,
