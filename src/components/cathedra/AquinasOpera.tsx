@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import React, { useState } from 'react';
 import { Icons } from '../../constants';
-import { useNavigate } from '@/lib/rr-compat';
+import { Link } from '@/lib/rr-compat';
 import { AppRoute } from '@/types';
 import { motion, AnimatePresence } from 'framer-motion';
 import AudioButton from './AudioButton';
@@ -191,11 +191,6 @@ const AquinasOpera: React.FC = () => {
   const [expandedPart, setExpandedPart] = useState<string | null>('Ia');
   const [expandedQuestion, setExpandedQuestion] = useState<string | null>(null);
   const [expandedArticle, setExpandedArticle] = useState<string | null>(null);
-  const navigate = useNavigate();
-
-  const handleStartAquinasChat = () => {
-    navigate(AppRoute.STUDY_MODE, { state: { mode: 'aquinas' } });
-  };
 
   return (
     <div className="w-full space-y-spacing-xl pb-spacing-3xl">
@@ -320,11 +315,11 @@ const AquinasOpera: React.FC = () => {
                     <span>Aplicação prática no cotidiano</span>
                   </div>
                 </div>
-                <Button 
-                  onClick={() => navigate(AppRoute.CHECKOUT)}
+                <Button
+                  asChild
                   className="w-full md:w-auto px-spacing-xl py-spacing-md bg-primary text-primary-foreground rounded-premium-full font-bold hover:scale-[1.02] active:scale-[0.98] transition-all"
                 >
-                  Garantir acesso ao PRO
+                  <Link to={AppRoute.CHECKOUT}>Garantir acesso ao PRO</Link>
                 </Button>
               </div>
             </div>
@@ -362,11 +357,13 @@ const AquinasOpera: React.FC = () => {
             <div className="text-center space-y-spacing-md">
               <p className="text-muted-foreground font-serif italic">Dúvidas sobre o domínio intelectual?</p>
               <Button
-                onClick={handleStartAquinasChat}
+                asChild
                 className="inline-flex items-center gap-spacing-sm px-spacing-xl py-spacing-md bg-primary text-primary-foreground rounded-premium-full font-bold hover:scale-[1.02] active:scale-[0.98] transition-all group shadow-premium shadow-primary/20"
               >
-                <Icons.Brain className="w-spacing-md h-spacing-md" />
-                Interagir com Logos (Modo Aquino)
+                <Link to={`${AppRoute.STUDY_MODE}?mode=aquinas`}>
+                  <Icons.Brain className="w-spacing-md h-spacing-md" />
+                  Interagir com Logos (Modo Aquino)
+                </Link>
               </Button>
             </div>
           </motion.div>

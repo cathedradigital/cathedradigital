@@ -133,7 +133,7 @@ const StudyMode: React.FC = () => {
     return base.slice(0, 4);
   }, [profile]);
 
-  const initialMode = (location.state as any)?.mode || null;
+  const initialMode = (location.state as any)?.mode || new URLSearchParams(location.search).get('mode') || null;
   const [currentMode, setCurrentMode] = useState<string | null>(initialMode);
   const initialTopicProcessed = useRef(false);
 
@@ -391,4 +391,3 @@ const StudyMode: React.FC = () => {
 };
 
 export default StudyMode;
-
