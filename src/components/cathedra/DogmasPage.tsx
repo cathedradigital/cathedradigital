@@ -269,6 +269,7 @@ const normalizeSearch = (value: string) => value
   .trim();
 
 const formatDogmaYear = (year: number) => year > 0 ? String(year) : 'Tradição';
+const MARIAN_DOGMAS = DOGMAS.filter(dogma => dogma.category === 'Mariologia');
 
 const DogmasPage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -345,15 +346,17 @@ const DogmasPage: React.FC = () => {
       </div>
 
       {/* Category tabs */}
-      <div className="flex gap-spacing-xs justify-center flex-wrap">
+      <div className="-mx-spacing-md overflow-x-auto px-spacing-md pb-spacing-2xs md:mx-0 md:px-0" aria-label="Categorias de dogmas">
+        <div className="flex min-w-max gap-spacing-xs justify-start md:min-w-0 md:justify-center">
         {CATEGORIES.map(cat => (
           <Button key={cat} type="button" aria-pressed={category === cat} onClick={() => updateSearch('categoria', cat)}
-            className={`px-spacing-md py-spacing-xs rounded-premium-full text-premium-xs font-black uppercase tracking-widest transition-all ${
+            className={`shrink-0 px-spacing-md py-spacing-xs rounded-premium-full text-premium-xs font-black uppercase tracking-widest transition-all ${
               category === cat ? 'bg-foreground text-background shadow-premium' : 'bg-card border border-border text-muted-foreground hover:text-foreground'
             }`}>
             {cat}
           </Button>
         ))}
+        </div>
       </div>
 
       {(searchQuery || category !== 'Todos') && (
@@ -362,11 +365,29 @@ const DogmasPage: React.FC = () => {
         </div>
       )}
 
+      {/* Editorial orientation */}
+      <div className="grid gap-spacing-md md:grid-cols-[1fr_auto] items-stretch">
+        <div className="rounded-premium border border-border bg-card px-spacing-lg py-spacing-md">
+          <div className="flex items-start gap-spacing-sm">
+            <div className="mt-1 rounded-full bg-primary/10 p-spacing-xs text-primary"><Icons.Book className="h-spacing-md w-spacing-md" aria-hidden="true" /></div>
+            <div>
+              <p className="text-premium-xs font-black uppercase tracking-[0.18em] text-primary">Como ler esta biblioteca</p>
+              <p className="mt-spacing-2xs max-w-2xl text-premium-sm leading-relaxed text-muted-foreground">Cada entrada reúne a definição, a fonte de autoridade e caminhos para aprofundar na Bíblia, no Catecismo e no Magistério.</p>
+            </div>
+          </div>
+        </div>
+        <button type="button" onClick={() => updateSearch('categoria', 'Mariologia')} className="group rounded-premium border border-secondary/30 bg-secondary/5 px-spacing-lg py-spacing-md text-left transition-colors hover:border-secondary/60 hover:bg-secondary/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
+          <span className="flex items-center gap-spacing-xs text-premium-xs font-black uppercase tracking-[0.18em] text-secondary"><Icons.Heart className="h-spacing-sm w-spacing-sm" aria-hidden="true" /> Foco mariano</span>
+          <span className="mt-spacing-xs block font-serif text-premium-lg font-bold text-foreground">{MARIAN_DOGMAS.length} dogmas sobre Maria</span>
+          <span className="mt-spacing-2xs block text-premium-xs text-muted-foreground">Imaculada Conceição, Maternidade Divina e mais</span>
+        </button>
+      </div>
+
       {/* Stats */}
-      <div className="flex justify-center gap-spacing-lg text-center" aria-live="polite">
+      <div className="flex justify-center gap-spacing-lg border-y border-border/60 py-spacing-md text-center" aria-live="polite">
         <div>
           <p className="text-premium-2xl font-serif font-bold text-foreground">{filtered.length}</p>
-          <p className="text-premium-xs uppercase tracking-widest text-muted-foreground">{filtered.length === 1 ? 'Dogma' : 'Dogmas'}</p>
+          <p className="text-premium-xs uppercase tracking-widest text-muted-foreground">{filtered.length === 1 ? 'Dogma' : 'Dogmas'} exibidos</p>
         </div>
         <div>
           <p className="text-premium-2xl font-serif font-bold text-foreground">{new Set(filtered.map(d => d.category)).size}</p>
@@ -375,10 +396,10 @@ const DogmasPage: React.FC = () => {
       </div>
 
       {/* Dogmas list */}
-      <div className="space-y-spacing-sm">
+      <div className="space-y-spacing-sm" aria-label="Lista de dogmas">
         {filtered.map(dogma => (
           <div key={dogma.id}
-            className="bg-card border border-border rounded-2xl overflow-hidden transition-all hover:border-primary/30">
+            className="bg-card border border-border rounded-premium overflow-hidden transition-all hover:border-primary/40 hover:shadow-sm">
             <Button
               type="button"
               variant="ghost"
@@ -388,7 +409,7 @@ const DogmasPage: React.FC = () => {
               onClick={() => setExpandedId(expandedId === dogma.id ? null : dogma.id)}
               className="w-full h-auto min-h-[60px] justify-start whitespace-normal rounded-none bg-card text-foreground p-spacing-lg flex items-start gap-spacing-md normal-case tracking-normal shadow-none hover:bg-muted/60 hover:text-foreground hover:translate-y-0 active:scale-100"
             >
-              <span className="text-premium-2xl font-serif font-bold text-primary/60 shrink-0 w-spacing-xl">{dogma.id}</span>
+              <span className="mt-1 text-premium-xs font-black uppercase tracking-widest text-primary/70 shrink-0 w-spacing-xl">Nº {String(dogma.id).padStart(2, '0')}</span>
               <div className="flex-1 min-w-spacing-0">
                 <div className="flex items-center gap-spacing-xs mb-spacing-2xs flex-wrap">
                   <span className={`px-spacing-xs py-spacing-3xs rounded-premium-full text-premium-xs font-black uppercase tracking-widest ${CATEGORY_COLORS[dogma.category] || 'bg-muted text-muted-foreground'}`}>
@@ -406,10 +427,13 @@ const DogmasPage: React.FC = () => {
                   <p className="text-premium-sm text-muted-foreground line-clamp-spacing-2xs mt-spacing-2xs">{dogma.definition}</p>
                 )}
               </div>
-              <Icons.ArrowDown className={`w-spacing-md h-spacing-md text-muted-foreground shrink-0 transition-transform ${expandedId === dogma.id ? 'rotate-180' : ''}`} />
+              <span className="flex shrink-0 items-center gap-spacing-xs text-premium-xs font-black uppercase tracking-widest text-muted-foreground">
+                <span className="hidden sm:inline">{expandedId === dogma.id ? 'Fechar' : 'Ler'}</span>
+                <Icons.ArrowDown className={`w-spacing-md h-spacing-md transition-transform ${expandedId === dogma.id ? 'rotate-180' : ''}`} aria-hidden="true" />
+              </span>
             </Button>
             {expandedId === dogma.id && (
-              <div id={`dogma-panel-${dogma.id}`} role="region" aria-labelledby={`dogma-trigger-${dogma.id}`} className="px-spacing-lg pb-spacing-lg pl-[4.5rem] space-y-spacing-md border-t border-border pt-spacing-md">
+              <div id={`dogma-panel-${dogma.id}`} role="region" aria-labelledby={`dogma-trigger-${dogma.id}`} className="px-spacing-lg pb-spacing-lg pl-spacing-lg sm:pl-[5.5rem] space-y-spacing-md border-t border-border pt-spacing-md bg-muted/10">
                 <p className="text-foreground/90 leading-relaxed font-serif">{dogma.definition}</p>
                 <div className="flex items-center gap-spacing-xs">
                   <span className="text-premium-xs font-black uppercase tracking-widest text-primary">Fonte:</span>
@@ -482,7 +506,7 @@ const DogmasPage: React.FC = () => {
           </div>
         ))}
         {filtered.length === 0 && (
-          <div role="status" className="rounded-premium-full border border-dashed border-border bg-card px-spacing-lg py-spacing-xl text-center">
+          <div role="status" className="rounded-premium border border-dashed border-border bg-card px-spacing-lg py-spacing-xl text-center">
             <Icons.Search className="mx-auto mb-spacing-sm h-spacing-lg w-spacing-lg text-muted-foreground" aria-hidden="true" />
             <h2 className="text-premium-lg font-serif font-bold text-foreground">Nenhum dogma encontrado</h2>
             <p className="mt-spacing-xs text-premium-sm text-muted-foreground">Tente outro termo ou remova o filtro de categoria.</p>
