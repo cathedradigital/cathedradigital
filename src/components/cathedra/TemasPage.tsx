@@ -131,17 +131,17 @@ const TemasPage = () => {
   }, [queryClient]);
 
   return (
-    <div data-catedra-module-root data-catedra-module="nexus" className="min-h-screen w-full min-w-0 overflow-x-hidden bg-stitch-background text-stitch-on-background">
+    <div data-catedra-module-root data-catedra-module="nexus" className="min-h-screen w-full min-w-0 overflow-x-hidden bg-background text-foreground">
       <MobileTopBar kicker="Cathedra Digital" title="Temas" transparent />
       <main className="catedra-page catedra-section mx-auto min-w-0 px-4 pb-16 pt-6 sm:px-5 md:px-8 md:pt-12">
         <header className="mb-8 max-w-3xl md:mb-10">
-          <p className="font-stitch-body text-[10px] font-bold uppercase tracking-[0.24em] text-stitch-secondary md:text-[12px] md:tracking-[0.32em]">Nexus Theologicus</p>
-          <h1 className="mt-2 font-stitch-display text-[34px] leading-tight text-stitch-primary md:mt-3 md:text-[52px]">Temas que conectam</h1>
-          <p className="mt-3 max-w-2xl font-stitch-body text-[15px] leading-6 text-stitch-on-surface-variant md:text-[18px] md:leading-7">Explore os fios que aproximam Escritura, Catecismo, Magistério e vida cristã.</p>
+          <p className="text-premium-xs font-black uppercase tracking-[0.24em] text-secondary md:text-premium-sm md:tracking-[0.32em]">Nexus Theologicus</p>
+          <h1 className="mt-spacing-xs font-serif text-premium-4xl leading-tight text-foreground md:mt-spacing-sm md:text-premium-6xl">Temas que conectam</h1>
+          <p className="mt-spacing-sm max-w-2xl font-serif text-premium-base leading-relaxed text-muted-foreground md:text-premium-lg">Explore os fios que aproximam Escritura, Catecismo, Magistério e vida cristã.</p>
         </header>
 
         <div className="space-y-6">
-          <div className="sticky top-2 z-20 flex flex-col gap-3 rounded-2xl border border-stitch-outline-variant/30 bg-stitch-surface-container-lowest/95 p-3 shadow-sm backdrop-blur-md sm:p-4">
+          <div className="sticky top-2 z-20 flex flex-col gap-spacing-sm rounded-premium border border-border bg-card/95 p-spacing-sm shadow-sm backdrop-blur-md sm:p-spacing-md">
             <FuzzySearchInput
               className="w-full"
               value={searchQuery}
@@ -155,10 +155,10 @@ const TemasPage = () => {
                 <motion.button
                   key={cat}
                   {...getTabProps(`tab-category-${idx}`, `panel-temas`, activeCategory === cat, `
-                    min-h-10 whitespace-nowrap rounded-full border px-4 py-2 font-stitch-body text-[11px] font-bold uppercase tracking-[0.12em] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stitch-secondary
+                    min-h-[44px] whitespace-nowrap rounded-premium-full border px-spacing-md py-spacing-xs font-ui text-premium-xs font-black uppercase tracking-[0.12em] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2
                     ${activeCategory === cat
-                      ? 'border-stitch-secondary bg-stitch-secondary text-stitch-secondary-on-container'
-                      : 'border-stitch-outline-variant/40 bg-stitch-surface-container-low text-stitch-on-surface-variant hover:border-stitch-secondary hover:text-stitch-primary'
+                      ? 'border-primary bg-primary text-primary-foreground'
+                      : 'border-border bg-muted text-muted-foreground hover:border-primary/50 hover:text-foreground'
                     }
                   `)}
                   initial={false}
@@ -173,21 +173,21 @@ const TemasPage = () => {
             </div>
           </div>
           <div className="relative">
-            <div {...getTabPanelProps('panel-temas', `tab-category-${categories.indexOf(activeCategory)}`, true, "relative overflow-hidden rounded-2xl border border-stitch-outline-variant/30 bg-stitch-surface-container-lowest outline-none")}>
+            <div {...getTabPanelProps('panel-temas', `tab-category-${categories.indexOf(activeCategory)}`, true, "relative overflow-hidden rounded-premium border border-border bg-card outline-none focus-visible:ring-2 focus-visible:ring-primary/40")}>
               {loadingTags ? (
                   <div className="flex min-h-48 flex-col items-center justify-center gap-3 py-10">
                   <div className="relative">
-                    <Icons.Loader2 className="h-7 w-7 animate-spin text-stitch-secondary" />
-                    <div className="absolute inset-0 animate-pulse rounded-full bg-stitch-secondary/15" />
+                    <Icons.Loader2 className="h-7 w-7 animate-spin text-primary" />
+                    <div className="absolute inset-0 animate-pulse rounded-full bg-primary/10" />
                   </div>
-                  <span className="font-stitch-body text-[11px] font-bold uppercase tracking-[0.16em] text-stitch-on-surface-variant">Consultando Nexus...</span>
+                  <span className="text-premium-xs font-black uppercase tracking-[0.16em] text-muted-foreground">Consultando Nexus...</span>
                 </div>
               ) : filteredTags.length === 0 ? (
                 <div className="flex min-h-48 flex-col items-center justify-center gap-3 px-6 py-10 text-center">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-stitch-secondary-container/30">
-                    <Icons.Search className="h-5 w-5 text-stitch-secondary" />
+                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-secondary/10">
+                    <Icons.Search className="h-5 w-5 text-secondary" />
                   </div>
-                  <p className="font-stitch-body text-sm text-stitch-on-surface-variant">Nenhum tema encontrado para sua busca.</p>
+                  <p className="text-premium-sm text-muted-foreground">Nenhum tema encontrado para sua busca.</p>
                 </div>
               ) : (
                 <>
@@ -197,7 +197,9 @@ const TemasPage = () => {
                         <Icons.Sparkles className="w-spacing-sm h-spacing-sm text-primary/40" />
                         <span className="text-premium-xs font-bold text-primary/60 uppercase tracking-widest">Busca Global Ativa</span>
                       </div>
-                      <Button 
+                      <Button
+                        type="button"
+                        variant="ghost"
                         onClick={() => setActiveCategory('all')}
                         className="text-premium-xs font-black uppercase tracking-widest text-primary hover:underline underline-offset-4 transition-all"
                       >
@@ -215,20 +217,20 @@ const TemasPage = () => {
                             isSuggested={suggestedSlugs.has(tag.slug)}
                             onKeyDown={(e) => handleRovingKeyDown(e, idx, () => {})}
                             tabIndex={activeIndex === idx ? 0 : -1}
-                            className="rounded-full border border-stitch-outline-variant/40 bg-stitch-surface-container-low px-3 py-2 font-stitch-body text-[11px] font-bold uppercase tracking-[0.1em] text-stitch-on-surface-variant transition-colors hover:border-stitch-secondary hover:text-stitch-primary sm:px-4"
+                            className="rounded-premium-full border border-border bg-muted px-spacing-sm py-spacing-xs font-ui text-premium-xs font-black uppercase tracking-[0.1em] text-muted-foreground transition-colors hover:border-primary/50 hover:text-foreground sm:px-spacing-md"
                             profileId={profileId as ProfileId}
                           />
                         </div>
                       ))}
                     </div>
                   </div>
-                  <div className="flex items-center justify-center gap-2 border-t border-stitch-outline-variant/20 px-5 pb-5 pt-3">
-                    <div className="flex items-center gap-2 rounded-full border border-stitch-outline-variant/30 bg-stitch-surface-container-low px-3 py-1.5">
-                      <span className="font-stitch-body text-[10px] font-bold uppercase tracking-[0.14em] text-stitch-on-surface-variant tabular-nums">
+                  <div className="flex items-center justify-center gap-2 border-t border-border px-5 pb-5 pt-3">
+                    <div className="flex items-center gap-2 rounded-premium border border-border bg-muted px-3 py-1.5">
+                      <span className="text-premium-xs font-black uppercase tracking-[0.14em] text-muted-foreground tabular-nums">
                         {filteredTags.length} conexões sagradas
                       </span>
-                      <div className="h-1.5 w-1.5 rounded-full bg-stitch-secondary/60" />
-                      <Icons.Sparkles className="h-3.5 w-3.5 text-stitch-secondary" />
+                      <div className="h-1.5 w-1.5 rounded-full bg-secondary/60" />
+                      <Icons.Sparkles className="h-3.5 w-3.5 text-secondary" />
                     </div>
                   </div>
                 </>
@@ -241,13 +243,13 @@ const TemasPage = () => {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="flex flex-col items-center justify-center rounded-2xl border border-stitch-secondary/20 bg-stitch-secondary-container/10 px-6 py-8 text-center"
+            className="flex flex-col items-center justify-center rounded-premium border border-secondary/30 bg-secondary/5 px-6 py-8 text-center"
           >
-            <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-stitch-surface-container-lowest text-stitch-secondary">
-              <Icons.Tag className="h-5 w-5" />
+            <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-secondary/10 text-secondary">
+              <Icons.Tag className="h-5 w-5" aria-hidden="true" />
             </div>
-            <h3 className="font-stitch-display text-[22px] leading-tight text-stitch-primary">Descubra os tesouros da Fé</h3>
-            <p className="mt-2 max-w-2xl font-stitch-body text-sm leading-6 text-stitch-on-surface-variant">
+            <h3 className="font-serif text-premium-2xl leading-tight text-foreground">Descubra os tesouros da Fé</h3>
+            <p className="mt-2 max-w-2xl text-premium-sm leading-relaxed text-muted-foreground">
               Selecione um tema acima para percorrer os conteúdos relacionados da Bíblia, Catecismo e Magistério.
             </p>
           </motion.div>

@@ -183,10 +183,13 @@ const SUMA_DATA: SumaSection[] = [
   },
 ];
 
+const SUMA_QUESTIONS = SUMA_DATA.reduce((total, section) => total + section.questions.length, 0);
+const SUMA_ARTICLES = SUMA_DATA.reduce((total, section) => total + section.questions.reduce((count, question) => count + question.articles.length, 0), 0);
+
 const AquinasOpera: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'concepts' | 'suma'>('concepts');
   const [expandedPart, setExpandedPart] = useState<string | null>('Ia');
-  const [expandedQuestion, setExpandedQuestion] = useState<number | null>(null);
+  const [expandedQuestion, setExpandedQuestion] = useState<string | null>(null);
   const [expandedArticle, setExpandedArticle] = useState<string | null>(null);
   const navigate = useNavigate();
 
@@ -212,19 +215,42 @@ const AquinasOpera: React.FC = () => {
           </p>
         </div>
 
-        <div className="flex items-center justify-center gap-spacing-xs p-spacing-2xs bg-muted rounded-premium w-fit mx-auto">
+        <div className="-mx-spacing-md overflow-x-auto px-spacing-md pb-spacing-2xs md:mx-auto md:w-fit md:px-0">
+          <div className="flex min-w-max items-center justify-center gap-spacing-xs rounded-premium bg-muted p-spacing-2xs">
           <Button
+            type="button"
+            variant="ghost"
             onClick={() => setActiveTab('concepts')}
-            className={`px-spacing-lg py-spacing-xs rounded-premium-full text-premium-xs font-black uppercase tracking-widest transition-all ${activeTab === 'concepts' ? 'bg-background text-foreground shadow-premium-md' : 'text-muted-foreground hover:text-foreground'}`}
+            className={`px-spacing-lg py-spacing-xs rounded-premium-full text-premium-xs font-black uppercase tracking-widest transition-all ${activeTab === 'concepts' ? 'bg-background text-foreground shadow-premium-md' : 'text-muted-foreground hover:bg-background/50 hover:text-foreground'}`}
           >
             10 Conceitos
           </Button>
           <Button
+            type="button"
+            variant="ghost"
             onClick={() => setActiveTab('suma')}
-            className={`px-spacing-lg py-spacing-xs rounded-premium-full text-premium-xs font-black uppercase tracking-widest transition-all ${activeTab === 'suma' ? 'bg-background text-foreground shadow-premium-md' : 'text-muted-foreground hover:text-foreground'}`}
+            className={`px-spacing-lg py-spacing-xs rounded-premium-full text-premium-xs font-black uppercase tracking-widest transition-all ${activeTab === 'suma' ? 'bg-background text-foreground shadow-premium-md' : 'text-muted-foreground hover:bg-background/50 hover:text-foreground'}`}
           >
             Suma Teológica
           </Button>
+          </div>
+        </div>
+      </div>
+
+      <div className="grid gap-spacing-md md:grid-cols-[1fr_auto] items-stretch">
+        <div className="rounded-premium border border-border bg-card px-spacing-lg py-spacing-md">
+          <div className="flex items-start gap-spacing-sm">
+            <div className="mt-1 rounded-full bg-primary/10 p-spacing-xs text-primary"><Icons.Book className="h-spacing-md w-spacing-md" aria-hidden="true" /></div>
+            <div>
+              <p className="text-premium-xs font-black uppercase tracking-[0.18em] text-primary">Duas portas de entrada</p>
+              <p className="mt-spacing-2xs max-w-2xl text-premium-sm leading-relaxed text-muted-foreground">Comece pelos conceitos para uma leitura breve e contemplativa. Entre na Suma para percorrer a arquitetura das questões, artigos e respostas de Tomás.</p>
+            </div>
+          </div>
+        </div>
+        <div className="rounded-premium border border-secondary/30 bg-secondary/5 px-spacing-lg py-spacing-md">
+          <span className="flex items-center gap-spacing-xs text-premium-xs font-black uppercase tracking-[0.18em] text-secondary"><Icons.Scroll className="h-spacing-sm w-spacing-sm" aria-hidden="true" /> Mapa da obra</span>
+          <span className="mt-spacing-xs block font-serif text-premium-lg font-bold text-foreground">{SUMA_DATA.length} partes · {SUMA_QUESTIONS} questões</span>
+          <span className="mt-spacing-2xs block text-premium-xs text-muted-foreground">{SUMA_ARTICLES} artigos selecionados</span>
         </div>
       </div>
 
@@ -241,9 +267,9 @@ const AquinasOpera: React.FC = () => {
               {AQUINO_CONCEPTS.map((concept, idx) => (
                 <div key={concept.id} className="group bg-card border border-border rounded-premium p-spacing-lg hover:border-primary/50 transition-all hover:shadow-premium-hover hover:shadow-primary/5">
                   <div className="flex items-start justify-between mb-spacing-md">
-                    <span className="text-premium-4xl font-serif text-primary/60 group-hover:text-primary/60 transition-colors">0{idx + 1}</span>
+                    <span className="text-premium-xs font-black uppercase tracking-widest text-primary/70">Nº {String(idx + 1).padStart(2, '0')}</span>
                     <div className="p-spacing-xs bg-primary/5 rounded-premium text-primary">
-                      <Icons.Scroll className="w-spacing-md h-spacing-md" />
+                      <Icons.Scroll className="w-spacing-md h-spacing-md" aria-hidden="true" />
                     </div>
                   </div>
                   <h3 className="text-premium-xl font-serif font-bold text-foreground mb-spacing-md">{concept.title}</h3>
@@ -257,7 +283,7 @@ const AquinasOpera: React.FC = () => {
                       <p className="text-premium-lg font-serif font-medium text-foreground">{concept.padh}</p>
                     </div>
                     <div className="pt-spacing-md border-t border-border">
-                      <p className="text-premium-sm font-serif font-bold text-primary">👉 {concept.pergunta}</p>
+                      <p className="text-premium-sm font-serif font-bold text-primary">{concept.pergunta}</p>
                     </div>
                   </div>
                 </div>
@@ -355,8 +381,12 @@ const AquinasOpera: React.FC = () => {
         {SUMA_DATA.map(section => (
           <div key={section.part} className="bg-card border border-border rounded-premium overflow-hidden">
             <Button
+              type="button"
+              variant="ghost"
+              aria-expanded={expandedPart === section.part}
+              aria-controls={`aquinas-part-${section.part}`}
               onClick={() => setExpandedPart(expandedPart === section.part ? null : section.part)}
-              className="w-full p-spacing-md flex items-center justify-between text-left hover:bg-primary/5 transition-all"
+              className="w-full h-auto min-h-[72px] justify-between whitespace-normal rounded-none bg-card p-spacing-md text-left hover:bg-primary/5 hover:text-foreground transition-all"
             >
               <div>
                 <span className="text-premium-xs font-black uppercase tracking-widest text-primary">{section.part}</span>
@@ -366,32 +396,44 @@ const AquinasOpera: React.FC = () => {
             </Button>
 
             {expandedPart === section.part && (
-              <div className="border-t border-border">
-                {section.questions.map(q => (
-                  <div key={`${section.part}-${q.id}`} className="border-b border-border last:border-0">
+              <div id={`aquinas-part-${section.part}`} className="border-t border-border">
+                {section.questions.map(q => {
+                  const questionKey = `${section.part}-${q.id}`;
+                  return (
+                  <div key={questionKey} className="border-b border-border last:border-0">
                     <Button
-                      onClick={() => setExpandedQuestion(expandedQuestion === q.id ? null : q.id)}
-                      className="w-full p-spacing-md pl-spacing-xl flex items-center justify-between text-left hover:bg-muted/50 transition-all"
+                      type="button"
+                      variant="ghost"
+                      aria-expanded={expandedQuestion === questionKey}
+                      aria-controls={`aquinas-question-${questionKey}`}
+                      onClick={() => {
+                        setExpandedQuestion(expandedQuestion === questionKey ? null : questionKey);
+                      }}
+                      className="w-full h-auto min-h-[56px] justify-between whitespace-normal rounded-none p-spacing-md pl-spacing-xl text-left hover:bg-muted/50 hover:text-foreground transition-all"
                     >
                       <span className="font-bold text-premium-sm text-foreground">{q.title}</span>
-                      <Icons.ArrowDown className={`w-spacing-md h-spacing-md text-muted-foreground transition-transform ${expandedQuestion === q.id ? 'rotate-180' : ''}`} />
+                      <Icons.ArrowDown className={`w-spacing-md h-spacing-md text-muted-foreground transition-transform ${expandedQuestion === questionKey ? 'rotate-180' : ''}`} />
                     </Button>
 
-                    {expandedQuestion === q.id && (
-                      <div className="px-spacing-xl pb-spacing-md space-y-spacing-xs">
+                    {expandedQuestion === questionKey && (
+                      <div id={`aquinas-question-${questionKey}`} className="px-spacing-xl pb-spacing-md space-y-spacing-xs">
                         {q.articles.map(art => {
                           const artKey = `${section.part}-${q.id}-${art.id}`;
                           return (
                             <div key={artKey}>
                               <Button
+                                type="button"
+                                variant="ghost"
+                                aria-expanded={expandedArticle === artKey}
+                                aria-controls={`aquinas-article-${artKey}`}
                                 onClick={() => setExpandedArticle(expandedArticle === artKey ? null : artKey)}
-                                className="w-full p-spacing-sm rounded-premium-full text-left hover:bg-primary/5 transition-all"
+                                className="w-full h-auto justify-start whitespace-normal rounded-premium p-spacing-sm text-left hover:bg-primary/5 hover:text-foreground transition-all"
                               >
                                 <span className="text-premium-sm font-serif text-foreground/90">{art.title}</span>
                               </Button>
                               {expandedArticle === artKey && (
-                                <div className="px-spacing-sm pb-spacing-md">
-                                  <p className="text-premium-base md:text-premium-lg text-foreground/80 font-serif leading-relaxed whitespace-pre-line bg-muted rounded-premium-full p-spacing-md">{art.body}</p>
+                                <div id={`aquinas-article-${artKey}`} className="px-spacing-sm pb-spacing-md">
+                                  <p className="text-premium-base md:text-premium-lg text-foreground/80 font-serif leading-relaxed whitespace-pre-line bg-muted/60 border border-border rounded-premium p-spacing-md">{art.body}</p>
                                 </div>
                               )}
                             </div>
@@ -400,7 +442,8 @@ const AquinasOpera: React.FC = () => {
                       </div>
                     )}
                   </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </div>
